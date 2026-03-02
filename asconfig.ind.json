@@ -17,14 +17,14 @@
  */
 
 {
-      /******************** LIB_KyoLib ********************/
+    /******************** LIB_KyoLib ********************/
 
-      // 类型：SWC 库（lib） 或 应用程序（app）
+    // 类型：SWC 库（lib） 或 应用程序（app）
     "type": "lib",
 
-      // 编译器选项
+    // 编译器选项
     "compilerOptions": {
-          // 构建调试版本
+        // 构建调试版本
         "debug": true,
 
         /******************** 源文件路径 ********************/
@@ -64,6 +64,6 @@
 
         /******************** 输出相关 ********************/
         // 输出路径（默认使用 IDEA 的生成路径）
-        "output": "../out/production/LIB_KyoLib/LIB_KyoLib.swc"
+        "output": "out/production/LIB_KyoLib/LIB_KyoLib.swc"
     }
 }
