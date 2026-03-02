@@ -60,7 +60,7 @@ public class RunJS extends Sprite {
     }
 
 
-    function JSDemo2():void {
+    internal function JSDemo2():void {
         var doc = window.document;
         var btn = doc.createElement('button');
 
