@@ -65,7 +65,7 @@ public class RunJS extends Sprite {
         var btn:* = doc.createElement('button');
 
         btn.innerHTML = 'Click Me!';
-        btn.onclick   = function () {
+        btn.onclick   = function ():void {
             var i = 0;
             window.setInterval(function () {
                 btn.innerHTML = 'Run in ActionScript: i=' + i++;
