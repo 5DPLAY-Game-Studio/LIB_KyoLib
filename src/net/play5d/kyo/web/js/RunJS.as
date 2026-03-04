@@ -62,7 +62,7 @@ public class RunJS extends Sprite {
 
     internal function JSDemo2():void {
         var doc:* = window.document;
-        var btn = doc.createElement('button');
+        var btn:* = doc.createElement('button');
 
         btn.innerHTML = 'Click Me!';
         btn.onclick   = function () {
