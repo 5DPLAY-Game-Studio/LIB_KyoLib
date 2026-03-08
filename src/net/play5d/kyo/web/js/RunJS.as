@@ -77,7 +77,7 @@ public class RunJS extends Sprite {
 
 
     internal function JSDemo3():void {
-        var doc = window.document;
+        var doc:* = window.document;
 
         for (var i = 0; i < 5; i++) {
             var btn = doc.createElement('button');
