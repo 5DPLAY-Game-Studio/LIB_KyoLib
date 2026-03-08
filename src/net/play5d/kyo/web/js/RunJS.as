@@ -80,7 +80,7 @@ public class RunJS extends Sprite {
         var doc:* = window.document;
 
         for (var i:int = 0; i < 5; i++) {
-            var btn = doc.createElement('button');
+            var btn:* = doc.createElement('button');
             doc.body.appendChild(btn);
 
             btn.innerHTML = 'Button' + i;
