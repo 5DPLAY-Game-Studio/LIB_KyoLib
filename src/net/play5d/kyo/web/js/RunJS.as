@@ -85,7 +85,7 @@ public class RunJS extends Sprite {
 
             btn.innerHTML = 'Button' + i;
             btn.onclick   = (
-                    function (i:*) {
+                    function (i:*):* {
                         return function () {
                             window.alert(i);
                         };
