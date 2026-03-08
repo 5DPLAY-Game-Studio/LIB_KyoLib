@@ -76,7 +76,7 @@ public class RunJS extends Sprite {
     }
 
 
-    function JSDemo3() {
+    internal function JSDemo3() {
         var doc = window.document;
 
         for (var i = 0; i < 5; i++) {
