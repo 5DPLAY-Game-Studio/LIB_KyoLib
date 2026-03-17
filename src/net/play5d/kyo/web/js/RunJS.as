@@ -107,7 +107,7 @@ public class RunJS extends Sprite {
                       new window.ActiveXObject('Microsoft.XMLHTTP') :
                       new window.XMLHttpRequest;
 
-            xhr.onreadystatechange = function () {
+            xhr.onreadystatechange = function ():void {
                 if (xhr.readyState != 4) {
                     return;
                 }
