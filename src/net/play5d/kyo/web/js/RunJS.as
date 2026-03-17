@@ -102,7 +102,7 @@ public class RunJS extends Sprite {
 
         btn.innerHTML = 'Load Test.xml';
 
-        btn.onclick = function () {
+        btn.onclick = function ():void {
             var xhr = window.ActiveXObject ?
                       new window.ActiveXObject('Microsoft.XMLHTTP') :
                       new window.XMLHttpRequest;
