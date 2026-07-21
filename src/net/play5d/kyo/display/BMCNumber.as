@@ -20,7 +20,19 @@ package net.play5d.kyo.display {
 import flash.display.DisplayObject;
 import flash.display.MovieClip;
 
+/**
+ * 位图影片数字：每位为 <code>BitmapMovieClip</code>，可由 MC 类绘制或复用帧数组。
+ *
+ * @see MCNumber
+ * @see BitmapMovieClip
+ */
 public class BMCNumber extends MCNumber {
+    /**
+     * @param mc MovieClip 类，或已有 <code>BitmapMCFrameVO</code> 帧数组。
+     * @param number 初始数值。
+     * @param startFrame 数字起始帧，默认 1。
+     * @param mcWidth 每位宽度；-1 为自动，默认 -1。
+     */
     public function BMCNumber(mc:Object, number:uint, startFrame:int = 1, mcWidth:Number = -1) {
         var mcc:Class;
         if (mc is Class) {
@@ -32,8 +44,12 @@ public class BMCNumber extends MCNumber {
         super(mcc, number, startFrame, mcWidth);
     }
 
+    /** @private 复用的帧数组 */
     private var _insArray:Array;
 
+    /**
+     * @private 创建位图影片并跳到对应数字帧。
+     */
     protected override function createNum(i:int):DisplayObject {
         var bmc:BitmapMovieClip = new BitmapMovieClip(false);
         if (_insArray) {

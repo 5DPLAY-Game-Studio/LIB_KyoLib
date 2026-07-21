@@ -30,11 +30,26 @@ import flash.geom.Rectangle;
 
 import net.play5d.kyo.utils.KyoUtils;
 
+/**
+ * 将 MovieClip 或位图帧序列逐帧烘焙为 BitmapData 并播放的 Sprite。
+ *
+ * <p>支持单 MC 绘制、多层 MC 合成绘制，以及帧脚本与标签跳转。</p>
+ *
+ * @see BitmapMCFrameVO
+ * @example
+ * <listing version="3.0">
+ * var bmc:BitmapMovieClip = new BitmapMovieClip();
+ * bmc.draw(mc);
+ * bmc.play();
+ * </listing>
+ */
 public class BitmapMovieClip extends Sprite {
     /**
-     * @param autoPlay 自动播放
-     * @param drawFrames 最大帧数，MC帧数超过此值则不创建超过的帧 [-1 不限制]
-     * @param lockWidthHeight 当Marix的scale改变时，是否不改变Width,Height (默认不改变)
+     * 构造位图影片剪辑。
+     *
+     * @param autoPlay 是否自动播放，默认 <code>true</code>。
+     * @param drawFrames 最大绘制帧数；MC 超过此值则不创建后续帧，<code>-1</code> 表示不限制。
+     * @param lockSize 绘制时若 Matrix 含缩放，是否锁定宽高（将 matrix 的 <code>a</code>/<code>d</code> 置为 1），默认 <code>false</code>。
      */
     public function BitmapMovieClip(autoPlay:Boolean = true, drawFrames:int = -1, lockSize:Boolean = false) {
         this.autoPlay = autoPlay;
@@ -42,37 +57,93 @@ public class BitmapMovieClip extends Sprite {
         _maxFrames    = drawFrames;
     }
 
+    /**
+     * 当前播放帧号（从 1 起）。
+     * @default 0
+     */
     public var currentFrame:int;
+    /**
+     * 当前帧标签。
+     * @default null
+     */
     public var currentFrameLabel:String;
+    /**
+     * 总帧数（<code>insArray</code> 有效长度减 1）。
+     * @default 0
+     */
     public var totalFrames:int;
+    /**
+     * 每帧之间的间隔帧数（<code>renderNextFrame</code> 计数用）。
+     * @default 0
+     */
     public var gapFrame:int;
+    /**
+     * 播放到末尾后，再经过多少间隔帧才循环或结束。
+     * @default 0
+     */
     public var loopGapFrame:int;
+    /**
+     * 绘制时是否锁定源对象宽高（见构造参数 <code>lockSize</code>）。
+     */
     public var lockSize:Boolean;
+    /**
+     * 初始化完成后是否自动播放。
+     */
     public var autoPlay:Boolean;
+    /**
+     * 绘制前是否按 bounds 修正注册点。
+     * @default true
+     */
     public var fixRegPoint:Boolean   = true;
+    /**
+     * 固定每帧 BitmapData 尺寸；为 <code>null</code> 时使用绘制结果尺寸。
+     * @default null
+     */
     public var fixSize:Point;
+    /**
+     * 播放到末尾后是否循环。
+     * @default true
+     */
     public var loopPlay:Boolean      = true;
+    /**
+     * 非循环模式下是否已播放完成。
+     * @default false
+     */
     public var playComplete:Boolean;
+    /**
+     * 绘制时附加的偏移量。
+     * @default null
+     */
     public var fixPoint:Point;
+    /**
+     * 非循环播放完成时的回调。
+     * @default null
+     */
     public var onPlayComplete:Function;
+    /** @private 显示用 Bitmap 子对象 */
     protected var _bp:Bitmap;
+    /** @private 帧号到脚本列表的映射 */
     private var _scripts:Object;
+    /** @private 最大绘制帧数 */
     private var _maxFrames:int;
+    /** @private 当前间隔帧计数 */
     private var _currentGapFrame:int = 0;
+    /** @private MC 上待监听的函数数组属性名列表 */
     private var _listenFunctions:Array;
-
-//		private var _scaleX:Number = 1;
-//		private var _scaleY:Number = 1;
-
+    /** @private 帧数据数组，索引 1 起为有效帧 */
     private var _insArray:Array;
 
     /**
-     * 所有的BitmapData对象，赋值将根据此数组中BitmapData对象创建BitmapMovieClip
+     * 帧数据数组；赋值后将据此初始化并可选自动播放。
+     *
+     * @return <code>BitmapMCFrameVO</code> 数组，索引 1 起为帧数据。
+     * @see BitmapMCFrameVO
      */
     public function get insArray():Array {
         return _insArray;
     }
 
+    /** @private */
     public function set insArray(value:Array):void {
         if (!value) {
             return;
@@ -81,6 +152,11 @@ public class BitmapMovieClip extends Sprite {
         initBMC();
     }
 
+    /**
+     * 由 <code>BitmapData</code> 数组构建帧数据并初始化。
+     *
+     * @param value 位图数组，按顺序转为 <code>BitmapMCFrameVO</code>。
+     */
     public function set bitmapDataArray(value:Array):void {
         if (!value) {
             return;
@@ -97,18 +173,27 @@ public class BitmapMovieClip extends Sprite {
     }
 
     /**
-     * 把一个MC逐帧绘制成BitmapData
-     * @param source
-     * @param matrix
-     * @param colorTransform
-     * @param blendMode
-     * @param clipRect
-     * @param smoothing
+     * 将单个 DisplayObject（通常为 MovieClip）逐帧绘制为 BitmapData 序列。
      *
+     * @param source 源显示对象；为 MovieClip 时按总帧数逐帧绘制，否则只绘一帧。
+     * @param matrix 可选变换矩阵，缩放会乘到 <code>source.scaleX/Y</code>。
+     * @param colorTransform 可选颜色变换。
+     * @param blendMode 可选混合模式。
+     * @param clipRect 可选裁剪矩形。
+     * @param smoothing 是否平滑缩放。
+     * @see #drawMulti()
+     * @example
+     * <listing version="3.0">
+     * bmc.draw(mc);
+     * </listing>
      */
     public function draw(
-            source:DisplayObject, matrix:Matrix = null, colorTransform:ColorTransform = null, blendMode:String = null,
-            clipRect:Rectangle                                                                                 = null, smoothing:Boolean                                                       = false
+        source        :DisplayObject,
+        matrix        :Matrix = null,
+        colorTransform:ColorTransform = null,
+        blendMode     :String = null,
+        clipRect      :Rectangle = null,
+        smoothing     :Boolean = false
     ):void {
         beforeDraw(matrix, colorTransform, blendMode, clipRect, smoothing);
         var drawVar:DrawVar = new DrawVar(source, matrix, colorTransform, blendMode, clipRect, smoothing);
@@ -128,20 +213,33 @@ public class BitmapMovieClip extends Sprite {
     }
 
     /**
-     * 把多个MC逐帧绘制成BitmapData
-     * @param source
-     * @param matrix
-     * @param colorTransform
-     * @param blendMode
-     * @param clipRect
-     * @param smoothing
-     * @param baseFrameMc 基帧图像,其他的层按照此MC作动画
-     * @param hideFrameout 隐藏掉超过基帧的图像
+     * 将多个 MovieClip 按帧合成绘制为 BitmapData 序列。
+     *
+     * <p>可指定基帧 MC 决定总帧数与帧标签；超出基帧帧数的层可隐藏。</p>
+     *
+     * @param source MovieClip 或其它 DisplayObject 数组。
+     * @param matrix 可选变换矩阵。
+     * @param colorTransform 可选颜色变换。
+     * @param blendMode 可选混合模式。
+     * @param clipRect 可选裁剪矩形。
+     * @param smoothing 是否平滑缩放。
+     * @param baseFrameMc 基帧 MC，总帧数与标签以其为准。
+     * @param hideFrameout 帧数不足的层是否隐藏，默认 <code>true</code>。
+     * @see #draw()
+     * @example
+     * <listing version="3.0">
+     * bmc.drawMulti([bodyMc, effectMc], null, null, null, null, false, bodyMc);
+     * </listing>
      */
     public function drawMulti(
-            source:Array, matrix:Matrix = null, colorTransform:ColorTransform = null, blendMode:String = null,
-            clipRect:Rectangle                                                                         = null, smoothing:Boolean                                               = false, baseFrameMc:MovieClip                = null,
-            hideFrameout:Boolean                                                                       = true
+        source        :Array,
+        matrix        :Matrix = null,
+        colorTransform:ColorTransform = null,
+        blendMode     :String = null,
+        clipRect      :Rectangle = null,
+        smoothing     :Boolean = false,
+        baseFrameMc   :MovieClip = null,
+        hideFrameout  :Boolean = true
     ):void {
         beforeDraw(matrix, colorTransform, blendMode, clipRect, smoothing);
         var mcGroup:McGroup = new McGroup(source, baseFrameMc, hideFrameout);
@@ -157,13 +255,33 @@ public class BitmapMovieClip extends Sprite {
         initBMC();
     }
 
+    /**
+     * 克隆实例，共享同一 <code>insArray</code> 帧数据。
+     *
+     * @return 新实例，未自动播放。
+     * @example
+     * <listing version="3.0">
+     * var copy:BitmapMovieClip = bmc.clone();
+     * </listing>
+     */
     public function clone():BitmapMovieClip {
         var bmc:BitmapMovieClip = new BitmapMovieClip();
         bmc.insArray            = _insArray;
         return bmc;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * 跳转到指定帧并开始播放。
+     *
+     * @param frame 帧号（<code>int</code>）或帧标签（<code>String</code>）。
+     * @param scene 未使用，保留以兼容 MovieClip API。
+     * @see #gotoAndStop()
+     * @example
+     * <listing version="3.0">
+     * bmc.gotoAndPlay(3);
+     * bmc.gotoAndPlay('attack');
+     * </listing>
+     */
     public function gotoAndPlay(frame:Object, scene:String = null):void {
         var f:int = getFrame(frame);
         if (f > 0) {
@@ -172,6 +290,16 @@ public class BitmapMovieClip extends Sprite {
         play();
     }
 
+    /**
+     * 跳转到指定帧并停止。
+     *
+     * @param frame 帧号或帧标签。
+     * @see #gotoAndPlay()
+     * @example
+     * <listing version="3.0">
+     * bmc.gotoAndStop('idle');
+     * </listing>
+     */
     public function gotoAndStop(frame:Object):void {
         var f:int = getFrame(frame);
         removeEventListener(Event.ENTER_FRAME, playing);
@@ -185,6 +313,14 @@ public class BitmapMovieClip extends Sprite {
         render();
     }
 
+    /**
+     * 前进一帧并停止。
+     *
+     * @example
+     * <listing version="3.0">
+     * bmc.nextFrame();
+     * </listing>
+     */
     public function nextFrame():void {
         stop();
         playComplete = false;
@@ -192,6 +328,14 @@ public class BitmapMovieClip extends Sprite {
         render();
     }
 
+    /**
+     * 后退一帧并停止。
+     *
+     * @example
+     * <listing version="3.0">
+     * bmc.prevFrame();
+     * </listing>
+     */
     public function prevFrame():void {
         stop();
         playComplete = false;
@@ -199,6 +343,15 @@ public class BitmapMovieClip extends Sprite {
         render();
     }
 
+    /**
+     * 开始按 ENTER_FRAME 播放（总帧数小于 2 时不播放）。
+     *
+     * @see #stop()
+     * @example
+     * <listing version="3.0">
+     * bmc.play();
+     * </listing>
+     */
     public function play():void {
         if (totalFrames < 2) {
             return;
@@ -209,15 +362,29 @@ public class BitmapMovieClip extends Sprite {
         addEventListener(Event.ENTER_FRAME, playing);
     }
 
+    /**
+     * 停止播放并移除 ENTER_FRAME 监听。
+     *
+     * @see #play()
+     * @example
+     * <listing version="3.0">
+     * bmc.stop();
+     * </listing>
+     */
     public function stop():void {
         removeEventListener(Event.ENTER_FRAME, playing);
     }
 
     /**
-     * 在某帧调用方法
-     * @param frame 帧
-     * @param script 函数
-     * @param params 参数
+     * 在指定帧注册回调脚本。
+     *
+     * @param frame 帧号。
+     * @param script 回调函数。
+     * @param params 传给回调的参数数组，默认 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * bmc.addFrameScript(5, onHit, [target]);
+     * </listing>
      */
     public function addFrameScript(frame:int, script:Function, params:Array = null):void {
         var insf:InsFunction = new InsFunction(script, params);
@@ -228,16 +395,26 @@ public class BitmapMovieClip extends Sprite {
     }
 
     /**
-     * 帧调用函数参数名
-     * @param name Array名称
-     * 用法：在MC中声明一个Array，在需要调用函数的帧中，将这个Array赋值需要调用的函数；
-     *        Array中可以是Function,也可以是Object{f:Function,p:Array}
-     *        Array格式 = [Function,{f:函数[Function],p:参数[Array]}]
+     * 注册 MC 上函数数组属性的名称，绘制时从源 MC 提取并在对应帧调用。
+     *
+     * <p>源 MC 中声明同名 Array，在需触发的帧赋值；元素可为 <code>Function</code> 或
+     * <code>{f:Function, p:Array}</code>。</p>
+     *
+     * @param name MC 上 Array 类型属性名。
+     * @example
+     * <listing version="3.0">
+     * bmc.addFunctionListener('frameCalls');
+     * </listing>
      */
     public function addFunctionListener(name:String):void {
         KyoUtils.array_push_notHas(_listenFunctions, name);
     }
 
+    /**
+     * 按 <code>gapFrame</code> 间隔推进一帧（ENTER_FRAME 回调内部使用）。
+     *
+     * @see #gapFrame
+     */
     public function renderNextFrame():void {
         if (_currentGapFrame == 0) {
             _currentGapFrame = gapFrame;
@@ -250,6 +427,15 @@ public class BitmapMovieClip extends Sprite {
         }
     }
 
+    /**
+     * 停止播放并释放资源。
+     *
+     * @param clearBitmap 为 <code>true</code> 时 dispose 各帧 BitmapData。
+     * @example
+     * <listing version="3.0">
+     * bmc.destory(true);
+     * </listing>
+     */
     public function destory(clearBitmap:Boolean = false):void {
         stop();
         if (clearBitmap) {
@@ -263,6 +449,7 @@ public class BitmapMovieClip extends Sprite {
         _insArray = null;
     }
 
+    /** @private 根据 insArray 初始化显示与播放状态 */
     private function initBMC():void {
         if (!_insArray || _insArray.length < 1) {
             throw Error('bitMapDatas has no data');
@@ -280,6 +467,7 @@ public class BitmapMovieClip extends Sprite {
         }
     }
 
+    /** @private 绘制单帧并写入 insArray */
     private function createFrame(drawVar:DrawVar, frame:int):void {
         var sc:DisplayObject = drawVar.source;
         var mc:MovieClip     = sc is MovieClip ? sc as MovieClip : null;
@@ -302,12 +490,8 @@ public class BitmapMovieClip extends Sprite {
 
         if (fixRegPoint) {
             var bounds:Rectangle = sc.getBounds(sc);
-            sc.x                 = -(
-                    bounds.x * sc.scaleX
-            ) << 0;
-            sc.y                 = -(
-                    bounds.y * sc.scaleY
-            ) << 0;
+            sc.x                 = -(bounds.x * sc.scaleX) << 0;
+            sc.y                 = -(bounds.y * sc.scaleY) << 0;
         }
 
         if (fixPoint) {
@@ -334,6 +518,7 @@ public class BitmapMovieClip extends Sprite {
         sp               = null;
     }
 
+    /** @private 按 currentFrame 更新位图显示与帧脚本 */
     private function render():void {
         if (!_insArray) {
             return;
@@ -369,6 +554,7 @@ public class BitmapMovieClip extends Sprite {
         renderScript();
     }
 
+    /** @private 执行当前帧已注册脚本 */
     private function renderScript():void {
         if (_scripts && _scripts[currentFrame] != null) {
             for each(var o:Object in _scripts[currentFrame]) {
@@ -376,14 +562,13 @@ public class BitmapMovieClip extends Sprite {
                     o();
                 }
                 else {
-                    (
-                            o.fun as Function
-                    ).call(null, o.params);
+                    (o.fun as Function).call(null, o.params);
                 }
             }
         }
     }
 
+    /** @private 解析帧号或帧标签 */
     private function getFrame(frame:Object):int {
         playComplete = false;
 
@@ -400,19 +585,22 @@ public class BitmapMovieClip extends Sprite {
         return -1;
     }
 
+    /** @private 绘制前重置 insArray 并处理 lockSize */
     private function beforeDraw(
-            matrix:Matrix = null, colorTransform:ColorTransform = null, blendMode:String = null,
-            clipRect:Rectangle                                                           = null, smoothing:Boolean = false
+        matrix        :Matrix = null,
+        colorTransform:ColorTransform = null,
+        blendMode     :String = null,
+        clipRect      :Rectangle = null,
+        smoothing     :Boolean = false
     ):void {
         _insArray = [];
         if (lockSize && matrix) {
-//				_scaleX = matrix.a;
-//				_scaleY = matrix.d;
             matrix.a = 1;
             matrix.d = 1;
         }
     }
 
+    /** @private 从 MC 或 McGroup 提取帧函数并注册 */
     private function initListenFunctions(mc:Object, frame:int):void {
         if (!_listenFunctions) {
             return;
@@ -444,6 +632,7 @@ public class BitmapMovieClip extends Sprite {
         }
     }
 
+    /** @private ENTER_FRAME 播放回调 */
     private function playing(e:Event):void {
         renderNextFrame();
     }
@@ -459,10 +648,27 @@ import flash.geom.Rectangle;
 
 import net.play5d.kyo.utils.KyoUtils;
 
+/**
+ * 单次绘制上下文：源对象与 draw 参数。
+ *
+ * @private
+ */
 internal class DrawVar {
+    /**
+     * @param source 待绘制源。
+     * @param matrix 可选变换矩阵。
+     * @param colorTransform 可选颜色变换。
+     * @param blendMode 可选混合模式。
+     * @param clipRect 可选裁剪矩形。
+     * @param smoothing 是否平滑。
+     */
     public function DrawVar(
-            source:DisplayObject, matrix:Matrix = null, colorTransform:ColorTransform = null, blendMode:String = null,
-            clipRect:Rectangle                                                                                 = null, smoothing:Boolean                                                       = false
+        source        :DisplayObject,
+        matrix        :Matrix = null,
+        colorTransform:ColorTransform = null,
+        blendMode     :String = null,
+        clipRect      :Rectangle = null,
+        smoothing     :Boolean = false
     ) {
         this.source         = source;
         this.matrix         = matrix;
@@ -473,14 +679,23 @@ internal class DrawVar {
         initlize();
     }
 
-    public var source:DisplayObject, matrix:Matrix = null, colorTransform:ColorTransform = null,
-               blendMode:String                                                          = null, clipRect:Rectangle                               = null, smoothing:Boolean = false;
+    /** @private 绘制源 DisplayObject */
+    public var source:DisplayObject;
+    /** @private 变换矩阵 */
+    public var matrix:Matrix = null;
+    /** @private 颜色变换 */
+    public var colorTransform:ColorTransform = null;
+    /** @private 混合模式 */
+    public var blendMode:String = null;
+    /** @private 裁剪矩形 */
+    public var clipRect:Rectangle = null;
+    /** @private 是否平滑缩放 */
+    public var smoothing:Boolean = false;
 
+    /** @private 复位源 MC 并清空引用 */
     public function destory():void {
         if (source is MovieClip) {
-            (
-                    source as MovieClip
-            ).gotoAndStop(1);
+            (source as MovieClip).gotoAndStop(1);
         }
         source         = null;
         matrix         = null;
@@ -488,6 +703,7 @@ internal class DrawVar {
         clipRect       = null;
     }
 
+    /** @private 将 matrix 缩放应用到 source */
     private function initlize():void {
         if (matrix) {
             source.scaleX *= matrix.a;
@@ -496,7 +712,17 @@ internal class DrawVar {
     }
 }
 
+/**
+ * 多 MovieClip 合成容器，供 <code>drawMulti</code> 逐帧对齐。
+ *
+ * @private
+ */
 internal class McGroup extends Sprite {
+    /**
+     * @param mcs 待合成层列表。
+     * @param baseFrameMc 基帧 MC，决定总帧数。
+     * @param hideFrameout 帧数不足时是否隐藏该层。
+     */
     public function McGroup(mcs:Array, baseFrameMc:MovieClip = null, hideFrameout:Boolean = true) {
         this.hideFrameout = hideFrameout;
         _baseMc           = baseFrameMc;
@@ -517,12 +743,8 @@ internal class McGroup extends Sprite {
                 continue;
             }
             if (d is MovieClip) {
-                (
-                        d as MovieClip
-                ).gotoAndStop(1);
-                var tf:int = (
-                        d as MovieClip
-                ).totalFrames;
+                (d as MovieClip).gotoAndStop(1);
+                var tf:int = (d as MovieClip).totalFrames;
                 if (totalFrames < tf) {
                     totalFrames = tf;
                 }
@@ -530,11 +752,16 @@ internal class McGroup extends Sprite {
         }
     }
 
+    /** @private 合成总帧数 */
     public var totalFrames:int;
+    /** @private 是否隐藏超出帧数的层 */
     public var hideFrameout:Boolean;
+    /** @private 子层列表 */
     private var _ins:Array = [];
+    /** @private 基帧 MC */
     private var _baseMc:MovieClip;
 
+    /** @private 优先返回基帧标签，否则返回首个非基 MC 的帧标签 */
     public function get currentFrameLabel():String {
         if (_baseMc) {
             if (_baseMc.currentFrameLabel) {
@@ -556,11 +783,13 @@ internal class McGroup extends Sprite {
         return null;
     }
 
+    /** @private 添加一层到合成容器 */
     public function addDisplay(d:DisplayObject):void {
         addChild(d);
         _ins.push(d);
     }
 
+    /** @private 各层同步跳转到指定帧 */
     public function gotoAndStop(frame:int):void {
         for each(var d:DisplayObject in _ins) {
             if (d is MovieClip) {
@@ -577,6 +806,7 @@ internal class McGroup extends Sprite {
         }
     }
 
+    /** @private 收集各层指定名称的帧函数数组并清空源属性 */
     public function getFrameFunctions(name:String):Array {
         var fs:Array = [];
         for each(var d:DisplayObject in _ins) {
@@ -590,21 +820,34 @@ internal class McGroup extends Sprite {
         return fs;
     }
 
+    /** @private 移除所有子对象 */
     public function destory():void {
         KyoUtils.removeAllChildren(this);
         _ins = null;
     }
 }
 
+/**
+ * 帧脚本封装：函数与参数。
+ *
+ * @private
+ */
 internal class InsFunction {
+    /**
+     * @param fun 回调函数。
+     * @param params 参数数组。
+     */
     public function InsFunction(fun:Function, params:Array = null) {
         _fun    = fun;
         _params = params;
     }
 
+    /** @private */
     private var _fun:Function;
+    /** @private */
     private var _params:Array;
 
+    /** @private 调用注册的函数 */
     public function call():void {
         _fun.call(null, _params);
     }

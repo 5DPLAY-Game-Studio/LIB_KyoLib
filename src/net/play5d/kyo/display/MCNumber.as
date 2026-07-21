@@ -21,14 +21,19 @@ import flash.display.DisplayObject;
 import flash.display.MovieClip;
 import flash.display.Sprite;
 
+/**
+ * 以 MovieClip 跳帧方式显示数字（每位一个 MC 实例）。
+ *
+ * @see BMCNumber
+ * @see #number
+ */
 public class MCNumber extends Sprite {
     /**
-     * 以MovieClip作为资源的数字，以跳帧的方式实现
-     * @param mc MovieClip的导出类型
-     * @param number 赋值数字
-     * @param startFrame 数字的起始帧
-     * @param mcWidth MovieClip的宽度，-1时，自动取MC的宽度
-     *
+     * @param mc MovieClip 导出类（含数字帧）。
+     * @param number 初始数值。
+     * @param startFrame 数字 0 对应的起始帧，默认 1。
+     * @param mcWidth 每位宽度；为 -1 时用实例实际宽度，默认 -1。
+     * @param bits 最小位数（不足补 0），默认 0 表示不补。
      */
     public function MCNumber(mc:Class, number:uint, startFrame:int = 1, mcWidth:Number = -1, bits:uint = 0) {
         _mc             = mc;
@@ -38,18 +43,33 @@ public class MCNumber extends Sprite {
         this.number     = number;
     }
 
+    /**
+     * 每位固定宽度；为 -1 时用显示对象宽度。
+     * @default -1
+     */
     public var mcWidth:Number = -1;
+    /**
+     * 数字 0 对应的起始帧。
+     */
     public var startFrame:int;
+    /** @private MC 类 */
     protected var _mc:Class;
-    protected var _mcs:Array  = [];
+    /** @private 当前位显示对象列表 */
+    protected var _mcs:Array = [];
+    /** @private 最小位数 */
     protected var _bits:uint;
-
+    /** @private */
     protected var _number:uint;
 
+    /**
+     * 当前显示的数值。
+     * @return 无符号整数。
+     */
     public function get number():uint {
         return _number;
     }
 
+    /** @private */
     public function set number(v:uint):void {
         _number = v;
         for each(var m:DisplayObject in _mcs) {
@@ -71,6 +91,9 @@ public class MCNumber extends Sprite {
         }
     }
 
+    /**
+     * @private 创建并加入一位数字显示对象。
+     */
     protected function createNum(i:int):DisplayObject {
         var mc:MovieClip = new _mc();
         mc.gotoAndStop(startFrame + i);

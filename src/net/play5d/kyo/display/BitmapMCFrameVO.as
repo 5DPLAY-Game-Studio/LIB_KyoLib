@@ -19,15 +19,47 @@
 package net.play5d.kyo.display {
 import flash.display.BitmapData;
 
+/**
+ * 位图影片单帧数据：位图、绘制偏移与帧标签。
+ *
+ * @see BitmapMovieClip
+ * @see #destory()
+ */
 public class BitmapMCFrameVO {
+    /**
+     * 构造空帧数据。
+     */
     public function BitmapMCFrameVO() {
     }
 
+    /**
+     * 绘制时源对象的 X（播放时取负作为位图偏移）。
+     * @default 0
+     */
     public var x:Number = 0;
+    /**
+     * 绘制时源对象的 Y。
+     * @default 0
+     */
     public var y:Number = 0;
+    /**
+     * 该帧位图数据。
+     * @default null
+     */
     public var bd:BitmapData;
+    /**
+     * 帧标签（来自源 MovieClip）。
+     * @default null
+     */
     public var frameLabel:String;
 
+    /**
+     * 释放位图数据。
+     * @example
+     * <listing version="3.0">
+     * vo.destory();
+     * </listing>
+     */
     public function destory():void {
         if (bd) {
             bd.dispose();
