@@ -22,14 +22,24 @@ import com.greensock.TweenLite;
 import flash.text.TextField;
 
 /**
- * 文字效果类
+ * 文字显示效果工具。
  * @author kyo
+ * @see #showOneByOne()
  */
 public class WordEffect {
     /**
-     * 一个字一个字的出现
-     * @param txt
-     * @param gapTime 间隔（秒）
+     * 将文本框内容按字逐个追加显示。
+     *
+     * <p>会先清空 <code>txt.text</code>，再按间隔把原文字逐字 <code>appendText</code> 回去；最后一个字出现后调用 <code>finish</code>（若有）。</p>
+     *
+     * @param txt 目标文本框（需已设好完整 <code>text</code>）。
+     * @param gapTime 相邻两字之间的间隔（秒），默认 0.03。
+     * @param finish 全部显示完成后的无参回调，可选。
+     * @example
+     * <listing version="3.0">
+     * tf.text = '你好世界';
+     * WordEffect.showOneByOne(tf, 0.05, onDone);
+     * </listing>
      */
     public static function showOneByOne(txt:TextField, gapTime:Number = 0.03, finish:Function = null):void {
         var str:String = txt.text;

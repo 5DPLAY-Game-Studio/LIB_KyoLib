@@ -19,9 +19,27 @@
 package net.play5d.kyo.effect {
 import flash.geom.ColorTransform;
 
+/**
+ * 残影常用的预设 <code>ColorTransform</code>（红 / 蓝偏移）。
+ *
+ * <p>返回的是惰性创建的共享实例，请勿就地修改其属性以免影响其它调用方。</p>
+ *
+ * @see DisplayEffect#ghostShadow()
+ * @see #red
+ * @see #blue
+ */
 public class GhostShadowColorTransform {
+    /** @private */
     private static var _red:ColorTransform;
 
+    /**
+     * 红色偏移残影用的颜色变换（<code>redOffset = 255</code>）。
+     * @return 共享的 <code>ColorTransform</code> 实例。
+     * @example
+     * <listing version="3.0">
+     * DisplayEffect.ghostShadow(mc, 0.1, 1, GhostShadowColorTransform.red);
+     * </listing>
+     */
     public static function get red():ColorTransform {
         if (!_red) {
             _red           = new ColorTransform();
@@ -30,8 +48,17 @@ public class GhostShadowColorTransform {
         return _red;
     }
 
+    /** @private */
     private static var _blue:ColorTransform;
 
+    /**
+     * 蓝色偏移残影用的颜色变换（<code>blueOffset = 255</code>）。
+     * @return 共享的 <code>ColorTransform</code> 实例。
+     * @example
+     * <listing version="3.0">
+     * DisplayEffect.ghostShadow(mc, 0.1, 1, GhostShadowColorTransform.blue);
+     * </listing>
+     */
     public static function get blue():ColorTransform {
         if (!_blue) {
             _blue            = new ColorTransform();
@@ -40,6 +67,9 @@ public class GhostShadowColorTransform {
         return _blue;
     }
 
+    /**
+     * 构造函数（本类以静态访问器使用，通常无需实例化）。
+     */
     public function GhostShadowColorTransform() {
     }
 }
