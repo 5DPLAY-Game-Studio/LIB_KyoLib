@@ -21,15 +21,34 @@ import flash.events.Event;
 
 import net.play5d.kyo.stage.IStage;
 
+/**
+ * 场景控制器相关事件。
+ *
+ * @see net.play5d.kyo.stage.KyoStageCtrl
+ * @see #CHANGE_STATE
+ * @see #stage
+ */
 public class KyoStageEvent extends Event {
-
+    /**
+     * <code>CHANGE_STATE</code> 事件的 <code>type</code> 属性值。
+     * @eventType CHANGE_STATE
+     */
     public static const CHANGE_STATE:String = 'CHANGE_STATE';
 
+    /**
+     * @param type 事件类型。
+     * @param stage 相关场景。
+     * @param bubbles 是否冒泡。
+     * @param cancelable 是否可取消。
+     */
     public function KyoStageEvent(type:String, stage:IStage, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
         this.stage = stage;
     }
 
+    /**
+     * 事件关联的场景。
+     */
     public var stage:IStage;
 }
 }
