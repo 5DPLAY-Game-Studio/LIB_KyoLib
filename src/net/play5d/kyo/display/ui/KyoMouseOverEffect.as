@@ -21,11 +21,32 @@ import flash.display.DisplayObject;
 import flash.events.MouseEvent;
 import flash.geom.ColorTransform;
 
+/**
+ * 鼠标悬停视觉效果工具（静态方法）。
+ *
+ * @see #addEffect()
+ * @see #EFFECT_TYPE_HILIGHT
+ */
 public class KyoMouseOverEffect {
+    /**
+     * 高亮效果：悬停时 RGB offset 加 128。
+     */
     public static const EFFECT_TYPE_HILIGHT:int = 0;
 
-    public static function addEffect(display:DisplayObject, effectType:int = 0,
-                                     targetDisplay:DisplayObject           = null
+    /**
+     * 为显示对象注册悬停 / 移出效果。
+     * @param display 监听鼠标事件的对象。
+     * @param effectType 效果类型，默认 <code>EFFECT_TYPE_HILIGHT</code>。
+     * @param targetDisplay 实际改 transform 的对象；默认与 <code>display</code> 相同。
+     * @example
+     * <listing version="3.0">
+     * KyoMouseOverEffect.addEffect(btn);
+     * </listing>
+     */
+    public static function addEffect(
+        display      :DisplayObject,
+        effectType   :int = 0,
+        targetDisplay:DisplayObject = null
     ):void {
         targetDisplay ||= display;
 
@@ -52,6 +73,9 @@ public class KyoMouseOverEffect {
         });
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoMouseOverEffect() {
     }
 

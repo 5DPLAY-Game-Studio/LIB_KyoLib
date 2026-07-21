@@ -17,13 +17,31 @@
  */
 
 package net.play5d.kyo.display.ui {
+/**
+ * 按钮组：在一组 <code>IKyoButton</code> 中互斥设置焦点。
+ *
+ * @see IKyoButton
+ * @see #focus()
+ */
 public class KyoBtnGroup {
+    /**
+     * @param btns 按钮集合（可遍历的 <code>Object</code> / 数组等）。
+     */
     public function KyoBtnGroup(btns:Object) {
         _btns = btns;
     }
 
+    /** @private */
     private var _btns:Object;
 
+    /**
+     * 将指定按钮设为焦点，其余按钮取消焦点。
+     * @param btn 要聚焦的按钮。
+     * @example
+     * <listing version="3.0">
+     * group.focus(btnA);
+     * </listing>
+     */
     public function focus(btn:IKyoButton):void {
         for each(var i:IKyoButton in _btns) {
             if (i == btn) {

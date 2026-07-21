@@ -26,17 +26,42 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
+/**
+ * 简易舞台弹层工具：提示框与确认框（依赖静态 <code>stage</code>）。
+ *
+ * @see #stage
+ * @see #alert()
+ * @see #confrim()
+ * @see KyoSimpButton
+ */
 public class KyoUI {
+    /**
+     * 弹层父容器（需为已上舞台的 Sprite）。
+     * @default null
+     */
     public static var stage:Sprite;
+    /**
+     * <code>alert</code> 是否使用淡入淡出。
+     * @default false
+     */
     public static var tween:Boolean = false;
-
+    /**
+     * 弹层内按钮默认尺寸。
+     * @default (50, 20)
+     */
     public static var btnSize:Point = new Point(50, 20);
 
-
-//		public static function align():void{
-//
-//		}
-
+    /**
+     * 显示仅含「确定」的提示框。
+     * @param msg 文案。
+     * @param width 框宽，默认 200。
+     * @param height 框高，默认 100。
+     * @example
+     * <listing version="3.0">
+     * KyoUI.stage = root;
+     * KyoUI.alert('完成');
+     * </listing>
+     */
     public static function alert(msg:String, width:Number = 200, height:Number = 100):void {
         var sp:Sprite     = newBox(width, height);
         var txt:TextField = newTxt(msg, width);
@@ -44,9 +69,7 @@ public class KyoUI {
         stage.addChild(sp);
 
         var btn:KyoSimpButton = new KyoSimpButton('确定', btnSize.x, btnSize.y);
-        btn.x                 = (
-                                        width - btn.width
-                                ) / 2;
+        btn.x                 = (width - btn.width) / 2;
         btn.y                 = height - btn.height - 10;
         btn.onClick(close);
         sp.addChild(btn);
@@ -59,7 +82,8 @@ public class KyoUI {
         function close(e:Event = null):void {
             if (tween) {
                 TweenLite.to(sp, .5, {
-                    alpha: 0, onComplete: function ():void {
+                    alpha     : 0,
+                    onComplete: function ():void {
                         stage.removeChild(sp);
                         sp = null;
                     }
@@ -72,8 +96,24 @@ public class KyoUI {
         }
     }
 
-    public static function confrim(msg:String, ok:Function = null, no:Function = null, width:Number = 200,
-                                   height:Number                                                    = 100
+    /**
+     * 显示「确定 / 取消」确认框。
+     * @param msg 文案。
+     * @param ok 确定回调，可选。
+     * @param no 取消回调，可选。
+     * @param width 框宽，默认 200。
+     * @param height 框高，默认 100。
+     * @example
+     * <listing version="3.0">
+     * KyoUI.confrim('删除？', onOk, onCancel);
+     * </listing>
+     */
+    public static function confrim(
+        msg   :String,
+        ok    :Function = null,
+        no    :Function = null,
+        width :Number = 200,
+        height:Number = 100
     ):void {
         var sp:Sprite     = newBox(width, height);
         var txt:TextField = newTxt(msg, width);
@@ -108,21 +148,26 @@ public class KyoUI {
         }
     }
 
-
+    /**
+     * @private 创建居中文本。
+     */
     private static function newTxt(msg:String, width:Number):TextField {
-        var tf:TextFormat     = new TextFormat();
-        tf.align              = TextFormatAlign.CENTER;
-        var txt:TextField     = new TextField();
+        var tf:TextFormat = new TextFormat();
+        tf.align          = TextFormatAlign.CENTER;
+        var txt:TextField = new TextField();
         txt.defaultTextFormat = tf;
-        txt.mouseEnabled      = false;
-        txt.text              = msg;
-        txt.width             = width;
-        txt.height            = txt.textHeight + 5;
-        txt.y                 = 10;
+        txt.mouseEnabled  = false;
+        txt.text          = msg;
+        txt.width         = width;
+        txt.height        = txt.textHeight + 5;
+        txt.y             = 10;
 
         return txt;
     }
 
+    /**
+     * @private 创建居中白底框。
+     */
     private static function newBox(width:Number, height:Number):Sprite {
         var bg:Sprite = new Sprite();
         bg.graphics.lineStyle(1, 0);
@@ -130,16 +175,11 @@ public class KyoUI {
         bg.graphics.drawRect(0, 0, width, height);
         bg.graphics.endFill();
 
-        bg.x = (
-                       stage.stage.stageWidth - width
-               ) / 2;
-        bg.y = (
-                       stage.stage.stageHeight - height
-               ) / 2;
+        bg.x = (stage.stage.stageWidth - width) / 2;
+        bg.y = (stage.stage.stageHeight - height) / 2;
 
         return bg;
     }
-
 
 }
 }

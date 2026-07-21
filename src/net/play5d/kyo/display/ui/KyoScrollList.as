@@ -21,7 +21,18 @@ import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+/**
+ * 可无缝滚动的瓦片列表：复制首段项以填满可视区后按速度循环滚动。
+ *
+ * @see KyoTileList
+ * @see #roll()
+ */
 public class KyoScrollList extends KyoTileList {
+    /**
+     * @param displays 显示对象数组，可选。
+     * @param size 可视区域尺寸。
+     * @param scrollType 0 水平，1 垂直；默认 0。
+     */
     public function KyoScrollList(displays:Array = null, size:Point = null, scrollType:int = 0) {
         _scrollType  = scrollType;
         _size        = size;
@@ -33,11 +44,23 @@ public class KyoScrollList extends KyoTileList {
         super(displays, hrow, vrow);
     }
 
+    /** @private 0 水平 / 1 垂直 */
     private var _scrollType:int;
+    /** @private */
     private var _size:Point;
+    /** @private 每帧滚动速度 */
     private var _rollSpeed:Number;
+    /** @private 循环复位位置 */
     private var _targetPos:Number;
 
+    /**
+     * 开始循环滚动；内容不足以填满可视区时不启动。
+     * @param speed 每帧滚动像素（可正可负）。
+     * @example
+     * <listing version="3.0">
+     * list.roll(2);
+     * </listing>
+     */
     public function roll(speed:Number):void {
         _rollSpeed = speed;
 
@@ -45,20 +68,12 @@ public class KyoScrollList extends KyoTileList {
 
         switch (_scrollType) {
         case 0:
-            addn       = Math.ceil(_size.x / (
-                    unitySize.x + gap.x
-            ));
-            _targetPos = displays.length * (
-                    unitySize.x + gap.x
-            );
+            addn       = Math.ceil(_size.x / (unitySize.x + gap.x));
+            _targetPos = displays.length * (unitySize.x + gap.x);
             break;
         case 1:
-            addn       = Math.ceil(_size.y / (
-                    unitySize.y + gap.y
-            ));
-            _targetPos = displays.length * (
-                    unitySize.y + gap.y
-            );
+            addn       = Math.ceil(_size.y / (unitySize.y + gap.y));
+            _targetPos = displays.length * (unitySize.y + gap.y);
             break;
         }
 
@@ -75,6 +90,9 @@ public class KyoScrollList extends KyoTileList {
         addEventListener(Event.ENTER_FRAME, enterFrame);
     }
 
+    /**
+     * @private 推进 scrollRect 并在边界循环。
+     */
     private function enterFrame(e:Event):void {
         if (!_size) {
             return;

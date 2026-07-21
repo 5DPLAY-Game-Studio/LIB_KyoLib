@@ -22,28 +22,58 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 
+/**
+ * 基于 MovieClip 帧的按钮：转发点击等鼠标事件，并支持焦点 / 禁用帧切换。
+ *
+ * @see IKyoButton
+ * @see KyoBtnGroup
+ * @see #focus
+ * @see #enabled
+ */
 public class KyoMCButton extends EventDispatcher implements IKyoButton {
-    public function KyoMCButton(mc:MovieClip, nornalFrame:Object = 1, selectFrame:Object = null,
-                                overFrame:Object                                         = null, unenabledFrame:Object           = null
+    /**
+     * @param mc 按钮皮肤 MovieClip。
+     * @param nornalFrame 普通态帧（标签或帧号），默认 1。
+     * @param selectFrame 选中 / 焦点态帧，可选。
+     * @param overFrame 悬停态帧，可选（当前未自动切换）。
+     * @param unenabledFrame 禁用态帧，可选。
+     */
+    public function KyoMCButton(
+        mc            :MovieClip,
+        nornalFrame   :Object = 1,
+        selectFrame   :Object = null,
+        overFrame     :Object = null,
+        unenabledFrame:Object = null
     ) {
         this.mc = mc;
         mc.addEventListener(MouseEvent.CLICK, handler);
         mc.addEventListener(MouseEvent.MOUSE_DOWN, handler);
         mc.addEventListener(MouseEvent.MOUSE_UP, handler);
-        _nornalFrame = nornalFrame;
-        _selectFrame = selectFrame;
-        _overFrame = overFrame;
+        _nornalFrame    = nornalFrame;
+        _selectFrame    = selectFrame;
+        _overFrame      = overFrame;
         _unenabledFrame = unenabledFrame;
 
         goFrame(_nornalFrame);
     }
 
+    /**
+     * 按钮皮肤。
+     */
     public var mc:MovieClip;
+    /** @private */
     private var _selectFrame:Object;
+    /** @private */
     private var _nornalFrame:Object;
+    /** @private */
     private var _overFrame:Object;
+    /** @private */
     private var _unenabledFrame:Object;
 
+    /**
+     * 设置是否焦点：切换到选中帧或普通帧。
+     * @param v <code>true</code> 为焦点。
+     */
     public function set focus(v:Boolean):void {
         if (v) {
             goFrame(_selectFrame);
@@ -53,6 +83,10 @@ public class KyoMCButton extends EventDispatcher implements IKyoButton {
         }
     }
 
+    /**
+     * 设置是否可用：控制 <code>mouseEnabled</code> 并切换普通 / 禁用帧。
+     * @param v <code>true</code> 为可用。
+     */
     public function set enabled(v:Boolean):void {
         mc.mouseEnabled = v;
         if (v) {
@@ -63,12 +97,18 @@ public class KyoMCButton extends EventDispatcher implements IKyoButton {
         }
     }
 
+    /**
+     * @private 跳转到指定帧（帧为空则忽略）。
+     */
     private function goFrame(frame:Object):void {
         if (frame) {
             mc.gotoAndStop(frame);
         }
     }
 
+    /**
+     * @private 将 MC 上的鼠标事件再派发到本实例。
+     */
     private function handler(e:Event):void {
         dispatchEvent(e);
     }

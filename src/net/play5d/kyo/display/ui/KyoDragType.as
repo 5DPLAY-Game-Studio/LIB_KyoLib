@@ -17,9 +17,24 @@
  */
 
 package net.play5d.kyo.display.ui {
+/**
+ * 拖拽方向常量，供 <code>KyoDragList</code> 等使用。
+ *
+ * @see KyoDragList
+ * @see KyoDragSelecter
+ */
 public class KyoDragType {
-    public static const DRAG_TYPE_H:int    = 1;
-    public static const DRAG_TYPE_V:int    = 2;
+    /**
+     * 仅水平拖拽。
+     */
+    public static const DRAG_TYPE_H:int = 1;
+    /**
+     * 仅垂直拖拽。
+     */
+    public static const DRAG_TYPE_V:int = 2;
+    /**
+     * 水平与垂直均可拖拽。
+     */
     public static const DRAG_TYPE_BOTH:int = 3;
 }
 }

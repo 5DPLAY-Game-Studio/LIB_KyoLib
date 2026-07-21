@@ -17,7 +17,17 @@
  */
 
 package net.play5d.kyo.display.ui {
+/**
+ * 可聚焦按钮约定，供按钮组统一切换选中态。
+ *
+ * @see KyoMCButton
+ * @see KyoBtnGroup
+ */
 public interface IKyoButton {
+    /**
+     * 设置是否处于焦点 / 选中态。
+     * @param v <code>true</code> 为焦点。
+     */
     function set focus(v:Boolean):void;
 }
 }

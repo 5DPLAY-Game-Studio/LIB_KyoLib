@@ -19,9 +19,23 @@
 package net.play5d.kyo.display.ui {
 import flash.events.Event;
 
+/**
+ * Kyo UI 通用事件。
+ *
+ * @see #CHANGE
+ */
 public class KyoEvent extends Event {
+    /**
+     * <code>CHANGE</code> 事件的 <code>type</code> 属性值。
+     * @eventType CHANGE
+     */
     public static const CHANGE:String = 'kyo-event-change';
 
+    /**
+     * @param type 事件类型。
+     * @param bubbles 是否冒泡，默认 <code>false</code>。
+     * @param cancelable 是否可取消，默认 <code>false</code>。
+     */
     public function KyoEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
     }

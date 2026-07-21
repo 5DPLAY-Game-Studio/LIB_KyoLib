@@ -24,7 +24,20 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+/**
+ * 可拖拽滚动面板：内容超出 <code>maskSize</code> 时可拖动，并可同步外部滚动条。
+ *
+ * @see KyoDragType
+ * @see IKyoScrollBar
+ * @see #source
+ * @see #move()
+ */
 public class KyoScrollPane extends Sprite {
+    /**
+     * @param maskSize 可视区域尺寸。
+     * @param source 内容显示对象，可选。
+     * @param dragType 拖拽方向，默认垂直。
+     */
     public function KyoScrollPane(maskSize:Point, source:DisplayObject = null, dragType:int = KyoDragType.DRAG_TYPE_V) {
         this.dragType = dragType;
         this.maskSize = maskSize;
@@ -35,24 +48,47 @@ public class KyoScrollPane extends Sprite {
         this.addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
     }
 
+    /**
+     * 拖拽方向，见 <code>KyoDragType</code>。
+     */
     public var dragType:int;
+    /**
+     * 可视区域尺寸。
+     */
     public var maskSize:Point;
+    /**
+     * 可选联动滚动条。
+     * @default null
+     */
     public var scrollBar:IKyoScrollBar;
+    /**
+     * 判定为拖拽的最小像素位移。
+     * @default 5
+     */
     public var dragPixel:int = 5;
+    /** @private 按下时舞台坐标 */
     protected var _downPoint:Point;
-    protected var _downListPoint:Point;
-    protected var _haveToDrag:Boolean;
+    /** @private 是否已进入拖拽 */
     protected var _draging:Boolean;
+    /** @private 按下时 scrollRect */
     private var _downSR:Rectangle;
+    /** @private 内容宽 */
     private var _width:Number;
+    /** @private 内容高 */
     private var _height:Number;
-
+    /** @private */
     private var _source:DisplayObject;
 
+    /**
+     * 被滚动的内容。
+     * @return 内容显示对象。
+     * @default null
+     */
     public function get source():DisplayObject {
         return _source;
     }
 
+    /** @private */
     public function set source(value:DisplayObject):void {
         _source = value;
 
@@ -61,20 +97,22 @@ public class KyoScrollPane extends Sprite {
         update();
     }
 
+    /**
+     * @private 相对按下点的鼠标位移。
+     */
     protected function get mousePoint():Point {
         var xx:Number = _downPoint.x - stage.mouseX;
         var yy:Number = _downPoint.y - stage.mouseY;
         return new Point(xx, yy);
     }
 
+    /**
+     * @private 内容是否超出可视区，允许拖拽。
+     */
     private function get allowDrag():Boolean {
         switch (dragType) {
         case KyoDragType.DRAG_TYPE_BOTH:
-            if ((
-                        _width < maskSize.x
-                ) && (
-                        _height < maskSize.y
-                )) {
+            if ((_width < maskSize.x) && (_height < maskSize.y)) {
                 return false;
             }
             break;
@@ -91,6 +129,13 @@ public class KyoScrollPane extends Sprite {
         return true;
     }
 
+    /**
+     * 移除拖拽相关监听。
+     * @example
+     * <listing version="3.0">
+     * pane.destory();
+     * </listing>
+     */
     public function destory():void {
         this.removeEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
         removeEventListener(Event.ENTER_FRAME, draging);
@@ -99,6 +144,13 @@ public class KyoScrollPane extends Sprite {
         }
     }
 
+    /**
+     * 根据内容尺寸刷新命中区域与 scrollRect，并更新滚动条。
+     * @example
+     * <listing version="3.0">
+     * pane.update();
+     * </listing>
+     */
     public function update():void {
         _width  = _source.width;
         _height = _source.height;
@@ -113,6 +165,15 @@ public class KyoScrollPane extends Sprite {
         updateScrollBar();
     }
 
+    /**
+     * 按增量平移滚动位置（内部会夹紧到合法范围）。
+     * @param x 水平增量（内容方向）。
+     * @param y 垂直增量。
+     * @example
+     * <listing version="3.0">
+     * pane.move(0, 20);
+     * </listing>
+     */
     public function move(x:Number, y:Number):void {
         var rect:Rectangle = scrollRect.clone();
         rect.x -= x;
@@ -121,6 +182,9 @@ public class KyoScrollPane extends Sprite {
         scrollRect = rect;
     }
 
+    /**
+     * @private 移除舞台抬起监听并恢复 mouseChildren。
+     */
     protected final function removeListener():void {
         if (stage) {
             stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
@@ -128,6 +192,9 @@ public class KyoScrollPane extends Sprite {
         }
     }
 
+    /**
+     * @private 根据位移判断是否进入拖拽。
+     */
     protected function checkDraging(xx:Number, yy:Number):void {
         switch (dragType) {
         case KyoDragType.DRAG_TYPE_BOTH:
@@ -147,6 +214,9 @@ public class KyoScrollPane extends Sprite {
         }
     }
 
+    /**
+     * @private 同步外部滚动条位置。
+     */
     protected function updateScrollBar():void {
         if (!scrollBar) {
             return;
@@ -163,6 +233,9 @@ public class KyoScrollPane extends Sprite {
         }
     }
 
+    /**
+     * @private 将 rect 夹紧到可滚动范围。
+     */
     private function checkout(rect:Rectangle):void {
         var w:Number = _width - maskSize.x;
         var h:Number = _height - maskSize.y;
@@ -180,6 +253,9 @@ public class KyoScrollPane extends Sprite {
         }
     }
 
+    /**
+     * @private 拖拽帧更新。
+     */
     protected function draging(e:Event):void {
         var pp:Point = mousePoint;
         checkDraging(pp.x, pp.y);
@@ -203,7 +279,6 @@ public class KyoScrollPane extends Sprite {
                 rect.x += _downSR.x;
                 rect.y += _downSR.y;
             }
-            //				trace(rect);
             checkout(rect);
 
             scrollRect = rect;
@@ -211,20 +286,24 @@ public class KyoScrollPane extends Sprite {
         }
     }
 
+    /**
+     * @private 结束拖拽。
+     */
     protected function endDrag(e:MouseEvent):void {
         removeListener();
         removeEventListener(Event.ENTER_FRAME, draging);
-//			setTimeout(function():void{mouseEnabled = mouseChildren = true;},1000);
     }
 
+    /**
+     * @private 开始拖拽。
+     */
     private function beginDrag(e:MouseEvent):void {
         if (!allowDrag) {
             return;
         }
 
-        _downSR        = scrollRect;
-        _downPoint     = new Point(stage.mouseX, stage.mouseY);
-        _downListPoint = new Point(this.x, this.y);
+        _downSR    = scrollRect;
+        _downPoint = new Point(stage.mouseX, stage.mouseY);
 
         addEventListener(Event.ENTER_FRAME, draging);
         _draging = false;

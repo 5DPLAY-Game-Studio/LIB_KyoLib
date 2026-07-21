@@ -19,9 +19,24 @@
 package net.play5d.kyo.display.ui {
 import flash.events.Event;
 
+/**
+ * <code>IphoneIconList</code> 相关事件。
+ *
+ * @see IphoneIconList
+ * @see IphoneIconListDoc
+ */
 public class IphoneIconListEvent extends Event {
+    /**
+     * <code>PAGE_CHANGE</code> 事件的 <code>type</code> 属性值。
+     * @eventType PAGE_CHANGE
+     */
     public static const PAGE_CHANGE:String = 'PAGE_CHANGE';
 
+    /**
+     * @param type 事件类型。
+     * @param bubbles 是否冒泡，默认 <code>false</code>。
+     * @param cancelable 是否可取消，默认 <code>false</code>。
+     */
     public function IphoneIconListEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
     }

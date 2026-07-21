@@ -19,9 +19,23 @@
 package net.play5d.kyo.display.ui {
 import flash.events.IEventDispatcher;
 
+/**
+ * 滚动条约定：可启用/禁用，并按内容位置更新滑块。
+ *
+ * @see KyoScrollBar
+ * @see KyoScrollPane
+ */
 public interface IKyoScrollBar extends IEventDispatcher {
+    /**
+     * 设置滚动条是否可用。
+     * @param v <code>true</code> 为可用。
+     */
     function set enabled(v:Boolean):void;
 
+    /**
+     * 根据内容滚动位置更新滑块。
+     * @param pos 滚动位置（具体含义由实现定义，通常为像素或比例）。
+     */
     function update(pos:Number):void;
 }
 }

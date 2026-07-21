@@ -19,14 +19,33 @@
 package net.play5d.kyo.display.ui {
 import flash.events.Event;
 
+/**
+ * Kyo UI 控件事件（如滚动条拖拽更新）。
+ *
+ * @see KyoScrollBar
+ * @see #UPDATE
+ * @see #params
+ */
 public class KyoUIEvent extends Event {
+    /**
+     * <code>UPDATE</code> 事件的 <code>type</code> 属性值。
+     * @eventType UPDATE
+     */
     public static const UPDATE:String = 'event-update';
 
+    /**
+     * @param type 事件类型。
+     * @param params 附加参数（如滚动比例 <code>Point</code>），可选。
+     */
     public function KyoUIEvent(type:String, params:Object = null) {
         super(type, false, false);
         this.params = params;
     }
 
+    /**
+     * 事件附带数据。
+     * @default null
+     */
     public var params:Object;
 }
 }

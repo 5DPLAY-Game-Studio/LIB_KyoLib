@@ -19,16 +19,42 @@
 package net.play5d.kyo.display.ui {
 import flash.events.Event;
 
+/**
+ * <code>PicScroller</code> 相关事件。
+ *
+ * @see PicScroller
+ * @see #data
+ */
 public class PicScrollEvent extends Event {
-    public static const CHANGE:String          = 'CHANGE';
+    /**
+     * <code>CHANGE</code> 事件的 <code>type</code> 属性值。
+     * @eventType CHANGE
+     */
+    public static const CHANGE:String = 'CHANGE';
+    /**
+     * <code>CHANGE_COMPLETE</code> 事件的 <code>type</code> 属性值。
+     * @eventType CHANGE_COMPLETE
+     */
     public static const CHANGE_COMPLETE:String = 'CHANGE_COMPLETE';
-    public static const MOUSE_UP:String        = 'MOUSE_UP';
+    /**
+     * <code>MOUSE_UP</code> 事件的 <code>type</code> 属性值。
+     * @eventType MOUSE_UP
+     */
+    public static const MOUSE_UP:String = 'MOUSE_UP';
 
+    /**
+     * @param type 事件类型。
+     * @param data 附加数据（通常为当前页索引），可选。
+     */
     public function PicScrollEvent(type:String, data:Object = null) {
         super(type, false, false);
         this.data = data;
     }
 
+    /**
+     * 事件附带数据。
+     * @default null
+     */
     public var data:Object;
 }
 }

@@ -21,20 +21,48 @@ import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
+/**
+ * 选中变化时分派（<code>Event.SELECT</code>）。
+ * @eventType flash.events.Event.SELECT
+ */
+[Event(name='select', type='flash.events.Event')]
+/**
+ * 选项卡容器：按间距排布 <code>ITab</code> 项，点击互斥选中。
+ *
+ * @see BaseBox
+ * @see ITab
+ * @see #select()
+ * @see #selectedTab
+ */
 public class TabBox extends BaseBox {
+    /**
+     * @param gapX 水平间距，默认 5。
+     * @param gapY 垂直间距，默认 0。
+     */
     public function TabBox(gapX:Number = 5, gapY:Number = 0) {
         this.gapX = gapX;
         this.gapY = gapY;
     }
 
+    /**
+     * 当前选中的选项卡。
+     * @default null
+     */
     public var selectedTab:ITab;
+    /** @private 布局光标 X */
     private var _lx:Number;
+    /** @private 布局光标 Y */
     private var _ly:Number;
 
+    /**
+     * 当前选中项在 <code>instances</code> 中的索引。
+     * @return 索引；未选中时为 -1。
+     */
     public function get selectedIndex():int {
         return _instances.indexOf(selectedTab);
     }
 
+    /** @inheritDoc */
     protected override function build():void {
         _lx = _ly = 0;
         if (!_instances || _instances.length < 1) {
@@ -44,6 +72,7 @@ public class TabBox extends BaseBox {
         select(0);
     }
 
+    /** @inheritDoc */
     protected override function buildByRepeater():void {
         if (repeater) {
             _instances = repeater.getItems();
@@ -51,6 +80,13 @@ public class TabBox extends BaseBox {
         build();
     }
 
+    /**
+     * 按 <code>instances</code> 同步子显示对象（增删）。
+     * @example
+     * <listing version="3.0">
+     * tabBox.update();
+     * </listing>
+     */
     public function update():void {
         var e:int = numChildren > _instances.length ? numChildren : _instances.length;
         for (var i:int; i < e; i++) {
@@ -72,12 +108,23 @@ public class TabBox extends BaseBox {
         }
     }
 
+    /**
+     * 按索引选中选项卡。
+     * @param id 索引。
+     * @example
+     * <listing version="3.0">
+     * tabBox.select(1);
+     * </listing>
+     */
     public function select(id:int):void {
         if (_instances) {
             selectTab(_instances[id]);
         }
     }
 
+    /**
+     * @private 加入显示列表并监听点击。
+     */
     private function addChildItem(d:ITab):void {
         var dp:DisplayObject;
         if (d is DisplayObject) {
@@ -98,6 +145,9 @@ public class TabBox extends BaseBox {
         }
     }
 
+    /**
+     * @private 互斥设置 selected。
+     */
     private function selectTab(v:ITab):void {
         selectedTab = v;
         if (v.selected == true) {
@@ -109,11 +159,13 @@ public class TabBox extends BaseBox {
         v.selected = true;
     }
 
+    /**
+     * @private 点击选中并派发 SELECT。
+     */
     private function mouseHandler(e:MouseEvent):void {
         selectTab(e.currentTarget as ITab);
         dispatchEvent(new Event(Event.SELECT));
     }
-
 
 }
 }

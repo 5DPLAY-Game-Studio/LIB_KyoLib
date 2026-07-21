@@ -25,7 +25,19 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
+/**
+ * 简易程序绘制按钮：渐变底 + 居中标签，悬停变色。
+ *
+ * @see #onClick()
+ * @see #btnWidth
+ * @see #btnHeight
+ */
 public class KyoSimpButton extends Sprite {
+    /**
+     * @param label 按钮文字。
+     * @param width 宽，默认 50。
+     * @param height 高，默认 20。
+     */
     public function KyoSimpButton(label:String, width:Number = 50, height:Number = 20) {
         super();
 
@@ -34,19 +46,17 @@ public class KyoSimpButton extends Sprite {
 
         drawBg([0xffffff, 0xcccccc]);
 
-        var txt:TextField     = new TextField();
-        var tf:TextFormat     = new TextFormat();
-        tf.align              = TextFormatAlign.CENTER;
-        tf.size               = 12;
+        var txt:TextField = new TextField();
+        var tf:TextFormat = new TextFormat();
+        tf.align          = TextFormatAlign.CENTER;
+        tf.size           = 12;
         txt.defaultTextFormat = tf;
 
         txt.text   = label;
         txt.width  = width;
         txt.height = txt.textHeight + 5;
 
-        txt.y = (
-                        height - txt.height
-                ) / 2;
+        txt.y = (height - txt.height) / 2;
 
         addChild(txt);
 
@@ -57,13 +67,30 @@ public class KyoSimpButton extends Sprite {
         addEventListener(MouseEvent.MOUSE_OUT, overHandler);
     }
 
+    /**
+     * 按钮宽度。
+     */
     public var btnWidth:Number;
+    /**
+     * 按钮高度。
+     */
     public var btnHeight:Number;
 
+    /**
+     * 注册点击回调。
+     * @param fun 监听 <code>MouseEvent.CLICK</code> 的函数。
+     * @example
+     * <listing version="3.0">
+     * btn.onClick(onBtnClick);
+     * </listing>
+     */
     public function onClick(fun:Function):void {
         addEventListener(MouseEvent.CLICK, fun);
     }
 
+    /**
+     * @private 绘制线性渐变背景。
+     */
     private function drawBg(color:Array):void {
         graphics.lineStyle(1, 0x666666);
         var mtx:Matrix = new Matrix();
@@ -73,6 +100,9 @@ public class KyoSimpButton extends Sprite {
         graphics.endFill();
     }
 
+    /**
+     * @private 悬停 / 移出换底色。
+     */
     private function overHandler(e:MouseEvent):void {
         if (e.type == MouseEvent.MOUSE_OVER) {
             drawBg([0xffffff, 0xF2F2F2]);

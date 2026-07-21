@@ -23,9 +23,18 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 
 /**
- * 在一定范围内滚动
+ * 在固定可视尺寸内循环滚动显示对象的 <code>scrollRect</code>。
+ *
+ * @see #start()
+ * @see #stop()
+ * @see #speed
  */
 public class KyoScroller {
+    /**
+     * @param d 被滚动的显示对象。
+     * @param size 可视区域尺寸。
+     * @param dsize 内容尺寸；为 <code>null</code> 时取 <code>d</code> 的宽高。
+     */
     public function KyoScroller(d:DisplayObject, size:Point, dsize:Point = null) {
         _d     = d;
         _size  = size;
@@ -35,31 +44,58 @@ public class KyoScroller {
         updateSC();
     }
 
-    public var speed:Number = 2;
-    private var _d:DisplayObject;
-    private var _size:Point;
-    private var _dsize:Point;
-    private var _p:Point    = new Point();
     /**
-     * 开始运作
-     * @param direct 1:从右向左，2：从左向右，3：从上向下，4：从下向上
+     * 每帧滚动像素速度。
+     * @default 2
      */
+    public var speed:Number = 2;
+    /** @private */
+    private var _d:DisplayObject;
+    /** @private */
+    private var _size:Point;
+    /** @private */
+    private var _dsize:Point;
+    /** @private 当前 scrollRect 原点 */
+    private var _p:Point = new Point();
+    /** @private 滚动方向 */
     private var _direct:int;
 
+    /**
+     * 开始滚动。
+     * @param direct 方向：1 右→左，2 左→右，3 上→下，4 下→上；默认 1。
+     * @example
+     * <listing version="3.0">
+     * scroller.start(1);
+     * </listing>
+     * @see #stop()
+     */
     public function start(direct:int = 1):void {
         _direct = direct;
         stop();
         _d.addEventListener(Event.ENTER_FRAME, moving);
     }
 
+    /**
+     * 停止滚动。
+     * @example
+     * <listing version="3.0">
+     * scroller.stop();
+     * </listing>
+     */
     public function stop():void {
         _d.removeEventListener(Event.ENTER_FRAME, moving);
     }
 
+    /**
+     * @private 应用 scrollRect。
+     */
     private function updateSC():void {
         _d.scrollRect = new Rectangle(_p.x, _p.y, _size.x, _size.y);
     }
 
+    /**
+     * @private 按方向推进并循环。
+     */
     private function moving(e:Event):void {
         switch (_direct) {
         case 1:

@@ -20,11 +20,25 @@ package net.play5d.kyo.display.ui {
 import flash.display.DisplayObject;
 import flash.events.IEventDispatcher;
 
+/**
+ * 选项卡项约定：可选中态，并提供用于布局的显示对象。
+ *
+ * @see TabBox
+ */
 public interface ITab extends IEventDispatcher {
+    /**
+     * 是否处于选中态。
+     */
     function get selected():Boolean;
 
+    /**
+     * @private
+     */
     function set selected(v:Boolean):void;
 
+    /**
+     * 作为子项加入布局的显示对象。
+     */
     function get display():DisplayObject;
 }
 }
