@@ -17,33 +17,84 @@
  */
 
 package net.play5d.kyo.utils {
+/**
+ * 同时按 id 与插入顺序索引的映射表。
+ *
+ * @see ArrayLite
+ * @see #push()
+ * @see #getItemById()
+ * @see #getItemByIndex()
+ */
 public class ArrayMap {
+    /**
+     * 构造函数。
+     */
     public function ArrayMap() {
         super();
         _o   = {};
         _arr = [];
     }
 
+    /** @private */
     private var _o:Object;
+    /** @private */
     private var _arr:Array;
 
+    /**
+     * 元素个数（插入顺序数组长度）。
+     */
     public function get length():int {
         return _arr.length;
     }
 
+    /**
+     * 追加一项（按 id 覆盖字典项，并追加到顺序数组）。
+     * @param id 键。
+     * @param value 值。
+     * @example
+     * <listing version="3.0">
+     * map.push('a', obj);
+     * </listing>
+     */
     public function push(id:Object, value:*):void {
         _o[id] = value;
         _arr.push(value);
     }
 
+    /**
+     * 按插入下标取值。
+     * @param index 下标。
+     * @return 值。
+     * @example
+     * <listing version="3.0">
+     * var v:* = map.getItemByIndex(0);
+     * </listing>
+     */
     public function getItemByIndex(index:int):* {
         return _arr[index];
     }
 
+    /**
+     * 按 id 取值。
+     * @param id 键。
+     * @return 值。
+     * @example
+     * <listing version="3.0">
+     * var v:* = map.getItemById('a');
+     * </listing>
+     */
     public function getItemById(id:Object):* {
         return _o[id];
     }
 
+    /**
+     * 按 id 删除（同步从顺序数组移除）。
+     * @param id 键。
+     * @example
+     * <listing version="3.0">
+     * map.removeItemById('a');
+     * </listing>
+     */
     public function removeItemById(id:Object):void {
         if (!_o[id]) {
             return;

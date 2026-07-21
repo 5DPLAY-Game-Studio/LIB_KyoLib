@@ -25,12 +25,25 @@ import flash.net.URLRequest;
 
 import net.play5d.kyo.utils.vo.KyoWeaterVO;
 
+/**
+ * 从 Yahoo Weather RSS 加载天气，并解析今日 / 明日预报。
+ *
+ * @see #loadWeather()
+ * @see #todayWeather
+ * @see net.play5d.kyo.utils.vo.KyoWeaterVO
+ */
 public class KyoWeather {
+    /** @private */
     private static var _weatherxml:XML;
+    /** @private */
     private static var yweather:Namespace = new Namespace('http://xml.weather.yahoo.com/ns/rss/1.0');
 
+    /** @private */
     private static var _todayWeather:KyoWeaterVO;
 
+    /**
+     * 今日天气；未加载成功则为 <code>null</code>。
+     */
     public static function get todayWeather():KyoWeaterVO {
         if (!_weatherxml) {
             return null;
@@ -45,8 +58,12 @@ public class KyoWeather {
         return _todayWeather;
     }
 
+    /** @private */
     private static var _tomorrowWeather:KyoWeaterVO;
 
+    /**
+     * 明日天气；未加载成功则为 <code>null</code>。
+     */
     public static function get tomorrowWeather():KyoWeaterVO {
         if (!_weatherxml) {
             return null;
@@ -61,6 +78,16 @@ public class KyoWeather {
         return _tomorrowWeather;
     }
 
+    /**
+     * 按城市 WOEID 加载摄氏度预报 RSS。
+     * @param cityCode Yahoo 城市代码。
+     * @param back 成功回调，无参数；可省略。
+     * @param error 失败回调，无参数；可省略。
+     * @example
+     * <listing version="3.0">
+     * KyoWeather.loadWeather(2151330, onOk);
+     * </listing>
+     */
     public static function loadWeather(cityCode:int, back:Function = null, error:Function = null):void {
         var url:String   = 'http://weather.yahooapis.com/forecastrss' +
                            '?w=' + cityCode + '&u=c';
@@ -71,8 +98,7 @@ public class KyoWeather {
 
         function success(e:Event):void {
             removeListeners();
-            _weatherxml          = new XML(ul.data);
-            var codeToday:String = _weatherxml.channel.item.yweather::forecast[0].@code;
+            _weatherxml = new XML(ul.data);
             if (back != null) {
                 back();
             }

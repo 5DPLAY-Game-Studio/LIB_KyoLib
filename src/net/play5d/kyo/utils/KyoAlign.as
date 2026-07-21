@@ -20,15 +20,38 @@ package net.play5d.kyo.utils {
 import flash.display.DisplayObject;
 import flash.geom.Point;
 
+/**
+ * 显示对象对齐工具；目前仅实现水平 / 垂直居中。
+ *
+ * @see #centerH()
+ * @see #centerW()
+ */
 public class KyoAlign {
+    /**
+     * 左对齐（当前为空实现）。
+     * @param A 要对齐的对象。
+     * @param B 参照对象。
+     */
     public static function left(A:DisplayObject, B:DisplayObject):void {
-
     }
 
+    /**
+     * 右对齐（当前为空实现）。
+     * @param A 要对齐的对象。
+     * @param B 参照对象。
+     */
     public static function right(A:DisplayObject, B:DisplayObject):void {
-
     }
 
+    /**
+     * 垂直居中：将 <code>A</code> 相对参照高度居中。
+     * @param A 要对齐的对象。
+     * @param B 参照高度：<code>Number</code>、高度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
+     * @example
+     * <listing version="3.0">
+     * KyoAlign.centerH(label, panel);
+     * </listing>
+     */
     public static function centerH(A:DisplayObject, B:Object):void {
         var Bnum:Number;
         if (B is Number) {
@@ -39,25 +62,38 @@ public class KyoAlign {
             Bnum         = bp.y - bp.x;
         }
         if (B is DisplayObject) {
-            A.y  = (
-                    B as DisplayObject
-            ).y;
-            Bnum = (
-                    B as DisplayObject
-            ).height;
+            A.y  = (B as DisplayObject).y;
+            Bnum = (B as DisplayObject).height;
         }
         var diff:Number = Bnum - A.height;
         A.y += diff / 2;
     }
 
+    /**
+     * 顶对齐（当前为空实现）。
+     * @param A 要对齐的对象。
+     * @param B 参照对象。
+     */
     public static function up(A:DisplayObject, B:DisplayObject):void {
-
     }
 
+    /**
+     * 底对齐（当前为空实现）。
+     * @param A 要对齐的对象。
+     * @param B 参照对象。
+     */
     public static function down(A:DisplayObject, B:DisplayObject):void {
-
     }
 
+    /**
+     * 水平居中：将 <code>A</code> 相对参照宽度居中。
+     * @param A 要对齐的对象。
+     * @param B 参照宽度：<code>Number</code>、宽度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
+     * @example
+     * <listing version="3.0">
+     * KyoAlign.centerW(btn, stage.stageWidth);
+     * </listing>
+     */
     public static function centerW(A:DisplayObject, B:Object):void {
         var Bnum:Number;
         if (B is Number) {
@@ -68,20 +104,18 @@ public class KyoAlign {
             Bnum         = bp.y - bp.x;
         }
         if (B is DisplayObject) {
-            A.x  = (
-                    B as DisplayObject
-            ).x;
-            Bnum = (
-                    B as DisplayObject
-            ).width;
+            A.x  = (B as DisplayObject).x;
+            Bnum = (B as DisplayObject).width;
         }
         var diff:Number = Bnum - A.width;
         A.x += diff / 2;
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoAlign() {
     }
-
 
 }
 }

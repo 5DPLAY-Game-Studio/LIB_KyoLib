@@ -20,7 +20,22 @@ package net.play5d.kyo.utils {
 import flash.display.DisplayObject;
 import flash.text.TextFormat;
 
+/**
+ * UI 辅助：进度条缩放与 Flash 组件字体。
+ *
+ * @see #setBarScaleX()
+ * @see #setFlashUIFont()
+ */
 public class KyoUIUtils {
+    /**
+     * 按比例设置横向缩放；比例 &lt;= 0 时隐藏。
+     * @param ui 目标显示对象。
+     * @param per 0~1 比例。
+     * @example
+     * <listing version="3.0">
+     * KyoUIUtils.setBarScaleX(bar, 0.5);
+     * </listing>
+     */
     public static function setBarScaleX(ui:DisplayObject, per:Number):void {
         if (per > 0) {
             ui.scaleX  = per;
@@ -32,9 +47,13 @@ public class KyoUIUtils {
     }
 
     /**
-     * 设置FLASH的UI组件字体
-     * @param ui
-     * @param font 对应TextFormat的值，默认为宋体，12号
+     * 设置 Flash UI 组件字体样式。
+     * @param ui 组件实例。
+     * @param font 写入 <code>TextFormat</code> 的属性对象；默认宋体 12。
+     * @example
+     * <listing version="3.0">
+     * KyoUIUtils.setFlashUIFont(combo, {size: 14});
+     * </listing>
      */
     public static function setFlashUIFont(ui:*, font:Object = null):void {
         var tft:TextFormat = new TextFormat();

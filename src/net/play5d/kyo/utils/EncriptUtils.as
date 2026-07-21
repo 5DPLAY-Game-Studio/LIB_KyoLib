@@ -22,19 +22,38 @@ import com.adobe.crypto.MD5;
 import com.hurlant.util.Hex;
 
 import flash.utils.ByteArray;
-import flash.utils.getTimer;
 
+/**
+ * MD5 / AES 加解密工具（历史拼写 <code>Encript</code>）。
+ *
+ * @see #md5()
+ * @see #encriptAES()
+ * @see #decryptAES()
+ */
 public class EncriptUtils {
+    /**
+     * 对字节做 MD5（大文件仅取头尾各 1KB）。
+     * @param bytes 源字节。
+     * @return MD5 十六进制字符串。
+     * @example
+     * <listing version="3.0">
+     * var h:String = EncriptUtils.md5(ba);
+     * </listing>
+     */
     public static function md5(bytes:ByteArray):String {
         return hashBytes(bytes);
     }
 
     /**
-     * 加密 AES
-     * @param source  String | ByteArray
-     * @param key
-     * @param iv
-     * @return
+     * AES-128-CBC 加密。
+     * @param source <code>String</code> 或 <code>ByteArray</code>。
+     * @param key 十六进制密钥字符串。
+     * @param iv 十六进制 IV 字符串。
+     * @return 密文字节。
+     * @example
+     * <listing version="3.0">
+     * var c:ByteArray = EncriptUtils.encriptAES('hi', key, iv);
+     * </listing>
      */
     public static function encriptAES(source:Object, key:String, iv:String):ByteArray {
         var keyByte:ByteArray = Hex.toArray(key);
@@ -57,6 +76,17 @@ public class EncriptUtils {
         return encryptBytes;
     }
 
+    /**
+     * AES 解密为 UTF-8 字符串。
+     * @param code 密文字节。
+     * @param key 十六进制密钥。
+     * @param iv 十六进制 IV。
+     * @return 明文。
+     * @example
+     * <listing version="3.0">
+     * var s:String = EncriptUtils.decryptAES(code, key, iv);
+     * </listing>
+     */
     public static function decryptAES(code:ByteArray, key:String, iv:String):String {
         var byte:ByteArray = decryptAESBytes(code, key, iv);
 
@@ -66,6 +96,17 @@ public class EncriptUtils {
         return decode;
     }
 
+    /**
+     * AES 解密为字节。
+     * @param code 密文字节。
+     * @param key 十六进制密钥。
+     * @param iv 十六进制 IV。
+     * @return 明文字节。
+     * @example
+     * <listing version="3.0">
+     * var b:ByteArray = EncriptUtils.decryptAESBytes(code, key, iv);
+     * </listing>
+     */
     public static function decryptAESBytes(code:ByteArray, key:String, iv:String):ByteArray {
         var keyByte:ByteArray = Hex.toArray(key);
         var ivByte:ByteArray  = Hex.toArray(iv);
@@ -76,9 +117,11 @@ public class EncriptUtils {
         return byte;
     }
 
+    /**
+     * @private 采样头尾字节后 MD5。
+     */
     private static function hashBytes(fileBytes:ByteArray):String {
         var length:int = fileBytes.length;
-        var time:int   = getTimer();
         var bytes:ByteArray;
 
         if (length < 1024 * 2) {
@@ -87,7 +130,6 @@ public class EncriptUtils {
         else {
             bytes = new ByteArray();
             bytes.writeBytes(fileBytes, 0, 1024);
-//				bytes.writeBytes(fileBytes, int(length * 0.5), 1024);
             bytes.writeBytes(fileBytes, length - 1024, 1024);
         }
 
@@ -95,6 +137,9 @@ public class EncriptUtils {
         return hash;
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function EncriptUtils() {
     }
 

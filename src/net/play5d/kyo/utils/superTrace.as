@@ -17,6 +17,15 @@
  */
 
 package net.play5d.kyo.utils {
+/**
+ * 带调用栈方法名的 <code>trace</code>。
+ *
+ * @param args 输出参数。
+ * @example
+ * <listing version="3.0">
+ * superTrace('value', 1);
+ * </listing>
+ */
 public function superTrace(...args):void {
     var e:Error       = new Error();
     var caller:String = '[' + e.getStackTrace().match(/[\w\/]*\(\)/g)[1] + ']';

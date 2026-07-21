@@ -17,12 +17,25 @@
  */
 
 package net.play5d.kyo.utils {
-
 import flash.system.Capabilities;
 
+/**
+ * 基于时间、随机数与运行环境字符串生成 UUID 风格标识。
+ *
+ * @see #create()
+ */
 public class UUID {
+    /** @private */
     private static var counter:Number = 0;
 
+    /**
+     * 生成形如 <code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code> 的 ID。
+     * @return UUID 字符串（大写十六进制）。
+     * @example
+     * <listing version="3.0">
+     * var id:String = UUID.create();
+     * </listing>
+     */
     public static function create():String {
         var dt:Date            = new Date();
         var id1:Number         = dt.getTime();
@@ -34,23 +47,26 @@ public class UUID {
         return finalString;
     }
 
+    /**
+     * @private
+     */
     private static function calculate(src:String):String {
         return hex_sha1(src);
     }
 
+    /**
+     * @private
+     */
     private static function hex_sha1(src:String):String {
         return binb2hex(core_sha1(str2binb(src), src.length * 8));
     }
 
+    /**
+     * @private
+     */
     private static function core_sha1(x:Array, len:Number):Array {
-        x[len >> 5] |= 0x80 << (
-                24 - len % 32
-        );
-        x[(
-                  (
-                          len + 64 >> 9
-                  ) << 4
-          ) + 15]    = len;
+        x[len >> 5] |= 0x80 << (24 - len % 32);
+        x[((len + 64 >> 9) << 4) + 15] = len;
         var w:Array  = new Array(80), a:Number = 1732584193;
         var b:Number = -271733879, c:Number = -1732584194;
         var d:Number = 271733878, e:Number = -1009589776;
@@ -81,109 +97,74 @@ public class UUID {
         return new Array(a, b, c, d, e);
     }
 
+    /**
+     * @private
+     */
     private static function sha1_ft(t:Number, b:Number, c:Number, d:Number):Number {
         if (t < 20) {
-            return (
-                           b & c
-                   ) | (
-                           (
-                                   ~b
-                           ) & d
-                   );
+            return (b & c) | ((~b) & d);
         }
         if (t < 40) {
             return b ^ c ^ d;
         }
         if (t < 60) {
-            return (
-                           b & c
-                   ) | (
-                           b & d
-                   ) | (
-                           c & d
-                   );
+            return (b & c) | (b & d) | (c & d);
         }
         return b ^ c ^ d;
     }
 
+    /**
+     * @private
+     */
     private static function sha1_kt(t:Number):Number {
-        return (
-                       t < 20
-               ) ? 1518500249 : (
-                                        t < 40
-                                ) ? 1859775393 : (
-                                                         t < 60
-                                                 ) ? -1894007588 : -899497514;
+        return (t < 20) ? 1518500249 : (t < 40) ? 1859775393 : (t < 60) ? -1894007588 : -899497514;
     }
 
+    /**
+     * @private
+     */
     private static function safe_add(x:Number, y:Number):Number {
-        var lsw:Number = (
-                                 x & 0xFFFF
-                         ) + (
-                                 y & 0xFFFF
-                         );
-        var msw:Number = (
-                                 x >> 16
-                         ) + (
-                                 y >> 16
-                         ) + (
-                                 lsw >> 16
-                         );
-        return (
-                       msw << 16
-               ) | (
-                       lsw & 0xFFFF
-               );
+        var lsw:Number = (x & 0xFFFF) + (y & 0xFFFF);
+        var msw:Number = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return (msw << 16) | (lsw & 0xFFFF);
     }
 
+    /**
+     * @private
+     */
     private static function rol(num:Number, cnt:Number):Number {
-        return (
-                       num << cnt
-               ) | (
-                       num >>> (
-                               32 - cnt
-                       )
-               );
+        return (num << cnt) | (num >>> (32 - cnt));
     }
 
+    /**
+     * @private
+     */
     private static function str2binb(str:String):Array {
         var bin:Array   = new Array();
-        var mask:Number = (
-                                  1 << 8
-                          ) - 1;
+        var mask:Number = (1 << 8) - 1;
         for (var i:Number = 0; i < str.length * 8; i += 8) {
-            bin[i >> 5] |= (
-                                   str.charCodeAt(i / 8) & mask
-                           ) << (
-                                   24 - i % 32
-                           );
+            bin[i >> 5] |= (str.charCodeAt(i / 8) & mask) << (24 - i % 32);
         }
         return bin;
     }
 
+    /**
+     * @private
+     */
     private static function binb2hex(binarray:Array):String {
         var str:String = new String('');
         var tab:String = new String('0123456789abcdef');
         for (var i:Number = 0; i < binarray.length * 4; i++) {
-            str += tab.charAt((
-                                      binarray[i >> 2] >> (
-                                              (
-                                                      3 - i % 4
-                                              ) * 8 + 4
-                                      )
-                              ) & 0xF) + tab.charAt((
-                                                            binarray[i >> 2] >> (
-                                                                    (
-                                                                            3 - i % 4
-                                                                    ) * 8
-                                                            )
-                                                    ) & 0xF);
+            str += tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) +
+                   tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
         }
         return str;
     }
 
+    /**
+     * 构造函数（包内可见；通常使用静态 <code>create</code>）。
+     */
     function UUID() {
-
     }
 }
 }

@@ -17,15 +17,39 @@
  */
 
 package net.play5d.kyo.utils {
+/**
+ * 以 id 为键的轻量字典，并维护元素个数 <code>length</code>。
+ *
+ * @see ArrayMap
+ * @see #push()
+ * @see #getItem()
+ */
 public class ArrayLite {
+    /**
+     * 构造函数。
+     */
     public function ArrayLite() {
         super();
         _o = {};
     }
 
+    /**
+     * 当前键值对数量。
+     * @default 0
+     */
     public var length:int;
+    /** @private */
     private var _o:Object;
 
+    /**
+     * 写入或覆盖一项；新键时 <code>length</code> 加一。
+     * @param id 键。
+     * @param value 值。
+     * @example
+     * <listing version="3.0">
+     * lite.push('a', 1);
+     * </listing>
+     */
     public function push(id:Object, value:*):void {
         if (!_o[id]) {
             length++;
@@ -33,10 +57,27 @@ public class ArrayLite {
         _o[id] = value;
     }
 
+    /**
+     * 按键取值。
+     * @param id 键。
+     * @return 值；无则 <code>undefined</code>。
+     * @example
+     * <listing version="3.0">
+     * var v:* = lite.getItem('a');
+     * </listing>
+     */
     public function getItem(id:Object):* {
         return _o[id];
     }
 
+    /**
+     * 按键删除；存在时 <code>length</code> 减一。
+     * @param id 键。
+     * @example
+     * <listing version="3.0">
+     * lite.remove('a');
+     * </listing>
+     */
     public function remove(id:Object):void {
         if (!_o[id]) {
             return;

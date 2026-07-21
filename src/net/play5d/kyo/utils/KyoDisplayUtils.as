@@ -25,11 +25,22 @@ import flash.utils.ByteArray;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 
+/**
+ * 显示对象克隆与旋转矩形碰撞检测。
+ *
+ * @see #clone()
+ * @see #duplicateDisplayObject()
+ * @see #rorationRectCollide()
+ */
 public class KyoDisplayUtils {
-    /*
-     *   深度拷贝，最好用于普通对象上，不要用于自定义类上
-     *   obj: 要拷贝的对象
-     *   return ：返回obj的深度拷贝
+    /**
+     * 通过 AMF 序列化做深度拷贝（更适合普通对象，慎用于复杂自定义类）。
+     * @param object 源对象。
+     * @return 拷贝后的显示对象。
+     * @example
+     * <listing version="3.0">
+     * var c:DisplayObject = KyoDisplayUtils.clone(obj);
+     * </listing>
      */
     public static function clone(object:Object):DisplayObject {
         var qClassName:String = getQualifiedClassName(object);
@@ -41,11 +52,15 @@ public class KyoDisplayUtils {
         return copier.readObject() as DisplayObject;
     }
 
-    /*
-     *    影片剪辑的复制，只要是DisplayObject都可以
-     *    target ：要复制的影片剪辑
-     *    autoAdd: 如果为true就表示重复的天骄显示列表中
-     *
+    /**
+     * 按构造函数新建实例并复制 transform / filters 等；可选加入父级。
+     * @param target 源显示对象。
+     * @param autoAdd 为 <code>true</code> 且有 parent 时加入同一显示列表。
+     * @return 副本。
+     * @example
+     * <listing version="3.0">
+     * var d:DisplayObject = KyoDisplayUtils.duplicateDisplayObject(mc, true);
+     * </listing>
      */
     public static function duplicateDisplayObject(target:DisplayObject, autoAdd:Boolean = false):DisplayObject {
         var targetClass:Class       = Object(target).constructor;
@@ -72,14 +87,16 @@ public class KyoDisplayUtils {
         return duplicate;
     }
 
-
-//		public static var output:Sprite = new Sprite();
-//		public static var output2:Sprite = new Sprite();
-
     /**
-     * 用来判断两个矩形是否碰撞 [支持旋转以后的矩形]
-     * @param obj1 包含{x(必填),y(必填),width(必填),height(必填),scaleX(选填),rotation(选填),radian(选填：孤度),orginX(选填，注册点x),orginY(选填，注册点y)}
-     * @param obj2 同obj1
+     * 判断两个矩形是否碰撞（支持旋转）。
+     * @param obj1 含 <code>x/y/width/height</code>（必填）；可选 <code>scaleX/rotation/radian/orginX/orginY</code>。
+     * @param obj2 同 obj1。
+     * @return 是否碰撞。
+     * @throws Error 缺少 x/y/width/height。
+     * @example
+     * <listing version="3.0">
+     * var hit:Boolean = KyoDisplayUtils.rorationRectCollide(a, b);
+     * </listing>
      */
     public static function rorationRectCollide(obj1:Object, obj2:Object):Boolean {
         if (obj1 == null || obj2 == null) {
@@ -89,9 +106,7 @@ public class KyoDisplayUtils {
         var cosobj:Object = {};
         var sinobj:Object = {};
 
-        /*
-         *   设置一个点旋转一定角度后的新坐标
-         */
+        //设置一个点旋转一定角度后的新坐标
         function rodatePoint(origin:Point, p:Point, ro:Number, radian:Number):void {
             if (isNaN(radian) || radian == 0) {
                 radian = ro * 3.14 / 180;
@@ -103,36 +118,15 @@ public class KyoDisplayUtils {
             cosobj[ro] = cos;
             sinobj[ro] = sin;
 
-            var x0:Number = (
-                            p.x - origin.x
-                            ) * cos - (
-                            p.y - origin.y
-                            ) * sin;
-            var y0:Number = (
-                                    p.y - origin.y
-                            ) * cos + (
-                                    p.x - origin.x
-                            ) * sin;
+            var x0:Number = (p.x - origin.x) * cos - (p.y - origin.y) * sin;
+            var y0:Number = (p.y - origin.y) * cos + (p.x - origin.x) * sin;
 
             p.x = x0 + origin.x;
             p.y = y0 + origin.y;
         }
 
-        /*
-         *   获取矩形的每个点，保存在Array中并返回
-         *   dis:显示对象，获取其矩形坐标
-         *   globalPoint :以将dis坐标转化为舞台全局坐标了
-         */
+        //获取矩形四角点（可旋转）
         function getRectEachPoint(dis:Rectangle, orgin:Point, angle:int, radian:Number = 0):Array {
-            /*
-             #   b                     c
-             *   |---------------------|
-             *   |                     |
-             *   |         注册点             |
-             *   |                     |
-             *   |---------------------|
-             *   a                     d
-             */
             var fourPointArr:Array = [];
 
             var tx:int = int(dis.x - orgin.x);
@@ -172,7 +166,6 @@ public class KyoDisplayUtils {
         function getScalarValue(arr:Array, axsi:Point):Array {
             var minMaxArr:Array = [];
             var tempArray:Array = [];
-            var len:int         = arr.length;
             for (var i:int = 0; i < 4; ++i) {
                 var pp:Point = getProjectPoint(axsi, arr[i]);
                 tempArray[i] = pp.x * axsi.x + pp.y * axsi.y;
@@ -244,27 +237,6 @@ public class KyoDisplayUtils {
             rect2.x  = rect2.x - rect2.width + obj2.orginX + orgin2.x;
         }
 
-//			output.x = rect1.x;
-//			output.y = rect1.y;
-//			output.graphics.clear();
-//			output.graphics.beginFill(0xfff000,0.5);
-//			output.graphics.drawRect(-orgin1.x , -orgin1.y , rect1.width , rect1.height);
-//			output.graphics.endFill();
-//			output.graphics.beginFill(0xffffff,1);
-//			output.graphics.drawRect(0 , 0 , 2 , 2);
-//			output.graphics.endFill();
-//			output.rotation = rotation1;
-//			output2.x = rect2.x;
-//			output2.y = rect2.y;
-//			output2.graphics.clear();
-//			output2.graphics.beginFill(0xfff000,0.5);
-//			output2.graphics.drawRect(-orgin2.x , -orgin2.y , rect2.width , rect2.height);
-//			output2.graphics.endFill();
-//			output2.graphics.beginFill(0xffffff,1);
-//			output2.graphics.drawRect(0 , 0 , 2 , 2);
-//			output2.graphics.endFill();
-//			output2.rotation = rotation2;
-
         var arr1:Array = getRectEachPoint(rect1, orgin1, rotation1, radian1);
         var arr2:Array = getRectEachPoint(rect2, orgin2, rotation2, radian2);
 
@@ -287,7 +259,6 @@ public class KyoDisplayUtils {
 
         return true;
     }
-
 
 }
 }

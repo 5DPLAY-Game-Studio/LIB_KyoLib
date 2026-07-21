@@ -43,6 +43,14 @@ import flash.utils.describeType;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 
+/**
+ * 通用工具集合：数组、显示对象、数值、字符串与反射等。
+ *
+ * @see #setValueByObject()
+ * @see #array_push_notHas()
+ * @see KyoMath
+ * @see KyoRandom
+ */
 public class KyoUtils {
     /**
      * 根据子元素属性查找一个对象
@@ -172,6 +180,16 @@ public class KyoUtils {
         }
     }
 
+    /**
+     * 统计数组中某项出现次数。
+     * @param array 数组或类数组。
+     * @param item 目标项。
+     * @return 次数。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.array_countItem(a, 1);
+     * </listing>
+     */
     public static function array_countItem(array:Object, item:*):int {
         var n:int;
         for (var i:int = 0; i < array.length; i++) {
@@ -182,12 +200,29 @@ public class KyoUtils {
         return n;
     }
 
+    /**
+     * 移除 Sprite 全部子显示对象。
+     * @param sp 容器。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.sprite_removeAllChildren(box);
+     * </listing>
+     */
     public static function sprite_removeAllChildren(sp:Sprite):void {
         while (sp.numChildren > 0) {
             sp.removeChildAt(0);
         }
     }
 
+    /**
+     * 将数组元素浅拷贝到新数组（重排下标）。
+     * @param array 源数组。
+     * @return 新数组。
+     * @example
+     * <listing version="3.0">
+     * var a:Array = KyoUtils.array_fixID(src);
+     * </listing>
+     */
     public static function array_fixID(array:Array):Array {
         var a:Array = [];
         for each(var i:* in array) {
@@ -225,6 +260,16 @@ public class KyoUtils {
         return r;
     }
 
+    /**
+     * 按属性值分组。
+     * @param array 源数组。
+     * @param key 属性名。
+     * @return key → 同组元素数组。
+     * @example
+     * <listing version="3.0">
+     * var g:Object = KyoUtils.array_groupByPortal(list, 'type');
+     * </listing>
+     */
     public static function array_groupByPortal(array:Array, key:String):Object {
         var o:Object = {};
         for each(var i:* in array) {
@@ -356,31 +401,16 @@ public class KyoUtils {
     }
 
     /**
-     * 去除位图中的颜色
-     * @param bp 位图
-     * @param colors 颜色值
-     * @param merge 容差
-     *
+     * 按阈值将位图某色设为透明。
+     * @param source <code>Bitmap</code> 或 <code>BitmapData</code>。
+     * @param arg1 省略则取 (0,0) 像素；为颜色值；或与 arg2 组成采样坐标 x。
+     * @param arg2 采样坐标 y（当 arg1 为 x 时）。
+     * @return 处理后的位图数据。
+     * @example
+     * <listing version="3.0">
+     * var bd:BitmapData = KyoUtils.transparent(bmp);
+     * </listing>
      */
-//		public static function deleteBitmapColor(bp:BitmapData , colors:Array , merge:int = 32):BitmapData{
-//			var returnbp:BitmapData = new BitmapData(bp.width ,  bp.height , true , 0);
-//			for(var x:int=0 ; x < bp.width ; x++){
-//				for(var y:int=0 ; y < bp.height ; y++){
-//					var c:uint = bp.getPixel(x,y);
-//					var copy:Boolean = true;
-//					for each(var pc:int in colors){
-//						var rc:int = pc - c;
-//						if(copy) copy = Math.abs(rc) > merge;
-//					}
-//					if(copy) returnbp.copyPixels(bp , new Rectangle(x,y) , new Point());
-//				}
-//			}
-//			returnbp.copyPixels(
-//			returnbp.threshold(bp,new Rectangle(0,0,bp.width,bp.height),new Point(),'==',0,colors[0]);
-//			return returnbp;
-//		}
-
-
     public static function transparent(source:*, arg1:* = null, arg2:* = null):BitmapData {
         var threshold:uint;
         var s:BitmapData = source is Bitmap ? source.bitmapData : source;
@@ -480,6 +510,15 @@ public class KyoUtils {
         return pf.toLowerCase();
     }
 
+    /**
+     * 移除容器全部子对象，可对每个子项回调。
+     * @param d 容器。
+     * @param itemCallFunction 每个被移除子对象的回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.removeAllChildren(box);
+     * </listing>
+     */
     public static function removeAllChildren(d:DisplayObjectContainer, itemCallFunction:Function = null):void {
         while (d.numChildren) {
             var dd:DisplayObject = d.removeChildAt(0);
@@ -489,6 +528,15 @@ public class KyoUtils {
         }
     }
 
+    /**
+     * 按名称移除子对象。
+     * @param d 容器。
+     * @param name 子对象名。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.removeChildByName(box, 'tip');
+     * </listing>
+     */
     public static function removeChildByName(d:DisplayObjectContainer, name:String):void {
         var o:DisplayObject = d.getChildByName(name);
         if (o) {
@@ -496,6 +544,15 @@ public class KyoUtils {
         }
     }
 
+    /**
+     * 整数转中文数字（简易，支持到万）。
+     * @param n 非负整数。
+     * @return 中文数字串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.number2CN(21); // '二十一'
+     * </listing>
+     */
     public static function number2CN(n:int):String {
         var w:int, q:int, b:int, s:int;
         var r:String = '';
@@ -541,6 +598,16 @@ public class KyoUtils {
         return r;
     }
 
+    /**
+     * 追加文本；若增加滚动行则改为换行追加。
+     * @param txtfield 文本框。
+     * @param text 追加内容。
+     * @return 是否因换行而调整。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.appendTextAutoLine(tf, 'hi');
+     * </listing>
+     */
     public static function appendTextAutoLine(txtfield:TextField, text:String):Boolean {
         var ll:int     = txtfield.maxScrollV;
         var tmp:String = txtfield.text;
@@ -552,6 +619,17 @@ public class KyoUtils {
         return false;
     }
 
+    /**
+     * 在文本底部追加行，并裁掉顶部多余行以保持行数。
+     * @param textfield 文本框。
+     * @param text 新行内容。
+     * @param totalLines 目标行数（首次会预填空行）。
+     * @param html 是否按 htmlText 追加。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.appendTextBottom(tf, 'line', 5);
+     * </listing>
+     */
     public static function appendTextBottom(textfield:TextField, text:String, totalLines:int,
                                             html:Boolean = false
     ):void {
@@ -577,6 +655,17 @@ public class KyoUtils {
         }
     }
 
+    /**
+     * 判断数值是否落在两端点之间（顺序无关）。
+     * @param num 待测值。
+     * @param num1 端点一。
+     * @param num2 端点二。
+     * @return 是否在区间内。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.math_is_between(5, 0, 10);
+     * </listing>
+     */
     public static function math_is_between(num:Number, num1:Number, num2:Number):Boolean {
         return (
                        num >= num1 && num <= num2
@@ -585,6 +674,16 @@ public class KyoUtils {
                );
     }
 
+    /**
+     * 向零衰减：正数减 k、负数加 k，越过 0 则置 0。
+     * @param n 原值。
+     * @param k 衰减量。
+     * @return 结果。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.num_wake(10, 3);
+     * </listing>
+     */
     public static function num_wake(n:Number, k:Number):Number {
         if (n > 0) {
             n -= k;
@@ -601,6 +700,16 @@ public class KyoUtils {
         return n;
     }
 
+    /**
+     * 沿符号方向增强绝对值。
+     * @param n 原值。
+     * @param k 增量。
+     * @return 结果。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.num_strong(-2, 1); // -3
+     * </listing>
+     */
     public static function num_strong(n:Number, k:Number):Number {
         if (n < 0) {
             n -= k;
@@ -611,6 +720,16 @@ public class KyoUtils {
         return n;
     }
 
+    /**
+     * 将数值钳制在 Point 表示的 [x, y] 范围。
+     * @param n 原值。
+     * @param range x=min，y=max。
+     * @return 钳制后的值。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.num_fixRange(v, new Point(0, 1));
+     * </listing>
+     */
     public static function num_fixRange(n:Number, range:Point):Number {
         if (n < range.x) {
             n = range.x;
@@ -621,6 +740,15 @@ public class KyoUtils {
         return n;
     }
 
+    /**
+     * 将点坐标钳制到矩形（宽高当作右/下边界）。
+     * @param p 点（原地修改）。
+     * @param range 范围矩形。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.point_fixRange(pt, rect);
+     * </listing>
+     */
     public static function point_fixRange(p:Point, range:Rectangle):void {
         if (p.x < range.x) {
             p.x = range.x;
@@ -743,6 +871,15 @@ public class KyoUtils {
         return to;
     }
 
+    /**
+     * 浅拷贝动态 Object 的可枚举键。
+     * @param from 源对象。
+     * @return 新对象。
+     * @example
+     * <listing version="3.0">
+     * var o:Object = KyoUtils.cloneObject(src);
+     * </listing>
+     */
     public static function cloneObject(from:Object):Object {
         var o:Object = {};
         for (var j:String in from) {
@@ -751,8 +888,20 @@ public class KyoUtils {
         return o;
     }
 
+    /**
+     * 设置 TextField 文本与是否可鼠标交互。
+     * @param txt 文本框。
+     * @param text 内容。
+     * @param mouseEnabled 是否可交互。
+     * @param nulltxt text 为 null 时的占位。
+     * @param autoSize 是否自动缩小字号适配。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.setText(tf, 'hi');
+     * </listing>
+     */
     public static function setText(txt:TextField, text:Object = '', mouseEnabled:Boolean = false,
-                                   nulltxt:String                                        = 'null', autoSize:Boolean             = false
+                                   nulltxt:String = 'null', autoSize:Boolean = false
     ):void {
         var t:String = String(text);
         if (t == null) {
@@ -766,6 +915,14 @@ public class KyoUtils {
         }
     }
 
+    /**
+     * 缩小字号直到文本宽/高适配 TextField。
+     * @param txt 文本框。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.textFieldAutoSize(tf);
+     * </listing>
+     */
     public static function textFieldAutoSize(txt:TextField):void {
         var tf:TextFormat = txt.getTextFormat();
         if (txt.multiline == true) {
@@ -824,6 +981,16 @@ public class KyoUtils {
         }
     }
 
+    /**
+     * 比较两点是否完全相同。
+     * @param A 点 A。
+     * @param B 点 B。
+     * @return 是否相等。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.matchPoint(p1, p2);
+     * </listing>
+     */
     public static function matchPoint(A:Point, B:Point):Boolean {
         if (!A || !B) {
             return false;
@@ -831,6 +998,16 @@ public class KyoUtils {
         return A.x == B.x && A.y == B.y;
     }
 
+    /**
+     * 比较两矩形是否完全相同（历史拼写 <code>Rectangel</code>）。
+     * @param A 矩形 A。
+     * @param B 矩形 B。
+     * @return 是否相等。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.matchRectangel(r1, r2);
+     * </listing>
+     */
     public static function matchRectangel(A:Rectangle, B:Rectangle):Boolean {
         if (!A || !B) {
             return false;
@@ -838,6 +1015,16 @@ public class KyoUtils {
         return A.x == B.x && A.y == B.y && A.width == B.width && A.height == B.height;
     }
 
+    /**
+     * 求两矩形相交区域；无相交则 <code>null</code>（会规范化负宽高）。
+     * @param rectA 矩形 A。
+     * @param rectB 矩形 B。
+     * @return 相交矩形或 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var hit:Rectangle = KyoUtils.rect_is_hit(a, b);
+     * </listing>
+     */
     public static function rect_is_hit(rectA:Rectangle, rectB:Rectangle):Rectangle {
         function checkRect(rect:Rectangle):void {
             if (rect.width < 0) {
@@ -903,6 +1090,16 @@ public class KyoUtils {
         return v.split(p).join(repl);
     }
 
+    /**
+     * 反复 match 并收集捕获组（最多一万次）。
+     * @param v 源字符串。
+     * @param p 正则或匹配模式。
+     * @return 捕获结果数组（逆序）。
+     * @example
+     * <listing version="3.0">
+     * var a:Array = KyoUtils.str_matchALL(s, /\{(\w+)\}/);
+     * </listing>
+     */
     public static function str_matchALL(v:String, p:*):Array {
         var ra:Array = [];
         for (var i:int; i < 10000; i++) {
@@ -957,6 +1154,15 @@ public class KyoUtils {
         mc.filters                 = [gray];
     }
 
+    /**
+     * 统计 Object 中真值属性个数。
+     * @param obj 对象。
+     * @return 个数。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.getObjLength(map);
+     * </listing>
+     */
     public static function getObjLength(obj:Object):int {
         if (!obj) {
             return 0;
@@ -970,6 +1176,15 @@ public class KyoUtils {
         return l;
     }
 
+    /**
+     * 通过 ByteArray AMF 深拷贝。
+     * @param v 源对象。
+     * @return 拷贝。
+     * @example
+     * <listing version="3.0">
+     * var c:* = KyoUtils.clone(obj);
+     * </listing>
+     */
     public static function clone(v:Object):* {
         var myBA:ByteArray = new ByteArray();
         myBA.writeObject(v);
@@ -988,10 +1203,8 @@ public class KyoUtils {
     public static function readTextVariables(v:String):Object {
         var o:Object = {};
 
-        v                = StringUtil.replace(v, '\r', '');
-        var ps:Array     = v.split('\n');
-        var states:Array = [];
-        var behind:String;
+        v            = StringUtil.replace(v, '\r', '');
+        var ps:Array = v.split('\n');
         for each(var i:String in ps) {
             if (i.substr(0, 2) == '//') {
                 continue;
@@ -1082,6 +1295,15 @@ public class KyoUtils {
         return newItem;
     }
 
+    /**
+     * 设置 Sprite 音量。
+     * @param mc 目标。
+     * @param volume 0~1。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.setMcVolume(root, 0.5);
+     * </listing>
+     */
     public static function setMcVolume(mc:Sprite, volume:Number):void {
         if (!mc) {
             return;
@@ -1093,6 +1315,15 @@ public class KyoUtils {
         }
     }
 
+    /**
+     * 克隆 ColorTransform（不含 color 属性赋值）。
+     * @param ct 源。
+     * @return 新实例。
+     * @example
+     * <listing version="3.0">
+     * var ct2:ColorTransform = KyoUtils.cloneColorTransform(ct);
+     * </listing>
+     */
     public static function cloneColorTransform(ct:ColorTransform):ColorTransform {
         var newCt:ColorTransform = new ColorTransform();
 
@@ -1108,12 +1339,13 @@ public class KyoUtils {
         newCt.redMultiplier = ct.redMultiplier;
         newCt.redOffset     = ct.redOffset;
 
-//			newCt.color = ct.color;
-
         return newCt;
 
     }
 
+    /**
+     * @private 个位中文。
+     */
     private static function num2cnbase(n:int, showZero:Boolean = true):String {
         if (!showZero && n == 0) {
             return '';

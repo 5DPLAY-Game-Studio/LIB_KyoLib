@@ -18,10 +18,16 @@
 
 package net.play5d.kyo.utils {
 /**
- * 时间格式化类
+ * 时间 / 日期格式化工具。
+ *
+ * @see #getTime()
+ * @see #getDate()
+ * @see #secToTime()
+ * @see KyoClock
  * @author kyo
  */
 public class KyoTimerFormat {
+    /** @private 英文星期（周二拼写历史为 Tuesdry） */
     private static const EN_DAYS:Object = {
         0: 'Sunday',
         1: 'Monday',
@@ -31,6 +37,7 @@ public class KyoTimerFormat {
         5: 'Friday',
         6: 'Saturday'
     };
+    /** @private 中文星期 */
     private static const CN_DAYS:Object = {
         0: '星期天',
         1: '星期一',
@@ -41,14 +48,35 @@ public class KyoTimerFormat {
         6: '星期六'
     };
 
+    /**
+     * 是否为上午。
+     * @param date 日期。
+     * @return hours &lt; 12。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.isAM(new Date());
+     * </listing>
+     */
     public static function isAM(date:Date):Boolean {
         return date.hours < 12;
     }
 
+    /**
+     * 格式化时分秒。
+     * @param date 日期。
+     * @param sign 分隔符。
+     * @param second 是否含秒。
+     * @param type24 是否 24 小时制。
+     * @return 时间字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.getTime(new Date());
+     * </listing>
+     */
     public static function getTime(date:Date, sign:String = ' : ', second:Boolean = true,
-                                   type24:Boolean                                 = true
+                                   type24:Boolean = true
     ):String {
-        var h:int = date.hours;
+        var h:int    = date.hours;
         var m:String = formatNum(date.minutes);
         var s:String = second ? sign + formatNum(date.seconds) : '';
         if (!type24 && h > 12) {
@@ -58,20 +86,48 @@ public class KyoTimerFormat {
         return hh + sign + m + s;
     }
 
+    /**
+     * 格式化年月日。
+     * @param date 日期。
+     * @param sign 分隔符。
+     * @return 日期字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.getDate(new Date());
+     * </listing>
+     */
     public static function getDate(date:Date, sign:String = '/'):String {
         return date.fullYear + sign + formatNum(date.month + 1) + sign + formatNum(date.date);
     }
 
+    /**
+     * 日期 + 时间。
+     * @param date 日期。
+     * @param sign_date 日期分隔符。
+     * @param sign_time 时间分隔符。
+     * @param second 是否含秒。
+     * @param type24 是否 24 小时制。
+     * @return 组合字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.getDateTime(new Date());
+     * </listing>
+     */
     public static function getDateTime(date:Date, sign_date:String = '/', sign_time:String = ' : ',
-                                       second:Boolean                                      = true, type24:Boolean = true
+                                       second:Boolean = true, type24:Boolean = true
     ):String {
         return getDate(date, sign_date) + ' ' + getTime(date, sign_time, second, type24);
     }
 
     /**
-     * 获取星期几
-     * @param date
-     * @param type 返回的样式 -> 0：返回数字 ， 1：返回英文，2：返回中文
+     * 获取星期几。
+     * @param date 日期。
+     * @param type 0=数字；1=英文；2=中文。
+     * @return 星期字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.getDay(new Date(), 2);
+     * </listing>
      */
     public static function getDay(date:Date, type:int = 1):String {
         var n:int = date.day;
@@ -86,7 +142,16 @@ public class KyoTimerFormat {
     }
 
     /**
-     * 将秒转换为时间（时：分：秒）
+     * 将秒数转为时:分:秒。
+     * @param s 总秒数。
+     * @param gap 分隔符。
+     * @param second 是否含秒段。
+     * @param hour 是否含小时段。
+     * @return 时间字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.secToTime(3661); // 01:01:01
+     * </listing>
      */
     public static function secToTime(s:int, gap:String = ':', second:Boolean = true, hour:Boolean = true):String {
         var h:int = s / 60 / 60;
@@ -110,6 +175,15 @@ public class KyoTimerFormat {
         return hs + ms + ss;
     }
 
+    /**
+     * 两位补零。
+     * @param n 整数。
+     * @return 至少两位的字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.formatNum(5); // '05'
+     * </listing>
+     */
     public static function formatNum(n:int):String {
         return n >= 10 ? n.toString() : '0' + n;
     }

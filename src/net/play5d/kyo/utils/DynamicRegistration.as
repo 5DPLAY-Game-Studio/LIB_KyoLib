@@ -20,19 +20,35 @@ package net.play5d.kyo.utils {
 import flash.display.DisplayObject;
 import flash.geom.Point;
 
-//动态设置注册点
+/**
+ * 按自定义注册点设置显示对象属性（旋转 / 缩放时保持注册点视觉位置）。
+ *
+ * @see #flush()
+ */
 public class DynamicRegistration {
+    /**
+     * @param target 目标显示对象。
+     * @param regpoint 本地坐标系下的注册点。
+     */
     function DynamicRegistration(target:DisplayObject, regpoint:Point) {
         this._target   = target;
         this._regpoint = regpoint;
     }
 
-    //需更改的注册点位置
+    /** @private 注册点（本地坐标） */
     private var _regpoint:Point;
-    //更改注册的显示对象
+    /** @private */
     private var _target:DisplayObject;
 
-    //设置显示对象的属性
+    /**
+     * 设置属性；非 x/y 时会补偿位移以固定注册点。
+     * @param prop 属性名（如 <code>x</code>、<code>y</code>、<code>rotation</code>、<code>scaleX</code>）。
+     * @param value 新值。
+     * @example
+     * <listing version="3.0">
+     * reg.flush('rotation', 45);
+     * </listing>
+     */
     public function flush(prop:String, value:Number):void {
         var mc:DisplayObject = this._target;
         //转换为全局坐标
@@ -49,26 +65,6 @@ public class DynamicRegistration {
             mc.y += A.y - B.y;
         }
     }
-
-//		//设置属性后，不直接改变MC的属性，返回X,Y的差值
-//		public function getOffset(prop:String,value:Number):Point {
-//			var offset:Point = new Point();
-//			var mc:DisplayObject=this._target;
-//			//转换为全局坐标
-//			var A:Point=mc.parent.globalToLocal(mc.localToGlobal(_regpoint));
-//			if (prop=="x"||prop=="y") {
-//				offset[prop] = value-_regpoint[prop];
-//			} else {
-//				mc[prop]=value;
-//				//执行旋转等属性后，再重新计算全局坐标
-//				var B:Point=mc.parent.globalToLocal(mc.localToGlobal(_regpoint));
-//				//把注册点从B点移到A点
-//				offset.x = A.x-B.x;
-//				offset.y = A.y-B.y;
-//			}
-//
-//			return offset;
-//		}
 
 }
 }

@@ -19,11 +19,27 @@
 package net.play5d.kyo.utils {
 import flash.geom.Point;
 
+/**
+ * 常用数值与几何计算。
+ *
+ * @see #fixRange()
+ * @see #getDistanceByPoints()
+ * @see #velocityFromAngle()
+ */
 public class KyoMath {
+    /** @private 度转弧度系数 */
     private static const DEGTORAD:Number = Math.PI / 180;
 
     /**
-     * 将数字保持在范围之内
+     * 将数字钳制在 [min, max]。
+     * @param number 原值。
+     * @param min 最小值。
+     * @param max 最大值。
+     * @return 钳制后的值。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.fixRange(1.5, 0, 1); // 1
+     * </listing>
      */
     public static function fixRange(number:Number, min:Number, max:Number):Number {
         if (number < min) {
@@ -36,19 +52,30 @@ public class KyoMath {
     }
 
     /**
-     * 将数字限制在指定范围内
-     * @param number 原数
-     * @param min 最小值
-     * @param max 最大值
+     * 判断数字是否在 [min, max] 内（含边界）。
+     * @param number 原值。
+     * @param min 最小值。
+     * @param max 最大值。
+     * @return 是否在范围内。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.inRange(5, 0, 10); // true
+     * </listing>
      */
     public static function inRange(number:Number, min:Number, max:Number):Boolean {
         return number >= min && number <= max;
     }
 
     /**
-     * 保留小数XX位
-     * @param num 原数字
-     * @param n 小数位数
+     * 保留指定小数位。
+     * @param num 原数字。
+     * @param n 小数位数。
+     * @param mathFun 取整函数，默认 <code>Math.round</code>。
+     * @return 处理后的数。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.decimal(1.2345, 2); // 1.23
+     * </listing>
      */
     public static function decimal(num:Number, n:int, mathFun:Function = null):Number {
         mathFun ||= Math.round;
@@ -57,8 +84,13 @@ public class KyoMath {
     }
 
     /**
-     * 平均值
-     * @param params 一个数组 或 多个数字
+     * 平均值。
+     * @param params 一个数组，或多个数字。
+     * @return 平均值。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.average(1, 2, 3); // 2
+     * </listing>
      */
     public static function average(...params):Number {
         var array:Array = params[0] is Array ? params[0] : params;
@@ -67,8 +99,13 @@ public class KyoMath {
     }
 
     /**
-     * 总和
-     * @param params 一个数组 或 多个数字
+     * 总和。
+     * @param params 一个数组，或多个数字。
+     * @return 总和。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.sum([1, 2, 3]); // 6
+     * </listing>
      */
     public static function sum(...params):Number {
         var array:Array = params[0] is Array ? params[0] : params;
@@ -80,16 +117,21 @@ public class KyoMath {
     }
 
     /**
-     * 计算两点间的角度
+     * 计算两点间的角度（度）。
+     * @param A 起点。
+     * @param B 终点。
+     * @return 角度。
+     * @example
+     * <listing version="3.0">
+     * var a:int = KyoMath.getAngleByPoints(p1, p2);
+     * </listing>
      */
     public static function getAngleByPoints(A:Point, B:Point):int {
         var xx:Number         = B.x - A.x;
         var yy:Number         = B.y - A.y;
         var hypotenuse:Number = Math.sqrt(xx * xx + yy * yy);
         var radian:Number     = Math.acos(xx / hypotenuse);
-        var angle:Number      = 180 / (
-                                Math.PI / radian
-        );
+        var angle:Number      = 180 / (Math.PI / radian);
         if (yy < 0) {
             return -angle;
         }
@@ -97,7 +139,14 @@ public class KyoMath {
     }
 
     /**
-     * 计算两点间的距离
+     * 计算两点间的距离。
+     * @param A 点 A。
+     * @param B 点 B。
+     * @return 距离。
+     * @example
+     * <listing version="3.0">
+     * var d:Number = KyoMath.getDistanceByPoints(p1, p2);
+     * </listing>
      */
     public static function getDistanceByPoints(A:Point, B:Point):Number {
         var xx:Number = A.x - B.x;
@@ -105,6 +154,17 @@ public class KyoMath {
         return Math.sqrt(xx * xx + yy * yy);
     }
 
+    /**
+     * 按弧度旋转点（可选 y 轴缩放）。
+     * @param point 原点。
+     * @param radious 弧度（历史拼写）。
+     * @param scale y 分量缩放。
+     * @return 新点。
+     * @example
+     * <listing version="3.0">
+     * var p:Point = KyoMath.getPointByRadians(pt, Math.PI / 2);
+     * </listing>
+     */
     public static function getPointByRadians(point:Point, radious:Number, scale:Number = 1):Point {
         var rp:Point = new Point();
         rp.x         = point.x * Math.cos(radious) - point.y * Math.sin(radious) * scale;
@@ -113,14 +173,28 @@ public class KyoMath {
     }
 
     /**
-     * 角度转弧度
+     * 角度转弧度。
+     * @param degrees 角度。
+     * @return 弧度。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.asRadians(180); // Math.PI
+     * </listing>
      */
     public static function asRadians(degrees:Number):Number {
         return degrees * DEGTORAD;
     }
 
     /**
-     *  由角度计算速度
+     * 由角度与速率得到速度向量。
+     * @param angle 角度或弧度（由 <code>isDegree</code> 决定）。
+     * @param speed 速率。
+     * @param isDegree 为 <code>true</code> 时 angle 为角度。
+     * @return 速度点（分量取整）。
+     * @example
+     * <listing version="3.0">
+     * var v:Point = KyoMath.velocityFromAngle(45, 10);
+     * </listing>
      */
     public static function velocityFromAngle(angle:int, speed:int, isDegree:Boolean = true):Point {
         var a:Number = isDegree ? asRadians(angle) : angle;

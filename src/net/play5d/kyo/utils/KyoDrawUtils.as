@@ -23,9 +23,29 @@ import flash.display.GradientType;
 import flash.display.Graphics;
 import flash.display.Shape;
 
+/**
+ * 扇形与环形绘制工具。
+ *
+ * @see #drawRing()
+ * @see #drawSector()
+ */
 public class KyoDrawUtils {
+    /** @private 复用绘图 Shape */
     private static var _drawShape:Shape;
 
+    /**
+     * 绘制空心圆环扇形到透明 <code>BitmapData</code>。
+     * @param width 环宽。
+     * @param radius 外半径。
+     * @param angle 扇形角度。
+     * @param color 填充色或渐变色数组。
+     * @param alpha 透明度。
+     * @return 位图。
+     * @example
+     * <listing version="3.0">
+     * var bd:BitmapData = KyoDrawUtils.drawRing(10, 50, 90);
+     * </listing>
+     */
     public static function drawRing(
             width:Number, radius:Number, angle:int, color:Object = 0xffff00, alpha:Number = 1):BitmapData {
 
@@ -48,9 +68,24 @@ public class KyoDrawUtils {
         return bd;
     }
 
+    /**
+     * 在指定 <code>Graphics</code> 上绘制扇形。
+     * @param graphics 目标画笔。
+     * @param x 圆心 x。
+     * @param y 圆心 y。
+     * @param r 半径。
+     * @param angle 角度（绝对值超过 360 按 360）。
+     * @param startFrom 起始角度（度）。
+     * @param color 单色 <code>uint</code> 或渐变色 <code>Array</code>。
+     * @param alpha 透明度。
+     * @example
+     * <listing version="3.0">
+     * KyoDrawUtils.drawSector(g, 100, 100, 50, 90, 0, 0xff0000);
+     * </listing>
+     */
     public static function drawSector(
             graphics:Graphics, x:Number = 200, y:Number = 200, r:Number = 100, angle:Number = 60, startFrom:Number = 0,
-            color:Object                                                                                           = 0xFFFFFF, alpha:Number = 1
+            color:Object = 0xFFFFFF, alpha:Number = 1
     ):void {
         graphics.clear();
         if (color is Array) {
@@ -63,12 +98,8 @@ public class KyoDrawUtils {
         else {
             graphics.beginFill(color as uint, alpha);
         }
-//			graphics.lineStyle(0,color);
-//			graphics.lineTo(x,y);
 
-        angle = (
-                        Math.abs(angle) > 360
-                ) ? 360 : angle;
+        angle = (Math.abs(angle) > 360) ? 360 : angle;
 
         var n:int         = Math.ceil(Math.abs(angle) / 45);
         var angleA:Number = angle / n;
@@ -97,6 +128,9 @@ public class KyoDrawUtils {
         graphics.endFill();
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoDrawUtils() {
     }
 

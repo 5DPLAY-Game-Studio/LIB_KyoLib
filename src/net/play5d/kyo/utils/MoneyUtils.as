@@ -18,27 +18,37 @@
 
 package net.play5d.kyo.utils {
 /**
- * 主要功能把阿拉伯数字单位转换成中文大写
+ * 将阿拉伯数字金额转为中文大写。
+ *
+ * @see #toCNUpper()
  * @author marcoLee
  */
 public class MoneyUtils {
     //1：个，2：十，3：百，4：千，5：万，6：十万，7：百万，8：千万，9：亿，10：十亿，11：百亿，12：千亿，13：兆, 14：十兆， 15：百兆， 16：千兆
-    public static const NUM_CN:Array        = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '镹'];
+    /** 中文大写数字 0~9。 */
+    public static const NUM_CN:Array = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '镹'];
+    /** 小数单位：角、分。 */
     public static const DECIMAL_UNITS:Array = ['角', '分'];
-    public static const LEVELS:Array        = ['元', '万', '亿', '兆'];
-    public static const UNITS:Array         = ['千', '百', '拾'];
+    /** 节权：元、万、亿、兆。 */
+    public static const LEVELS:Array = ['元', '万', '亿', '兆'];
+    /** 千百十。 */
+    public static const UNITS:Array = ['千', '百', '拾'];
 
     /**
-     * 把阿拉伯数字单位转换成中文大写
-     * @param num 阿拉伯数字
-     * @return 中文大写
+     * 把阿拉伯数字转换成中文大写金额。
+     * @param num 阿拉伯数字。
+     * @return 中文大写。
+     * @throws Error 整数部分超过 16 位。
+     * @example
+     * <listing version="3.0">
+     * MoneyUtils.toCNUpper(12.34);
+     * </listing>
      */
     public static function toCNUpper(num:Number):String {
         if (num == 0) {
             return NUM_CN[0];
         }
 
-        var count:int       = getUnitCount(num);
         var numStr:String   = num.toFixed(2);
         var pos:int         = numStr.indexOf('.');
         var dotLeft:String  = pos == -1 ? numStr : numStr.substring(0, pos);
@@ -52,9 +62,13 @@ public class MoneyUtils {
     }
 
     /**
-     * 把数字中的整数部分进行转换
-     * @param str
-     * @return
+     * 转换整数部分字符串。
+     * @param str 整数字符串。
+     * @return 中文大写整数段。
+     * @example
+     * <listing version="3.0">
+     * MoneyUtils.convertIntegerStr('1234');
+     * </listing>
      */
     public static function convertIntegerStr(str:String):String {
         var tCount:int  = Math.floor(str.length / 4);
@@ -73,9 +87,13 @@ public class MoneyUtils {
     }
 
     /**
-     * 把数字中的小数部分进行转换
-     * @param str
-     * @return
+     * 转换小数部分字符串。
+     * @param str 小数数字符串。
+     * @return 角分中文。
+     * @example
+     * <listing version="3.0">
+     * MoneyUtils.convertDecimalStr('34');
+     * </listing>
      */
     public static function convertDecimalStr(str:String):String {
         var newStr:String = '';
@@ -89,25 +107,28 @@ public class MoneyUtils {
     }
 
     /**
-     * 用数据方法得到数字整数部分长度
-     * @param num
-     * @return
+     * 用对数估算整数位数。
+     * @param num 数字。
+     * @return 位数。
+     * @example
+     * <listing version="3.0">
+     * MoneyUtils.getUnitCount(100);
+     * </listing>
      */
     public static function getUnitCount(num:Number):int {
         return Math.ceil(Math.log(num) / Math.LN10);
     }
 
+    /**
+     * @private
+     */
     private static function convertNodes(nodes:Array):String {
         var str:String = '';
         var beforeZero:Boolean;
         for (var i:int = 0; i < nodes.length; i++) {
             var node:ThousandNode = nodes[i] as ThousandNode;
-            if ((
-                        beforeZero && node.desc.length > 0
-                ) ||
-                (
-                        node.beforeZero && node.desc.length > 0 && str.length > 0
-                )) {
+            if ((beforeZero && node.desc.length > 0) ||
+                (node.beforeZero && node.desc.length > 0 && str.length > 0)) {
                 str += NUM_CN[0];
             }
 
@@ -124,10 +145,7 @@ public class MoneyUtils {
     }
 
     /**
-     * 对四位数进行处理，不够自动补起
-     * @param num
-     * @param level
-     * @return
+     * @private 对四位数进行处理，不够自动补齐。
      */
     private static function convertThousand(num:String, level:int):ThousandNode {
         var node:ThousandNode = new ThousandNode();
@@ -180,18 +198,36 @@ public class MoneyUtils {
         return node;
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function MoneyUtils() {
     }
 
 }
 }
 
+/**
+ * 千位节节点（文件内）。
+ */
 class ThousandNode {
+    /**
+     * 构造函数。
+     */
     public function ThousandNode() {
-
     }
 
+    /**
+     * 节前是否需补零。
+     */
     public var beforeZero:Boolean;
+    /**
+     * 节后是否需补零。
+     */
     public var afterZero:Boolean;
+    /**
+     * 本节点描述。
+     * @default ''
+     */
     public var desc:String = '';
 }

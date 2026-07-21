@@ -27,14 +27,26 @@ import flash.utils.Timer;
 import flash.utils.clearInterval;
 import flash.utils.setInterval;
 
+/**
+ * 浏览器 / 页面相关工具：打开链接、JS 回调、参数轮询与路径处理。
+ *
+ * @see #getURL()
+ * @see #getParameters()
+ * @see #addJSCallBack()
+ */
 public class WebUtils {
-//		public static var allowGetURL:Boolean = true;
-//		public static var setURLtoClipboard:Boolean = false;
-//
-//		public static var getUrlBack:Function;
-
+    /** @private 缓存的页面 host */
     private static var _url:String;
 
+    /**
+     * 在浏览器中打开 URL。
+     * @param url 地址；空则仅 trace。
+     * @param target 窗口目标。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.getURL('http://example.com');
+     * </listing>
+     */
     public static function getURL(url:String, target:String = '_blank'):void {
         if (!url) {
             trace('getURL: url is null');
@@ -42,16 +54,25 @@ public class WebUtils {
         }
         try {
             navigateToURL(new URLRequest(url), target);
-//				if(setURLtoClipboard) System.setClipboard(url);
-//				if(getUrlBack != null)getUrlBack();
         }
         catch (e:Error) {
             trace(e);
         }
     }
 
+    /**
+     * 向 JS 注册 Flash 回调；可先轮询 <code>jsReady</code> 再注册。
+     * @param functionName JS 可调用的函数名。
+     * @param closure AS 回调。
+     * @param jsReady 返回 Boolean 的 JS 就绪函数名；可省略。
+     * @param debugTxt 可选调试文本。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.addJSCallBack('flashReady', onCall);
+     * </listing>
+     */
     public static function addJSCallBack(functionName:String, closure:Function, jsReady:String = null,
-                                         debugTxt:TextField                                    = null
+                                         debugTxt:TextField = null
     ):void {
         if (jsReady == null) {
             try {
@@ -85,6 +106,15 @@ public class WebUtils {
         }
     }
 
+    /**
+     * 检查当前页面 URL 是否包含给定锁定域名片段。
+     * @param params 字符串或字符串数组（可多个参数）。
+     * @return 全部匹配为 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * if (WebUtils.checkLockedURL('example.com')) { }
+     * </listing>
+     */
     public static function checkLockedURL(...params):Boolean {
         for each(var i:Object in params) {
             if (i is Array) {
@@ -104,14 +134,18 @@ public class WebUtils {
     }
 
     /**
-     * 获取URL传来的参数
-     * @param stage
-     * @param checkVar 检测传来的属性KEY
-     * @param back 成功后调用，有一个参数Object，即URL参数集合
-     * @param timeout 在一定时间(毫秒)后，认为失败，调用back。为0时直到取到参数为止
+     * 轮询获取 SWF URL 参数。
+     * @param stage 舞台。
+     * @param checkVar 用于检测是否就绪的参数键。
+     * @param back 成功回调，参数为 parameters 对象。
+     * @param timeout 超时毫秒；0 表示一直等到取到。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.getParameters(stage, 'id', onParams, 5000);
+     * </listing>
      */
     public static function getParameters(stage:Stage, checkVar:String, back:Function, timeout:int = 0):void {
-        var loadint:int = setInterval(loadp, 300);
+        var loadint:int   = setInterval(loadp, 300);
         var loadTimes:int = timeout == 0 ? -1 : Math.ceil(timeout / 300);
 
         function loadp():void {
@@ -128,6 +162,15 @@ public class WebUtils {
         }
     }
 
+    /**
+     * 取当前 SWF 所在目录 URL。
+     * @param s 舞台。
+     * @return 目录路径（含末尾 <code>/</code>）。
+     * @example
+     * <listing version="3.0">
+     * var base:String = WebUtils.getLocalUrl(stage);
+     * </listing>
+     */
     public static function getLocalUrl(s:Stage):String {
         var url:String = s.loaderInfo.url;
         var i:int      = url.lastIndexOf('/');
@@ -135,41 +178,106 @@ public class WebUtils {
         return url;
     }
 
+    /**
+     * 在匹配键后插入路径，并修正重复的 <code>http://</code>。
+     * @param txt 原文。
+     * @param matchKey 匹配键。
+     * @param urlPath 插入路径。
+     * @return 替换后字符串。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.replaceUrl(html, 'src=', base);
+     * </listing>
+     */
     public static function replaceUrl(txt:String, matchKey:String, urlPath:String):String {
         var v:String = txt.replace(matchKey, matchKey + urlPath);
         v            = v.replace(urlPath + 'http://', 'http://');
         return v;
     }
 
+    /**
+     * 取 URL 目录部分（按 <code>/</code>）。
+     * @param url 完整 URL。
+     * @return 目录。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.getUrlFloder(url);
+     * </listing>
+     */
     public static function getUrlFloder(url:String):String {
         var x:int = url.lastIndexOf('/');
         return url.substr(0, x + 1);
     }
 
+    /**
+     * 取本地路径目录部分（按 <code>\\</code>）。
+     * @param url 本地路径。
+     * @return 目录。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.getLocalFloder(path);
+     * </listing>
+     */
     public static function getLocalFloder(url:String):String {
         var x:int = url.lastIndexOf('\\');
         return url.substr(0, x + 1);
     }
 
+    /**
+     * 取当前 SWF 文件名。
+     * @param stage 舞台。
+     * @return 文件名。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.getFileName(stage);
+     * </listing>
+     */
     public static function getFileName(stage:Stage):String {
         var url:String = stage.loaderInfo.url;
         var x:int      = url.lastIndexOf('/');
         return url.substr(x + 1);
     }
 
+    /**
+     * 取当前 SWF 所在目录。
+     * @param stage 舞台。
+     * @return 目录 URL。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.getStageUrlFloder(stage);
+     * </listing>
+     */
     public static function getStageUrlFloder(stage:Stage):String {
         var url:String = stage.loaderInfo.url;
         return getUrlFloder(url);
     }
 
+    /**
+     * 刷新页面。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.refresh();
+     * </listing>
+     */
     public static function refresh():void {
         getURL('javascript:location.reload();', '_self');
     }
 
+    /**
+     * 调用 JS <code>alert</code>。
+     * @param v 提示文本。
+     * @example
+     * <listing version="3.0">
+     * WebUtils.alert('ok');
+     * </listing>
+     */
     public static function alert(v:String):void {
         getURL('javascript:alert("' + v + '");', '_self');
     }
 
+    /**
+     * @private
+     */
     private static function checkURL(url:String):Boolean {
         if (_url == null) {
             try {

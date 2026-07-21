@@ -23,15 +23,44 @@ import flash.net.URLRequest;
 import flash.net.URLRequestMethod;
 import flash.net.URLVariables;
 
+/**
+ * 简易 HTTP GET / POST 封装。
+ *
+ * @see #get()
+ * @see #post()
+ */
 public class AJAX {
+    /**
+     * 以 POST 请求 URL。
+     * @param url 地址。
+     * @param data 表单变量；可省略。
+     * @param back 成功回调，参数为响应数据；可省略。
+     * @example
+     * <listing version="3.0">
+     * AJAX.post('api.php', vars, onData);
+     * </listing>
+     */
     public static function post(url:String, data:URLVariables = null, back:Function = null):void {
         loadurl(url, data, URLRequestMethod.POST, back);
     }
 
+    /**
+     * 以 GET 请求 URL。
+     * @param url 地址。
+     * @param data 查询变量；可省略。
+     * @param back 成功回调，参数为响应数据；可省略。
+     * @example
+     * <listing version="3.0">
+     * AJAX.get('api.php', vars, onData);
+     * </listing>
+     */
     public static function get(url:String, data:URLVariables = null, back:Function = null):void {
         loadurl(url, data, URLRequestMethod.GET, back);
     }
 
+    /**
+     * @private
+     */
     private static function loadurl(url:String, obj:Object, method:String, back:Function):void {
         var rq:URLRequest = new URLRequest(url);
         rq.data           = obj;
@@ -46,9 +75,11 @@ public class AJAX {
         l.load(rq);
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function AJAX() {
     }
-
 
 }
 }

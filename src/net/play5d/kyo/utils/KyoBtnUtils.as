@@ -26,23 +26,39 @@ import flash.events.MouseEvent;
 import flash.geom.ColorTransform;
 import flash.utils.Dictionary;
 
+/**
+ * 显示对象按钮初始化：简单点击，或按下变暗 / 弹性回弹效果。
+ *
+ * @see #initBtn()
+ * @see #initSampleBtn()
+ * @see #disposeBtn()
+ */
 public class KyoBtnUtils {
+    /** @private */
     private static var _btnMap:Dictionary = new Dictionary();
 
+    /** @private */
     private static var _blackTransform:ColorTransform = new ColorTransform(1, 1, 1, 1, -20, -20, -20);
+    /** @private */
     private static var _emptyTransform:ColorTransform = new ColorTransform();
 
+    /** @private */
     private static var _btnTween:TweenLite;
 
+    /** @private */
     private static var _curOnClick:Function;
+    /** @private */
     private static var _curOnClickParam:*;
 
     /**
-     * 定义简单按钮
-     * @param d
-     * @param click
-     * @param clickParam
-     *
+     * 定义简单按钮（仅 CLICK，无按下效果）。
+     * @param d 显示对象。
+     * @param click 点击回调；可省略。
+     * @param clickParam 传给回调的参数；可省略。
+     * @example
+     * <listing version="3.0">
+     * KyoBtnUtils.initSampleBtn(mc, onClick);
+     * </listing>
      */
     public static function initSampleBtn(d:DisplayObject, click:Function = null, clickParam:* = null):void {
 
@@ -58,6 +74,14 @@ public class KyoBtnUtils {
         }
     }
 
+    /**
+     * 解除简单按钮监听。
+     * @param d 显示对象。
+     * @example
+     * <listing version="3.0">
+     * KyoBtnUtils.disposeSampleBtn(mc);
+     * </listing>
+     */
     public static function disposeSampleBtn(d:DisplayObject):void {
         if (d == null) {
             return;
@@ -67,23 +91,23 @@ public class KyoBtnUtils {
     }
 
     /**
-     * 定义按钮
-     * @param d
-     * @param click 点击事件
-     * @param clickParam 点击事件传回参数
-     * @param effectType 1-简单效果，2=动画效果
+     * 定义带按下效果的按钮。
+     * @param d 显示对象；为 Sprite 时开启 buttonMode。
+     * @param click 点击回调；可省略。
+     * @param clickParam 传给回调的参数；可省略。
+     * @param effectType 1=变暗；2=下移变暗 + 弹性回弹后触发点击。
+     * @example
+     * <listing version="3.0">
+     * KyoBtnUtils.initBtn(btn, onClick, null, 2);
+     * </listing>
      */
     public static function initBtn(d:DisplayObject, click:Function = null, clickParam:* = null,
-                                   effectType:int                                       = 1
+                                   effectType:int = 1
     ):void {
 
         if (d is Sprite) {
-            (
-                    d as Sprite
-            ).mouseChildren = false;
-            (
-                    d as Sprite
-            ).buttonMode    = true;
+            (d as Sprite).mouseChildren = false;
+            (d as Sprite).buttonMode    = true;
         }
 
         _btnMap[d] = {
@@ -100,6 +124,14 @@ public class KyoBtnUtils {
         }
     }
 
+    /**
+     * 解除按钮监听与映射。
+     * @param d 显示对象。
+     * @example
+     * <listing version="3.0">
+     * KyoBtnUtils.disposeBtn(btn);
+     * </listing>
+     */
     public static function disposeBtn(d:DisplayObject):void {
         if (d == null) {
             return;
@@ -110,6 +142,9 @@ public class KyoBtnUtils {
         _btnMap[d] = null;
     }
 
+    /**
+     * @private
+     */
     private static function doBtnEffect(d:DisplayObject, param:Object, resume:Boolean = false):void {
         switch (param.effectType) {
         case 2:
@@ -129,13 +164,14 @@ public class KyoBtnUtils {
             }
             else {
                 d.transform.colorTransform = _emptyTransform;
-                //						btnEffectFin();
-                //						TweenLite.delayedCall(0.2,btnEffectFin);
             }
             break;
         }
     }
 
+    /**
+     * @private
+     */
     private static function btnEffectFin():void {
         if (_curOnClick != null) {
             if (_curOnClickParam != null) {
@@ -150,6 +186,9 @@ public class KyoBtnUtils {
         }
     }
 
+    /**
+     * @private
+     */
     private static function sampleBtnHandler(e:MouseEvent):void {
         var o:Object = _btnMap[e.currentTarget];
         if (o.click != null) {
@@ -162,6 +201,9 @@ public class KyoBtnUtils {
         }
     }
 
+    /**
+     * @private
+     */
     private static function btnHandler(e:MouseEvent):void {
         var d:DisplayObject = e.currentTarget as DisplayObject;
         var o:Object        = _btnMap[d];

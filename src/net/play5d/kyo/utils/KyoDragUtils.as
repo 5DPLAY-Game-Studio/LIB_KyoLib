@@ -22,9 +22,26 @@ import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 
+/**
+ * 鼠标拖拽工具：底层事件挂钩与 <code>startDrag</code> 封装。
+ *
+ * @see #dragBase()
+ * @see #dragSimple()
+ */
 public class KyoDragUtils {
+    /**
+     * 在按下对象上挂钩 DOWN/MOVE/UP；回调返回 <code>false</code> 可取消后续。
+     * @param downmc 按下目标。
+     * @param onDown 按下回调；可返回 Boolean。
+     * @param onUp 抬起回调；可返回 Boolean。
+     * @param onMove 移动回调。
+     * @example
+     * <listing version="3.0">
+     * KyoDragUtils.dragBase(mc, onDown, onUp, onMove);
+     * </listing>
+     */
     public static function dragBase(downmc:DisplayObject, onDown:Function = null, onUp:Function = null,
-                                    onMove:Function                                             = null
+                                    onMove:Function = null
     ):void {
         downmc.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 
@@ -76,15 +93,24 @@ public class KyoDragUtils {
         }
     }
 
+    /**
+     * 基于 <code>dragBase</code> 调用 <code>startDrag</code> / <code>stopDrag</code>。
+     * @param downmc 按下的 Sprite。
+     * @param params 可选键：<code>onDown/onUp/onMove/dragmc/bounds/lockCenter</code>。
+     * @example
+     * <listing version="3.0">
+     * KyoDragUtils.dragSimple(panel, {bounds: rect});
+     * </listing>
+     */
     public static function dragSimple(downmc:Sprite, params:Object = null):void {
         var onDown:Function, onUp:Function, onMove:Function;
         var dragmc:Sprite, bounds:Rectangle, lockCenter:Boolean;
         if (params) {
-            onDown = params.onDown;
-            onUp = params.onUp;
-            onMove = params.onMove;
-            dragmc = params.dragmc;
-            bounds = params.bounds;
+            onDown     = params.onDown;
+            onUp       = params.onUp;
+            onMove     = params.onMove;
+            dragmc     = params.dragmc;
+            bounds     = params.bounds;
             lockCenter = params.lockCenter;
         }
 
@@ -114,6 +140,9 @@ public class KyoDragUtils {
         }
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoDragUtils() {
     }
 
