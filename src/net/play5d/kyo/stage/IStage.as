@@ -20,28 +20,32 @@ package net.play5d.kyo.stage {
 import flash.display.DisplayObject;
 
 /**
- * 场景接口
+ * 场景接口：显示对象、构建与销毁生命周期。
+ *
+ * @see KyoStageCtrl
+ * @see #display
+ * @see #build()
+ * @see #destroy()
  */
 public interface IStage {
-
     /**
-     * 显示对象
+     * 场景显示对象。
      */
     function get display():DisplayObject;
 
     /**
-     * 构建
+     * 构建场景（加入显示列表前）。
      */
     function build():void;
 
     /**
-     * 稍后构建
+     * 加入显示列表后的后续构建。
      */
     function afterBuild():void;
 
     /**
-     * 销毁
-     * @param back 回调函数
+     * 销毁场景。
+     * @param back 销毁完成后的回调；可省略。
      */
     function destroy(back:Function = null):void;
 }

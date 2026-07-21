@@ -25,27 +25,57 @@ import flash.utils.setTimeout;
 import net.play5d.kyo.stage.effect.IStageFadEffect;
 import net.play5d.kyo.stage.events.KyoStageEvent;
 
+/**
+ * 切换场景时派发。
+ *
+ * @eventType net.play5d.kyo.stage.events.KyoStageEvent.CHANGE_STATE
+ */
+[Event(name='CHANGE_STATE', type='net.play5d.kyo.stage.events.KyoStageEvent')]
+/**
+ * 主场景与弹出层控制器：切换 <code>IStage</code>、管理层叠与淡入淡出效果。
+ *
+ * @see IStage
+ * @see #goStage()
+ * @see #addLayer()
+ * @see net.play5d.kyo.stage.events.KyoStageEvent
+ */
 public class KyoStageCtrl extends EventDispatcher {
+    /**
+     * @param mainStage 承载场景与层的根容器。
+     */
     public function KyoStageCtrl(mainStage:Sprite) {
         _mainStage = mainStage;
     }
 
     /**
-     * 切换场景时，暂时停止场景的点击事件
+     * 切换场景时暂时关闭鼠标交互的毫秒数；0 表示不关闭。
+     * @default 0
      */
     public var changeStateMouseGap:int = 0;
+    /** @private */
     private var _mainStage:Sprite;
+    /** @private */
     private var _curStage:IStage;
-    private var _layers:Array          = [];
+    /** @private */
+    private var _layers:Array = [];
 
+    /**
+     * 当前主场景。
+     */
     public function get currentStage():IStage {
         return _curStage;
     }
 
+    /**
+     * 是否没有任何弹出层。
+     */
     public function get noneLayer():Boolean {
         return _layers.length == 0;
     }
 
+    /**
+     * @private
+     */
     private function set stageMouseChildren(v:Boolean):void {
         if (_mainStage.stage) {
             _mainStage.stage.mouseChildren = v;
@@ -53,10 +83,15 @@ public class KyoStageCtrl extends EventDispatcher {
     }
 
     /**
-     * 切换换场景
-     * @param stg 场景对象，继续接口：Istage
-     * @param sameChange 在切换到的场景与当前场景相同时，是否也要切换
-     * @param buildAfterDestory 在当前场景卸载后加载新场景
+     * 切换主场景。
+     * @param stg 新场景。
+     * @param sameChange 与当前同类时是否仍切换。
+     * @param buildAfterDestory 为 <code>true</code> 时等旧场景 <code>destroy</code> 回调后再构建（历史拼写）。
+     * @return 是否实际发起了切换（同类且 <code>sameChange</code> 为 false 时返回 false）。
+     * @example
+     * <listing version="3.0">
+     * ctrl.goStage(new HomeStage());
+     * </listing>
      */
     public function goStage(stg:IStage, sameChange:Boolean = false, buildAfterDestory:Boolean = false):Boolean {
         function detoryComplete():void {
@@ -86,7 +121,7 @@ public class KyoStageCtrl extends EventDispatcher {
         }
 
         if (!sameChange) {
-            var classname:String = getQualifiedClassName(stg);
+            var classname:String  = getQualifiedClassName(stg);
             var classname2:String = getQualifiedClassName(_curStage);
             if (classname == classname2) {
                 return false;
@@ -111,16 +146,21 @@ public class KyoStageCtrl extends EventDispatcher {
     }
 
     /**
-     * 显示弹出层
-     * @param layer 弹出层
-     * @param x NaN 时 = 水平居中
-     * @param y NaN 时 = 垂直居中
-     * @param removeElse (独占)为true时，关闭其他已经弹出的层
-     * @param effect 弹出时效果
+     * 显示弹出层。
+     * @param layer 弹出层场景。
+     * @param x <code>NaN</code> 时水平居中；否则为 x。
+     * @param y <code>NaN</code> 时垂直居中；否则为 y。
+     * @param removeElse 为 <code>true</code> 时先关闭其他层。
+     * @param effect 淡入效果；可省略。
+     * @param addBack 加入并效果结束后的回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * ctrl.addLayer(dlg, NaN, NaN, true, new ZoomEffect());
+     * </listing>
      */
     public function addLayer(
             layer:IStage, x:Number = 0, y:Number = 0, removeElse:Boolean = false, effect:IStageFadEffect = null,
-            addBack:Function                                                                             = null
+            addBack:Function = null
     ):void {
         if (removeElse) {
             removeAllLayer();
@@ -134,17 +174,13 @@ public class KyoStageCtrl extends EventDispatcher {
         var dh:Number = layer.display.height * _mainStage.scaleY;
 
         if (isNaN(x)) {
-            layer.display.x = (
-                                      sw - dw
-                              ) / 2;
+            layer.display.x = (sw - dw) / 2;
         }
         else {
             layer.display.x = x;
         }
         if (isNaN(y)) {
-            layer.display.y = (
-                                      sh - dh
-                              ) / 2;
+            layer.display.y = (sh - dh) / 2;
         }
         else {
             layer.display.y = y;
@@ -167,6 +203,15 @@ public class KyoStageCtrl extends EventDispatcher {
         _layers.push(layer);
     }
 
+    /**
+     * 是否已存在指定层（实例或类型）。
+     * @param layer <code>IStage</code> 实例或 <code>Class</code>。
+     * @return 是否存在。
+     * @example
+     * <listing version="3.0">
+     * if (ctrl.hasLayer(MyDlg)) { }
+     * </listing>
+     */
     public function hasLayer(layer:Object):Boolean {
         for each(var i:IStage in _layers) {
             if (layer is IStage) {
@@ -184,6 +229,16 @@ public class KyoStageCtrl extends EventDispatcher {
         return false;
     }
 
+    /**
+     * 移除弹出层。
+     * @param layer 目标层。
+     * @param effect 淡出效果；可省略。
+     * @param removeBack 移除完成后的回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * ctrl.removeLayer(dlg);
+     * </listing>
+     */
     public function removeLayer(layer:IStage, effect:IStageFadEffect = null, removeBack:Function = null):void {
 
         if (effect) {
@@ -213,6 +268,13 @@ public class KyoStageCtrl extends EventDispatcher {
 
     }
 
+    /**
+     * 移除全部弹出层。
+     * @example
+     * <listing version="3.0">
+     * ctrl.removeAllLayer();
+     * </listing>
+     */
     public function removeAllLayer():void {
         for each(var i:IStage in _layers) {
             removeLayer(i);
@@ -220,6 +282,14 @@ public class KyoStageCtrl extends EventDispatcher {
         _layers = [];
     }
 
+    /**
+     * 清理主场景，可选同时清层。
+     * @param _removeAllLayer 是否先 <code>removeAllLayer</code>。
+     * @example
+     * <listing version="3.0">
+     * ctrl.clean();
+     * </listing>
+     */
     public function clean(_removeAllLayer:Boolean = true):void {
         if (_removeAllLayer) {
             removeAllLayer();
