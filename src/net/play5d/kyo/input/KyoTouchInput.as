@@ -23,18 +23,47 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+/**
+ * 基于鼠标按下 / 抬起的滑动输入（模拟触摸滑动），派发 <code>KyoTouchEvent.SLIDE</code>。
+ *
+ * @see KyoTouchEvent
+ * @see #slidePos
+ * @see #enableArea
+ * @see #enbaled
+ *
+ * @eventType net.play5d.kyo.input.KyoTouchEvent.SLIDE
+ */
+[Event(name='event-slide', type='net.play5d.kyo.input.KyoTouchEvent')]
 public class KyoTouchInput extends EventDispatcher {
+    /**
+     * @param stage 侦听鼠标事件的舞台。
+     */
     public function KyoTouchInput(stage:Stage) {
         _stage = stage;
 
         enbaled = true;
     }
 
+    /**
+     * 判定为滑动所需的最小像素位移。
+     * @default 20
+     */
     public var slidePos:int = 20;
+    /**
+     * 可选有效区域；为 <code>null</code> 时全舞台有效。
+     * 判定使用 <code>x/y/width/height</code>（非标准含宽高的矩形包含）。
+     */
     public var enableArea:Rectangle;
+    /** @private */
     private var _stage:Stage;
+    /** @private */
     private var _downPoint:Point;
 
+    /**
+     * 是否启用监听（历史拼写 <code>enbaled</code>）。
+     * 赋值时会先移除再重新注册 Stage 鼠标监听。
+     * @private
+     */
     public function set enbaled(v:Boolean):void {
         _stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseHandler);
         _stage.removeEventListener(MouseEvent.MOUSE_UP, mouseHandler);
@@ -43,6 +72,9 @@ public class KyoTouchInput extends EventDispatcher {
         _stage.addEventListener(MouseEvent.MOUSE_UP, mouseHandler);
     }
 
+    /**
+     * @private 点是否在 enableArea 内。
+     */
     private function checkarea(sx:Number, sy:Number):Boolean {
         if (enableArea) {
             if (sx > enableArea.width || sx < enableArea.x) {
@@ -55,6 +87,9 @@ public class KyoTouchInput extends EventDispatcher {
         return true;
     }
 
+    /**
+     * @private 根据按下点与当前鼠标位置派发滑动事件。
+     */
     private function doSlide():void {
         if (!_downPoint) {
             return;
@@ -67,19 +102,16 @@ public class KyoTouchInput extends EventDispatcher {
         if (Math.abs(x) >= Math.abs(y)) {
             //横向滑动
             if (x > slidePos) {
-                dispatchEvent(
-                        new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_RIGHT}));
+                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_RIGHT}));
             }
             if (x < -slidePos) {
-                dispatchEvent(
-                        new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_LEFT}));
+                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_LEFT}));
             }
         }
         else {
             //竖向滑动
             if (y > slidePos) {
-                dispatchEvent(
-                        new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_DOWN}));
+                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_DOWN}));
             }
             if (y < -slidePos) {
                 dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_UP}));
@@ -87,6 +119,9 @@ public class KyoTouchInput extends EventDispatcher {
         }
     }
 
+    /**
+     * @private
+     */
     private function mouseHandler(e:MouseEvent):void {
         switch (e.type) {
         case MouseEvent.MOUSE_DOWN:

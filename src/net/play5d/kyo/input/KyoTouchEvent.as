@@ -19,14 +19,33 @@
 package net.play5d.kyo.input {
 import flash.events.Event;
 
+/**
+ * 触摸 / 滑动相关事件。
+ *
+ * @see KyoTouchInput
+ * @see #SLIDE
+ * @see #direct
+ */
 public class KyoTouchEvent extends Event {
+    /**
+     * <code>SLIDE</code> 事件的 <code>type</code> 属性值。
+     * @eventType SLIDE
+     */
     public static const SLIDE:String = 'event-slide';
 
-    public static const DIRECT_UP:int    = 0;
-    public static const DIRECT_DOWN:int  = 6;
-    public static const DIRECT_LEFT:int  = 9;
+    /** 向上滑动。 */
+    public static const DIRECT_UP:int = 0;
+    /** 向下滑动。 */
+    public static const DIRECT_DOWN:int = 6;
+    /** 向左滑动。 */
+    public static const DIRECT_LEFT:int = 9;
+    /** 向右滑动。 */
     public static const DIRECT_RIGHT:int = 3;
 
+    /**
+     * @param type 事件类型。
+     * @param obj 可选属性字典（键写入本实例，如 <code>direct</code>）。
+     */
     public function KyoTouchEvent(type:String, obj:Object = null) {
         for (var i:String in obj) {
             this[i] = obj[i];
@@ -34,6 +53,10 @@ public class KyoTouchEvent extends Event {
         super(type, false, false);
     }
 
+    /**
+     * 滑动方向，见 <code>DIRECT_*</code> 常量。
+     * @default 0
+     */
     public var direct:int;
 }
 }

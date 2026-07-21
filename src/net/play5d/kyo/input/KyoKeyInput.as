@@ -21,38 +21,67 @@ import flash.display.Stage;
 import flash.events.KeyboardEvent;
 import flash.utils.getTimer;
 
+/**
+ * 可映射的键盘输入管理：按下态、按过判定、连招顺序与回调。
+ *
+ * @see KyoKeyVO
+ * @see KyoKeyLite
+ * @see #mappingKeyCode()
+ * @see #turnOn()
+ */
 public class KyoKeyInput {
-//		private static var _i:KeyInput;
-//		public static function get I():KeyInput{
-//			_i ||= new KeyInput();
-//			return _i;
+    /**
+     * @param stage 侦听键盘事件的舞台。
+     */
     public function KyoKeyInput(stage:Stage) {
         this.stage = stage;
     }
 
-//		}
-    public var stage:Stage;
-    public var orderKeyAble:Boolean  = true;
     /**
-     * 连续按键队列的最大值
+     * 舞台引用。
+     */
+    public var stage:Stage;
+    /**
+     * 是否记录连招顺序队列。
+     * @default true
+     */
+    public var orderKeyAble:Boolean = true;
+    /**
+     * 连续按键队列的最大值。
+     * @default 10
      */
     public var maxOrderKeyLength:int = 10;
     /**
-     * 连续按键时间限定(毫秒)
+     * 连续按键时间限定（毫秒）；超时则清空队列。
+     * @default 200
      */
-    public var orderKeyDuration:int  = 200;
-    private var _orderKeys:Array     = [];
+    public var orderKeyDuration:int = 200;
+    /** @private */
+    private var _orderKeys:Array = [];
+    /** @private */
     private var _lastDownTime:int;
-    private var _downCodes:Object    = {};
-    private var _keys:Object         = {};
+    /** @private */
+    private var _downCodes:Object = {};
+    /** @private name → KyoKeyVO */
+    private var _keys:Object = {};
+    /** @private code → KyoKeyVO */
     private var _map:Object;
+    /** @private */
     private var _isOn:Boolean;
+    /** @private */
     private var _downF:Function;
+    /** @private */
     private var _upF:Function;
 
     /**
-     * 设置按键映射
-     * @param array 数组数据格式  ：[{name:String , code:int}] 或 [KyoKeyVO]
+     * 批量设置按键映射（先清空再添加）。
+     * @param array 元素为 <code>{name:String, code:int}</code> 或 <code>KyoKeyVO</code>。
+     * @example
+     * <listing version="3.0">
+     * input.mappingKeyCode([KyoKeyCode.A, KyoKeyCode.S]);
+     * </listing>
+     * @see #addMappingKeyCodeVO()
+     * @see #clearMappingKeyCode()
      */
     public function mappingKeyCode(array:Array):void {
         clearMappingKeyCode();
@@ -63,8 +92,12 @@ public class KyoKeyInput {
     }
 
     /**
-     * 增加按键映射， KyoKeyVO类型
-     * @param o 格式：{name:String , code:int} 或 KyoKeyVO
+     * 增加一条按键映射。
+     * @param o <code>{name:String, code:int}</code> 或 <code>KyoKeyVO</code>。
+     * @example
+     * <listing version="3.0">
+     * input.addMappingKeyCodeVO(KyoKeyCode.SPACE);
+     * </listing>
      */
     public function addMappingKeyCodeVO(o:Object):void {
         var k:KyoKeyVO;
@@ -80,8 +113,12 @@ public class KyoKeyInput {
     }
 
     /**
-     * 减少按键映射， KyoKeyVO类型
-     * @param o 格式：String 或 KyoKeyVO
+     * 移除一条按键映射。
+     * @param o 键名 <code>String</code> 或 <code>KyoKeyVO</code>。
+     * @example
+     * <listing version="3.0">
+     * input.removeMappingKeyCodeVO('A');
+     * </listing>
      */
     public function removeMappingKeyCodeVO(o:Object):void {
         var s:String;
@@ -89,9 +126,7 @@ public class KyoKeyInput {
             s = o as String;
         }
         if (o is KyoKeyVO) {
-            s = (
-                    o as KyoKeyVO
-            ).name;
+            s = (o as KyoKeyVO).name;
         }
         if (s && _keys[s]) {
             delete _keys[s];
@@ -99,13 +134,25 @@ public class KyoKeyInput {
         }
     }
 
+    /**
+     * 清空全部映射。
+     * @example
+     * <listing version="3.0">
+     * input.clearMappingKeyCode();
+     * </listing>
+     */
     public function clearMappingKeyCode():void {
         _keys = {};
         _map  = {};
     }
 
     /**
-     * 检查按键设置
+     * 检查映射表是否均非 null。
+     * @return 全部有效为 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * var ok:Boolean = input.checkOK();
+     * </listing>
      */
     public function checkOK():Boolean {
         for (var i:String in _keys) {
@@ -117,7 +164,12 @@ public class KyoKeyInput {
     }
 
     /**
-     * 输出按键设置
+     * 导出当前映射为 name→code 对象。
+     * @return 键名到 keyCode 的字典。
+     * @example
+     * <listing version="3.0">
+     * var o:Object = input.printKeys();
+     * </listing>
      */
     public function printKeys():Object {
         var o:Object = {};
@@ -128,7 +180,13 @@ public class KyoKeyInput {
     }
 
     /**
-     *开启按键侦听
+     * 开启按键侦听。
+     * @throws Error stage 为 null。
+     * @example
+     * <listing version="3.0">
+     * input.turnOn();
+     * </listing>
+     * @see #turnOff()
      */
     public function turnOn():void {
         if (_isOn) {
@@ -143,18 +201,27 @@ public class KyoKeyInput {
     }
 
     /**
-     *关闭按键侦听
+     * 关闭按键侦听并清空连招队列。
+     * @example
+     * <listing version="3.0">
+     * input.turnOff();
+     * </listing>
      */
     public function turnOff():void {
         _isOn      = false;
-//			_map = null;
         _orderKeys = [];
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
         stage.removeEventListener(KeyboardEvent.KEY_UP, keyHandler);
     }
 
     /**
-     * 根据键位(常量)判断是否按键 :String
+     * 按映射键名判断是否全部按下。
+     * @param params 一个或多个键名（映射表中的 name）。
+     * @return 全部按下为 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * if (input.isDownKey('A', 'S')) { }
+     * </listing>
      */
     public function isDownKey(...params):Boolean {
         var isDown:Boolean;
@@ -169,7 +236,13 @@ public class KyoKeyInput {
     }
 
     /**
-     * 根据按键CODE判断是否按键
+     * 按 keyCode 判断是否全部按下。
+     * @param params 一个或多个 keyCode。
+     * @return 全部按下为 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * if (input.isDownCode(65)) { }
+     * </listing>
      */
     public function isDownCode(...params):Boolean {
         var isDown:Boolean;
@@ -183,7 +256,13 @@ public class KyoKeyInput {
     }
 
     /**
-     * 根据键位(常量)判断是否按过键  , String 或 KyoKeyVO
+     * 按映射键名判断是否“按过”（若按下则清除其 isDown）。
+     * @param params 键名。
+     * @return 调用时是否处于按下。
+     * @example
+     * <listing version="3.0">
+     * if (input.isPressKey('A')) { }
+     * </listing>
      */
     public function isPressKey(...params):Boolean {
         var isDown:Boolean = isDownKey.apply(null, params);
@@ -197,7 +276,13 @@ public class KyoKeyInput {
     }
 
     /**
-     * 根据按键CODE判断是否按过键
+     * 按 keyCode 判断是否“按过”（若按下则从按下表删除）。
+     * @param params keyCode。
+     * @return 调用时是否处于按下。
+     * @example
+     * <listing version="3.0">
+     * if (input.isPressCode(65)) { }
+     * </listing>
      */
     public function isPressCode(...params):Boolean {
         var isDown:Boolean = isDownCode.apply(null, params);
@@ -210,9 +295,13 @@ public class KyoKeyInput {
     }
 
     /**
-     * 按键回调函数(参数:key常量)
-     * @param down 按下时调用
-     * @param up 松开时调用
+     * 设置按下 / 抬起回调（参数为映射键名，未映射时为 keyCode）。
+     * @param down 按下时调用。
+     * @param up 松开时调用；可省略。
+     * @example
+     * <listing version="3.0">
+     * input.addKeyBack(onDown, onUp);
+     * </listing>
      */
     public function addKeyBack(down:Function, up:Function = null):void {
         _downF = down;
@@ -220,8 +309,14 @@ public class KyoKeyInput {
     }
 
     /**
-     * 判断是否按顺序按键
-     * @param params [KyoKeyVO]
+     * 判断最近按键顺序是否匹配（匹配成功后清空队列）。
+     * @param params 期望顺序的 <code>KyoKeyVO</code> 列表。
+     * @return 是否匹配。
+     * @example
+     * <listing version="3.0">
+     * if (input.inorder(KyoKeyCode.A, KyoKeyCode.S, KyoKeyCode.D)) { }
+     * </listing>
+     * @see #clearInorder()
      */
     public function inorder(...params):Boolean {
         var s:int = _orderKeys.length - params.length;
@@ -240,14 +335,31 @@ public class KyoKeyInput {
         return true;
     }
 
+    /**
+     * 清空连招顺序队列。
+     * @example
+     * <listing version="3.0">
+     * input.clearInorder();
+     * </listing>
+     */
     public function clearInorder():void {
         _orderKeys = [];
     }
 
+    /**
+     * 清空按 keyCode 记录的按下表。
+     * @example
+     * <listing version="3.0">
+     * input.clearDown();
+     * </listing>
+     */
     public function clearDown():void {
         _downCodes = {};
     }
 
+    /**
+     * @private 重建 code→VO 映射并开启侦听。
+     */
     private function updateMapping():void {
         _map = {};
         for each(var i:KyoKeyVO in _keys) {
@@ -256,6 +368,9 @@ public class KyoKeyInput {
         turnOn();
     }
 
+    /**
+     * @private 写入连招队列。
+     */
     private function pushOrder(k:KyoKeyVO):void {
         if (!orderKeyAble) {
             return;
@@ -270,6 +385,9 @@ public class KyoKeyInput {
         }
     }
 
+    /**
+     * @private
+     */
     private function keyHandler(e:KeyboardEvent):void {
         var ki:KyoKeyVO;
 

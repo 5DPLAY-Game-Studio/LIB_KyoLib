@@ -17,20 +17,55 @@
  */
 
 package net.play5d.kyo.input {
+/**
+ * 按键值对象：名称、keyCode 与按下状态。
+ *
+ * @see KyoKeyCode
+ * @see KyoKeyInput
+ */
 public class KyoKeyVO {
+    /**
+     * @param name 键名（映射用）。
+     * @param code 键盘 keyCode。
+     */
     public function KyoKeyVO(name:String, code:int) {
         this.name = name;
         this.code = code;
     }
 
+    /**
+     * 键名。
+     */
     public var name:String;
+    /**
+     * 键盘 keyCode。
+     */
     public var code:int;
+    /**
+     * 当前是否处于按下（由输入管理器维护）。
+     * @default false
+     */
     public var isDown:Boolean;
 
+    /**
+     * @return 键名。
+     * @example
+     * <listing version="3.0">
+     * String(KyoKeyCode.A); // 'A'
+     * </listing>
+     */
     public function toString():String {
         return name;
     }
 
+    /**
+     * 复制名称与 code（不复制 <code>isDown</code>）。
+     * @return 新实例。
+     * @example
+     * <listing version="3.0">
+     * var k:KyoKeyVO = KyoKeyCode.A.clone();
+     * </listing>
+     */
     public function clone():KyoKeyVO {
         return new KyoKeyVO(name, code);
     }
