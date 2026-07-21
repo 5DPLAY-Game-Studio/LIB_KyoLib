@@ -25,10 +25,27 @@ import flash.geom.Point;
  * @see #fixRange()
  * @see #getDistanceByPoints()
  * @see #velocityFromAngle()
+ * @see #int2roman()
  */
 public class KyoMath {
     /** @private 度转弧度系数 */
     private static const DEGTORAD:Number = Math.PI / 180;
+
+    /** 可转换罗马数字的最大整数（含） */
+    public static const MAX_ROMAN:int = 3999;
+    /** 可转换罗马数字的最小整数（含） */
+    public static const MIN_ROMAN:int = 1;
+
+    /**
+     * @private 各位罗马数字表：个/十/百/千。
+     * 使用 Unicode 罗马数字字形。
+     */
+    private static const ROMAN_DIGITS:Array = [
+        ['', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ', 'Ⅵ', 'Ⅶ', 'Ⅷ', 'Ⅸ'],
+        ['', 'Ⅹ', 'ⅩⅩ', 'ⅩⅩⅩ', 'ⅩⅬ', 'Ⅼ', 'ⅬⅩ', 'ⅬⅩⅩ', 'ⅬⅩⅩⅩ', 'ⅩⅭ'],
+        ['', 'Ⅽ', 'ⅭⅭ', 'ⅭⅭⅭ', 'ⅭⅮ', 'Ⅾ', 'ⅮⅭ', 'ⅮⅭⅭ', 'ⅮⅭⅭⅭ', 'ⅭⅯ'],
+        ['', 'Ⅿ', 'ⅯⅯ', 'ⅯⅯⅯ']
+    ];
 
     /**
      * 将数字钳制在 [min, max]。
@@ -205,6 +222,31 @@ public class KyoMath {
         result.y = int(Math.sin(a) * speed);
 
         return result;
+    }
+
+    /**
+     * 整数转罗马数字。
+     * @param number 范围 <code>[MIN_ROMAN, MAX_ROMAN]</code>。
+     * @return 罗马数字字符串；超出范围则为 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.int2roman(8); // 'Ⅷ'
+     * KyoMath.int2roman(0); // null
+     * </listing>
+     * @see #MIN_ROMAN
+     * @see #MAX_ROMAN
+     */
+    public static function int2roman(number:int):String {
+        if (number < MIN_ROMAN || number > MAX_ROMAN) {
+            return null;
+        }
+
+        var roman:String = '';
+        for (var i:int = 0; number > 0; i++) {
+            roman  = ROMAN_DIGITS[i][number % 10] + roman;
+            number = int(number / 10);
+        }
+        return roman;
     }
 
 }
