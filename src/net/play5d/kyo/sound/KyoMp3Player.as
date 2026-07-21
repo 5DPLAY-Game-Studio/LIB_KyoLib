@@ -25,23 +25,57 @@ import flash.net.URLRequest;
 import net.play5d.kyo.utils.KyoRandom;
 import net.play5d.kyo.utils.KyoUtils;
 
+/**
+ * 基于 URL 列表的 MP3 播放器，支持多种播放模式与上一曲 / 下一曲。
+ *
+ * @see #playMode
+ * @see #list
+ * @see #play()
+ */
 public class KyoMp3Player {
+    /** 列表循环。 */
     public static const MODE_ALL_LOOP:String = 'all_loop_mode';
+    /** 单曲循环。 */
     public static const MODE_ONE_LOOP:String = 'one_loop_mode';
+    /** 列表播完停止。 */
     public static const MODE_ALL_ONCE:String = 'all_once_mode';
+    /** 单曲播完停止。 */
     public static const MODE_ONE_ONCE:String = 'one_once_mode';
-    public static const MODE_RANDOM:String   = 'random_mode';
+    /** 随机下一曲。 */
+    public static const MODE_RANDOM:String = 'random_mode';
 
+    /**
+     * 构造函数。
+     */
     public function KyoMp3Player() {
     }
 
+    /**
+     * 播放模式，见 <code>MODE_*</code>。
+     */
     public var playMode:String;
+    /**
+     * 曲目 URL 列表。
+     */
     public var list:Array = [];
+    /** @private */
     private var _sound:Sound;
+    /** @private */
     private var _channel:SoundChannel;
+    /** @private */
     private var _current:String;
+    /** @private */
     private var _pausedPos:int;
 
+    /**
+     * 播放指定 URL；为空时尝试从暂停位置恢复，或播放列表首项。
+     * @param v MP3 URL；可省略。
+     * @throws Error 列表为空且无法确定播放目标。
+     * @example
+     * <listing version="3.0">
+     * player.play('a.mp3');
+     * </listing>
+     */
     public function play(v:String = null):void {
         if (!v) {
             if (_pausedPos > 0) {
@@ -56,7 +90,6 @@ public class KyoMp3Player {
             }
         }
 
-
         stop();
         _pausedPos = 0;
         _current   = v;
@@ -68,6 +101,13 @@ public class KyoMp3Player {
 
     }
 
+    /**
+     * 停止当前播放。
+     * @example
+     * <listing version="3.0">
+     * player.stop();
+     * </listing>
+     */
     public function stop():void {
         if (_channel) {
             _channel.removeEventListener(Event.SOUND_COMPLETE, onSoundComplete);
@@ -77,11 +117,26 @@ public class KyoMp3Player {
         }
     }
 
+    /**
+     * 暂停并记录位置。
+     * @example
+     * <listing version="3.0">
+     * player.pause();
+     * </listing>
+     */
     public function pause():void {
         _pausedPos = _channel.position;
         _channel.stop();
     }
 
+    /**
+     * 播放列表下一曲。
+     * @param loop 到末尾时是否回到第一首。
+     * @example
+     * <listing version="3.0">
+     * player.next();
+     * </listing>
+     */
     public function next(loop:Boolean = true):void {
         if (!list) {
             return;
@@ -99,6 +154,14 @@ public class KyoMp3Player {
         play(list[id]);
     }
 
+    /**
+     * 播放列表上一曲。
+     * @param loop 到开头时是否跳到最后一首。
+     * @example
+     * <listing version="3.0">
+     * player.prev();
+     * </listing>
+     */
     public function prev(loop:Boolean = true):void {
         if (!list) {
             return;
@@ -116,7 +179,9 @@ public class KyoMp3Player {
         play(list[id]);
     }
 
-
+    /**
+     * @private 按 playMode 决定下一动作。
+     */
     private function onSoundComplete(e:Event):void {
         _channel.removeEventListener(Event.SOUND_COMPLETE, onSoundComplete);
 
@@ -138,7 +203,6 @@ public class KyoMp3Player {
             break;
         }
     }
-
 
 }
 }

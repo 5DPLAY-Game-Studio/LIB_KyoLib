@@ -20,7 +20,22 @@ package net.play5d.kyo.sound {
 import flash.media.Sound;
 import flash.net.URLRequest;
 
+/**
+ * 轻量一次性播放：传入声音 Class 或 URL 即播。
+ *
+ * @see #play()
+ * @see KyoSoundPlayer
+ */
 public class KyoSoundLite {
+    /**
+     * 播放声音。
+     * @param sound 声音 <code>Class</code> 或 URL 字符串。
+     * @param times 循环次数；默认 1。
+     * @example
+     * <listing version="3.0">
+     * KyoSoundLite.play('hit.mp3');
+     * </listing>
+     */
     public static function play(sound:Object, times:int = 1):void {
         var s:Sound;
         if (sound is Class) {
@@ -34,6 +49,9 @@ public class KyoSoundLite {
         }
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoSoundLite() {
     }
 

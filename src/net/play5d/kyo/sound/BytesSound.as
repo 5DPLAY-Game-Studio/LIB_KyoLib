@@ -20,9 +20,15 @@ package net.play5d.kyo.sound {
 import flash.media.Sound;
 import flash.utils.ByteArray;
 
+/**
+ * 从压缩音频字节（分块）加载的 <code>Sound</code>。
+ *
+ * @see #loadBytes()
+ */
 public class BytesSound extends Sound {
-//		private var _bytes:ByteArray;
-
+    /**
+     * @param bytes 可选压缩音频数据；非空则立即 <code>loadBytes</code>。
+     */
     public function BytesSound(bytes:ByteArray = null) {
         super(null, null);
         if (bytes) {
@@ -30,51 +36,27 @@ public class BytesSound extends Sound {
         }
     }
 
+    /**
+     * 按最多 40KB 一块调用 <code>loadCompressedDataFromByteArray</code>，完成后 <code>clear</code> 源字节。
+     * @param v 压缩音频字节。
+     * @example
+     * <listing version="3.0">
+     * var s:BytesSound = new BytesSound();
+     * s.loadBytes(ba);
+     * </listing>
+     */
     public function loadBytes(v:ByteArray):void {
-//			_bytes = v;
-
         v.position = 0;
-
-//			var _this:BytesSound = this;
-//
-//			function loadNext():void{
-//				if(v.bytesAvailable < 1){
-//					trace("loadBytes finish");
-//					return;
-//				}
-//
-//				var bytes:ByteArray = new ByteArray();
-//
-//				var start:uint = v.position;
-//
-//				var len:uint = Math.min(v.bytesAvailable, 40 * 1024);
-//				v.readBytes(bytes, 0, len);
-//
-//				var end:uint = start + len;
-//
-//				trace("loadCompressedDataFromByteArray", start, "-", end);
-//				_this.loadCompressedDataFromByteArray(bytes, bytes.bytesAvailable);
-//
-//				setTimeout(loadNext, 1);
-//			}
-//			loadNext();
 
         while (v.bytesAvailable > 0) {
             var bytes:ByteArray = new ByteArray();
-
-//				var start:uint = v.position;
-
-            var len:uint = Math.min(v.bytesAvailable, 40 * 1024);
+            var len:uint        = Math.min(v.bytesAvailable, 40 * 1024);
             v.readBytes(bytes, 0, len);
-
-//				trace("loadCompressedDataFromByteArray", start, "-", start + bytes.bytesAvailable);
             this.loadCompressedDataFromByteArray(bytes, bytes.bytesAvailable);
         }
 
         v.clear();
-
     }
-
 
 }
 }

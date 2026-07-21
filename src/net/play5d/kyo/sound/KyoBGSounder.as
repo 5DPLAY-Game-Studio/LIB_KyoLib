@@ -24,32 +24,55 @@ import flash.media.SoundTransform;
 import flash.net.URLRequest;
 
 /**
- * 背景音乐播放类
+ * 背景音乐播放单例：支持 URL / Class / Sound，循环、暂停与音量。
+ *
+ * @see #I
+ * @see #play()
+ * @see #stop()
  * @author Kyo
  */
 public class KyoBGSounder {
+    /** @private */
     private static var _i:KyoBGSounder;
 
+    /**
+     * 单例。
+     */
     public static function get I():KyoBGSounder {
         _i ||= new KyoBGSounder();
         return _i;
     }
 
     /**
-     * 音乐URL链接或者声音CLASS对象
+     * 音乐 URL、声音 Class 或 <code>Sound</code> 实例。
      */
     public var sound:Object;
+    /**
+     * 当前是否处于播放流程中（非暂停态标记）。
+     * @default false
+     */
     public var playing:Boolean;
 
+    /** @private */
     private var _snd:Sound;
+    /** @private */
     private var _channel:SoundChannel;
+    /** @private */
     private var _soundTransform:SoundTransform = new SoundTransform();
+    /** @private */
     private var _channelPausePosition:int;
 
+    /**
+     * 音量 0~1。
+     * @default 1
+     */
     public function get volume():Number {
         return _soundTransform.volume;
     }
 
+    /**
+     * @private
+     */
     public function set volume(value:Number):void {
         _soundTransform.volume = value;
         if (_channel) {
@@ -57,11 +80,14 @@ public class KyoBGSounder {
         }
     }
 
-
     /**
-     * 播放背景音乐
-     * @param snd 为空时，播放sound对象
-     * @param isLoop 循环播放
+     * 播放背景音乐。
+     * @param snd 为空时使用 <code>sound</code>。
+     * @param isLoop 是否循环。
+     * @example
+     * <listing version="3.0">
+     * KyoBGSounder.I.play('bgm.mp3');
+     * </listing>
      */
     public function play(snd:Object = null, isLoop:Boolean = true):void {
         trace('bgm play');
@@ -94,7 +120,11 @@ public class KyoBGSounder {
     }
 
     /**
-     * 停止音乐
+     * 停止并关闭当前音乐。
+     * @example
+     * <listing version="3.0">
+     * KyoBGSounder.I.stop();
+     * </listing>
      */
     public function stop():void {
         trace('bgm stop');
@@ -116,6 +146,13 @@ public class KyoBGSounder {
         playing = false;
     }
 
+    /**
+     * 暂停，记录播放位置。
+     * @example
+     * <listing version="3.0">
+     * KyoBGSounder.I.pause();
+     * </listing>
+     */
     public function pause():void {
         trace('bgm pause');
         if (_channel) {
@@ -124,16 +161,26 @@ public class KyoBGSounder {
         }
     }
 
+    /**
+     * 从暂停位置继续播放。
+     * @example
+     * <listing version="3.0">
+     * KyoBGSounder.I.resume();
+     * </listing>
+     */
     public function resume():void {
         trace('bgm resume');
         if (_channel) {
-//				_channel = _snd.play(_channelPausePosition, int.MAX_VALUE, _soundTransform);
             playsnd(_channelPausePosition);
         }
     }
 
     /**
-     * 关闭时打开；打开时关闭
+     * 播放中则停止，否则播放（历史方法名 <code>toogle</code>）。
+     * @example
+     * <listing version="3.0">
+     * KyoBGSounder.I.toogle();
+     * </listing>
      */
     public function toogle():void {
         if (playing) {
@@ -144,6 +191,9 @@ public class KyoBGSounder {
         }
     }
 
+    /**
+     * @private
+     */
     private function playsnd(position:int = 0, isLoop:Boolean = true):void {
         if (!_snd) {
             return;
@@ -162,6 +212,9 @@ public class KyoBGSounder {
         }
     }
 
+    /**
+     * @private
+     */
     private function playCompleteHandler(e:Event):void {
         if (_channel) {
             _channel.removeEventListener(Event.SOUND_COMPLETE, playCompleteHandler);

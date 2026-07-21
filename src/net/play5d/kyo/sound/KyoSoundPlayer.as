@@ -23,32 +23,54 @@ import flash.utils.getTimer;
 
 import net.play5d.kyo.utils.KyoRandom;
 
+/**
+ * 音效播放单例：支持声道互斥、播放间隔与音量控制。
+ *
+ * @see #I
+ * @see #playSound()
+ * @see KyoSoundLite
+ */
 public class KyoSoundPlayer {
+    /** @private */
     private static var _i:KyoSoundPlayer;
 
+    /**
+     * 单例。
+     */
     public static function get I():KyoSoundPlayer {
         _i ||= new KyoSoundPlayer();
         return _i;
     }
 
+    /**
+     * 构造函数。
+     */
     public function KyoSoundPlayer() {
     }
 
-    private var _sounds:Object       = {};
+    /** @private channelId → InsSound */
+    private var _sounds:Object = {};
+    /** @private 全局默认音量 */
     private var _defaultValue:Number = 1;
+    /** @private channelId=-1 时上次播放时间 */
     private var _lastPlay:int;
 
     /**
-     * 播放声音
-     * @param s 声音对象或者对象Class
-     * @param channelId 声道ID，在同一声道ID中，只能有一个声音在播放，-1则没有限制
-     * @param gap 播放间隔(毫秒)，仅当 channelId = -1 时有效
-     * @param loops 循环次数
-     * @param volume 音量，-1时，使用全局 / 声道音量
-     * @param merge 是否覆盖声道中的声音
+     * 播放声音。
+     * @param s 声音对象、<code>Class</code>，或数组（随机取一项）。
+     * @param channelId 声道 ID；同 ID 同时仅一路；-1 表示不限声道。
+     * @param gap 播放间隔（毫秒），仅 <code>channelId == -1</code> 时有效。
+     * @param loops 循环次数。
+     * @param volume 音量；-1 时用全局或该声道音量。
+     * @param merge 为 <code>true</code> 时覆盖同声道正在播放的声音。
+     * @param onComplete 声道播放完成回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * KyoSoundPlayer.I.playSound(HitSnd, 1);
+     * </listing>
      */
     public function playSound(s:Object, channelId:int = -1, gap:int = 100, loops:int = 0, volume:Number = -1,
-                              merge:Boolean                                                             = false, onComplete:Function = null
+                              merge:Boolean = false, onComplete:Function = null
     ):void {
         var snd:Sound = getSound(s);
         if (!snd) {
@@ -82,8 +104,12 @@ public class KyoSoundPlayer {
     }
 
     /**
-     * 停止声音
-     * @param channelId 声道ID，停止此声道的声音
+     * 停止指定声道。
+     * @param channelId 声道 ID。
+     * @example
+     * <listing version="3.0">
+     * KyoSoundPlayer.I.stopSound(1);
+     * </listing>
      */
     public function stopSound(channelId:int = -1):void {
         var c:InsSound = _sounds[channelId] as InsSound;
@@ -93,8 +119,12 @@ public class KyoSoundPlayer {
     }
 
     /**
-     * 停止所有声音
-     * @param clean 是否清空声道
+     * 停止所有声道声音。
+     * @param clean 为 <code>true</code> 时清空声道表。
+     * @example
+     * <listing version="3.0">
+     * KyoSoundPlayer.I.stopAllSounds(true);
+     * </listing>
      */
     public function stopAllSounds(clean:Boolean = false):void {
         for each(var i:InsSound in _sounds) {
@@ -106,8 +136,13 @@ public class KyoSoundPlayer {
     }
 
     /**
-     * 是否正在播放声音
-     * @param channelId 声道ID
+     * 指定声道是否正在播放。
+     * @param channelId 声道 ID。
+     * @return 是否播放中。
+     * @example
+     * <listing version="3.0">
+     * var p:Boolean = KyoSoundPlayer.I.playingSound(1);
+     * </listing>
      */
     public function playingSound(channelId:int = -1):Boolean {
         var c:InsSound = _sounds[channelId] as InsSound;
@@ -118,9 +153,13 @@ public class KyoSoundPlayer {
     }
 
     /**
-     * 设置音量
-     * @param volume 音量：0 ~ 1
-     * @param channelId 声道，-1时，设置所有音量
+     * 设置音量。
+     * @param volume 0~1。
+     * @param channelId 声道；-1 时设全局并同步已有声道。
+     * @example
+     * <listing version="3.0">
+     * KyoSoundPlayer.I.setVolume(0.5);
+     * </listing>
      */
     public function setVolume(volume:Number, channelId:int = -1):void {
         if (channelId == -1) {
@@ -131,12 +170,13 @@ public class KyoSoundPlayer {
             return;
         }
         if (_sounds[channelId]) {
-            (
-                    _sounds[channelId] as InsSound
-            ).volume = volume;
+            (_sounds[channelId] as InsSound).volume = volume;
         }
     }
 
+    /**
+     * @private
+     */
     private function getSound(s:Object):Sound {
         var snd:Sound;
         if (s is Array) {
@@ -159,35 +199,65 @@ import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
 
+/**
+ * 单声道播放包装（文件内 internal）。
+ */
 internal class InsSound {
+    /**
+     * @param sound 声音实例。
+     */
     public function InsSound(sound:Sound):void {
         _sound = sound;
     }
 
+    /**
+     * 是否正在播放。
+     */
     public var playing:Boolean;
+    /**
+     * 播放完成回调。
+     */
     public var onComplete:Function;
+    /** @private */
     private var _channel:SoundChannel;
+    /** @private */
     private var _sound:Sound;
+    /** @private */
     private var _loop:int;
 
+    /** @private */
     private var _volume:Number;
 
+    /**
+     * 当前音量。
+     */
     public function get volume():Number {
         return _volume;
     }
 
+    /**
+     * @private
+     */
     public function set volume(v:Number):void {
         _volume        = v;
         var pos:Number = _channel.position;
         playsound(pos);
     }
 
+    /**
+     * 开始播放。
+     * @param loop 循环次数。
+     * @param volume 音量。
+     */
     public function play(loop:int, volume:Number):void {
         _volume = volume;
         _loop   = loop;
         playsound();
     }
 
+    /**
+     * 停止。
+     */
     public function stop():void {
         if (_channel) {
             _channel.stop();
@@ -195,6 +265,9 @@ internal class InsSound {
         playing = false;
     }
 
+    /**
+     * @private
+     */
     private function playsound(startTime:Number = 0):void {
         stop();
         playing  = true;
@@ -202,6 +275,9 @@ internal class InsSound {
         _channel.addEventListener(Event.SOUND_COMPLETE, soundComplete);
     }
 
+    /**
+     * @private
+     */
     private function soundComplete(e:Event):void {
         _channel.removeEventListener(Event.SOUND_COMPLETE, soundComplete);
         playing = false;
