@@ -111,7 +111,7 @@ public class KyoXMLUtils {
      * @return 无符号整数。
      * @example
      * <listing version="3.0">
-     * var n:uint = KyoXMLUtils.getUint(xml.@id);
+     * var n:uint = KyoXMLUtils.getUint(xml.&#64;id);
      * </listing>
      */
     public static function getUint(x:XMLList, defaultNumber:uint = 0):uint {
@@ -129,7 +129,7 @@ public class KyoXMLUtils {
      * @return 数值。
      * @example
      * <listing version="3.0">
-     * var n:Number = KyoXMLUtils.getNumber(xml.@v);
+     * var n:Number = KyoXMLUtils.getNumber(xml.&#64;v);
      * </listing>
      */
     public static function getNumber(x:XMLList, defaultNumber:Number = 0):Number {

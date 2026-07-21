@@ -155,7 +155,7 @@ public class KyoURLoader {
     /**
      * 根据文件头 BOM 判断文本编码类型（读取后复位 position）。
      * @param fileData 文件字节。
-     * @return <code>TYPE_*</code> 常量之一。
+     * @return <code>TYPE_UNICODE</code> 等常量之一。
      * @example
      * <listing version="3.0">
      * var t:String = KyoURLoader.getFileType(ba);

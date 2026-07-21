@@ -23,7 +23,7 @@ import com.greensock.easing.Elastic;
 import net.play5d.kyo.stage.IStage;
 
 /**
- * 弹性上下位移的场景淡入 / 淡出效果（历史拼写 <code>fad*</code>）。
+ * 弹性上下位移的场景淡入 / 淡出效果（历史拼写 fadIn / fadOut）。
  *
  * @see IStageFadEffect
  * @see ZoomEffect

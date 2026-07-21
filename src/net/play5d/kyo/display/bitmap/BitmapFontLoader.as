@@ -27,7 +27,7 @@ import net.play5d.kyo.loader.KyoURLoader;
 /**
  * 位图字体加载与缓存。
  *
- * <p>按 Starling 字体 XML 解析贴图路径，加载后以 <code>info.@face</code> 为键存入字典，可通过 <code>getFont</code> 取出。</p>
+ * <p>按 Starling 字体 XML 解析贴图路径，加载后以 <code>info.&#64;face</code> 为键存入字典，可通过 <code>getFont</code> 取出。</p>
  *
  * @see BitmapFont
  * @see #loadFonts()
@@ -121,7 +121,7 @@ public class BitmapFontLoader {
     }
 
     /**
-     * 按字体名（XML <code>info.@face</code>）取已缓存的 <code>BitmapFont</code>。
+     * 按字体名（XML <code>info.&#64;face</code>）取已缓存的 <code>BitmapFont</code>。
      * @param id 字体 face 名。
      * @return 对应字体；未加载过则为 <code>undefined</code>/<code>null</code>。
      * @example

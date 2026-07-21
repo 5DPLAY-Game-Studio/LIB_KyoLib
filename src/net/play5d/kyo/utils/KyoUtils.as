@@ -665,6 +665,9 @@ public class KyoUtils {
 
     /**
      * 判断数值是否落在两端点之间（顺序无关）。
+     *
+     * <p>新代码请优先使用 <code>KyoMath.inRange</code>（端点需已有序）。本方法保留兼容旧调用。</p>
+     *
      * @param num 待测值。
      * @param num1 端点一。
      * @param num2 端点二。
@@ -673,6 +676,7 @@ public class KyoUtils {
      * <listing version="3.0">
      * KyoUtils.math_is_between(5, 0, 10);
      * </listing>
+     * @see net.play5d.kyo.utils.KyoMath#inRange()
      */
     public static function math_is_between(num:Number, num1:Number, num2:Number):Boolean {
         return (
@@ -730,6 +734,9 @@ public class KyoUtils {
 
     /**
      * 将数值钳制在 Point 表示的 [x, y] 范围。
+     *
+     * <p>新代码请优先使用 <code>KyoMath.fixRange(n, min, max)</code>。本方法保留兼容旧调用。</p>
+     *
      * @param n 原值。
      * @param range x=min，y=max。
      * @return 钳制后的值。
@@ -737,6 +744,7 @@ public class KyoUtils {
      * <listing version="3.0">
      * KyoUtils.num_fixRange(v, new Point(0, 1));
      * </listing>
+     * @see net.play5d.kyo.utils.KyoMath#fixRange()
      */
     public static function num_fixRange(n:Number, range:Point):Number {
         if (n < range.x) {

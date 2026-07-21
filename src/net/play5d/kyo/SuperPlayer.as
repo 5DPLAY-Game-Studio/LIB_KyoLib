@@ -85,7 +85,7 @@ public class SuperPlayer extends Sprite {
     }
 
     /**
-     * 当前媒体类型，见 <code>TYPE_*</code>。
+     * 当前媒体类型，见 <code>TYPE_FLASH</code> 等常量。
      */
     public var type:String;
     /**

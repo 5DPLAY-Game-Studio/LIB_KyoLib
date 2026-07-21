@@ -51,7 +51,7 @@ public class KyoMp3Player {
     }
 
     /**
-     * 播放模式，见 <code>MODE_*</code>。
+     * 播放模式，见 <code>MODE_ALL_LOOP</code> 等常量。
      */
     public var playMode:String;
     /**

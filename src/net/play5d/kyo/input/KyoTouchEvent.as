@@ -54,7 +54,7 @@ public class KyoTouchEvent extends Event {
     }
 
     /**
-     * 滑动方向，见 <code>DIRECT_*</code> 常量。
+     * 滑动方向，见 <code>DIRECT_UP</code> 等常量。
      * @default 0
      */
     public var direct:int;

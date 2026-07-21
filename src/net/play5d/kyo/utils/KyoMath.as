@@ -49,6 +49,9 @@ public class KyoMath {
 
     /**
      * 将数字钳制在 [min, max]。
+     *
+     * <p>新代码优先使用本方法；旧代码中的 <code>KyoUtils.num_fixRange</code> 仍可用。</p>
+     *
      * @param number 原值。
      * @param min 最小值。
      * @param max 最大值。
@@ -57,6 +60,7 @@ public class KyoMath {
      * <listing version="3.0">
      * KyoMath.fixRange(1.5, 0, 1); // 1
      * </listing>
+     * @see net.play5d.kyo.utils.KyoUtils#num_fixRange()
      */
     public static function fixRange(number:Number, min:Number, max:Number):Number {
         if (number < min) {
@@ -70,6 +74,9 @@ public class KyoMath {
 
     /**
      * 判断数字是否在 [min, max] 内（含边界）。
+     *
+     * <p>新代码优先使用本方法（端点需有序）；无序端点见 <code>KyoUtils.math_is_between</code>。</p>
+     *
      * @param number 原值。
      * @param min 最小值。
      * @param max 最大值。
@@ -78,6 +85,7 @@ public class KyoMath {
      * <listing version="3.0">
      * KyoMath.inRange(5, 0, 10); // true
      * </listing>
+     * @see net.play5d.kyo.utils.KyoUtils#math_is_between()
      */
     public static function inRange(number:Number, min:Number, max:Number):Boolean {
         return number >= min && number <= max;

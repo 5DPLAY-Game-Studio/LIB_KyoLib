@@ -76,7 +76,7 @@ public class BitmapFont {
     private var _source:BitmapData;
     /** @private 字符码 → 字形缓存 */
     private var _fontCache:Object = {};
-    /** @private 单字参考宽度（取自 XML <code>info.@size</code>） */
+    /** @private 单字参考宽度（取自 XML <code>info.&#64;size</code>） */
     private var _charWidth:int;
     /** @private 单字高度（取各字形最大 height） */
     private var _charHeight:int;
