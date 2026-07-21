@@ -29,9 +29,46 @@ import net.play5d.kyo.display.ui.ppt.effect.BasePPTEffect;
 import net.play5d.kyo.display.ui.ppt.effect.PPTef_scrollH;
 
 /**
- * 滚动图片幻灯
+ * 翻页开始时分派，<code>data</code> 为当前页索引。
+ * @eventType PicPointerEvent.CHANGE_START
+ */
+[Event(name='CHANGE_START', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
+/**
+ * 翻页动画结束时分派，<code>data</code> 为当前页索引。
+ * @eventType PicPointerEvent.CHANGE_FINISH
+ */
+[Event(name='CHANGE_FINISH', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
+/**
+ * 可视为点击的鼠标抬起时分派，<code>data</code> 为当前页索引。
+ * @eventType PicPointerEvent.MOUSE_UP
+ */
+[Event(name='MOUSE_UP', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
+/**
+ * 资源加载进度；整体进度为 0–1，写入 <code>data</code>。
+ * @eventType PicPointerEvent.LOAD_PROCESS
+ */
+[Event(name='LOAD_PROCESS', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
+/**
+ * 全部资源加载完成时分派。
+ * @eventType PicPointerEvent.LOAD_COMPLETE
+ */
+[Event(name='LOAD_COMPLETE', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
+/**
+ * 滚动图片幻灯片：定时翻页、效果过渡、可选拖拽与加载进度提示。
+ *
+ * @see PicPointerEvent
+ * @see BasePPTEffect
+ * @see PPTLoaderCtrl
+ * @see #initlize()
+ * @see #toNext()
+ * @see #toPrev()
  */
 public class PicPointer extends Sprite {
+    /**
+     * @param size 可视区域尺寸。
+     * @param delay 自动翻页间隔（秒），默认 1。
+     * @param effect 切换效果；为 <code>null</code> 时使用 <code>PPTef_scrollH</code>。
+     */
     public function PicPointer(size:Point, delay:Number = 1, effect:BasePPTEffect = null) {
         this.size  = size;
         this.delay = delay;
@@ -49,35 +86,53 @@ public class PicPointer extends Sprite {
         _picSprite.graphics.endFill();
     }
 
+    /**
+     * 可视区域尺寸。
+     */
     public var size:Point;
+    /**
+     * 自动翻页间隔（秒）。
+     */
     public var delay:Number;
+    /** @private 资源 URL 列表 */
     private var _datas:Array;
+    /** @private id → PicLoader */
     private var _loaders:Object;
+    /** @private 承载页内容的容器 */
     private var _picSprite:Sprite;
+    /** @private 切换效果 */
     private var _effect:BasePPTEffect;
+    /** @private 队列加载控制 */
     private var _loaderCtrl:PPTLoaderCtrl = new PPTLoaderCtrl();
+    /** @private 加载进度信息文本 */
     private var _infoTxt:TextField;
+    /** @private 自动翻页计时器 */
     private var _timer:Timer;
-
+    /** @private 当前页索引；未初始化为 -1 */
     private var _curId:int = -1;
 
+    /**
+     * 当前页索引。
+     * @return 页索引；未初始化时为 -1。
+     * @default -1
+     */
     public function get curId():int {
         return _curId;
     }
 
-    /**
-     * 移动方向（1：左右滚动，2：上下滚动）
-     */
-                //		public var direct:int = 2;
+    /** @private */
     private var _dragAble:Boolean;
 
     /**
-     * 是否能拖动
+     * 是否启用拖拽翻页；设为 <code>true</code> 时调用效果的 <code>initDrag</code>。
+     * @return 是否可拖拽。
+     * @default false
      */
     public function get dragAble():Boolean {
         return _dragAble;
     }
 
+    /** @private */
     public function set dragAble(v:Boolean):void {
         _dragAble = v;
         if (v) {
@@ -85,6 +140,10 @@ public class PicPointer extends Sprite {
         }
     }
 
+    /**
+     * 是否显示加载进度文本层。
+     * @param v <code>true</code> 创建并显示；<code>false</code> 移除。
+     */
     public function set showInfo(v:Boolean):void {
         if (v) {
             if (!_infoTxt) {
@@ -109,6 +168,15 @@ public class PicPointer extends Sprite {
         }
     }
 
+    /**
+     * 写入进度信息文本（需先 <code>showInfo = true</code>）。
+     * @param v 显示文案。
+     * @example
+     * <listing version="3.0">
+     * pointer.showInfo = true;
+     * pointer.infoMsg('loading...');
+     * </listing>
+     */
     public function infoMsg(v:String):void {
         if (_infoTxt) {
             _infoTxt.text = v;
@@ -116,14 +184,18 @@ public class PicPointer extends Sprite {
     }
 
     /**
-     *  初始化
-     * @param data 图片数据
+     * 初始化幻灯：绑定效果、加载数据并启动自动翻页。
+     * @param data 图片 / 资源 URL 数组。
+     * @example
+     * <listing version="3.0">
+     * pointer.initlize(['a.jpg', 'b.jpg']);
+     * </listing>
+     * @see #update()
      */
     public function initlize(data:Array):void {
         _effect.initlize(this, _picSprite);
 
         setData(data);
-//			loadNext();
         _curId = 0;
         resetLoaders();
         addEventListener(MouseEvent.MOUSE_UP, onClick);
@@ -132,6 +204,12 @@ public class PicPointer extends Sprite {
         dispatchEvent(new PicPointerEvent(PicPointerEvent.CHANGE_START, _curId));
     }
 
+    /**
+     * 用新数据重建幻灯（先 <code>destory</code> 再加载）。
+     * @param data 资源 URL 数组。
+     * @see #initlize()
+     * @see #destory()
+     */
     public function update(data:Array):void {
         destory();
         setData(data);
@@ -141,6 +219,13 @@ public class PicPointer extends Sprite {
         dispatchEvent(new PicPointerEvent(PicPointerEvent.CHANGE_START, _curId));
     }
 
+    /**
+     * 销毁页加载器并从容器移除。
+     * @example
+     * <listing version="3.0">
+     * pointer.destory();
+     * </listing>
+     */
     public function destory():void {
         _curId = -1;
 
@@ -158,12 +243,24 @@ public class PicPointer extends Sprite {
 
     }
 
+    /**
+     * 暂停自动翻页计时器。
+     * @example
+     * <listing version="3.0">
+     * pointer.pause();
+     * </listing>
+     * @see #resume()
+     */
     public function pause():void {
         if (_timer) {
             _timer.stop();
         }
     }
 
+    /**
+     * 重置并启动自动翻页计时器。
+     * @see #pause()
+     */
     public function resume():void {
         if (_timer) {
             _timer.reset();
@@ -171,6 +268,15 @@ public class PicPointer extends Sprite {
         }
     }
 
+    /**
+     * 切换到下一页并播放过渡动画。
+     * @example
+     * <listing version="3.0">
+     * pointer.toNext();
+     * </listing>
+     * @see #toPrev()
+     * @see #jump()
+     */
     public function toNext():void {
         pause();
         _curId = fixid(_curId + 1);
@@ -178,6 +284,10 @@ public class PicPointer extends Sprite {
         _effect.tweenNext(tweenFinish);
     }
 
+    /**
+     * 切换到上一页并播放过渡动画。
+     * @see #toNext()
+     */
     public function toPrev():void {
         pause();
         _curId = fixid(_curId - 1);
@@ -185,6 +295,14 @@ public class PicPointer extends Sprite {
         _effect.tweenPrev(tweenFinish);
     }
 
+    /**
+     * 跳转到指定页（内部先定位到上一页再 <code>toNext</code> 以走过渡）。
+     * @param id 目标页索引。
+     * @example
+     * <listing version="3.0">
+     * pointer.jump(2);
+     * </listing>
+     */
     public function jump(id:int):void {
         if (id == _curId) {
             return;
@@ -196,13 +314,9 @@ public class PicPointer extends Sprite {
         toNext();
     }
 
-    private function newPicLoader(size:Point):PicLoader {
-        var pl:PicLoader = new PicLoader(size);
-        _picSprite.addChild(pl);
-        pl.visible = false;
-        return pl;
-    }
-
+    /**
+     * @private 按 URL 列表创建加载器并开始队列加载。
+     */
     private function setData(v:Array):void {
         _loaders            = {};
         var needLoads:Array = [];
@@ -220,6 +334,9 @@ public class PicPointer extends Sprite {
         _loaderCtrl.loadQueue(needLoads);
     }
 
+    /**
+     * @private 多页时创建计时器；单页则销毁计时器。
+     */
     private function initTimer():void {
         if (_datas.length > 1) {
             if (!_timer) {
@@ -238,6 +355,9 @@ public class PicPointer extends Sprite {
         resume();
     }
 
+    /**
+     * @private 将索引环绕到合法范围。
+     */
     private function fixid(id:int):int {
         if (id > _datas.length - 1) {
             id = 0;
@@ -248,12 +368,18 @@ public class PicPointer extends Sprite {
         return id;
     }
 
+    /**
+     * @private 过渡结束：重排三页并恢复计时。
+     */
     private function tweenFinish():void {
         resetLoaders();
         resume();
         dispatchEvent(new PicPointerEvent(PicPointerEvent.CHANGE_FINISH, _curId));
     }
 
+    /**
+     * @private 按当前索引布置当前 / 下一 / 上一页到效果与容器。
+     */
     private function resetLoaders():void {
         if (!_loaders) {
             return;
@@ -274,22 +400,29 @@ public class PicPointer extends Sprite {
         _picSprite.addChild(prevLoader);
     }
 
+    /**
+     * @private 汇总加载进度并转发事件。
+     */
     private function onLoadProcess(e:PicPointerEvent):void {
         var per:Number        = Number(e.data);
         var percentStr:String = int(per * 100) + '%';
         infoMsg('正在加载资源：' + percentStr + ' (' + _loaderCtrl.curIndex + '/' + _loaderCtrl.totalIndex + ')');
 
-        var allProcess:Number = (
-                                        _loaderCtrl.curIndex - 1 + per
-                                ) / _loaderCtrl.totalIndex;
+        var allProcess:Number = (_loaderCtrl.curIndex - 1 + per) / _loaderCtrl.totalIndex;
         this.dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_PROCESS, allProcess));
     }
 
+    /**
+     * @private 全部加载完成。
+     */
     private function onLoadComplete(e:PicPointerEvent):void {
         showInfo = false;
         this.dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_COMPLETE));
     }
 
+    /**
+     * @private 点击抬起（排除拖拽）时派发 MOUSE_UP。
+     */
     private function onClick(e:MouseEvent):void {
         if (!_effect.canClick()) {
             return;
@@ -297,11 +430,12 @@ public class PicPointer extends Sprite {
         dispatchEvent(new PicPointerEvent(PicPointerEvent.MOUSE_UP, _curId));
     }
 
+    /**
+     * @private 计时到点翻到下一页。
+     */
     private function onTimer(e:TimerEvent):void {
-//			if(_curLoader.finish())
         toNext();
     }
-
 
 }
 }

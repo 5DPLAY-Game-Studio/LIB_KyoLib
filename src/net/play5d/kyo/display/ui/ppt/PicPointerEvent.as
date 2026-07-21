@@ -19,19 +19,53 @@
 package net.play5d.kyo.display.ui.ppt {
 import flash.events.Event;
 
+/**
+ * 幻灯片 / 队列加载相关事件。
+ *
+ * @see PicPointer
+ * @see PPTLoaderCtrl
+ * @see #data
+ */
 public class PicPointerEvent extends Event {
-    public static const CHANGE_START:String  = 'CHANGE_START';
+    /**
+     * <code>CHANGE_START</code> 事件的 <code>type</code> 属性值。
+     * @eventType CHANGE_START
+     */
+    public static const CHANGE_START:String = 'CHANGE_START';
+    /**
+     * <code>CHANGE_FINISH</code> 事件的 <code>type</code> 属性值。
+     * @eventType CHANGE_FINISH
+     */
     public static const CHANGE_FINISH:String = 'CHANGE_FINISH';
-    public static const MOUSE_UP:String      = 'MOUSE_UP';
-
-    public static const LOAD_PROCESS:String  = 'LOAD_PROCESS';
+    /**
+     * <code>MOUSE_UP</code> 事件的 <code>type</code> 属性值。
+     * @eventType MOUSE_UP
+     */
+    public static const MOUSE_UP:String = 'MOUSE_UP';
+    /**
+     * <code>LOAD_PROCESS</code> 事件的 <code>type</code> 属性值。
+     * @eventType LOAD_PROCESS
+     */
+    public static const LOAD_PROCESS:String = 'LOAD_PROCESS';
+    /**
+     * <code>LOAD_COMPLETE</code> 事件的 <code>type</code> 属性值。
+     * @eventType LOAD_COMPLETE
+     */
     public static const LOAD_COMPLETE:String = 'LOAD_COMPLETE';
 
+    /**
+     * @param type 事件类型。
+     * @param data 附加数据（如页索引或进度 0–1），可选。
+     */
     public function PicPointerEvent(type:String, data:Object = null) {
         super(type, false, false);
         this.data = data;
     }
 
+    /**
+     * 事件附带数据（页索引、加载进度等，视类型而定）。
+     * @default null
+     */
     public var data:Object;
 }
 }
