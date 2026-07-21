@@ -19,15 +19,33 @@
 package net.play5d.kyo.display.ui.ppt.effect {
 import com.greensock.TweenLite;
 
+/**
+ * 水平滑动切换效果，支持正向 / 反向。
+ *
+ * @see BasePPTEffect
+ * @see #direct
+ * @see PPTef_scrollV
+ */
 public class PPTef_scrollH extends BasePPTEffect {
+    /**
+     * @param direct 滑动方向：<code>1</code> 正向（上一页在左、下一页在右），<code>-1</code> 反向。
+     */
     public function PPTef_scrollH(direct:int = 1) {
         super();
         this.direct = direct;
     }
 
+    /**
+     * 水平滑动方向：1 正向，-1 反向。
+     * @default 1
+     */
     public var direct:int = 1;
+    /** @private */
     private var _tween:TweenLite;
 
+    /**
+     * @private 按 <code>direct</code> 布置三页 X 坐标。
+     */
     protected override function initStart():void {
         _sp.x         = 0;
         _currentPic.x = 0;
@@ -44,12 +62,7 @@ public class PPTef_scrollH extends BasePPTEffect {
         }
     }
 
-//		public override function initPrev():void{
-//			_prevPic.x = -_pointer.size.x;
-//		}
-//		public override function initNext():void{
-//			_nextPic.x = _pointer.size.x;
-//		}
+    /** @inheritDoc */
     public override function tweenNext(back:Function):void {
         switch (direct) {
         case 1:
@@ -61,6 +74,7 @@ public class PPTef_scrollH extends BasePPTEffect {
         }
     }
 
+    /** @inheritDoc */
     public override function tweenPrev(back:Function):void {
         switch (direct) {
         case 1:
@@ -72,30 +86,35 @@ public class PPTef_scrollH extends BasePPTEffect {
         }
     }
 
+    /** @inheritDoc */
     public override function tweenBack():void {
         var t:Number = duration / 2;
         _tween       = TweenLite.to(_sp, t, {x: 0});
     }
 
+    /** @inheritDoc */
     public override function tweening():Boolean {
         return _tween && _tween._active;
     }
 
+    /** @inheritDoc */
     public override function tweenStop():void {
         if (_tween) {
             _tween.kill();
         }
     }
 
-
+    /** @inheritDoc */
     protected override function onDraging():void {
         _sp.x = mousePoint().x - _downP.x;
     }
 
+    /** @inheritDoc */
     protected override function dragNext():Boolean {
         return _sp.x - _downSPP.x < -100;
     }
 
+    /** @inheritDoc */
     protected override function dragPrev():Boolean {
         return _sp.x - _downSPP.x > 100;
     }
