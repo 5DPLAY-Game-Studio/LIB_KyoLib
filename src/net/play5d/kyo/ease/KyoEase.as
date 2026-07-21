@@ -21,21 +21,30 @@ import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.geom.Point;
 
+/**
+ * 缓动 / 运动工具（静态方法）。
+ *
+ * @see #parabola()
+ */
 public class KyoEase {
     /**
-     * 抛物线动物
-     *
+     * 抛物线运动：水平匀速，垂直受重力加速，越过目标点后回调。
+     * @param display 要移动的显示对象。
+     * @param target 目标坐标。
+     * @param speed 水平速度（像素/帧），默认 10。
+     * @param g 重力加速度，默认 1。
+     * @param callBack 到达条件满足时的无参回调，可选。
+     * @example
+     * <listing version="3.0">
+     * KyoEase.parabola(ball, new Point(400, 300), 8, 1, onLand);
+     * </listing>
      */
-    /**
-     * 抛物线运动
-     * @param display 要移动物体
-     * @param target 目标坐标
-     * @param speed 水平移动速度
-     * @param g 重力
-     * @param callBack 回调函数,到达目标坐标时调用
-     */
-    public static function parabola(display:DisplayObject, target:Point, speed:Number = 10, g:Number = 1,
-                                    callBack:Function                                                = null
+    public static function parabola(
+        display :DisplayObject,
+        target  :Point,
+        speed   :Number = 10,
+        g       :Number = 1,
+        callBack:Function = null
     ):void {
         var distance:Number = Math.abs(target.x - display.x);
         var time:int        = distance / speed;
@@ -54,9 +63,11 @@ public class KyoEase {
                 }
             }
         }
-
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoEase() {
     }
 }
