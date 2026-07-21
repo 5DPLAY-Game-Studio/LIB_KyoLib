@@ -25,16 +25,36 @@ import flash.geom.Point;
 
 import net.play5d.kyo.stage.IStage;
 
+/**
+ * 缩放弹出 / 缩回的场景层效果。
+ *
+ * @see IStageFadEffect
+ * @see ElastEffect
+ */
 public class ZoomEffect implements IStageFadEffect {
+    /**
+     * @param duration 时长（秒）。
+     * @param back 淡入是否使用 <code>Back.easeOut</code>。
+     */
     public function ZoomEffect(duration:Number = 0.3, back:Boolean = true) {
         _duration = duration;
         _back     = back;
     }
 
+    /** @private */
     private var _duration:Number;
+    /** @private */
     private var _back:Boolean;
-    private var _fixPosition:Boolean;
 
+    /**
+     * 从小到大缩放入场。
+     * @param stage 目标场景。
+     * @param complete 完成回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * new ZoomEffect().fadIn(layer, onDone);
+     * </listing>
+     */
     public function fadIn(stage:IStage, complete:Function = null):void {
         var z:Number        = 0.5;
         var p:Point         = new Point();
@@ -49,6 +69,15 @@ public class ZoomEffect implements IStageFadEffect {
         TweenLite.from(stage.display, _duration, to);
     }
 
+    /**
+     * 缩小退场。
+     * @param stage 目标场景。
+     * @param complete 完成回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * new ZoomEffect().fadOut(layer, onDone);
+     * </listing>
+     */
     public function fadOut(stage:IStage, complete:Function = null):void {
         var z:Number        = 0.1;
         var p:Point         = new Point();
