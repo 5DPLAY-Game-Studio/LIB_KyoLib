@@ -22,7 +22,20 @@ import flash.filters.ConvolutionFilter;
 import flash.filters.DisplacementMapFilter;
 import flash.geom.*;
 
+/**
+ * 位图水波纹效果：在源图上按点扰动并位移映射输出。
+ *
+ * <p>每帧调用 <code>render</code> 并传入扰动点；构造时会做一次空渲染以初始化缓冲。</p>
+ *
+ * @see #render()
+ * @see #strongth
+ * @see #destory()
+ */
 public class WaterWaveEffect extends Sprite {
+    /**
+     * @param img 源位图（效果生命周期内由本类持有并在 <code>destory</code> 时 dispose）。
+     * @param scale 显示缩放倍数，默认 1。
+     */
     public function WaterWaveEffect(img:BitmapData, scale:int = 1) {
         surface = img;
 
@@ -33,21 +46,51 @@ public class WaterWaveEffect extends Sprite {
         buildwave();
     }
 
-    public var strongth:Number    = 1;
-    private var mouseDown:Boolean = false;
-    private var result:BitmapData, result2:BitmapData, source:BitmapData, buffer:BitmapData, output:BitmapData,
-                surface:BitmapData;
+    /**
+     * 扰动强度（写入扰动像素时相对中心点的偏移），默认 1。
+     * @default 1
+     */
+    public var strongth:Number = 1;
+    /** @private */
+    private var result :BitmapData;
+    /** @private */
+    private var result2:BitmapData;
+    /** @private */
+    private var source :BitmapData;
+    /** @private */
+    private var buffer :BitmapData;
+    /** @private */
+    private var output :BitmapData;
+    /** @private */
+    private var surface:BitmapData;
+    /** @private */
     private var bounds:Rectangle;
+    /** @private */
     private var origin:Point;
-    private var matrix:Matrix, matrix2:Matrix;
+    /** @private */
+    private var matrix :Matrix;
+    /** @private */
+    private var matrix2:Matrix;
+    /** @private */
     private var wave:ConvolutionFilter;
+    /** @private */
     private var damp:ColorTransform;
+    /** @private */
     private var water:DisplacementMapFilter;
-    //
+    /** @private */
     private var imgW:Number;
+    /** @private */
     private var imgH:Number;
+    /** @private 显示缩放 */
     private var size:int;
 
+    /**
+     * 释放内部缓冲与源图。
+     * @example
+     * <listing version="3.0">
+     * wave.destory();
+     * </listing>
+     */
     public function destory():void {
         result.dispose();
         result2.dispose();
@@ -69,8 +112,12 @@ public class WaterWaveEffect extends Sprite {
     }
 
     /**
-     *  运行
-     * @param points 包含坐标(Point)的数组
+     * 推进一帧水波演算；可选在指定点写入扰动。
+     * @param points 扰动坐标数组（元素为 <code>Point</code>）；为 <code>null</code> 时仅做传播衰减。
+     * @example
+     * <listing version="3.0">
+     * wave.render([new Point(mouseX, mouseY)]);
+     * </listing>
      */
     public function render(points:Array = null):void {
         if (points) {
@@ -85,16 +132,6 @@ public class WaterWaveEffect extends Sprite {
             }
         }
 
-//			if(mousex != -1 && mousey != -1){
-//				var _x:Number = mousex / 2 / size;
-//				var _y:Number = mousey / 2 / size;
-//				source.setPixel (_x+1, _y, 16777215);
-//				source.setPixel (_x-1, _y, 16777215);
-//				source.setPixel (_x, _y+1, 16777215);
-//				source.setPixel (_x, _y-1, 16777215);
-//				source.setPixel (_x, _y, 16777215);
-//			}
-
         result.applyFilter(source, bounds, origin, wave);
 
         result.draw(result, matrix, null, BlendMode.ADD);
@@ -106,6 +143,9 @@ public class WaterWaveEffect extends Sprite {
         source = result.clone();
     }
 
+    /**
+     * @private 创建缓冲、滤镜与显示位图。
+     */
     private function buildwave():void {
         result  = new BitmapData(imgW, imgH, false, 128);
         result2 = new BitmapData(imgW, imgH, false, 128);
