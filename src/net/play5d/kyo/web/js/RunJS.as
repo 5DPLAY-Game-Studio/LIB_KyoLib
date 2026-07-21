@@ -17,9 +17,17 @@
  */
 
 package net.play5d.kyo.web.js {
-import flash.display.*;
+import flash.display.Sprite;
 
+/**
+ * <code>JSEnv</code> 演示：DOM、事件、闭包与 AJAX。
+ *
+ * @see JSEnv
+ */
 public class RunJS extends Sprite {
+    /**
+     * 构造后依次运行各演示。
+     */
     function RunJS() {
         JSLine('DOM Demo:');
         JSDemo1();
@@ -34,9 +42,15 @@ public class RunJS extends Sprite {
         JSDemo4();
     }
 
-    // import DOM Interface
+    /**
+     * 浏览器 window 代理。
+     */
     private var window:JSEnv = JSEnv.$;
 
+    /**
+     * 在页面插入分隔标题。
+     * @param str 标题文本。
+     */
     internal function JSLine(str:*):void {
         var doc:* = window.document;
         var div:* = doc.createElement('div');
@@ -45,7 +59,9 @@ public class RunJS extends Sprite {
         doc.body.appendChild(div);
     }
 
-
+    /**
+     * DOM 创建样式盒子演示。
+     */
     internal function JSDemo1():void {
         var doc:* = window.document;
         var div:* = doc.createElement('div');
@@ -59,7 +75,9 @@ public class RunJS extends Sprite {
         doc.body.appendChild(div);
     }
 
-
+    /**
+     * 按钮点击与 setInterval 演示。
+     */
     internal function JSDemo2():void {
         var doc:* = window.document;
         var btn:* = doc.createElement('button');
@@ -75,7 +93,9 @@ public class RunJS extends Sprite {
         doc.body.appendChild(btn);
     }
 
-
+    /**
+     * 闭包绑定循环索引演示。
+     */
     internal function JSDemo3():void {
         var doc:* = window.document;
 
@@ -94,6 +114,9 @@ public class RunJS extends Sprite {
         }
     }
 
+    /**
+     * XMLHttpRequest / ActiveX 加载演示。
+     */
     internal function JSDemo4():void {
         var doc:* = window.document;
         var btn:* = doc.createElement('button');
@@ -104,8 +127,8 @@ public class RunJS extends Sprite {
 
         btn.onclick = function ():void {
             var xhr:* = window.ActiveXObject ?
-                      new window.ActiveXObject('Microsoft.XMLHTTP') :
-                      new window.XMLHttpRequest;
+                        new window.ActiveXObject('Microsoft.XMLHTTP') :
+                        new window.XMLHttpRequest;
 
             xhr.onreadystatechange = function ():void {
                 if (xhr.readyState != 4) {
