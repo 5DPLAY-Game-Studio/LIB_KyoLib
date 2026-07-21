@@ -38,7 +38,9 @@ import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.ui.ContextMenu;
 import flash.ui.ContextMenuItem;
+import flash.net.registerClassAlias;
 import flash.utils.ByteArray;
+import flash.utils.Dictionary;
 import flash.utils.describeType;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
@@ -48,10 +50,16 @@ import flash.utils.getQualifiedClassName;
  *
  * @see #setValueByObject()
  * @see #array_push_notHas()
+ * @see #clone()
  * @see KyoMath
  * @see KyoRandom
  */
 public class KyoUtils {
+    /** @private 已 registerClassAlias 的限定名 */
+    private static var _cloneAliasRegistered:Object = {};
+    /** @private 根类限定名 → AMF 相关类型名列表 */
+    private static var _cloneTypeNameCache:Object   = {};
+
     /**
      * 根据子元素属性查找一个对象
      * @param array
@@ -879,6 +887,7 @@ public class KyoUtils {
      * <listing version="3.0">
      * var o:Object = KyoUtils.cloneObject(src);
      * </listing>
+     * @see #clone()
      */
     public static function cloneObject(from:Object):Object {
         var o:Object = {};
@@ -1178,18 +1187,104 @@ public class KyoUtils {
 
     /**
      * 通过 ByteArray AMF 深拷贝。
-     * @param v 源对象。
-     * @return 拷贝。
+     *
+     * <p>拷贝前按类型图 <code>registerClassAlias</code>（有缓存），尽量还原为原 Class。
+     * 仅复制公开属性；目标类构造不可带参。浅拷动态 Object 见 <code>cloneObject</code>。</p>
+     *
+     * @param v 源对象；为 <code>null</code> 则返回 <code>null</code>。
+     * @return 深拷贝；构造带参等导致还原失败时为 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var c:* = KyoUtils.clone(obj);
      * </listing>
+     * @see #cloneObject()
      */
     public static function clone(v:Object):* {
-        var myBA:ByteArray = new ByteArray();
-        myBA.writeObject(v);
-        myBA.position = 0;
-        return myBA.readObject();
+        if (v == null) {
+            return null;
+        }
+
+        var names:Array = collectCloneTypeNames(v);
+        for each (var aliasName:String in names) {
+            ensureCloneClassAlias(aliasName);
+        }
+
+        var bytes:ByteArray = new ByteArray();
+        bytes.writeObject(v);
+        bytes.position = 0;
+
+        var className:String  = getQualifiedClassName(v);
+        var objectClass:Class = getDefinitionByName(className) as Class;
+        try {
+            return bytes.readObject() as objectClass;
+        }
+        catch (e:ArgumentError) {
+            // 带参构造等导致 AMF 还原失败
+        }
+        return null;
+    }
+
+    /** @private 收集源对象类型图上的限定名（按根类缓存） */
+    private static function collectCloneTypeNames(object:*):Array {
+        var rootName:String = getQualifiedClassName(object);
+        var cached:Array    = _cloneTypeNameCache[rootName] as Array;
+        if (cached) {
+            return cached;
+        }
+
+        var result:Array          = [];
+        var dictionary:Dictionary = new Dictionary();
+        var xml:XML               = describeType(object);
+
+        addCloneTypeName(dictionary, String(xml.@name));
+        collectCloneTypeAttrs(dictionary, xml.extendsClass);
+        collectCloneTypeAttrs(dictionary, xml.implementsInterface);
+        collectCloneTypeAttrs(dictionary, xml.variable);
+        collectCloneTypeAttrs(dictionary, xml.accessor);
+
+        for each (var methodXml:XML in xml.method) {
+            addCloneTypeName(dictionary, String(methodXml.@returnType));
+            collectCloneTypeAttrs(dictionary, methodXml.parameter);
+        }
+
+        for (var key:* in dictionary) {
+            result.push(String(key));
+        }
+
+        _cloneTypeNameCache[rootName] = result;
+        return result;
+    }
+
+    /** @private */
+    private static function collectCloneTypeAttrs(dict:Dictionary, list:XMLList):void {
+        for each (var node:XML in list) {
+            addCloneTypeName(dict, String(node.@type));
+        }
+    }
+
+    /** @private */
+    private static function addCloneTypeName(dict:Dictionary, typeName:String):void {
+        if (!typeName || typeName == 'void' || typeName == '*' || typeName == 'null') {
+            return;
+        }
+        dict[typeName] = true;
+    }
+
+    /** @private 按限定名注册 AMF 别名（只注册一次） */
+    private static function ensureCloneClassAlias(qname:String):void {
+        if (_cloneAliasRegistered[qname]) {
+            return;
+        }
+        try {
+            var cls:Class = getDefinitionByName(qname) as Class;
+            if (cls) {
+                registerClassAlias(qname, cls);
+                _cloneAliasRegistered[qname] = true;
+            }
+        }
+        catch (e:Error) {
+            // 内置类型或无法解析时跳过
+        }
     }
 
     /**
