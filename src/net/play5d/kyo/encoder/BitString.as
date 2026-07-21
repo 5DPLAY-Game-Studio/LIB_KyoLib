@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2021-2024, 5DPLAY Game Studio
  * All rights reserved.
  *
@@ -17,8 +17,21 @@
  */
 
 package net.play5d.kyo.encoder {
+/**
+ * JPEG 霍夫曼编码用的位串（长度 + 值）。
+ *
+ * @see JPGEncoder
+ */
 public class BitString {
+    /**
+     * 有效位数。
+     * @default 0
+     */
     public var len:Number = 0;
+    /**
+     * 位值。
+     * @default 0
+     */
     public var val:Number = 0;
 }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2021-2024, 5DPLAY Game Studio
  * All rights reserved.
  *
@@ -20,10 +20,20 @@ package net.play5d.kyo.encoder {
 import flash.display.*;
 import flash.utils.*;
 
+/**
+ * 将 <code>BitmapData</code> 编码为 JPEG 字节流（JFIF / DCT / 霍夫曼）。
+ *
+ * <p>构造时按质量生成量化表与霍夫曼表；<code>encode()</code> 输出完整 JPEG 数据。</p>
+ *
+ * @see #encode()
+ */
 public class JPGEncoder {
 
-    // Static table initialization
-
+    /**
+     * 按指定质量初始化量化表与霍夫曼表。
+     * @param quality 压缩质量，范围 1–100；超出会被钳制。
+     * @default 50
+     */
     public function JPGEncoder(quality:Number = 50) {
         if (quality <= 0) {
             quality = 1;
@@ -44,6 +54,7 @@ public class JPGEncoder {
         initQuantTables(sf);
     }
 
+    /** @private ZigZag 扫描顺序表 */
     private var ZigZag:Array                     = [
         0, 1, 5, 6, 14, 15, 27, 28,
         2, 4, 7, 13, 16, 26, 29, 42,
@@ -54,17 +65,29 @@ public class JPGEncoder {
         21, 34, 37, 47, 50, 56, 59, 61,
         35, 36, 48, 49, 57, 58, 62, 63
     ];
+    /** @private 亮度量化表 */
     private var YTable:Array                     = new Array(64);
+    /** @private 色度量化表 */
     private var UVTable:Array                    = new Array(64);
+    /** @private 亮度 DCT 量化缩放因子表 */
     private var fdtbl_Y:Array                    = new Array(64);
+    /** @private 色度 DCT 量化缩放因子表 */
     private var fdtbl_UV:Array                   = new Array(64);
+    /** @private 亮度 DC 霍夫曼表 */
     private var YDC_HT:Array;
+    /** @private 色度 DC 霍夫曼表 */
     private var UVDC_HT:Array;
+    /** @private 亮度 AC 霍夫曼表 */
     private var YAC_HT:Array;
+    /** @private 色度 AC 霍夫曼表 */
     private var UVAC_HT:Array;
+    /** @private 标准亮度 DC 码长表 */
     private var std_dc_luminance_nrcodes:Array   = [0, 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0];
+    /** @private 标准亮度 DC 码字表 */
     private var std_dc_luminance_values:Array    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    /** @private 标准亮度 AC 码长表 */
     private var std_ac_luminance_nrcodes:Array   = [0, 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 0x7d];
+    /** @private 标准亮度 AC 码字表 */
     private var std_ac_luminance_values:Array    = [
         0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12,
         0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07,
@@ -88,9 +111,13 @@ public class JPGEncoder {
         0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8,
         0xf9, 0xfa
     ];
+    /** @private 标准色度 DC 码长表 */
     private var std_dc_chrominance_nrcodes:Array = [0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0];
+    /** @private 标准色度 DC 码字表 */
     private var std_dc_chrominance_values:Array  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    /** @private 标准色度 AC 码长表 */
     private var std_ac_chrominance_nrcodes:Array = [0, 0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 0x77];
+    /** @private 标准色度 AC 码字表 */
     private var std_ac_chrominance_values:Array  = [
         0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21,
         0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71,
@@ -114,19 +141,35 @@ public class JPGEncoder {
         0xea, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8,
         0xf9, 0xfa
     ];
+    /** @private AC 系数位编码查找表 */
     private var bitcode:Array                    = new Array(65535);
+    /** @private AC 系数类别查找表 */
     private var category:Array                   = new Array(65535);
+    /** @private 输出字节流 */
     private var byteout:ByteArray;
+    /** @private 当前输出字节缓存 */
     private var bytenew:int                      = 0;
+    /** @private 当前字节内位位置 */
     private var bytepos:int                      = 7;
-
-    // IO functions
-    // Core processing
+    /** @private 8×8 块 ZigZag 重排缓冲 */
     private var DU:Array  = new Array(64);
+    /** @private 8×8 亮度块 */
     private var YDU:Array = new Array(64);
+    /** @private 8×8 U 色度块 */
     private var UDU:Array = new Array(64);
+    /** @private 8×8 V 色度块 */
     private var VDU:Array = new Array(64);
 
+    /**
+     * 将位图编码为 JPEG 字节流。
+     * @param image 源位图。
+     * @return JPEG 数据的 <code>ByteArray</code>。
+     * @example
+     * <listing version="3.0">
+     * var encoder:JPGEncoder = new JPGEncoder(80);
+     * var bytes:ByteArray = encoder.encode(bd);
+     * </listing>
+     */
     public function encode(image:BitmapData):ByteArray {
         // Initialize bit writer
         byteout = new ByteArray();
@@ -140,7 +183,6 @@ public class JPGEncoder {
         writeSOF0(image.width, image.height);
         writeDHT();
         writeSOS();
-
 
         // Encode 8x8 macroblocks
         var DCY:Number = 0;
@@ -173,6 +215,7 @@ public class JPGEncoder {
         return byteout;
     }
 
+    /** @private 按缩放因子生成量化表与 DCT 缩放因子 */
     private function initQuantTables(sf:int):void {
         var i:int;
         var t:Number;
@@ -242,8 +285,7 @@ public class JPGEncoder {
         }
     }
 
-    // DCT & quantization core
-
+    /** @private 由标准码长/码字表生成霍夫曼查找表 */
     private function computeHuffmanTbl(nrcodes:Array, std_table:Array):Array {
         var codevalue:int    = 0;
         var pos_in_table:int = 0;
@@ -261,8 +303,7 @@ public class JPGEncoder {
         return HT;
     }
 
-    // Chunk writing
-
+    /** @private 初始化 Y/UV 的 DC/AC 霍夫曼表 */
     private function initHuffmanTbl():void {
         YDC_HT  = computeHuffmanTbl(std_dc_luminance_nrcodes, std_dc_luminance_values);
         UVDC_HT = computeHuffmanTbl(std_dc_chrominance_nrcodes, std_dc_chrominance_values);
@@ -270,6 +311,7 @@ public class JPGEncoder {
         UVAC_HT = computeHuffmanTbl(std_ac_chrominance_nrcodes, std_ac_chrominance_values);
     }
 
+    /** @private 预填 AC 系数类别与位编码查找表 */
     private function initCategoryNumber():void {
         var nrlower:int = 1;
         var nrupper:int = 2;
@@ -298,6 +340,7 @@ public class JPGEncoder {
         }
     }
 
+    /** @private 将位串写入输出流（含 0xFF 填充） */
     private function writeBits(bs:BitString):void {
         var value:int  = bs.val;
         var posval:int = bs.len - 1;
@@ -321,10 +364,12 @@ public class JPGEncoder {
         }
     }
 
+    /** @private 写入单字节 */
     private function writeByte(value:int):void {
         byteout.writeByte(value);
     }
 
+    /** @private 写入 16 位大端字 */
     private function writeWord(value:int):void {
         writeByte((
                           value >> 8
@@ -334,6 +379,7 @@ public class JPGEncoder {
                   ) & 0xFF);
     }
 
+    /** @private 8×8 块前向 DCT 并量化 */
     private function fDCTQuant(data:Array, fdtbl:Array):Array {
         var tmp0:Number, tmp1:Number, tmp2:Number, tmp3:Number, tmp4:Number, tmp5:Number, tmp6:Number, tmp7:Number;
         var tmp10:Number, tmp11:Number, tmp12:Number, tmp13:Number;
@@ -451,6 +497,7 @@ public class JPGEncoder {
         return data;
     }
 
+    /** @private 写入 APP0（JFIF）段 */
     private function writeAPP0():void {
         writeWord(0xFFE0); // marker
         writeWord(16); // length
@@ -468,6 +515,7 @@ public class JPGEncoder {
         writeByte(0); // thumbnheight
     }
 
+    /** @private 写入 SOF0 帧头 */
     private function writeSOF0(width:int, height:int):void {
         writeWord(0xFFC0); // marker
         writeWord(17);   // length, truecolor YUV JPG
@@ -486,6 +534,7 @@ public class JPGEncoder {
         writeByte(1);    // QTV
     }
 
+    /** @private 写入 DQT 量化表段 */
     private function writeDQT():void {
         writeWord(0xFFDB); // marker
         writeWord(132);	   // length
@@ -500,6 +549,7 @@ public class JPGEncoder {
         }
     }
 
+    /** @private 写入 DHT 霍夫曼表段 */
     private function writeDHT():void {
         writeWord(0xFFC4); // marker
         writeWord(0x01A2); // length
@@ -538,6 +588,7 @@ public class JPGEncoder {
         }
     }
 
+    /** @private 写入 SOS 扫描段 */
     private function writeSOS():void {
         writeWord(0xFFDA); // marker
         writeWord(12); // length
@@ -553,6 +604,7 @@ public class JPGEncoder {
         writeByte(0); // Bf
     }
 
+    /** @private DCT 后 ZigZag 重排并霍夫曼编码一个 8×8 块 */
     private function processDU(CDU:Array, fdtbl:Array, DC:Number, HTDC:Array, HTAC:Array):Number {
         var EOB:BitString       = HTAC[0x00];
         var M16zeroes:BitString = HTAC[0xF0];
@@ -617,6 +669,7 @@ public class JPGEncoder {
         return DC;
     }
 
+    /** @private 从位图 8×8 区域采样并转换为 YUV */
     private function RGB2YUV(img:BitmapData, xpos:int, ypos:int):void {
         var pos:int = 0;
         for (var y:int = 0; y < 8; y++) {

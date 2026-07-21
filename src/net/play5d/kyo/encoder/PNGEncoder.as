@@ -21,78 +21,67 @@ import flash.display.BitmapData;
 import flash.utils.ByteArray;
 
 /**
- * Class that converts BitmapData into a valid PNG
+ * 将 <code>BitmapData</code> 编码为 PNG（IHDR / IDAT / IEND）。
+ *
+ * @see #encode()
  */
 public class PNGEncoder {
+    /** @private CRC 查找表 */
     private static var crcTable:Array;
+    /** @private 是否已初始化 CRC 表 */
     private static var crcTableComputed:Boolean = false;
 
     /**
-     * Created a PNG image from the specified BitmapData
-     *
-     * @param image The BitmapData that will be converted into the PNG format.
-     * @return a ByteArray representing the PNG encoded image data.
-     * @langversion ActionScript 3.0
-     * @playerversion Flash 9.0
-     * @tiptext
+     * 将位图编码为 PNG 字节流。
+     * @param img 源位图。
+     * @return PNG 数据的 <code>ByteArray</code>。
+     * @example
+     * <listing version="3.0">
+     * var bytes:ByteArray = PNGEncoder.encode(bd);
+     * </listing>
      */
     public static function encode(img:BitmapData):ByteArray {
-        // Create output byte array
         var png:ByteArray = new ByteArray();
-        // Write PNG signature
+        // PNG signature
         png.writeUnsignedInt(0x89504e47);
         png.writeUnsignedInt(0x0D0A1A0A);
-        // Build IHDR chunk
+        // IHDR
         var IHDR:ByteArray = new ByteArray();
         IHDR.writeInt(img.width);
         IHDR.writeInt(img.height);
         IHDR.writeUnsignedInt(0x08060000); // 32bit RGBA
         IHDR.writeByte(0);
         writeChunk(png, 0x49484452, IHDR);
-        // Build IDAT chunk
+        // IDAT
         var IDAT:ByteArray = new ByteArray();
         for (var i:int = 0; i < img.height; i++) {
-            // no filter
-            IDAT.writeByte(0);
+            IDAT.writeByte(0); // no filter
             var p:uint;
             var j:int;
             if (!img.transparent) {
                 for (j = 0; j < img.width; j++) {
                     p = img.getPixel(j, i);
-                    IDAT.writeUnsignedInt(
-                            uint((
-                                         (
-                                                 p & 0xFFFFFF
-                                         ) << 8
-                                 ) | 0xFF));
+                    IDAT.writeUnsignedInt(uint(((p & 0xFFFFFF) << 8) | 0xFF));
                 }
             }
             else {
                 for (j = 0; j < img.width; j++) {
                     p = img.getPixel32(j, i);
-                    IDAT.writeUnsignedInt(
-                            uint((
-                                         (
-                                                 p & 0xFFFFFF
-                                         ) << 8
-                                 ) |
-                                 (
-                                         p >>> 24
-                                 )));
+                    IDAT.writeUnsignedInt(uint(((p & 0xFFFFFF) << 8) | (p >>> 24)));
                 }
             }
         }
         IDAT.compress();
         writeChunk(png, 0x49444154, IDAT);
-        // Build IEND chunk
+        // IEND
         writeChunk(png, 0x49454E44, null);
-        // return PNG
         return png;
     }
 
-    private static function writeChunk(png:ByteArray,
-                                       type:uint, data:ByteArray
-    ):void {
+    /**
+     * @private 写入带 CRC 的 PNG chunk。
+     */
+    private static function writeChunk(png:ByteArray, type:uint, data:ByteArray):void {
         if (!crcTableComputed) {
             crcTableComputed = true;
             crcTable         = [];
@@ -101,8 +90,7 @@ public class PNGEncoder {
                 c = n;
                 for (var k:uint = 0; k < 8; k++) {
                     if (c & 1) {
-                        c = uint(uint(0xedb88320) ^
-                                 uint(c >>> 1));
+                        c = uint(uint(0xedb88320) ^ uint(c >>> 1));
                     }
                     else {
                         c = uint(c >>> 1);
@@ -124,16 +112,8 @@ public class PNGEncoder {
         var e:uint   = png.position;
         png.position = p;
         c            = 0xffffffff;
-        for (
-                var i:int = 0; i < (
-                e - p
-        ); i++
-        ) {
-            c = uint(crcTable[
-                     (
-                             c ^ png.readUnsignedByte()
-                     ) &
-                     uint(0xff)] ^ uint(c >>> 8));
+        for (var i:int = 0; i < (e - p); i++) {
+            c = uint(crcTable[(c ^ png.readUnsignedByte()) & uint(0xff)] ^ uint(c >>> 8));
         }
         c            = uint(c ^ uint(0xffffffff));
         png.position = e;
