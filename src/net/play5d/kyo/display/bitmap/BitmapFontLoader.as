@@ -24,20 +24,57 @@ import flash.events.Event;
 import net.play5d.kyo.loader.BitmapLoader;
 import net.play5d.kyo.loader.KyoURLoader;
 
+/**
+ * 位图字体加载与缓存。
+ *
+ * <p>按 Starling 字体 XML 解析贴图路径，加载后以 <code>info.@face</code> 为键存入字典，可通过 <code>getFont</code> 取出。</p>
+ *
+ * @see BitmapFont
+ * @see #loadFonts()
+ * @see #loadFont()
+ * @see #getFont()
+ */
 public class BitmapFontLoader {
+    /**
+     * 构造空的字体加载器。
+     */
     public function BitmapFontLoader() {
     }
 
+    /** @private 待加载的 XML URL 队列 */
     private var _urls:Array;
+    /** @private face → BitmapFont */
     private var _fontObj:Object = {};
+    /** @private 本次批量加载的总数 */
     private var _loadAmount:int;
+    /** @private 全部完成回调 */
     private var _loadBack:Function;
+    /** @private 进度回调，参数为 0–1 */
     private var _loadProcess:Function;
 
+    /**
+     * 清空已缓存的字体。
+     * @example
+     * <listing version="3.0">
+     * loader.clear();
+     * </listing>
+     */
     public function clear():void {
         _fontObj = {};
     }
 
+    /**
+     * 按 URL 列表依次加载多套字体 XML（及对应贴图）。
+     * @param urls 字体 XML 的 URL 数组。
+     * @param back 全部完成时的无参回调，可选。
+     * @param process 进度回调，参数为已完成比例（0–1），可选。
+     * @example
+     * <listing version="3.0">
+     * loader.loadFonts(['font/ui.xml'], onDone, onProgress);
+     * </listing>
+     * @see #loadFont()
+     * @see #getFont()
+     */
     public function loadFonts(urls:Array, back:Function = null, process:Function = null):void {
         _loadBack    = back;
         _loadProcess = process;
@@ -48,6 +85,19 @@ public class BitmapFontLoader {
         loadNext();
     }
 
+    /**
+     * 加载单套字体：根据 XML 中的 page 文件名，在 <code>url</code> 同目录下取贴图。
+     * @param url 字体 XML 的 URL（用于解析贴图相对路径）。
+     * @param fontXML 已解析的字体 XML。
+     * @param back 成功回调，可选。
+     * @param fail 失败回调，可选。
+     * @example
+     * <listing version="3.0">
+     * loader.loadFont('assets/font/ui.xml', xml, onOk, onFail);
+     * </listing>
+     * @see #loadFonts()
+     * @see #addFont()
+     */
     public function loadFont(url:String, fontXML:XML, back:Function = null, fail:Function = null):void {
         var bpurl:String  = fontXML.pages.page.@file;
         var floder:String = url.substr(0, url.lastIndexOf('/') + 1);
@@ -55,15 +105,37 @@ public class BitmapFontLoader {
         loadBitmapData(bpUrl, fontXML, back, fail);
     }
 
+    /**
+     * 用已有 XML 与贴图直接注册字体（不发起网络加载）。
+     * @param xml 字体 XML。
+     * @param bitmap 字体贴图。
+     * @example
+     * <listing version="3.0">
+     * loader.addFont(xml, bd);
+     * </listing>
+     * @see #getFont()
+     */
     public function addFont(xml:XML, bitmap:BitmapData):void {
         var fontid:String = xml.info.@face;
         _fontObj[fontid]  = new BitmapFont(xml, bitmap);
     }
 
+    /**
+     * 按字体名（XML <code>info.@face</code>）取已缓存的 <code>BitmapFont</code>。
+     * @param id 字体 face 名。
+     * @return 对应字体；未加载过则为 <code>undefined</code>/<code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var font:BitmapFont = loader.getFont('UI');
+     * </listing>
+     */
     public function getFont(id:String):BitmapFont {
         return _fontObj[id];
     }
 
+    /**
+     * @private 批量加载全部完成。
+     */
     private function loadComplete():void {
         if (_loadBack != null) {
             _loadBack();
@@ -72,8 +144,10 @@ public class BitmapFontLoader {
         _loadProcess = null;
     }
 
+    /**
+     * @private 队列中取下一个 XML 加载。
+     */
     private function loadNext():void {
-
         if (_loadProcess != null) {
             var cur:int = _loadAmount - _urls.length;
             _loadProcess(cur / _loadAmount);
@@ -101,9 +175,10 @@ public class BitmapFontLoader {
         }
     }
 
-
+    /**
+     * @private 加载贴图并注册 <code>BitmapFont</code>。
+     */
     private function loadBitmapData(bpurl:String, xml:XML, back:Function = null, fail:Function = null):void {
-
         var fontid:String = xml.info.@face;
 
         var loader:BitmapLoader = new BitmapLoader();
