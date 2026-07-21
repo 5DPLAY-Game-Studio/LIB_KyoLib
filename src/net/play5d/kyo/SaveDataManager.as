@@ -19,40 +19,90 @@
 package net.play5d.kyo {
 import flash.net.SharedObject;
 
+/**
+ * 基于 SharedObject 的存档管理：读写键值、可选自动 flush。
+ *
+ * @see #save()
+ * @see #updateData()
+ * @see KyoSharedObject
+ */
 public class SaveDataManager {
+    /**
+     * @param soname SharedObject 本地名。
+     * @param localpath 可选路径。
+     * @param secure 是否安全存储。
+     * @param autosave 修改后是否自动 <code>save</code>。
+     */
     public function SaveDataManager(soname:String, localpath:String = null, secure:Boolean = false,
-                                    autosave:Boolean                                       = false
+                                    autosave:Boolean = false
     ) {
-        _so = SharedObject.getLocal(soname, localpath, secure);
+        _so       = SharedObject.getLocal(soname, localpath, secure);
         _autosave = autosave;
     }
 
+    /** @private */
     private var _so:SharedObject;
+    /** @private */
     private var _autosave:Boolean;
 
+    /**
+     * 是否已写入过存档标记 <code>_has_data_</code>。
+     */
     public function get hasData():Boolean {
         return _so.data._has_data_ == true;
     }
 
+    /**
+     * 底层 SharedObject.data。
+     */
     public function get data():Object {
         return _so.data;
     }
 
+    /**
+     * @private 清空后用对象整体覆盖并可选自动保存。
+     */
     public function set data(data:Object):void {
         clear();
         addDataByObject(data);
         autosave();
     }
 
+    /**
+     * 按键取值。
+     * @param key 键名。
+     * @return 值。
+     * @example
+     * <listing version="3.0">
+     * var v:* = mgr.getDataByKey('score');
+     * </listing>
+     */
     public function getDataByKey(key:String):* {
         return _so.data[key];
     }
 
+    /**
+     * 更新单键并可选自动保存。
+     * @param key 键名。
+     * @param value 值。
+     * @example
+     * <listing version="3.0">
+     * mgr.updateData('score', 100);
+     * </listing>
+     */
     public function updateData(key:String, value:Object):void {
         _so.data[key] = value;
         autosave();
     }
 
+    /**
+     * 合并对象字段到 data。
+     * @param o 键值对象。
+     * @example
+     * <listing version="3.0">
+     * mgr.addDataByObject({a: 1});
+     * </listing>
+     */
     public function addDataByObject(o:Object):void {
         for (var i:String in o) {
             _so.data[i] = o[i];
@@ -60,10 +110,24 @@ public class SaveDataManager {
         autosave();
     }
 
+    /**
+     * 清空 SharedObject。
+     * @example
+     * <listing version="3.0">
+     * mgr.clear();
+     * </listing>
+     */
     public function clear():void {
         _so.clear();
     }
 
+    /**
+     * 写入标记与时间戳并 flush。
+     * @example
+     * <listing version="3.0">
+     * mgr.save();
+     * </listing>
+     */
     public function save():void {
         if (!hasData) {
             updateData('_has_data_', true);
@@ -72,6 +136,13 @@ public class SaveDataManager {
         _so.flush();
     }
 
+    /**
+     * 若开启 autosave 则调用 <code>save</code>。
+     * @example
+     * <listing version="3.0">
+     * mgr.autosave();
+     * </listing>
+     */
     public function autosave():void {
         if (_autosave) {
             save();

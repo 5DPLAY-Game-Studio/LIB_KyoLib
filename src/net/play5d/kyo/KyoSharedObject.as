@@ -19,7 +19,24 @@
 package net.play5d.kyo {
 import flash.net.SharedObject;
 
+/**
+ * 本地 <code>SharedObject</code> 读写封装。
+ *
+ * @see #load()
+ * @see #save()
+ * @see #deletee()
+ * @see SaveDataManager
+ */
 public class KyoSharedObject {
+    /**
+     * 读取本地 SharedObject 的 data 快照后关闭。
+     * @param id 本地名。
+     * @return data 对象。
+     * @example
+     * <listing version="3.0">
+     * var d:Object = KyoSharedObject.load('save1');
+     * </listing>
+     */
     public static function load(id:String):Object {
         var so:SharedObject = SharedObject.getLocal(id);
         var d:Object        = so.data;
@@ -27,6 +44,15 @@ public class KyoSharedObject {
         return d;
     }
 
+    /**
+     * 清空后写入对象字段并 flush。
+     * @param id 本地名。
+     * @param data 要写入的键值。
+     * @example
+     * <listing version="3.0">
+     * KyoSharedObject.save('save1', {score: 1});
+     * </listing>
+     */
     public static function save(id:String, data:Object):void {
         var so:SharedObject = SharedObject.getLocal(id);
         so.clear();
@@ -37,11 +63,22 @@ public class KyoSharedObject {
         so.close();
     }
 
+    /**
+     * 清空指定本地 SharedObject（历史方法名 <code>deletee</code>）。
+     * @param id 本地名。
+     * @example
+     * <listing version="3.0">
+     * KyoSharedObject.deletee('save1');
+     * </listing>
+     */
     public static function deletee(id:String):void {
         var so:SharedObject = SharedObject.getLocal(id);
         so.clear();
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoSharedObject() {
     }
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2021-2024, 5DPLAY Game Studio
  * All rights reserved.
  *
@@ -29,47 +29,113 @@ import flash.geom.Rectangle;
 import flash.net.URLRequest;
 
 /**
- * 超级播放器,v1.3
+ * 加载完成时派发。
+ * @eventType SuperPlayer.EVENT_LOAD_COMPLETE
+ */
+[Event(name='load_complete', type='flash.events.Event')]
+/**
+ * 视频播放完成时派发。
+ * @eventType SuperPlayer.EVENT_PLAY_COMPLETE
+ */
+[Event(name='play_complete', type='flash.events.Event')]
+/**
+ * 加载失败时派发。
+ * @eventType SuperPlayer.EVENT_LOAD_FAIL
+ */
+[Event(name='load_fail', type='flash.events.Event')]
+/**
+ * 按扩展名播放视频 / SWF / 图片的容器播放器。
+ *
+ * @see #play()
+ * @see #TYPE_VIDEO
  * @author kyo
+ * @version 1.3
  */
 public class SuperPlayer extends Sprite {
+    /**
+     * 加载完成事件类型。
+     * @eventType load_complete
+     */
     public static const EVENT_LOAD_COMPLETE:String = 'load_complete';
+    /**
+     * 播放完成事件类型。
+     * @eventType play_complete
+     */
     public static const EVENT_PLAY_COMPLETE:String = 'play_complete';
-
+    /**
+     * 加载失败事件类型。
+     * @eventType load_fail
+     */
     public static const EVENT_LOAD_FAIL:String = 'load_fail';
 
-    public static const TYPE_FLASH:String  = 'type_is_flash';
-    public static const TYPE_VIDEO:String  = 'type_is_video';
+    /** 当前为 Flash/SWF。 */
+    public static const TYPE_FLASH:String = 'type_is_flash';
+    /** 当前为视频。 */
+    public static const TYPE_VIDEO:String = 'type_is_video';
+    /** 当前为位图。 */
     public static const TYPE_BITMAP:String = 'type_is_bitmap';
 
+    /**
+     * @param width 显示宽。
+     * @param height 显示高。
+     */
     public function SuperPlayer(width:Number, height:Number) {
         _size = new Point(width, height);
         super();
     }
 
-//		public var content:DisplayObject;
-    public var type:String;
-    public var autoPlay:Boolean  = true;
     /**
-     * 锁定宽高比
+     * 当前媒体类型，见 <code>TYPE_*</code>。
+     */
+    public var type:String;
+    /**
+     * 视频是否在加载后立即播放。
+     * @default true
+     */
+    public var autoPlay:Boolean = true;
+    /**
+     * 图片是否锁定宽高比。
+     * @default false
      */
     public var lockRatio:Boolean = false;
-    public var video_pfxs:Array  = ['flv', 'mp4'];
-    public var flash_pfxs:Array  = ['swf'];
-    public var pic_pfxs:Array    = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
+    /**
+     * 视为视频的扩展名列表。
+     */
+    public var video_pfxs:Array = ['flv', 'mp4'];
+    /**
+     * 视为 SWF 的扩展名列表。
+     */
+    public var flash_pfxs:Array = ['swf'];
+    /**
+     * 视为图片的扩展名列表。
+     */
+    public var pic_pfxs:Array = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
+    /** @private */
     private var _url:String;
+    /** @private */
     private var _size:Point;
+    /** @private */
     private var _img:Loader;
+    /** @private */
     private var _swf:Loader;
+    /** @private */
     private var _video:InsVideo;
+    /** @private */
     private var _loopPlay:Boolean;
 
+    /** @private */
     private var _bgColor:uint;
 
+    /**
+     * 背景填充色；设为 1 时不绘制背景。
+     */
     public function get bgColor():uint {
         return _bgColor;
     }
 
+    /**
+     * @private
+     */
     public function set bgColor(value:uint):void {
         _bgColor = value;
 
@@ -83,10 +149,16 @@ public class SuperPlayer extends Sprite {
         graphics.endFill();
     }
 
+    /**
+     * 当前播放 URL。
+     */
     public function get playingUrl():String {
         return _url;
     }
 
+    /**
+     * 图片或 SWF 的加载内容；视频时为 <code>null</code>。
+     */
     public function get content():DisplayObject {
         if (_img) {
             return _img.loaderInfo.content;
@@ -97,17 +169,29 @@ public class SuperPlayer extends Sprite {
         return null;
     }
 
+    /**
+     * 视频是否正在播放。
+     */
     public function get videoPlaying():Boolean {
         return _video && _video.playing;
     }
 
     /**
-     * 时长等视频信息
+     * 视频元数据（时长等）。
      */
     public function get videoMetaData():Object {
         return _video.metadata;
     }
 
+    /**
+     * 按扩展名选择视频 / SWF / 图片并加载。
+     * @param url 资源地址。
+     * @param loop 视频播完是否循环。
+     * @example
+     * <listing version="3.0">
+     * player.play('a.mp4', true);
+     * </listing>
+     */
     public function play(url:String, loop:Boolean = false):void {
         stop();
 
@@ -133,6 +217,13 @@ public class SuperPlayer extends Sprite {
 
     }
 
+    /**
+     * 停止并卸载当前媒体。
+     * @example
+     * <listing version="3.0">
+     * player.stop();
+     * </listing>
+     */
     public function stop():void {
         if (_video) {
             _video.destory();
@@ -150,18 +241,39 @@ public class SuperPlayer extends Sprite {
         }
     }
 
+    /**
+     * 立即播放视频（从开头）。
+     * @example
+     * <listing version="3.0">
+     * player.playNow();
+     * </listing>
+     */
     public function playNow():void {
         if (_video) {
             _video.play();
         }
     }
 
+    /**
+     * 停止视频（不销毁）。
+     * @example
+     * <listing version="3.0">
+     * player.stopVideo();
+     * </listing>
+     */
     public function stopVideo():void {
         if (_video) {
             _video.stop();
         }
     }
 
+    /**
+     * 切换视频播放 / 暂停。
+     * @example
+     * <listing version="3.0">
+     * player.toggleMovie();
+     * </listing>
+     */
     public function toggleMovie():void {
         if (_video.playing) {
             _video.pause();
@@ -171,6 +283,13 @@ public class SuperPlayer extends Sprite {
         }
     }
 
+    /**
+     * 销毁全部资源（历史拼写 <code>destory</code>）。
+     * @example
+     * <listing version="3.0">
+     * player.destory();
+     * </listing>
+     */
     public function destory():void {
         type = null;
         _url = null;
@@ -209,6 +328,9 @@ public class SuperPlayer extends Sprite {
         }
     }
 
+    /**
+     * @private
+     */
     private function loadBitmap(v:String):void {
         var l:Loader = new Loader();
         l.contentLoaderInfo.addEventListener(Event.COMPLETE, loadPicComplete);
@@ -216,6 +338,9 @@ public class SuperPlayer extends Sprite {
         l.load(new URLRequest(v));
     }
 
+    /**
+     * @private
+     */
     private function loadSwf(v:String):void {
         _swf = new Loader();
         _swf.contentLoaderInfo.addEventListener(Event.COMPLETE, loadSwfComplete);
@@ -225,8 +350,10 @@ public class SuperPlayer extends Sprite {
         _swf.load(new URLRequest(v));
     }
 
+    /**
+     * @private
+     */
     private function playVideo(url:String):void {
-        //加载播放视频
         _video = new InsVideo(url, _size);
         addChild(_video);
         if (autoPlay) {
@@ -235,9 +362,11 @@ public class SuperPlayer extends Sprite {
         _video.addEventListener(InsVideo.PLAY_COMPLETE, onVideComplete);
         _video.addEventListener(InsVideo.PLAY_FAIL, onLoadContentFail);
         _video.addEventListener(InsVideo.META_DATA, onLoadContentComplete);
-//			onLoadContentComplete();
     }
 
+    /**
+     * @private
+     */
     private function loadPicComplete(e:Event):void {
         var loaderInfo:LoaderInfo = e.currentTarget as LoaderInfo;
         loaderInfo.removeEventListener(Event.COMPLETE, loadPicComplete);
@@ -247,16 +376,12 @@ public class SuperPlayer extends Sprite {
             if (_img.width > _img.height) {
                 _img.width  = _size.x;
                 _img.scaleY = _img.scaleX;
-                _img.y      = (
-                                      _size.y - _img.height
-                              ) / 2;
+                _img.y      = (_size.y - _img.height) / 2;
             }
             else {
                 _img.height = _size.y;
                 _img.scaleX = _img.scaleY;
-                _img.x      = (
-                                      _size.x - _img.width
-                              ) / 2;
+                _img.x      = (_size.x - _img.width) / 2;
             }
         }
         else {
@@ -264,10 +389,12 @@ public class SuperPlayer extends Sprite {
             _img.height = _size.y;
         }
         addChild(_img);
-//			content = loaderInfo.content;
         onLoadContentComplete();
     }
 
+    /**
+     * @private
+     */
     private function loadSwfComplete(e:Event):void {
         var back:Shape = new Shape();
         back.graphics.beginFill(0, 1);
@@ -285,15 +412,16 @@ public class SuperPlayer extends Sprite {
         var hl:Number = _size.y / li.height;
         var ll:Number = Math.max(bl, hl);
         l.scaleX      = l.scaleY = ll;
-//			l.y = (_size.y - li.height) / 2;
         if (l.y < 0) {
             l.y = 0;
         }
         addChild(l);
-//			content = li.content;
         onLoadContentComplete();
     }
 
+    /**
+     * @private
+     */
     private function onVideComplete(e:Event):void {
         dispatchEvent(new Event(EVENT_PLAY_COMPLETE));
         if (_loopPlay) {
@@ -301,10 +429,16 @@ public class SuperPlayer extends Sprite {
         }
     }
 
+    /**
+     * @private
+     */
     private function onLoadContentComplete(e:Event = null):void {
         dispatchEvent(new Event(EVENT_LOAD_COMPLETE));
     }
 
+    /**
+     * @private
+     */
     private function onLoadContentFail(e:Event = null):void {
         dispatchEvent(new Event(EVENT_LOAD_FAIL));
     }
@@ -322,11 +456,30 @@ import flash.net.NetStream;
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
+/**
+ * NetStream 视频播放包装（文件内 internal）。
+ */
 internal class InsVideo extends Sprite {
+    /**
+     * 播放完成。
+     * @eventType insvideo.play.complete
+     */
     public static const PLAY_COMPLETE:String = 'insvideo.play.complete';
-    public static const PLAY_FAIL:String     = 'insvideo.play.fail';
-    public static const META_DATA:String     = 'insvideo.event.metadata';
+    /**
+     * 播放失败。
+     * @eventType insvideo.play.fail
+     */
+    public static const PLAY_FAIL:String = 'insvideo.play.fail';
+    /**
+     * 元数据就绪。
+     * @eventType insvideo.event.metadata
+     */
+    public static const META_DATA:String = 'insvideo.event.metadata';
 
+    /**
+     * @param url 视频 URL。
+     * @param size 显示尺寸。
+     */
     public function InsVideo(url:String, size:Point) {
         var flvObject:Object = new Object();
         flvURL               = url;
@@ -352,15 +505,32 @@ internal class InsVideo extends Sprite {
         addChild(flvVideo);
     }
 
+    /**
+     * 是否在缓冲空时自动 resume（本类内循环逻辑）。
+     */
     public var loopPlay:Boolean;
+    /**
+     * 是否正在播放。
+     */
     public var playing:Boolean;
+    /**
+     * onMetaData 对象。
+     */
     public var metadata:Object;
+    /** @private */
     private var flvVideo:Video;
+    /** @private */
     private var flvURL:String;
+    /** @private */
     private var flvNC:NetConnection;
+    /** @private */
     private var flvNS:NetStream;
+    /** @private */
     private var _siint:int;
 
+    /**
+     * 从开头重新播放。
+     */
     public function play():void {
         playing = true;
 
@@ -371,16 +541,25 @@ internal class InsVideo extends Sprite {
 
     }
 
+    /**
+     * 暂停。
+     */
     public function pause():void {
         playing = false;
         flvNS.pause();
     }
 
+    /**
+     * 继续。
+     */
     public function resume():void {
         playing = true;
         flvNS.resume();
     }
 
+    /**
+     * 停止并稍后关闭流。
+     */
     public function stop():void {
         playing = false;
         flvNS.pause();
@@ -389,6 +568,9 @@ internal class InsVideo extends Sprite {
         _siint = setTimeout(flvNS.close, 1000);
     }
 
+    /**
+     * 销毁连接与视频（历史拼写 <code>destory</code>）。
+     */
     public function destory():void {
         stop();
 
@@ -416,15 +598,24 @@ internal class InsVideo extends Sprite {
 
     }
 
+    /**
+     * @private
+     */
     private function onMetaData(obj:Object):void {
         metadata = obj;
         dispatchEvent(new Event(META_DATA));
     }
 
+    /**
+     * @private
+     */
     private function videoFail(evt:AsyncErrorEvent):void {
         dispatchEvent(new Event(PLAY_FAIL));
     }
 
+    /**
+     * @private
+     */
     private function videoState(evt:NetStatusEvent):void {
         var code:String = evt.info.code;
         switch (code) {

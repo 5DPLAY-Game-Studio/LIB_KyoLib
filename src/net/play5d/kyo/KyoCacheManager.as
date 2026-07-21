@@ -20,33 +20,43 @@ package net.play5d.kyo {
 import flash.display.BitmapData;
 
 /**
- * 缓存管理器类
+ * 按 ID 缓存任意对象；清理时对 <code>BitmapData</code> 调用 dispose，并递归清理数组元素。
+ *
+ * @see #cacheById()
+ * @see #getById()
+ * @see #clear()
  */
 public class KyoCacheManager {
-
-    // 缓存对象的数量计数器
+    /**
+     * 已缓存条目计数（每次 <code>cacheById</code> 递增；覆盖同 ID 仍会加一）。
+     * @default 0
+     */
     public static var count:int = 0;
-    // 缓存对象字典，键为 ID 字符串，值为任意类型对象
+    /** @private id → 缓存对象 */
     private static var _cacheObjs:Object = {};
 
     /**
-     * 根据ID缓存对象
-     *
-     * @param obj 要缓存的对象
-     * @param id 缓存对象的ID字符串
+     * 按 ID 写入缓存。
+     * @param obj 要缓存的对象。
+     * @param id 缓存键。
+     * @example
+     * <listing version="3.0">
+     * KyoCacheManager.cacheById(bd, 'hero');
+     * </listing>
      */
     public static function cacheById(obj:*, id:String):void {
-        // 增加缓存对象数量计数器
         count++;
-        // 将对象存入缓存字典，以ID为键
         _cacheObjs[id] = obj;
     }
 
     /**
-     * 根据ID获取缓存对象
-     *
-     * @param id 缓存对象的ID字符串
-     * @return 缓存对象，若不存在则返回null
+     * 按 ID 取出缓存。
+     * @param id 缓存键。
+     * @return 对象；不存在则为 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var o:* = KyoCacheManager.getById('hero');
+     * </listing>
      */
     public static function getById(id:String):* {
         var obj:* = _cacheObjs[id];
@@ -58,30 +68,28 @@ public class KyoCacheManager {
     }
 
     /**
-     * 清除所有缓存项
+     * 清除全部缓存并重置计数。
+     * @example
+     * <listing version="3.0">
+     * KyoCacheManager.clear();
+     * </listing>
      */
     public static function clear():void {
-        // 遍历并清除
         for each(var item:* in _cacheObjs) {
             clearItem(item);
         }
 
-        // 重置
         count      = 0;
         _cacheObjs = {};
     }
 
     /**
-     * 清除单个缓存项
-     *
-     * @param item 要被清理的项目
+     * @private 释放 BitmapData 或递归清理数组元素。
      */
     private static function clearItem(item:*):void {
-        // 若对象是 BitmapData 类型，调用 dispose() 释放内存
         if (item is BitmapData) {
             (item as BitmapData).dispose();
         }
-        // 若对象是Array类型，递归清除数组中的每个元素
         else if (item is Array) {
             for each(var k:* in (item as Array)) {
                 clearItem(k);
@@ -90,7 +98,6 @@ public class KyoCacheManager {
 
         item = null;
     }
-
 
 }
 }
