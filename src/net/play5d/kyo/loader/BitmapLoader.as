@@ -23,13 +23,39 @@ import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.net.URLRequest;
 
+/**
+ * 通过 <code>Loader</code> 加载位图，成功后写入 <code>bitmap</code> 并以回调返回。
+ *
+ * @see #load()
+ * @see ImageLoader
+ */
 public class BitmapLoader {
+    /**
+     * 构造函数。
+     */
     public function BitmapLoader() {
     }
 
+    /**
+     * 加载完成的位图；失败或未加载时为 <code>null</code>。
+     */
     public var bitmap:Bitmap;
+    /**
+     * 最近一次 <code>load</code> 的 URL。
+     */
     public var url:String;
 
+    /**
+     * 加载图片 URL。
+     * @param url 图片地址。
+     * @param back 成功回调，参数为 <code>Bitmap</code>；可省略。
+     * @param fail 失败回调，无参数；可省略。
+     * @example
+     * <listing version="3.0">
+     * var bl:BitmapLoader = new BitmapLoader();
+     * bl.load('a.png', onOk, onFail);
+     * </listing>
+     */
     public function load(url:String, back:Function = null, fail:Function = null):void {
         this.url = url;
 

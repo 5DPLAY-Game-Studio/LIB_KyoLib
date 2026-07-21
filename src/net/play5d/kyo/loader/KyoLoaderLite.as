@@ -29,7 +29,26 @@ import flash.net.URLRequest;
 import flash.system.LoaderContext;
 import flash.utils.ByteArray;
 
+/**
+ * 静态轻量加载工具：显示对象、Loader、二进制与字节转显示对象。
+ *
+ * @see #load()
+ * @see #loadLoader()
+ * @see #loadBytes()
+ * @see #bytesToDisplay()
+ */
 public class KyoLoaderLite {
+    /**
+     * 加载 URL，成功回调显示内容。
+     * @param url 资源地址。
+     * @param back 成功回调，参数为 <code>DisplayObject</code>。
+     * @param fail 失败回调，无参数。
+     * @param process 进度回调，参数为 0~1 比例。
+     * @example
+     * <listing version="3.0">
+     * KyoLoaderLite.load('a.swf', onOk, onFail, onProg);
+     * </listing>
+     */
     public static function load(url:String, back:Function, fail:Function, process:Function):void {
         var l:Loader = new Loader();
         l.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
@@ -70,6 +89,17 @@ public class KyoLoaderLite {
 
     }
 
+    /**
+     * 加载 URL，成功回调 <code>Loader</code> 实例（不清空 Loader）。
+     * @param url 资源地址。
+     * @param back 成功回调，参数为 <code>Loader</code>。
+     * @param fail 失败回调，无参数。
+     * @param process 进度回调，参数为 0~1 比例。
+     * @example
+     * <listing version="3.0">
+     * KyoLoaderLite.loadLoader('a.swf', onOk, onFail, onProg);
+     * </listing>
+     */
     public static function loadLoader(url:String, back:Function, fail:Function, process:Function):void {
         var l:Loader = new Loader();
         l.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
@@ -107,6 +137,17 @@ public class KyoLoaderLite {
 
     }
 
+    /**
+     * 以二进制方式加载 URL。
+     * @param url 资源地址。
+     * @param back 成功回调，参数为 <code>ByteArray</code>。
+     * @param fail 失败回调；可省略。
+     * @param progress 进度回调，参数为 0~1 比例；可省略。
+     * @example
+     * <listing version="3.0">
+     * KyoLoaderLite.loadBytes('a.bin', onBytes);
+     * </listing>
+     */
     public static function loadBytes(url:String, back:Function, fail:Function = null, progress:Function = null):void {
 
         var loader:URLLoader = new URLLoader();
@@ -142,11 +183,15 @@ public class KyoLoaderLite {
     }
 
     /**
-     * BYTEARRAY to DISPLAY_OBJECT
-     * @param bytes
-     * @param onComplete 1 param: Loader
-     * @param onError
-     * @return Loader
+     * 将字节数组加载为显示对象（允许代码导入）。
+     * @param bytes 二进制数据。
+     * @param onComplete 成功回调，参数为 <code>Loader</code>；可省略。
+     * @param onError 失败回调；可省略。
+     * @return 用于加载的 <code>Loader</code>。
+     * @example
+     * <listing version="3.0">
+     * var l:Loader = KyoLoaderLite.bytesToDisplay(ba, onOk);
+     * </listing>
      */
     public static function bytesToDisplay(bytes:ByteArray, onComplete:Function = null, onError:Function = null):Loader {
         var loader:Loader = new Loader();
@@ -174,6 +219,9 @@ public class KyoLoaderLite {
         return loader;
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoLoaderLite() {
     }
 

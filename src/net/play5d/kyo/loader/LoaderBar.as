@@ -21,7 +21,18 @@ import flash.display.Shape;
 import flash.display.Sprite;
 import flash.geom.Point;
 
+/**
+ * 简单矩形进度条（底框 + 可缩放前景条）。
+ *
+ * @see #initlize()
+ * @see #update()
+ * @see PreLoader
+ */
 public class LoaderBar extends Sprite {
+    /**
+     * @param width 条宽。
+     * @param height 条高。
+     */
     public function LoaderBar(width:Number = 500, height:Number = 10) {
         super();
         size = new Point(width, height);
@@ -29,13 +40,41 @@ public class LoaderBar extends Sprite {
         initlize();
     }
 
-    public var color:uint     = 0xff0000;
+    /**
+     * 前景填充色。
+     * @default 0xff0000
+     */
+    public var color:uint = 0xff0000;
+    /**
+     * 边框颜色。
+     * @default 0x426F00
+     */
     public var lineColor:uint = 0x426F00;
+    /**
+     * 边框线宽。
+     * @default 2
+     */
     public var thinkness:uint = 2;
+    /**
+     * 背景填充色。
+     * @default 0
+     */
     public var backColor:uint = 0;
+    /**
+     * 尺寸（x=宽，y=高）。
+     */
     public var size:Point;
+    /** @private */
     private var _bar:Shape;
 
+    /**
+     * 按当前颜色与尺寸重绘底框与进度条。
+     * @example
+     * <listing version="3.0">
+     * bar.color = 0x00ff00;
+     * bar.initlize();
+     * </listing>
+     */
     public function initlize():void {
         graphics.clear();
         graphics.lineStyle(thinkness, lineColor);
@@ -52,6 +91,14 @@ public class LoaderBar extends Sprite {
         addChild(_bar);
     }
 
+    /**
+     * 更新进度（通过前景 <code>scaleX</code>）。
+     * @param p 0~1。
+     * @example
+     * <listing version="3.0">
+     * bar.update(0.5);
+     * </listing>
+     */
     public function update(p:Number):void {
         _bar.scaleX = p;
     }

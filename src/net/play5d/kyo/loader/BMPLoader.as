@@ -27,37 +27,102 @@ import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
 import flash.utils.ByteArray;
 
+/**
+ * <code>EVENT_PARSE_ERROR</code> 事件的 <code>type</code> 属性值。
+ *
+ * @eventType parseError
+ */
+[Event(name='parseError', type='flash.events.Event')]
+/**
+ * 加载完成时派发（解析成功后）。
+ *
+ * @eventType flash.events.Event.COMPLETE
+ */
+[Event(name='complete', type='flash.events.Event')]
+/**
+ * 网络 IO 错误时转发。
+ *
+ * @eventType flash.events.IOErrorEvent.IO_ERROR
+ */
+[Event(name='ioError', type='flash.events.IOErrorEvent')]
+/**
+ * 以二进制加载 BMP 并解析为 <code>Bitmap</code>（支持 1/4/8/24 位）。
+ *
+ * @see #load()
+ * @see #content
+ * @see #EVENT_PARSE_ERROR
+ */
 public class BMPLoader extends EventDispatcher {
+    /**
+     * 非 BMP 或解析失败时派发的事件类型。
+     * @eventType parseError
+     */
     public static const EVENT_PARSE_ERROR:String = 'parseError';
 
+    /**
+     * 构造函数。
+     */
     public function BMPLoader() {
     }
 
+    /**
+     * 解析成功后的位图。
+     */
     public var content:Bitmap;
 
+    /** @private */
     private var _loader:URLLoader;
+    /** @private */
     private var _binaryArray:ByteArray;
+    /** @private 当前解析游标（字节数） */
     private var _crtPos:int = 0;
-    private var _url:String = null;
+    /** @private */
     private var isBm:Boolean;
+    /** @private */
     private var bfSize:Number;
+    /** @private */
     private var bfoffBits:Number;
+    /** @private */
     private var biSize:int;
+    /** @private */
     private var biWidth:int;
+    /** @private */
     private var biHeight:int;
+    /** @private */
     private var biPlanes:int;
+    /** @private */
     private var biBitCount:int;
+    /** @private */
     private var biCompression:int;
+    /** @private */
     private var biSizeImage:Number;
+    /** @private */
     private var biXpelsPerMeter:Number;
+    /** @private */
     private var biYPelsPerMeter:Number;
+    /** @private */
     private var biClrUsed:int;
+    /** @private */
     private var biClrImportant:int;
+    /** @private */
     private var arrayRGBQuad:Array;
+    /** @private */
     private var int1:int, int2:int, int3:int, int4:int;
+    /** @private */
     private var short1:int;
+    /** @private */
     private var short2:int;
 
+    /**
+     * 按 URL 以二进制加载 BMP。
+     * @param uq 请求。
+     * @example
+     * <listing version="3.0">
+     * var bmp:BMPLoader = new BMPLoader();
+     * bmp.addEventListener(Event.COMPLETE, onOk);
+     * bmp.load(new URLRequest('a.bmp'));
+     * </listing>
+     */
     public function load(uq:URLRequest):void {
         _loader            = new URLLoader();
         _loader.dataFormat = URLLoaderDataFormat.BINARY;
@@ -67,7 +132,12 @@ public class BMPLoader extends EventDispatcher {
     }
 
     /**
-     * 读取字节 1个字节
+     * 读取 1 个有符号字节，并推进游标。
+     * @return 字节值。
+     * @example
+     * <listing version="3.0">
+     * var b:int = bmp.readbyte();
+     * </listing>
      */
     public function readbyte():int {
         _crtPos++;
@@ -75,7 +145,12 @@ public class BMPLoader extends EventDispatcher {
     }
 
     /**
-     * 读取字节(非负) 2个字节
+     * 读取 1 个无符号字节，并推进游标。
+     * @return 无符号字节。
+     * @example
+     * <listing version="3.0">
+     * var b:int = bmp.readunsignedbyte();
+     * </listing>
      */
     public function readunsignedbyte():int {
         _crtPos++;
@@ -83,7 +158,12 @@ public class BMPLoader extends EventDispatcher {
     }
 
     /**
-     * 读16位
+     * 以小端序读取 16 位无符号值。
+     * @return 16 位值。
+     * @example
+     * <listing version="3.0">
+     * var s:int = bmp.readshort();
+     * </listing>
      */
     public function readshort():int {
         _crtPos += 2;
@@ -93,7 +173,12 @@ public class BMPLoader extends EventDispatcher {
     }
 
     /**
-     * 读32位 (非负)
+     * 以小端序读取 32 位无符号值。
+     * @return 32 位值。
+     * @example
+     * <listing version="3.0">
+     * var u:int = bmp.readuint();
+     * </listing>
      */
     public function readuint():int {
         _crtPos += 4;
@@ -105,7 +190,12 @@ public class BMPLoader extends EventDispatcher {
     }
 
     /**
-     * 读32位
+     * 以小端序读取 32 位有符号值。
+     * @return 32 位值。
+     * @example
+     * <listing version="3.0">
+     * var n:int = bmp.readint();
+     * </listing>
      */
     public function readint():int {
         _crtPos += 4;
@@ -116,6 +206,9 @@ public class BMPLoader extends EventDispatcher {
         return int4 << 24 | int3 << 16 | int2 << 8 | int1;
     }
 
+    /**
+     * @private 解析 BMP 头与像素数据。
+     */
     private function parseBmpData():BitmapData {
         //设置当前的解析字节数为0
         _crtPos       = 0;
@@ -293,10 +386,16 @@ public class BMPLoader extends EventDispatcher {
         return bmd;
     }
 
+    /**
+     * @private
+     */
     private function onError(e:IOErrorEvent):void {
         dispatchEvent(e);
     }
 
+    /**
+     * @private
+     */
     private function onBmpLoadComplete(e:Event):void {
         _loader.removeEventListener(Event.COMPLETE, onBmpLoadComplete);
         _binaryArray       = _loader.data as ByteArray;

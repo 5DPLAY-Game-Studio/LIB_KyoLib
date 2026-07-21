@@ -26,19 +26,42 @@ import flash.net.URLRequestMethod;
 import flash.net.URLVariables;
 import flash.utils.ByteArray;
 
+/**
+ * URL 文本 / 二进制加载与 POST，以及字节 BOM 编码探测。
+ *
+ * @see #load()
+ * @see #post()
+ * @see #getFileType()
+ */
 public class KyoURLoader {
-    public static const TYPE_UNICODE:String            = 'Unicode';
+    /** Unicode（UTF-16 LE）BOM 探测结果。 */
+    public static const TYPE_UNICODE:String = 'Unicode';
+    /** Unicode big endian（UTF-16 BE）BOM 探测结果。 */
     public static const TYPE_UNICODE_BIG_ENDIAN:String = 'Unicode big endian';
-    public static const TYPE_UTF8:String               = 'UTF-8';
-    public static const TYPE_ANSI:String               = 'ANSI';
-    public static var showDebug:Boolean                = true;
+    /** UTF-8 BOM 探测结果。 */
+    public static const TYPE_UTF8:String = 'UTF-8';
+    /** 无已知 BOM 时视为 ANSI。 */
+    public static const TYPE_ANSI:String = 'ANSI';
+    /**
+     * 为 <code>true</code> 时 IO 错误会 <code>trace</code>。
+     * @default true
+     */
+    public static var showDebug:Boolean = true;
+    /**
+     * 最近一次 <code>load</code> 失败时的错误字符串；成功前会清空。
+     */
     public static var errorStr:String;
 
     /**
-     * LOAD数据
-     * @param url 网址
-     * @param back 成功后调用，函数需要1个参数：DATA：String
-     * @param failBack 失败后调用,0个参数
+     * 加载 URL 数据。
+     * @param url 地址。
+     * @param back 成功回调，参数为 <code>loader.data</code>。
+     * @param failBack 失败回调，无参数；可省略。
+     * @param param 可选，键值写入 <code>URLLoader</code> 属性（如 <code>dataFormat</code>）。
+     * @example
+     * <listing version="3.0">
+     * KyoURLoader.load('a.txt', onData);
+     * </listing>
      */
     public static function load(url:String, back:Function, failBack:Function = null, param:Object = null):void {
         errorStr = null;
@@ -82,11 +105,15 @@ public class KyoURLoader {
     }
 
     /**
-     * 发送POST请求
-     * @param url 网址
-     * @param data 发送参数 URLVariables 或 Object
-     * @param back 成功后调用，函数需要1个参数：DATA：String
-     * @param failBack 失败后调用,0个参数
+     * 发送 POST 请求。
+     * @param url 地址。
+     * @param data <code>URLVariables</code> 或普通 Object（会转为 URLVariables）。
+     * @param back 成功回调，参数为响应数据；可省略。
+     * @param failBack 失败回调，无参数；可省略。
+     * @example
+     * <listing version="3.0">
+     * KyoURLoader.post('api.php', {id: 1}, onData);
+     * </listing>
      */
     public static function post(url:String, data:Object, back:Function = null, failBack:Function = null):void {
         var loader:URLLoader = new URLLoader();
@@ -107,7 +134,6 @@ public class KyoURLoader {
         }
         loader.load(uq);
 
-
         function onComplete(e:Event):void {
             if (back != null) {
                 back(loader.data);
@@ -126,6 +152,15 @@ public class KyoURLoader {
         }
     }
 
+    /**
+     * 根据文件头 BOM 判断文本编码类型（读取后复位 position）。
+     * @param fileData 文件字节。
+     * @return <code>TYPE_*</code> 常量之一。
+     * @example
+     * <listing version="3.0">
+     * var t:String = KyoURLoader.getFileType(ba);
+     * </listing>
+     */
     public static function getFileType(fileData:ByteArray):String {
         var b0:int = fileData.readUnsignedByte();
         var b1:int = fileData.readUnsignedByte();
@@ -144,6 +179,9 @@ public class KyoURLoader {
         return TYPE_ANSI;
     }
 
+    /**
+     * 构造函数（本类以静态方法使用，通常无需实例化）。
+     */
     public function KyoURLoader() {
     }
 

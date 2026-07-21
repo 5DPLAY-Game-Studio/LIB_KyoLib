@@ -23,19 +23,46 @@ import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
 import flash.utils.ByteArray;
 
+/**
+ * 先解析 SWF 头再加载 SWF 内容的 <code>Loader</code>。
+ *
+ * @see SwfHeaderInfo
+ * @see #loadSwf()
+ * @see #headInfo
+ */
 public class SWFLoader extends Loader {
+    /**
+     * @param url SWF 地址。
+     * @param back 内容加载完成回调；可省略。
+     */
     public function SWFLoader(url:String, back:Function = null) {
         loadSwf(url, back);
     }
 
+    /**
+     * 解析得到的 SWF 头信息。
+     */
     public var headInfo:SwfHeaderInfo;
 
+    /**
+     * 先加载二进制解析头，再加载 SWF。
+     * @param url SWF 地址。
+     * @param back 内容加载完成回调。
+     * @param fail 头或数据失败回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * var l:SWFLoader = new SWFLoader('a.swf', onReady);
+     * </listing>
+     */
     public function loadSwf(url:String, back:Function, fail:Function = null):void {
         loadHead(url, function ():void {
             loadFlash(url, back);
         }, fail);
     }
 
+    /**
+     * @private
+     */
     private function loadHead(url:String, back:Function, fail:Function):void {
         KyoURLoader.load(url, ulcom, fail, {dataFormat: URLLoaderDataFormat.BINARY});
 
@@ -54,7 +81,9 @@ public class SWFLoader extends Loader {
 
     }
 
-
+    /**
+     * @private
+     */
     private function loadFlash(url:String, back:Function):void {
         contentLoaderInfo.addEventListener(Event.COMPLETE, loadCom);
         load(new URLRequest(url));

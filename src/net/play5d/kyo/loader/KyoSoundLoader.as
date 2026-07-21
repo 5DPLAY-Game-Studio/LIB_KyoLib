@@ -24,17 +24,40 @@ import flash.media.Sound;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 
+/**
+ * 批量加载音频，按 URL 缓存，并可从列表 XML 批量拉取。
+ *
+ * @see #loadSounds()
+ * @see #getSound()
+ * @see #loadPath()
+ */
 public class KyoSoundLoader {
+    /**
+     * 构造函数。
+     */
     public function KyoSoundLoader() {
     }
 
+    /** @private */
     private var _urls:Array;
+    /** @private */
     private var _curUrl:String;
+    /** @private url → Sound */
     private var _soundObj:Object = {};
+    /** @private */
     private var _loadBack:Function;
+    /** @private */
     private var _loadProcess:Function;
+    /** @private */
     private var _loadLength:int;
 
+    /**
+     * 关闭已缓存声音并清空表。
+     * @example
+     * <listing version="3.0">
+     * loader.unload();
+     * </listing>
+     */
     public function unload():void {
         if (_soundObj) {
             for each(var s:Sound in _soundObj) {
@@ -44,6 +67,16 @@ public class KyoSoundLoader {
         }
     }
 
+    /**
+     * 按 URL 列表顺序加载声音。
+     * @param urls 声音 URL 数组。
+     * @param back 全部结束回调（含失败后继续）；无参数；可省略。
+     * @param process 总进度回调，参数为 0~1；可省略。
+     * @example
+     * <listing version="3.0">
+     * loader.loadSounds(['a.mp3', 'b.mp3'], onAll);
+     * </listing>
+     */
     public function loadSounds(urls:Array, back:Function = null, process:Function = null):void {
         _loadBack    = back;
         _loadProcess = process;
@@ -54,8 +87,13 @@ public class KyoSoundLoader {
     }
 
     /**
-     * 获取SOUND
-     * @param pathOrname 完整路径（包含后缀名）或文件名字（不含后缀名）
+     * 获取已加载的 <code>Sound</code>。
+     * @param pathOrname 完整路径（含后缀），或文件名（不含后缀）。
+     * @return 声音实例；未找到则 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var s:Sound = loader.getSound('bgm');
+     * </listing>
      */
     public function getSound(pathOrname:String):Sound {
         if (_soundObj[pathOrname]) {
@@ -73,10 +111,29 @@ public class KyoSoundLoader {
         return null;
     }
 
+    /**
+     * 手动登记声音到缓存表。
+     * @param url 索引键（通常为路径）。
+     * @param sound 声音实例。
+     * @example
+     * <listing version="3.0">
+     * loader.addSound('a.mp3', sound);
+     * </listing>
+     */
     public function addSound(url:String, sound:Sound):void {
         _soundObj[url] = sound;
     }
 
+    /**
+     * 读取目录下列表 XML，再批量加载其中的声音路径。
+     * @param path 目录前缀。
+     * @param listXML 列表文件名（相对 path）。
+     * @param back 全部加载结束回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * loader.loadPath('snd', 'list.xml', onAll);
+     * </listing>
+     */
     public function loadPath(path:String, listXML:String, back:Function = null):void {
         var l:URLLoader = new URLLoader(new URLRequest(path + '/' + listXML));
         l.addEventListener(Event.COMPLETE, function (e:Event):void {
@@ -91,6 +148,9 @@ public class KyoSoundLoader {
         });
     }
 
+    /**
+     * @private
+     */
     private function loadNext():void {
         var url:String = _urls.shift();
         _curUrl        = url;
@@ -101,6 +161,9 @@ public class KyoSoundLoader {
         sound.addEventListener(IOErrorEvent.IO_ERROR, loadErr);
     }
 
+    /**
+     * @private
+     */
     private function loadFin():void {
         if (_loadBack != null) {
             _loadBack();
@@ -108,6 +171,9 @@ public class KyoSoundLoader {
         }
     }
 
+    /**
+     * @private
+     */
     private function loadProcess(e:ProgressEvent):void {
         if (_loadProcess != null) {
             var v:Number   = e.bytesLoaded / e.bytesTotal;
@@ -117,6 +183,9 @@ public class KyoSoundLoader {
         }
     }
 
+    /**
+     * @private
+     */
     private function loadCom(e:Event):void {
         var snd:Sound = e.currentTarget as Sound;
         snd.removeEventListener(Event.COMPLETE, loadCom);
@@ -134,6 +203,9 @@ public class KyoSoundLoader {
 
     }
 
+    /**
+     * @private
+     */
     private function loadErr(e:IOErrorEvent):void {
         var snd:Sound = e.currentTarget as Sound;
         snd.removeEventListener(Event.COMPLETE, loadCom);
@@ -149,7 +221,6 @@ public class KyoSoundLoader {
             loadNext();
         }
     }
-
 
 }
 }

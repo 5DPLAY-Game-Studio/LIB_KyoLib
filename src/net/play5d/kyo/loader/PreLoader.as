@@ -22,7 +22,18 @@ import flash.events.Event;
 import flash.events.ProgressEvent;
 import flash.utils.getDefinitionByName;
 
+/**
+ * 文档类预加载基类：显示进度条，完成后跳到第 2 帧并实例化 <code>_mainClass</code>。
+ *
+ * <p>子类需设置 <code>_mainClass</code> 为完整类名。</p>
+ *
+ * @see LoaderBar
+ * @see #initlize()
+ */
 public class PreLoader extends MovieClip {
+    /**
+     * 构造函数；加入舞台后自动 <code>initlize</code>。
+     */
     public function PreLoader() {
         super();
         addEventListener(Event.ADDED_TO_STAGE, onAddStage);
@@ -30,10 +41,29 @@ public class PreLoader extends MovieClip {
         stop();
     }
 
+    /**
+     * 是否显示内置 <code>LoaderBar</code>。
+     * @default true
+     */
     public var showLoadbar:Boolean = true;
+    /**
+     * 加载完成后要实例化的主类全名。
+     */
     protected var _mainClass:String;
+    /**
+     * 进度条实例。
+     */
     protected var _loadbar:LoaderBar;
 
+    /**
+     * 创建进度条并监听 <code>loaderInfo</code> 进度。
+     * @param width 可用宽（当前实现未用于布局，保留形参）。
+     * @param height 可用高（当前实现未用于布局，保留形参）。
+     * @example
+     * <listing version="3.0">
+     * initlize(stage.stageWidth, stage.stageHeight);
+     * </listing>
+     */
     public function initlize(width:Number, height:Number):void {
         if (showLoadbar) {
             _loadbar           = new LoaderBar(800, 15);
@@ -50,12 +80,20 @@ public class PreLoader extends MovieClip {
         loaderInfo.addEventListener(Event.COMPLETE, loadComplete);
     }
 
+    /**
+     * 进度更新钩子；默认驱动进度条。
+     * @param p 0~1。
+     */
     protected function onProgress(p:Number):void {
         if (_loadbar) {
             _loadbar.update(p);
         }
     }
 
+    /**
+     * 加载完成：移除进度条，跳到第 2 帧并添加主类实例。
+     * @param e 完成事件。
+     */
     protected function loadComplete(e:Event):void {
         if (_loadbar) {
             removeChild(_loadbar);
@@ -69,6 +107,9 @@ public class PreLoader extends MovieClip {
         addChild(new main());
     }
 
+    /**
+     * @private
+     */
     private function onAddStage(e:Event):void {
         var w:Number = stage.stageWidth - 200;
         var h:Number = stage.stageHeight - 50;
@@ -76,6 +117,9 @@ public class PreLoader extends MovieClip {
         initlize(w, h);
     }
 
+    /**
+     * @private
+     */
     private function loadProgress(e:ProgressEvent):void {
         var p:Number = e.bytesLoaded / e.bytesTotal;
         onProgress(p);
