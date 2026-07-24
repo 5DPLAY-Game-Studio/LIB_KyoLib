@@ -19,52 +19,59 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::
 :: Purpose
-::   Generate ASDoc HTML for LIB_KyoLib (Chinese UI chrome + source ASDoc body).
+::   Generate ASDoc for LIB_KyoLib and/or embed ASDoc XML into the
+::   production SWC (docs/) for IDE code hints.
 ::
 :: Usage
 ::   LIB_KyoLib\tools\asdoc.bat
-::   set OPEN=1 && LIB_KyoLib\tools\asdoc.bat
-::     OPEN=1 opens index.html in the default browser after success.
+::     MODE=full (default): HTML + embed into SWC.
 ::
-::   Optional monorepo forwarder:
-::     tools\script\asdoc_kyolib.bat  ->  this script
+::   set MODE=embed&& LIB_KyoLib\tools\asdoc.bat
+::     Full tempdita XML + embed. Used by embed_asdoc.bat / post-build.
+::
+::   set OPEN=1&& LIB_KyoLib\tools\asdoc.bat
+::   set SKIP_SWC=1&& LIB_KyoLib\tools\asdoc.bat
+::   set SWC_PATH=D:\path\LIB_KyoLib.swc&& LIB_KyoLib\tools\asdoc.bat
+::   set IF_MISSING=1&& ...   Skip when SWC already has docs/packages.dita
+::   set NO_PAUSE=1&& ...     No pause on failure (for build.bat / External Tool)
 ::
 :: Prerequisites
-::   1. FLEX_HOME points at Flex/AIR SDK root (bin, lib\asdoc.jar, frameworks,
-::      asdoc\templates).
-::   2. A JRE/JDK that can run asdoc.jar. Do NOT use SDK asdoc.bat
-::      (-Xbootclasspath/p breaks on Java 9+).
-::   3. Optional: parent repo built LIB_Other.swc for cross-lib types.
-::      Missing SWC only warns; docs may still generate with unresolved types.
+::   1. FLEX_HOME -> Flex/AIR SDK (bin, lib\asdoc.jar, frameworks, asdoc\templates)
+::   2. JRE/JDK that can run asdoc.jar (do NOT use SDK asdoc.bat on Java 9+)
+::   3. For embed: production SWC must exist (compc / IDEA / VSCode build first)
+::   4. Optional: LIB_Other.swc for cross-lib types (monorepo)
 ::
-:: Layout (relative to MODULE_ROOT = LIB_KyoLib)
+:: Layout (MODULE_ROOT = LIB_KyoLib)
 ::   src\                      Documented sources (-doc-sources)
 ::   lib\src\                  Third-party sources (filtered into -source-path)
-::   tools\asdoc.bat           This entry
-::   tools\asdoc\              Terms script, zh terms, local template cache
-::     build_terms_zh.ps1      Build Chinese ASDoc_terms.xml from SDK English
-::     zh_CN\ASDoc_terms.xml   Generated terms (refreshed each run)
-::     templates\              SDK template copy (gitignore; synced on first run)
-::   out\asdoc\                HTML output
-::   out\asdoc\_libsrc\        Filtered lib\src temp tree (Crypto stub)
-::
-:: Flow
-::   Check SDK -> filter lib sources -> build Chinese terms
-::   -> sync/overlay templates -> run asdoc.jar -> optional open browser
+::   tools\asdoc.bat / tools\embed_asdoc.bat
+::   tools\asdoc\              Terms, inject, wait, templates, zh_CN
+::   out\asdoc\                HTML (MODE=full)
+::   out\asdoc_embed\          Embed-mode output (+ tempdita)
 ::
 :: Notes
-::   No chcp / no lang packs: keep the caller's console code page unchanged.
-::   Console messages are ASCII-only for encoding safety.
+::   ASCII-only console messages. No chcp / lang packs.
+::   Do NOT use -skip-xsl=true (drops summary XML; thin SWC docs).
+::   IDEA (monorepo): External Tool EmbedKyoLibAsDoc after Make.
 ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 @echo off
 setlocal enabledelayedexpansion
 
-:: Directory of this bat (...\LIB_KyoLib\tools\)
 set BAT_HOME=%~dp0
 
-title LIB_KyoLib - ASDoc
+if /i "%MODE%"=="" set MODE=full
+if /i not "%MODE%"=="embed" if /i not "%MODE%"=="full" (
+	echo Invalid MODE=%MODE% ^(use full or embed^)
+	goto END
+)
+
+if /i "%MODE%"=="embed" (
+	title LIB_KyoLib - ASDoc embed
+) else (
+	title LIB_KyoLib - ASDoc
+)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 1) Flex / AIR SDK
@@ -79,7 +86,6 @@ call :EXIST "%FLEX_HOME%"
 set FLEX_BIN=%FLEX_HOME%\bin
 call :EXIST "%FLEX_BIN%"
 
-:: Invoke jar directly; SDK asdoc.bat breaks on Java 9+
 set ASDOC_JAR=%FLEX_HOME%\lib\asdoc.jar
 call :EXIST "%ASDOC_JAR%"
 
@@ -87,10 +93,9 @@ set FLEX_FRAMEWORKS=%FLEX_HOME%\frameworks
 call :EXIST "%FLEX_FRAMEWORKS%"
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: 2) Module paths and optional parent-repo SWC
+:: 2) Module paths and target SWC
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-:: MODULE_ROOT = LIB_KyoLib (parent of tools\)
 set MODULE_ROOT=%BAT_HOME%..
 for %%I in ("%MODULE_ROOT%") do set MODULE_ROOT=%%~fI
 
@@ -99,7 +104,7 @@ set KYO_LIB_SRC=%MODULE_ROOT%\lib\src
 call :EXIST "%KYO_SRC%"
 call :EXIST "%KYO_LIB_SRC%"
 
-:: Parent monorepo root (e.g. BleachVsNaruto) for LIB_Other.swc
+:: Parent may be monorepo root (BleachVsNaruto) or a standalone clone parent
 set REPO_ROOT=%MODULE_ROOT%\..
 for %%I in ("%REPO_ROOT%") do set REPO_ROOT=%%~fI
 
@@ -110,25 +115,58 @@ if not exist "%OTHER_SWC%" (
 	set OTHER_SWC=
 )
 
-set DOC_OUT=%MODULE_ROOT%\out\asdoc
+:: Monorepo:  <repo>\out\production\LIB_KyoLib\LIB_KyoLib.swc
+:: Standalone submodule / asconfig.ind:
+::   <LIB_KyoLib>\out\production\LIB_KyoLib\LIB_KyoLib.swc
+set SWC_MONO=%REPO_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc
+set SWC_IND=%MODULE_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc
+
+if "%SWC_PATH%"=="" (
+	if exist "%SWC_MONO%" (
+		set SWC_PATH=%SWC_MONO%
+	) else if exist "%SWC_IND%" (
+		set SWC_PATH=%SWC_IND%
+	) else (
+		set SWC_PATH=%SWC_MONO%
+	)
+)
+
+if /i "%MODE%"=="embed" (
+	set DOC_OUT=%MODULE_ROOT%\out\asdoc_embed
+) else (
+	set DOC_OUT=%MODULE_ROOT%\out\asdoc
+)
 if not exist "%DOC_OUT%" mkdir "%DOC_OUT%"
+
+if /i "%IF_MISSING%"=="1" (
+	if exist "%SWC_PATH%" (
+		powershell -NoProfile -ExecutionPolicy Bypass -File "%MODULE_ROOT%\tools\asdoc\inject_docs_swc.ps1" -SwcPath "%SWC_PATH%" -TestHasDocs >nul 2>&1
+		if not errorlevel 1 (
+			echo ASDoc already embedded in SWC; skip.
+			echo.
+			exit /b 0
+		)
+	)
+)
+
+if /i "%MODE%"=="embed" (
+	if not exist "%SWC_PATH%" (
+		echo SWC not found: %SWC_PATH%
+		echo Build LIB_KyoLib first.
+		goto END
+	)
+)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 3) Filter lib\src: drop Crypto.as, write a minimal stub
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-::
-:: Real com.hurlant.crypto.Crypto has block comments between case labels;
-:: asdoc's parser fatals on that, but type-check still needs Crypto symbols.
-:: robocopy the tree with /XF Crypto.as, then write a signature-only stub.
-::
 
-set FILTERED_LIB=%MODULE_ROOT%\out\asdoc\_libsrc
+set FILTERED_LIB=%DOC_OUT%\_libsrc
 if exist "%FILTERED_LIB%" rmdir /s /q "%FILTERED_LIB%"
 mkdir "%FILTERED_LIB%"
 
 robocopy "%KYO_LIB_SRC%" "%FILTERED_LIB%" /E /XF Crypto.as /NFL /NDL /NJH /NJS /nc /ns /np >nul
 set RC=!ERRORLEVEL!
-:: robocopy: 0-7 are success-class; >=8 is failure
 if !RC! GEQ 8 (
 	echo ASDoc generation failed.
 	goto END
@@ -152,13 +190,6 @@ if not exist "%STUB_DIR%" mkdir "%STUB_DIR%"
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 4) Chinese UI chrome: terms + local templates
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-::
-:: ASDoc has no locale switch. Chrome labels come from ASDoc_terms.xml:
-::   a) build_terms_zh.ps1 writes Chinese terms from SDK English table
-::   b) First run copies SDK asdoc\templates locally (gitignore)
-::   c) Overlay Chinese ASDoc_terms.xml into that templates dir
-::   d) asdoc -templates-path points at the local copy
-::
 
 set PATH=%FLEX_BIN%;%PATH%
 
@@ -182,22 +213,16 @@ if not exist "%ASDOC_TMPL%\asdoc-util.xslt" (
 )
 copy /Y "%ASDOC_ZH_TERMS%" "%ASDOC_TMPL%\ASDoc_terms.xml" >nul
 
-echo Generating LIB_KyoLib ASDoc...
+if /i "%MODE%"=="embed" (
+	echo Generating LIB_KyoLib ASDoc XML for SWC...
+) else (
+	echo Generating LIB_KyoLib ASDoc...
+)
 echo Output: %DOC_OUT%
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 5) Run asdoc.jar
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-::
-::   +flexlib                  Flex frameworks root
-::   -templates-path           Local templates with Chinese terms
-::   -compiler.source-path     src + filtered third-party sources
-::   -doc-sources              Document only src (not greensock/hurlant pages)
-::   -compiler.external-library-path
-::                             SDK libs + optional LIB_Other.swc
-::   -lenient                  Softer checks on third-party sources
-::   -keep-xml=false           Drop intermediate XML
-::
 
 if defined OTHER_SWC (
 	java -Xmx1536m -classpath "%ASDOC_JAR%" flex2.tools.ASDoc ^
@@ -207,7 +232,7 @@ if defined OTHER_SWC (
 		-doc-sources "%KYO_SRC%" ^
 		-compiler.external-library-path "%FLEX_FRAMEWORKS%\libs" "%FLEX_FRAMEWORKS%\libs\air" "%FLEX_FRAMEWORKS%\libs\mx" "%OTHER_SWC%" ^
 		-lenient ^
-		-keep-xml=false ^
+		-keep-xml=true ^
 		-main-title "LIB_KyoLib API" ^
 		-window-title "LIB_KyoLib ASDoc" ^
 		-footer "5DPLAY Game Studio - LIB_KyoLib" ^
@@ -220,7 +245,7 @@ if defined OTHER_SWC (
 		-doc-sources "%KYO_SRC%" ^
 		-compiler.external-library-path "%FLEX_FRAMEWORKS%\libs" "%FLEX_FRAMEWORKS%\libs\air" "%FLEX_FRAMEWORKS%\libs\mx" ^
 		-lenient ^
-		-keep-xml=false ^
+		-keep-xml=true ^
 		-main-title "LIB_KyoLib API" ^
 		-window-title "LIB_KyoLib ASDoc" ^
 		-footer "5DPLAY Game Studio - LIB_KyoLib" ^
@@ -232,7 +257,44 @@ if errorlevel 1 (
 	goto END
 )
 
-echo ASDoc generated: %DOC_OUT%\index.html
+if /i "%MODE%"=="full" (
+	echo ASDoc generated: %DOC_OUT%\index.html
+) else (
+	echo ASDoc XML generated: %DOC_OUT%\tempdita
+)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: 6) Embed tempdita into SWC docs/
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+set TEMPDITA=%DOC_OUT%\tempdita
+
+if /i "%SKIP_SWC%"=="1" (
+	echo [WARN] SKIP_SWC=1: SWC docs embedding skipped.
+	goto AFTER_SWC
+)
+
+if not exist "%TEMPDITA%" (
+	echo tempdita missing; cannot embed into SWC.
+	goto END
+)
+
+if not exist "%SWC_PATH%" (
+	echo [WARN] SWC not found: %SWC_PATH%
+	echo [WARN] Build LIB_KyoLib first, then re-run to embed docs.
+	if /i "%MODE%"=="embed" goto END
+	goto AFTER_SWC
+)
+
+echo Embedding ASDoc into SWC: %SWC_PATH%
+powershell -NoProfile -ExecutionPolicy Bypass -File "%MODULE_ROOT%\tools\asdoc\inject_docs_swc.ps1" -SwcPath "%SWC_PATH%" -TempDitaDir "%TEMPDITA%"
+if errorlevel 1 (
+	echo Failed to embed ASDoc into SWC.
+	goto END
+)
+echo ASDoc embedded into SWC docs/
+
+:AFTER_SWC
 
 if /i "%OPEN%"=="1" (
 	if exist "%DOC_OUT%\index.html" start "" "%DOC_OUT%\index.html"
@@ -244,7 +306,7 @@ exit /b 0
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :END
-pause >nul
+if /i not "%NO_PAUSE%"=="1" pause >nul
 exit /b 1
 
 :EXIST

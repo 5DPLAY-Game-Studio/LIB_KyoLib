@@ -26,13 +26,29 @@
     "tasks": [
         {
             "label": "ActionScript: compile debug - asconfig.ind.json",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "ActionScript: compile debug - asconfig.ind.json (compc)",
+                "LIB_KyoLib: embed ASDoc into SWC"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "ActionScript: compile debug - asconfig.ind.json (compc)",
             "type": "actionscript",
             "debug": true,
             "asconfig": "asconfig.ind.json",
-            "group": "build",
-            "problemMatcher": [],
-            "dependsOrder": "sequence",
-            "dependsOn": []
+            "problemMatcher": []
+        },
+        {
+            "label": "LIB_KyoLib: embed ASDoc into SWC",
+            "type": "shell",
+            "command": "${workspaceFolder}/tools/embed_asdoc.bat",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
         }
     ]
 }

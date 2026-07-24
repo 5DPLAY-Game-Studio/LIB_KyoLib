@@ -1,0 +1,9 @@
+<toolSet name="5DPLAY_TOOLS">
+  <tool name="EmbedKyoLibAsDoc" description="Embed ASDoc into LIB_KyoLib.swc" showInMainMenu="true" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="true" showConsoleOnStdErr="true" synchronizeAfterRun="true">
+    <exec>
+      <option name="COMMAND" value="$ProjectFileDir$\tools\embed_asdoc.bat" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
+    </exec>
+  </tool>
+</toolSet>
