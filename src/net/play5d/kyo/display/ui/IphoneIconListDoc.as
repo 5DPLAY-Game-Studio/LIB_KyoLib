@@ -95,10 +95,10 @@ public class IphoneIconListDoc extends Sprite {
      * 移除翻页监听并清空指示器子项。
      * @example
      * <listing version="3.0">
-     * doc.destory();
+     * doc.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         if (_iplist) {
             _iplist.removeEventListener(IphoneIconListEvent.PAGE_CHANGE, update);
         }

@@ -111,10 +111,10 @@ public class BasePPTEffect {
      * 移除拖拽相关监听并断开引用。
      * @example
      * <listing version="3.0">
-     * effect.destory();
+     * effect.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         if (_sp) {
             _sp.removeEventListener(MouseEvent.MOUSE_DOWN, dragDown);
             _sp = null;

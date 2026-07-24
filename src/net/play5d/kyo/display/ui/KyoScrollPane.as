@@ -133,10 +133,10 @@ public class KyoScrollPane extends Sprite {
      * 移除拖拽相关监听。
      * @example
      * <listing version="3.0">
-     * pane.destory();
+     * pane.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         this.removeEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
         removeEventListener(Event.ENTER_FRAME, draging);
         if (stage) {

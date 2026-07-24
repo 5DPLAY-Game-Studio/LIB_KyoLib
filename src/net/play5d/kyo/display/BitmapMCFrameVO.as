@@ -23,7 +23,7 @@ import flash.display.BitmapData;
  * 位图影片单帧数据：位图、绘制偏移与帧标签。
  *
  * @see BitmapMovieClip
- * @see #destory()
+ * @see #destroy()
  */
 public class BitmapMCFrameVO {
     /**
@@ -57,10 +57,10 @@ public class BitmapMCFrameVO {
      * 释放位图数据。
      * @example
      * <listing version="3.0">
-     * vo.destory();
+     * vo.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         if (bd) {
             bd.dispose();
             bd = null;

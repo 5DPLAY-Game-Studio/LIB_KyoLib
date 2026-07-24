@@ -77,7 +77,7 @@ public class BMCCacher {
     public function remove(id:String):void {
         var a:Array = _cacheObj[id];
         for each(var b:BitmapMCFrameVO in a) {
-            b.destory();
+            b.destroy();
             b = null;
         }
         a = null;
@@ -96,7 +96,7 @@ public class BMCCacher {
             for each(var j:* in i) {
                 if (j is BitmapMCFrameVO) {
                     var b:BitmapMCFrameVO = j;
-                    b.destory();
+                    b.destroy();
                 }
                 j = null;
             }

@@ -94,7 +94,7 @@ public class PicLoader extends Sprite {
 
     /**
      * 移除并卸载内部加载器。
-     * @see #destory()
+     * @see #destroy()
      * @see #unloadLoader()
      */
     public final function unload():void {
@@ -118,10 +118,10 @@ public class PicLoader extends Sprite {
      * 销毁：等同于 <code>unload</code>。
      * @example
      * <listing version="3.0">
-     * pic.destory();
+     * pic.destroy();
      * </listing>
      */
-    public final function destory():void {
+    public final function destroy():void {
         removeLoader();
     }
 

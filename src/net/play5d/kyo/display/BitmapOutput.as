@@ -26,7 +26,7 @@ import flash.geom.Matrix;
  * 将显示对象按固定尺寸绘制到自身 <code>bitmapData</code> 的位图输出。
  *
  * @see #render()
- * @see #destory()
+ * @see #destroy()
  */
 public class BitmapOutput extends Bitmap {
     /**
@@ -83,10 +83,10 @@ public class BitmapOutput extends Bitmap {
      * 断开源引用并释放位图。
      * @example
      * <listing version="3.0">
-     * output.destory();
+     * output.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         _source = null;
         bitmapData.dispose();
         bitmapData = null;

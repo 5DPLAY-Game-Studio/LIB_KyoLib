@@ -74,7 +74,7 @@ public class PicLoaderSp extends Sprite {
 
     /**
      * 卸载当前播放器。
-     * @see #destory()
+     * @see #destroy()
      */
     public final function unload():void {
         removeLoader();
@@ -84,10 +84,10 @@ public class PicLoaderSp extends Sprite {
      * 销毁：等同于 <code>unload</code>。
      * @example
      * <listing version="3.0">
-     * loader.destory();
+     * loader.destroy();
      * </listing>
      */
-    public final function destory():void {
+    public final function destroy():void {
         removeLoader();
     }
 
@@ -190,7 +190,7 @@ public class PicLoaderSp extends Sprite {
 
         _player.removeEventListener(SuperPlayer.EVENT_PLAY_COMPLETE, playBack);
 
-        _player.destory();
+        _player.destroy();
         _player = null;
     }
 

@@ -189,7 +189,7 @@ public class IphoneIconList extends Sprite {
      * @param params 传给该方法的参数。
      * @example
      * <listing version="3.0">
-     * list.anyoneDoFunction('destory');
+     * list.anyoneDoFunction('destroy');
      * </listing>
      */
     public function anyoneDoFunction(fun:String, ...params):void {
@@ -206,10 +206,10 @@ public class IphoneIconList extends Sprite {
      * 移除监听、销毁子列表并终止 Tween。
      * @example
      * <listing version="3.0">
-     * list.destory();
+     * list.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
         this.removeEventListener(MouseEvent.MOUSE_DOWN, downHanlder);
         if (stage) {
@@ -217,7 +217,7 @@ public class IphoneIconList extends Sprite {
         }
 
         for each(var i:KyoTileList in _lists) {
-            i.anyoneDoFunction('destory');
+            i.anyoneDoFunction('destroy');
         }
 
         removeLists();

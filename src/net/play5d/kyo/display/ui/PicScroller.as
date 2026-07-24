@@ -50,7 +50,7 @@ import flash.utils.Timer;
  * @see PicScrollEvent
  * @see #initlize()
  * @see #update()
- * @see #destory()
+ * @see #destroy()
  */
 public class PicScroller extends Sprite {
     /**
@@ -186,7 +186,7 @@ public class PicScroller extends Sprite {
      * </listing>
      */
     public function update(data:Array):void {
-        destory();
+        destroy();
         _datas  = data;
         _direct = direct;
         loadNext();
@@ -196,10 +196,10 @@ public class PicScroller extends Sprite {
      * 停止轮播并卸载当前页。
      * @example
      * <listing version="3.0">
-     * scroller.destory();
+     * scroller.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         _curId = -1;
         pause();
         if (_loader) {
