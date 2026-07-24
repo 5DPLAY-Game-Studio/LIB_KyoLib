@@ -33,7 +33,7 @@ import flash.text.TextFormat;
  *
  * @see #text
  * @see #update()
- * @see #destory()
+ * @see #destroy()
  * @example
  * <listing version="3.0">
  * var label:BitmapText = new BitmapText(true, 0xffffff);
@@ -325,10 +325,10 @@ public class BitmapText extends Bitmap {
      * 从显示列表移除并释放位图与内部引用。
      * @example
      * <listing version="3.0">
-     * label.destory();
+     * label.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         try {
             parent.removeChild(this);
         }

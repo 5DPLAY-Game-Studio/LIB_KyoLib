@@ -122,10 +122,10 @@ public class KyoDragList extends KyoTileList {
      * 移除拖拽与自动滚动相关监听。
      * @example
      * <listing version="3.0">
-     * list.destory();
+     * list.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         removeEventListener(Event.ENTER_FRAME, draging);
         removeEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
         if (stage) {

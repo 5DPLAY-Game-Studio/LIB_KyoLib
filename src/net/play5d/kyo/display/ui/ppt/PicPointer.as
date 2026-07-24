@@ -205,13 +205,13 @@ public class PicPointer extends Sprite {
     }
 
     /**
-     * 用新数据重建幻灯（先 <code>destory</code> 再加载）。
+     * 用新数据重建幻灯（先 <code>destroy</code> 再加载）。
      * @param data 资源 URL 数组。
      * @see #initlize()
-     * @see #destory()
+     * @see #destroy()
      */
     public function update(data:Array):void {
-        destory();
+        destroy();
         setData(data);
         _curId = 0;
         initTimer();
@@ -223,10 +223,10 @@ public class PicPointer extends Sprite {
      * 销毁页加载器并从容器移除。
      * @example
      * <listing version="3.0">
-     * pointer.destory();
+     * pointer.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         _curId = -1;
 
         if (_loaders) {
@@ -236,7 +236,7 @@ public class PicPointer extends Sprite {
                 }
                 catch (e:Error) {
                 }
-                p.destory();
+                p.destroy();
             }
             _loaders = null;
         }

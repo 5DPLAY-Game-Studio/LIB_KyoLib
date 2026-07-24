@@ -29,11 +29,11 @@ import flash.geom.*;
  *
  * @see #render()
  * @see #strongth
- * @see #destory()
+ * @see #destroy()
  */
 public class WaterWaveEffect extends Sprite {
     /**
-     * @param img 源位图（效果生命周期内由本类持有并在 <code>destory</code> 时 dispose）。
+     * @param img 源位图（效果生命周期内由本类持有并在 <code>destroy</code> 时 dispose）。
      * @param scale 显示缩放倍数，默认 1。
      */
     public function WaterWaveEffect(img:BitmapData, scale:int = 1) {
@@ -88,10 +88,10 @@ public class WaterWaveEffect extends Sprite {
      * 释放内部缓冲与源图。
      * @example
      * <listing version="3.0">
-     * wave.destory();
+     * wave.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         result.dispose();
         result2.dispose();
         source.dispose();

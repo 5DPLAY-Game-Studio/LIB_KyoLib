@@ -86,14 +86,14 @@ public class KyoStageCtrl extends EventDispatcher {
      * 切换主场景。
      * @param stg 新场景。
      * @param sameChange 与当前同类时是否仍切换。
-     * @param buildAfterDestory 为 <code>true</code> 时等旧场景 <code>destroy</code> 回调后再构建（历史拼写）。
+     * @param buildAfterDestroy 为 <code>true</code> 时等旧场景 <code>destroy</code> 回调后再构建。
      * @return 是否实际发起了切换（同类且 <code>sameChange</code> 为 false 时返回 false）。
      * @example
      * <listing version="3.0">
      * ctrl.goStage(new HomeStage());
      * </listing>
      */
-    public function goStage(stg:IStage, sameChange:Boolean = false, buildAfterDestory:Boolean = false):Boolean {
+    public function goStage(stg:IStage, sameChange:Boolean = false, buildAfterDestroy:Boolean = false):Boolean {
         function detoryComplete():void {
             try {
                 _mainStage.removeChild(_curStage.display);
@@ -128,7 +128,7 @@ public class KyoStageCtrl extends EventDispatcher {
             }
         }
         if (_curStage) {
-            if (buildAfterDestory) {
+            if (buildAfterDestroy) {
                 _curStage.destroy(detoryComplete);
             }
             else {

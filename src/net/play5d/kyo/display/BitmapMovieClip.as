@@ -207,7 +207,7 @@ public class BitmapMovieClip extends Sprite {
         else {
             createFrame(drawVar, 1);
         }
-        drawVar.destory();
+        drawVar.destroy();
         drawVar = null;
         initBMC();
     }
@@ -248,9 +248,9 @@ public class BitmapMovieClip extends Sprite {
         for (var i:int = 1; i <= e; i++) {
             createFrame(drawVar, i);
         }
-        mcGroup.destory();
+        mcGroup.destroy();
         mcGroup = null;
-        drawVar.destory();
+        drawVar.destroy();
         drawVar = null;
         initBMC();
     }
@@ -433,10 +433,10 @@ public class BitmapMovieClip extends Sprite {
      * @param clearBitmap 为 <code>true</code> 时 dispose 各帧 BitmapData。
      * @example
      * <listing version="3.0">
-     * bmc.destory(true);
+     * bmc.destroy(true);
      * </listing>
      */
-    public function destory(clearBitmap:Boolean = false):void {
+    public function destroy(clearBitmap:Boolean = false):void {
         stop();
         if (clearBitmap) {
             for each(var i:BitmapMCFrameVO in _insArray) {
@@ -693,7 +693,7 @@ internal class DrawVar {
     public var smoothing:Boolean = false;
 
     /** @private 复位源 MC 并清空引用 */
-    public function destory():void {
+    public function destroy():void {
         if (source is MovieClip) {
             (source as MovieClip).gotoAndStop(1);
         }
@@ -821,7 +821,7 @@ internal class McGroup extends Sprite {
     }
 
     /** @private 移除所有子对象 */
-    public function destory():void {
+    public function destroy():void {
         KyoUtils.removeAllChildren(this);
         _ins = null;
     }

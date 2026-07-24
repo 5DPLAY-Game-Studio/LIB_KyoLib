@@ -33,6 +33,6 @@ public interface IiphoneBtn {
     /**
      * 销毁按钮占用的资源。
      */
-    function destory():void;
+    function destroy():void;
 }
 }

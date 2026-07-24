@@ -226,7 +226,7 @@ public class SuperPlayer extends Sprite {
      */
     public function stop():void {
         if (_video) {
-            _video.destory();
+            _video.destroy();
             _video = null;
         }
         if (_img) {
@@ -284,13 +284,13 @@ public class SuperPlayer extends Sprite {
     }
 
     /**
-     * 销毁全部资源（历史拼写 <code>destory</code>）。
+     * 销毁全部资源。
      * @example
      * <listing version="3.0">
-     * player.destory();
+     * player.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         type = null;
         _url = null;
 
@@ -323,7 +323,7 @@ public class SuperPlayer extends Sprite {
             }
             catch (e:Error) {
             }
-            _video.destory();
+            _video.destroy();
             _video = null;
         }
     }
@@ -569,9 +569,9 @@ internal class InsVideo extends Sprite {
     }
 
     /**
-     * 销毁连接与视频（历史拼写 <code>destory</code>）。
+     * 销毁连接与视频。
      */
-    public function destory():void {
+    public function destroy():void {
         stop();
 
         if (flvNC) {

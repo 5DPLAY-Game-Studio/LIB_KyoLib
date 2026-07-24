@@ -132,10 +132,10 @@ public class IphoneScrollPane extends Sprite {
      * 移除拖拽相关监听。
      * @example
      * <listing version="3.0">
-     * pane.destory();
+     * pane.destroy();
      * </listing>
      */
-    public function destory():void {
+    public function destroy():void {
         removeEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
         if (stage) {
             stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
