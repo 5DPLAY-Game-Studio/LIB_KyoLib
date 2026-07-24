@@ -45,7 +45,8 @@
 ::   src\                      Documented sources (-doc-sources)
 ::   lib\src\                  Third-party sources (filtered into -source-path)
 ::   tools\asdoc.bat / tools\embed_asdoc.bat
-::   tools\asdoc\              Terms, inject, wait, templates, zh_CN
+::   tools\asdoc\              Local zh_CN / templates + fallback ps1
+::   Prefer monorepo tools\script\ps\ when present (inject / wait / build_terms)
 ::   out\asdoc\                HTML (MODE=full)
 ::   out\asdoc_embed\          Embed-mode output (+ tempdita)
 ::
@@ -108,6 +109,11 @@ call :EXIST "%KYO_LIB_SRC%"
 set REPO_ROOT=%MODULE_ROOT%\..
 for %%I in ("%REPO_ROOT%") do set REPO_ROOT=%%~fI
 
+:: Prefer monorepo tools\script\ps (single source); fallback to local copy
+set "ASDOC_PS=%REPO_ROOT%\tools\script\ps"
+if not exist "%ASDOC_PS%\inject_docs_swc.ps1" set "ASDOC_PS=%MODULE_ROOT%\tools\asdoc"
+set "ASDOC_LOCAL=%MODULE_ROOT%\tools\asdoc"
+
 set OTHER_SWC=%REPO_ROOT%\out\production\LIB_Other\LIB_Other.swc
 if not exist "%OTHER_SWC%" (
 	echo [WARN] LIB_Other.swc not found: %OTHER_SWC%
@@ -140,7 +146,7 @@ if not exist "%DOC_OUT%" mkdir "%DOC_OUT%"
 
 if /i "%IF_MISSING%"=="1" (
 	if exist "%SWC_PATH%" (
-		powershell -NoProfile -ExecutionPolicy Bypass -File "%MODULE_ROOT%\tools\asdoc\inject_docs_swc.ps1" -SwcPath "%SWC_PATH%" -TestHasDocs >nul 2>&1
+		powershell -NoProfile -ExecutionPolicy Bypass -File "%ASDOC_PS%\inject_docs_swc.ps1" -SwcPath "%SWC_PATH%" -TestHasDocs >nul 2>&1
 		if not errorlevel 1 (
 			echo ASDoc already embedded in SWC; skip.
 			echo.
@@ -193,10 +199,10 @@ if not exist "%STUB_DIR%" mkdir "%STUB_DIR%"
 
 set PATH=%FLEX_BIN%;%PATH%
 
-set ASDOC_TMPL=%MODULE_ROOT%\tools\asdoc\templates
-set ASDOC_ZH_TERMS=%MODULE_ROOT%\tools\asdoc\zh_CN\ASDoc_terms.xml
+set ASDOC_TMPL=%ASDOC_LOCAL%\templates
+set ASDOC_ZH_TERMS=%ASDOC_LOCAL%\zh_CN\ASDoc_terms.xml
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "%MODULE_ROOT%\tools\asdoc\build_terms_zh.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%ASDOC_PS%\build_terms_zh.ps1" -OutDir "%ASDOC_LOCAL%\zh_CN"
 if not exist "%ASDOC_ZH_TERMS%" (
 	echo ASDoc generation failed.
 	goto END
@@ -287,7 +293,7 @@ if not exist "%SWC_PATH%" (
 )
 
 echo Embedding ASDoc into SWC: %SWC_PATH%
-powershell -NoProfile -ExecutionPolicy Bypass -File "%MODULE_ROOT%\tools\asdoc\inject_docs_swc.ps1" -SwcPath "%SWC_PATH%" -TempDitaDir "%TEMPDITA%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%ASDOC_PS%\inject_docs_swc.ps1" -SwcPath "%SWC_PATH%" -TempDitaDir "%TEMPDITA%"
 if errorlevel 1 (
 	echo Failed to embed ASDoc into SWC.
 	goto END

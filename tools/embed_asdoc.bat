@@ -45,6 +45,9 @@ for %%I in ("%MODULE_ROOT%") do set "MODULE_ROOT=%%~fI"
 set "REPO_ROOT=%MODULE_ROOT%\.."
 for %%I in ("%REPO_ROOT%") do set "REPO_ROOT=%%~fI"
 
+set "ASDOC_PS=%REPO_ROOT%\tools\script\ps"
+if not exist "%ASDOC_PS%\wait_swc_ready.ps1" set "ASDOC_PS=%MODULE_ROOT%\tools\asdoc"
+
 set "SWC_MONO=%REPO_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc"
 set "SWC_IND=%MODULE_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc"
 
@@ -62,7 +65,7 @@ if not "%~1"=="" (
 	set "SWC_PATH=%~f1"
 )
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "%BAT_HOME%asdoc\wait_swc_ready.ps1" -SwcPath "!SWC_PATH!" -TimeoutSec 45
+powershell -NoProfile -ExecutionPolicy Bypass -File "%ASDOC_PS%\wait_swc_ready.ps1" -SwcPath "!SWC_PATH!" -TimeoutSec 45
 if errorlevel 1 (
 	echo SWC not ready for ASDoc embed: !SWC_PATH!
 	exit /b 1
