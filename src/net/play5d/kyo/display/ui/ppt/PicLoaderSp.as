@@ -22,6 +22,7 @@ import flash.events.Event;
 import flash.geom.Point;
 
 import net.play5d.kyo.SuperPlayer;
+import net.play5d.kyo.utils.KyoUtils;
 
 /**
  * 基于 <code>SuperPlayer</code> 的幻灯片页加载器，支持图片占位与视频播放完成回调。
@@ -67,7 +68,7 @@ public class PicLoaderSp extends Sprite {
      */
     public function initlize(v:String):void {
         _url           = v;
-        var pfx:String = getPrefix(v);
+        var pfx:String = KyoUtils.getExtension(v);
         var pa:Array   = ['jpg', 'jpeg', 'gif', 'png'];
         isBitmap       = pa.indexOf(pfx) != -1;
     }
@@ -127,15 +128,6 @@ public class PicLoaderSp extends Sprite {
             return _player.videoPlaying == false;
         }
         return true;
-    }
-
-    /**
-     * @private 取 URL 扩展名（小写）。
-     */
-    private function getPrefix(v:String):String {
-        var x:int     = v.indexOf('.');
-        var pf:String = v.substr(x + 1);
-        return pf.toLocaleLowerCase();
     }
 
     /**

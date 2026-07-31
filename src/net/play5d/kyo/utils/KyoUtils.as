@@ -479,9 +479,15 @@ public class KyoUtils {
     }
 
     /**
-     * 在数字前面加0,zeroBeforNumber(1 , 3) return "001"
-     * @param n 数字
-     * @param bit 位数
+     * 在数字前补 0 至指定整数位数（小数部分保留）。
+     * @param n 数字。
+     * @param bit 整数部分目标位数，默认 2。
+     * @return 补零后的字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.addZeroBeforNumber(1, 3); // '001'
+     * </listing>
+     * @see net.play5d.kyo.utils.KyoTimerFormat#formatNum()
      */
     public static function addZeroBeforNumber(n:Number, bit:int = 2):String {
         var nstr:String    = n.toString();
@@ -496,25 +502,49 @@ public class KyoUtils {
     }
 
     /**
-     * 获取URL的后缀名
-     * @param v
-     * @return
-     *
+     * 取 URL / 路径的扩展名（小写，不含点；忽略 <code>?</code> / <code>#</code> 查询与锚点）。
+     * @param v 完整 URL 或文件路径。
+     * @return 扩展名；无扩展名时为空串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.getExtension('a/b.PNG?x=1'); // 'png'
+     * </listing>
+     * @see #getPostfix()
+     * @see #getPrefix()
+     */
+    public static function getExtension(v:String):String {
+        if (!v) {
+            return '';
+        }
+        var path:String = v;
+        var q:int       = path.indexOf('?');
+        if (q != -1) {
+            path = path.substring(0, q);
+        }
+        var h:int = path.indexOf('#');
+        if (h != -1) {
+            path = path.substring(0, h);
+        }
+        var slash:int = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+        var i:int     = path.lastIndexOf('.');
+        if (i == -1 || i <= slash || i == path.length - 1) {
+            return '';
+        }
+        return path.substring(i + 1).toLowerCase();
+    }
+
+    /**
+     * 获取 URL 的后缀名（委托 <code>getExtension</code>）。
+     * @param v URL 或路径。
+     * @return 扩展名小写串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.getPostfix('a.jpg?v=1'); // 'jpg'
+     * </listing>
+     * @see #getExtension()
      */
     public static function getPostfix(v:String):String {
-        var k:int = v.indexOf('?');
-        var i:int;
-        var pf:String;
-        if (k == -1) {
-            i  = v.lastIndexOf('.');
-            pf = v.substr(i + 1);
-        }
-        else {
-            var s:String = v.substr(k - 5, 5);
-            i            = s.indexOf('.');
-            pf           = s.substr(i + 1);
-        }
-        return pf.toLowerCase();
+        return getExtension(v);
     }
 
     /**
@@ -1129,12 +1159,17 @@ public class KyoUtils {
     }
 
     /**
-     * 获取后缀名
+     * 获取后缀名（委托 <code>getExtension</code>；历史命名保留）。
+     * @param v URL 或路径。
+     * @return 扩展名小写串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.getPrefix('a.PNG'); // 'png'
+     * </listing>
+     * @see #getExtension()
      */
     public static function getPrefix(v:String):String {
-        var x:int     = v.indexOf('.');
-        var pf:String = v.substr(x + 1);
-        return pf.toLocaleLowerCase();
+        return getExtension(v);
     }
 
     /**
