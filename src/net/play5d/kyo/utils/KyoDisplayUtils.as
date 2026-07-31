@@ -18,15 +18,17 @@
 
 package net.play5d.kyo.utils {
 import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
 /**
- * 显示对象克隆与旋转矩形碰撞检测。
+ * 显示对象克隆、旋转矩形碰撞与置顶检测。
  *
  * @see #clone()
  * @see #duplicateDisplayObject()
  * @see #rorationRectCollide()
+ * @see #isInTop()
  */
 public class KyoDisplayUtils {
     /**
@@ -249,6 +251,45 @@ public class KyoDisplayUtils {
         }
 
         return true;
+    }
+
+    /**
+     * 判断显示对象是否位于容器在指定全局点下的最顶层。
+     * @param child 待测显示对象。
+     * @param container 命中检测容器；默认 <code>child.stage</code>。
+     * @param globalPoint 全局检测点；默认舞台中心。
+     * @return 是否为该点下最顶层（容器则含其子项）。
+     * @example
+     * <listing version="3.0">
+     * if (KyoDisplayUtils.isInTop(panel)) { ... }
+     * </listing>
+     */
+    public static function isInTop(
+            child:DisplayObject, container:DisplayObjectContainer = null, globalPoint:Point = null):Boolean {
+        if (!container) {
+            container = child.stage;
+        }
+        if (!globalPoint) {
+            globalPoint = new Point(1, 1);
+            try {
+                globalPoint.x = container.stage.stageWidth / 2;
+                globalPoint.y = container.stage.stageHeight / 2;
+            }
+            catch (e:Error) {
+            }
+        }
+        var arr:Array = container.getObjectsUnderPoint(globalPoint);
+        if (arr && arr.length > 0) {
+            var top:DisplayObject = arr.pop();
+            if (child is DisplayObjectContainer) {
+                var dc:DisplayObjectContainer = child as DisplayObjectContainer;
+                return dc.contains(top);
+            }
+            else {
+                return top == child;
+            }
+        }
+        return false;
     }
 
 }

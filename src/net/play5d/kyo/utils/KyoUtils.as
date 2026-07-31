@@ -23,6 +23,7 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
+import flash.display.FrameLabel;
 import flash.display.MovieClip;
 import flash.display.Sprite;
 import flash.events.ContextMenuEvent;
@@ -1476,6 +1477,96 @@ public class KyoUtils {
 
         return newCt;
 
+    }
+
+    /**
+     * 影片剪辑是否具有指定名称帧标签。
+     * @param mc 影片剪辑。
+     * @param label 帧标签名。
+     * @return 是否存在。
+     * @example
+     * <listing version="3.0">
+     * if (KyoUtils.hasFrameLabel(mc, 'loop')) { ... }
+     * </listing>
+     */
+    public static function hasFrameLabel(mc:MovieClip, label:String):Boolean {
+        var labels:Array = mc.currentLabels;
+
+        for each(var i:FrameLabel in labels) {
+            if (i.name == label) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 设置显示对象色相滤镜（-180 – 180）；为 0 时清除 filters。
+     * @param display 目标。
+     * @param hue 色相值。
+     */
+    public static function setHue(display:DisplayObject, hue:Number = 0):void {
+        if (hue == 0) {
+            display.filters = null;
+            return;
+        }
+
+        var filter:ColorMatrixFilter = createHueFilter(hue);
+        display.filters              = [filter];
+    }
+
+    /**
+     * 递归停止指定影片剪辑的子 MovieClip 播放（不含自身 stop）。
+     * @param mc 根影片剪辑。
+     */
+    public static function stopAllMovieClips(mc:MovieClip):void {
+        for (var i:int = 0; i < mc.numChildren; i++) {
+            var d:DisplayObject = mc.getChildAt(i);
+
+            if (d && d is MovieClip) {
+                var m:MovieClip = d as MovieClip;
+
+                m.stop();
+                stopAllMovieClips(m);
+            }
+        }
+    }
+
+    /**
+     * @private 创建色相 ColorMatrixFilter。
+     */
+    private static function createHueFilter(n:Number):ColorMatrixFilter {
+        const p1:Number = Math.cos(n * Math.PI / 180);
+        const p2:Number = Math.sin(n * Math.PI / 180);
+        const p4:Number = 0.213;
+        const p5:Number = 0.715;
+        const p6:Number = 0.072;
+
+        const matrix:Array = [
+            p4 + p1 * (1 - p4) + p2 * (0 - p4),
+            p5 + p1 * (0 - p5) + p2 * (0 - p5),
+            p6 + p1 * (0 - p6) + p2 * (1 - p6),
+            0,
+            0,
+            p4 + p1 * (0 - p4) + p2 * 0.143,
+            p5 + p1 * (1 - p5) + p2 * 0.14,
+            p6 + p1 * (0 - p6) + p2 * -0.283,
+            0,
+            0,
+            p4 + p1 * (0 - p4) + p2 * (0 - (1 - p4)),
+            p5 + p1 * (0 - p5) + p2 * p5,
+            p6 + p1 * (1 - p6) + p2 * p6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+        ];
+
+        return new ColorMatrixFilter(matrix);
     }
 
     /**
