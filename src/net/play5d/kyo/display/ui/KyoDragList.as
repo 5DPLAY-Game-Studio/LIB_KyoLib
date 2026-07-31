@@ -213,7 +213,7 @@ public class KyoDragList extends KyoTileList {
             if (rect.y < -w * 0.8) {
                 _mouseSpd = 0;
             }
-            if (Math.abs(_mouseSpd) < 1) {
+            if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd)) {
                 finalEndDrag();
             }
         }
@@ -249,8 +249,8 @@ public class KyoDragList extends KyoTileList {
     protected final function removeListener():void {
         if (stage) {
             stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
-            stage.mouseChildren = true;
         }
+        KyoScrollDragUtil.setStageMouseChildren(stage, true);
         removeEventListener(Event.ENTER_FRAME, draging);
     }
 
@@ -258,31 +258,19 @@ public class KyoDragList extends KyoTileList {
      * @private 相对按下点的鼠标位移。
      */
     protected function mousePoint():Point {
-        var xx:Number = _downPoint.x - stage.mouseX;
-        var yy:Number = _downPoint.y - stage.mouseY;
-        return new Point(xx, yy);
+        return KyoScrollDragUtil.mouseDelta(_downPoint, stage.mouseX, stage.mouseY);
     }
 
     /**
      * @private 根据位移判断是否进入拖拽。
      */
     protected function checkDraging(xx:Number, yy:Number):void {
-        switch (dragType) {
-        case KyoDragType.DRAG_TYPE_BOTH:
-            _draging ||= Math.abs(xx) > dragPixel || Math.abs(yy) > dragPixel;
-            break;
-        case KyoDragType.DRAG_TYPE_H:
-            _draging ||= Math.abs(xx) > dragPixel;
-            break;
-        case KyoDragType.DRAG_TYPE_V:
-            _draging ||= Math.abs(yy) > dragPixel;
-            break;
-        }
-        if (_draging) {
-            if (stage) {
-                stage.mouseChildren = false;
-            }
-        }
+        _draging = KyoScrollDragUtil.updateDragging(
+            _draging, xx, yy, dragPixel,
+            KyoScrollDragUtil.allowH(dragType),
+            KyoScrollDragUtil.allowV(dragType),
+            stage
+        );
     }
 
     /**
@@ -378,7 +366,7 @@ public class KyoDragList extends KyoTileList {
             _mouseSpd = mux.y - _mouseSpd;
             break;
         }
-        if (Math.abs(_mouseSpd) < 5) {
+        if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd, 0, 5)) {
             finalEndDrag();
         }
     }

@@ -22,6 +22,9 @@ package net.play5d.kyo.display.ui {
  *
  * @see KyoDragList
  * @see KyoDragSelecter
+ * @see KyoScrollPane
+ * @see IphoneScrollPane
+ * @see KyoScrollDragUtil
  */
 public class KyoDragType {
     /**

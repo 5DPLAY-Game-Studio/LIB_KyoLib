@@ -188,7 +188,7 @@ public class IphoneScrollPane extends Sprite {
                 _mouseSpd.y = 6;
             }
 
-            if (Math.abs(_mouseSpd.x) < 1 && Math.abs(_mouseSpd.y) < 1) {
+            if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd.x, _mouseSpd.y)) {
                 finalEndDrag();
             }
         }
@@ -199,18 +199,7 @@ public class IphoneScrollPane extends Sprite {
      * @private 根据位移判断是否进入拖拽并禁用舞台子项鼠标。
      */
     protected function checkDraging(xx:Number, yy:Number):void {
-        if (H_enab) {
-            _draging ||= Math.abs(xx) > dragPixel;
-        }
-        if (V_enab) {
-            _draging ||= Math.abs(yy) > dragPixel;
-        }
-
-        if (_draging) {
-            if (stage) {
-                stage.mouseChildren = false;
-            }
-        }
+        _draging = KyoScrollDragUtil.updateDragging(_draging, xx, yy, dragPixel, H_enab, V_enab, stage);
     }
 
     /**
@@ -266,8 +255,8 @@ public class IphoneScrollPane extends Sprite {
     private function removeListener():void {
         if (stage) {
             stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
-            stage.mouseChildren = true;
         }
+        KyoScrollDragUtil.setStageMouseChildren(stage, true);
     }
 
     /**
@@ -277,15 +266,7 @@ public class IphoneScrollPane extends Sprite {
         if (!stage) {
             return null;
         }
-        var xx:Number = _downPoint.x - stage.mouseX;
-        var yy:Number = _downPoint.y - stage.mouseY;
-        if (!H_enab) {
-            xx = 0;
-        }
-        if (!V_enab) {
-            yy = 0;
-        }
-        return new Point(xx, yy);
+        return KyoScrollDragUtil.mouseDelta(_downPoint, stage.mouseX, stage.mouseY, H_enab, V_enab);
     }
 
     /**
@@ -337,7 +318,7 @@ public class IphoneScrollPane extends Sprite {
         _mouseSpd.x = mux.x - _mouseSpd.x;
         _mouseSpd.y = mux.y - _mouseSpd.y;
 
-        if (Math.abs(_mouseSpd.x) < 5 && Math.abs(_mouseSpd.y) < 5) {
+        if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd.x, _mouseSpd.y, 5)) {
             finalEndDrag();
         }
     }
