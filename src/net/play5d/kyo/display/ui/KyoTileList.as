@@ -23,6 +23,7 @@ import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import net.play5d.kyo.utils.KyoMath;
 import net.play5d.kyo.utils.KyoUtils;
 
 /**
@@ -394,7 +395,7 @@ public class KyoTileList extends Sprite {
             _perPage   = _hrow * _vrow;
             _totalPage = Math.ceil(displays.length / _perPage);
         }
-        _page = KyoUtils.num_fixRange(_page, new Point(1, _totalPage));
+        _page = KyoMath.fixRange(_page, 1, _totalPage);
 
         list(_hrow, _vrow);
         if (scrollBar) {

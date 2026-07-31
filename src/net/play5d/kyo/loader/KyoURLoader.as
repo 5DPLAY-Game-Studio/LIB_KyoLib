@@ -19,6 +19,7 @@
 package net.play5d.kyo.loader {
 import flash.events.Event;
 import flash.events.IOErrorEvent;
+import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
@@ -58,12 +59,19 @@ public class KyoURLoader {
      * @param back 成功回调，参数为 <code>loader.data</code>。
      * @param failBack 失败回调，无参数；可省略。
      * @param param 可选，键值写入 <code>URLLoader</code> 属性（如 <code>dataFormat</code>）。
+     * @param progress 进度回调，参数为 0~1 比例；可省略。
      * @example
      * <listing version="3.0">
      * KyoURLoader.load('a.txt', onData);
      * </listing>
      */
-    public static function load(url:String, back:Function, failBack:Function = null, param:Object = null):void {
+    public static function load(
+        url     :String,
+        back    :Function,
+        failBack:Function = null,
+        param   :Object = null,
+        progress:Function = null
+    ):void {
         errorStr = null;
 
         var loader:URLLoader = new URLLoader();
@@ -75,13 +83,16 @@ public class KyoURLoader {
         loader.addEventListener(Event.COMPLETE, onComplete);
         loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
         loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError2);
+        if (progress != null) {
+            loader.addEventListener(ProgressEvent.PROGRESS, onProgress);
+        }
         loader.load(new URLRequest(url));
 
         function onComplete(e:Event):void {
             if (back != null) {
                 back(loader.data);
             }
-            loader = null;
+            clear();
         }
 
         function onError(e:IOErrorEvent):void {
@@ -89,7 +100,7 @@ public class KyoURLoader {
             if (failBack != null) {
                 failBack();
             }
-            loader = null;
+            clear();
             if (showDebug) {
                 trace(e);
             }
@@ -99,6 +110,25 @@ public class KyoURLoader {
             errorStr = e.toString();
             if (failBack != null) {
                 failBack();
+            }
+            clear();
+        }
+
+        function onProgress(e:ProgressEvent):void {
+            if (progress != null) {
+                progress(e.bytesLoaded / e.bytesTotal);
+            }
+        }
+
+        function clear():void {
+            if (loader == null) {
+                return;
+            }
+            loader.removeEventListener(Event.COMPLETE, onComplete);
+            loader.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+            loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError2);
+            if (progress != null) {
+                loader.removeEventListener(ProgressEvent.PROGRESS, onProgress);
             }
             loader = null;
         }

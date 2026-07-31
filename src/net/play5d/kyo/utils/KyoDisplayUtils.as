@@ -20,10 +20,6 @@ package net.play5d.kyo.utils {
 import flash.display.DisplayObject;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flash.net.registerClassAlias;
-import flash.utils.ByteArray;
-import flash.utils.getDefinitionByName;
-import flash.utils.getQualifiedClassName;
 
 /**
  * 显示对象克隆与旋转矩形碰撞检测。
@@ -34,22 +30,17 @@ import flash.utils.getQualifiedClassName;
  */
 public class KyoDisplayUtils {
     /**
-     * 通过 AMF 序列化做深度拷贝（更适合普通对象，慎用于复杂自定义类）。
+     * 通过 AMF 序列化做深度拷贝（委托 <code>KyoUtils.clone</code>）。
      * @param object 源对象。
-     * @return 拷贝后的显示对象。
+     * @return 拷贝后的显示对象；失败时为 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var c:DisplayObject = KyoDisplayUtils.clone(obj);
      * </listing>
+     * @see net.play5d.kyo.utils.KyoUtils#clone()
      */
     public static function clone(object:Object):DisplayObject {
-        var qClassName:String = getQualifiedClassName(object);
-        var objectType:Class  = getDefinitionByName(qClassName) as Class;
-        registerClassAlias(qClassName, objectType);
-        var copier:ByteArray = new ByteArray();
-        copier.writeObject(object);
-        copier.position = 0;
-        return copier.readObject() as DisplayObject;
+        return KyoUtils.clone(object) as DisplayObject;
     }
 
     /**

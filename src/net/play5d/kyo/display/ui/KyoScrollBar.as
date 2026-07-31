@@ -23,7 +23,7 @@ import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 
-import net.play5d.kyo.utils.KyoUtils;
+import net.play5d.kyo.utils.KyoMath;
 
 /**
  * 拖拽滑块时分派，<code>params</code> 为含 <code>x</code>/<code>y</code> 比例的 <code>Point</code>。
@@ -127,12 +127,12 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
         var pp:Number;
         var pos:Point = new Point();
         if (_type == TYPE_H) {
-            pp    = KyoUtils.num_fixRange(ui.parent.mouseX, _dragRange);
+            pp    = KyoMath.fixRange(ui.parent.mouseX, _dragRange.x, _dragRange.y);
             ui.x  = pp;
             pos.x = (pp - _dragRange.x) / _distance;
         }
         if (_type == TYPE_V) {
-            pp    = KyoUtils.num_fixRange(ui.parent.mouseY, _dragRange);
+            pp    = KyoMath.fixRange(ui.parent.mouseY, _dragRange.x, _dragRange.y);
             ui.y  = pp;
             pos.y = (pp - _dragRange.x) / _distance;
         }

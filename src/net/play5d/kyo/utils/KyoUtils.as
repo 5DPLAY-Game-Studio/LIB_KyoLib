@@ -209,17 +209,16 @@ public class KyoUtils {
     }
 
     /**
-     * 移除 Sprite 全部子显示对象。
+     * 移除 Sprite 全部子显示对象（委托 <code>removeAllChildren</code>）。
      * @param sp 容器。
      * @example
      * <listing version="3.0">
      * KyoUtils.sprite_removeAllChildren(box);
      * </listing>
+     * @see #removeAllChildren()
      */
     public static function sprite_removeAllChildren(sp:Sprite):void {
-        while (sp.numChildren > 0) {
-            sp.removeChildAt(0);
-        }
+        removeAllChildren(sp);
     }
 
     /**
@@ -679,11 +678,10 @@ public class KyoUtils {
      * @see net.play5d.kyo.utils.KyoMath#inRange()
      */
     public static function math_is_between(num:Number, num1:Number, num2:Number):Boolean {
-        return (
-                       num >= num1 && num <= num2
-               ) || (
-                       num >= num2 && num <= num1
-               );
+        if (num1 <= num2) {
+            return KyoMath.inRange(num, num1, num2);
+        }
+        return KyoMath.inRange(num, num2, num1);
     }
 
     /**
@@ -733,7 +731,7 @@ public class KyoUtils {
     }
 
     /**
-     * 将数值钳制在 Point 表示的 [x, y] 范围。
+     * 将数值钳制在 Point 表示的 [x, y] 范围（委托 <code>KyoMath.fixRange</code>）。
      *
      * <p>新代码请优先使用 <code>KyoMath.fixRange(n, min, max)</code>。本方法保留兼容旧调用。</p>
      *
@@ -747,13 +745,7 @@ public class KyoUtils {
      * @see net.play5d.kyo.utils.KyoMath#fixRange()
      */
     public static function num_fixRange(n:Number, range:Point):Number {
-        if (n < range.x) {
-            n = range.x;
-        }
-        if (n > range.y) {
-            n = range.y;
-        }
-        return n;
+        return KyoMath.fixRange(n, range.x, range.y);
     }
 
     /**
@@ -781,20 +773,25 @@ public class KyoUtils {
     }
 
     /**
-     * 保留小数点后几位
+     * 保留小数点后几位（向零截断；委托 <code>KyoMath.decimal</code>）。
+     * @param num 原数字。
+     * @param deciaml 小数位数。
+     * @return 截断后的数。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.num_decimal(1.29, 1); // 1.2
+     * </listing>
+     * @see net.play5d.kyo.utils.KyoMath#decimal()
      */
     public static function num_decimal(num:Number, deciaml:int = 1):Number {
-        var i:int    = int(num);
-        var s:String = num.toString();
-        var x:int    = s.indexOf('.');
-        if (x == -1) {
-            return i;
-        }
+        return KyoMath.decimal(num, deciaml, truncateTowardZero);
+    }
 
-        var ds:String = s.substr(x, deciaml + 1);
-        var d:Number  = Number(ds);
-
-        return i + d;
+    /**
+     * @private 向零截断取整，供 <code>num_decimal</code> 使用。
+     */
+    private static function truncateTowardZero(n:Number):Number {
+        return n > 0 ? Math.floor(n) : Math.ceil(n);
     }
 
     /**

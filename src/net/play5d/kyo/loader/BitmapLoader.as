@@ -18,13 +18,11 @@
 
 package net.play5d.kyo.loader {
 import flash.display.Bitmap;
-import flash.display.Loader;
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.net.URLRequest;
 
 /**
- * 通过 <code>Loader</code> 加载位图，成功后写入 <code>bitmap</code> 并以回调返回。
+ * 通过 <code>ImageLoader</code> 加载位图，成功后写入 <code>bitmap</code> 并以回调返回。
+ *
+ * <p>与 <code>ImageLoader</code> 不同：本类以 <code>Bitmap</code> 回调，并从 Loader 卸载内容但不 dispose 位图数据。</p>
  *
  * @see #load()
  * @see ImageLoader
@@ -59,33 +57,22 @@ public class BitmapLoader {
     public function load(url:String, back:Function = null, fail:Function = null):void {
         this.url = url;
 
-        var loader:Loader = new Loader();
-        loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
-        loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loadFail);
-        loader.load(new URLRequest(url));
+        var loader:ImageLoader = new ImageLoader();
+        loader.loadImage(url, onOk, onFail);
 
-        function loadComplete(e:Event):void {
-            bitmap = loader.content as Bitmap;
-
-            loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loadComplete);
-            loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, loadFail);
-            loader.unload();
-            loader = null;
-
+        function onOk(img:ImageLoader):void {
+            bitmap = img.content as Bitmap;
+            img.unload();
             if (back != null) {
                 back(bitmap);
             }
         }
 
-        function loadFail(e:IOErrorEvent):void {
-            loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loadComplete);
-            loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, loadFail);
-            loader = null;
+        function onFail(img:ImageLoader):void {
             if (fail != null) {
                 fail();
             }
         }
-
     }
 
 }

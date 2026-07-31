@@ -22,12 +22,14 @@ import flash.geom.Point;
 
 import mx.controls.Alert;
 
+import net.play5d.kyo.loader.ImageLoader;
+
 /**
  * 幻灯片单页加载器：按 URL 加载图片或 SWF，并缓存完成状态。
  *
  * <p>URL 可带后缀分隔写法 <code>path|ext</code>（如 <code>a.swf|.swf</code>）以选择 <code>SwfLoader</code> 或 <code>ImageLoader</code>。</p>
  *
- * @see ImageLoader
+ * @see net.play5d.kyo.loader.ImageLoader
  * @see SwfLoader
  * @see #load()
  */

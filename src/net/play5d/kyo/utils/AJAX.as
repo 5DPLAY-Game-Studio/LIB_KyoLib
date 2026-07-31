@@ -17,17 +17,18 @@
  */
 
 package net.play5d.kyo.utils {
-import flash.events.Event;
-import flash.net.URLLoader;
-import flash.net.URLRequest;
-import flash.net.URLRequestMethod;
 import flash.net.URLVariables;
 
+import net.play5d.kyo.loader.KyoURLoader;
+
 /**
- * 简易 HTTP GET / POST 封装。
+ * 简易 HTTP GET / POST 封装（委托 <code>KyoURLoader</code>）。
+ *
+ * <p>新代码请直接使用 <code>KyoURLoader</code>。本类保留兼容旧调用。</p>
  *
  * @see #get()
  * @see #post()
+ * @see net.play5d.kyo.loader.KyoURLoader
  */
 public class AJAX {
     /**
@@ -39,9 +40,10 @@ public class AJAX {
      * <listing version="3.0">
      * AJAX.post('api.php', vars, onData);
      * </listing>
+     * @see net.play5d.kyo.loader.KyoURLoader#post()
      */
     public static function post(url:String, data:URLVariables = null, back:Function = null):void {
-        loadurl(url, data, URLRequestMethod.POST, back);
+        KyoURLoader.post(url, data || new URLVariables(), back);
     }
 
     /**
@@ -53,26 +55,14 @@ public class AJAX {
      * <listing version="3.0">
      * AJAX.get('api.php', vars, onData);
      * </listing>
+     * @see net.play5d.kyo.loader.KyoURLoader#load()
      */
     public static function get(url:String, data:URLVariables = null, back:Function = null):void {
-        loadurl(url, data, URLRequestMethod.GET, back);
-    }
-
-    /**
-     * @private
-     */
-    private static function loadurl(url:String, obj:Object, method:String, back:Function):void {
-        var rq:URLRequest = new URLRequest(url);
-        rq.data           = obj;
-        rq.method         = method;
-        var l:URLLoader   = new URLLoader();
-        l.addEventListener(Event.COMPLETE, function ():void {
-            trace('url访问成功');
-            if (back != null) {
-                back(l.data);
-            }
-        });
-        l.load(rq);
+        if (data) {
+            var sep:String = url.indexOf('?') == -1 ? '?' : '&';
+            url            = url + sep + data.toString();
+        }
+        KyoURLoader.load(url, back);
     }
 
     /**

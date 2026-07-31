@@ -23,7 +23,6 @@ import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;
-import flash.net.URLLoader;
 import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
 import flash.system.LoaderContext;
@@ -138,7 +137,7 @@ public class KyoLoaderLite {
     }
 
     /**
-     * 以二进制方式加载 URL。
+     * 以二进制方式加载 URL（委托 <code>KyoURLoader</code>）。
      * @param url 资源地址。
      * @param back 成功回调，参数为 <code>ByteArray</code>。
      * @param fail 失败回调；可省略。
@@ -147,39 +146,16 @@ public class KyoLoaderLite {
      * <listing version="3.0">
      * KyoLoaderLite.loadBytes('a.bin', onBytes);
      * </listing>
+     * @see net.play5d.kyo.loader.KyoURLoader#load()
      */
     public static function loadBytes(url:String, back:Function, fail:Function = null, progress:Function = null):void {
+        KyoURLoader.load(url, onData, fail, {dataFormat: URLLoaderDataFormat.BINARY}, progress);
 
-        var loader:URLLoader = new URLLoader();
-        loader.dataFormat    = URLLoaderDataFormat.BINARY;
-
-        loader.addEventListener(Event.COMPLETE, onComplete);
-        loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
-        loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
-        loader.addEventListener(ProgressEvent.PROGRESS, onProgress);
-        loader.load(new URLRequest(url));
-
-        function onComplete(e:Event):void {
+        function onData(data:*):void {
             if (back != null) {
-                back(loader.data as ByteArray);
-            }
-            loader = null;
-        }
-
-        function onError(e:*):void {
-            if (fail != null) {
-                fail();
-            }
-            loader = null;
-            trace(e);
-        }
-
-        function onProgress(e:ProgressEvent):void {
-            if (progress != null) {
-                progress(e.bytesLoaded / e.bytesTotal);
+                back(data as ByteArray);
             }
         }
-
     }
 
     /**

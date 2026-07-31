@@ -21,11 +21,12 @@ import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
+import flash.events.ProgressEvent;
 import flash.geom.Point;
 import flash.net.URLRequest;
 
 /**
- * 继承 <code>Loader</code> 的图片加载器，支持目标尺寸、平滑与成功 / 失败回调。
+ * 继承 <code>Loader</code> 的图片加载器，支持目标尺寸、平滑、进度与成功 / 失败回调。
  *
  * @see #loadImage()
  * @see BitmapLoader
@@ -42,12 +43,19 @@ public class ImageLoader extends Loader {
      * @param size 目标尺寸；<code>x</code> 或 <code>y</code> 为 0 时按比例缩放。
      * @param back 成功回调，参数为本实例。
      * @param fail 失败回调，参数为本实例。
+     * @param process 进度回调，参数为本实例与 0–1 比例；可省略。
      */
-    public function ImageLoader(url:String = null, size:Point = null, back:Function = null, fail:Function = null) {
+    public function ImageLoader(
+        url    :String = null,
+        size   :Point = null,
+        back   :Function = null,
+        fail   :Function = null,
+        process:Function = null
+    ) {
         super();
         _size = size;
         if (url) {
-            loadImage(url, back, fail);
+            loadImage(url, back, fail, process);
         }
     }
 
@@ -67,7 +75,8 @@ public class ImageLoader extends Loader {
     private var _back:Function;
     /** @private */
     private var _fail:Function;
-
+    /** @private */
+    private var _process:Function;
     /** @private */
     private var _url:String;
 
@@ -107,6 +116,7 @@ public class ImageLoader extends Loader {
      * @param url 图片地址。
      * @param back 成功回调，参数为本实例；可省略。
      * @param fail 失败回调，参数为本实例；可省略。
+     * @param process 进度回调 <code>(loader, per)</code>；可省略。
      * @example
      * <listing version="3.0">
      * var img:ImageLoader = new ImageLoader();
@@ -115,7 +125,7 @@ public class ImageLoader extends Loader {
      * @see #reload()
      * @see #unloadAndDispose()
      */
-    public function loadImage(url:String, back:Function = null, fail:Function = null):void {
+    public function loadImage(url:String, back:Function = null, fail:Function = null, process:Function = null):void {
         unloadAndDispose();
         try {
             this['unloadAndStop'](true);
@@ -127,9 +137,11 @@ public class ImageLoader extends Loader {
         loadFail = false;
         _back    = back;
         _fail    = fail;
+        _process = process;
 
         contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
         contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+        contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProcess);
 
         load(new URLRequest(url));
     }
@@ -168,6 +180,7 @@ public class ImageLoader extends Loader {
     private function removeListener():void {
         contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
         contentLoaderInfo.removeEventListener(Event.COMPLETE, onComplete);
+        contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, onProcess);
     }
 
     /**
@@ -215,6 +228,16 @@ public class ImageLoader extends Loader {
             _fail = null;
         }
         removeListener();
+    }
+
+    /**
+     * @private
+     */
+    private function onProcess(e:ProgressEvent):void {
+        if (_process != null) {
+            var per:Number = e.bytesLoaded / e.bytesTotal;
+            _process(this, per);
+        }
     }
 }
 }
