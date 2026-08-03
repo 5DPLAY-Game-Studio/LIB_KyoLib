@@ -37,9 +37,14 @@ import flash.utils.setTimeout;
 public class ProcessUtils {
 
     /**
-     * 启动程序
-     * @param path 程序路径
-     * @param arguments 启动参数 Array|String
+     * 启动程序。
+     * @param path 程序路径。
+     * @param arguments 启动参数 Array|String。
+     * @return 已启动的 <code>NativeProcess</code>；不支持或文件不存在时为 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var p:NativeProcess = ProcessUtils.createProcess('C:/app.exe', ['-a']);
+     * </listing>
      */
     public static function createProcess(path:String, arguments:Object = null):NativeProcess {
         if (!NativeProcess.isSupported) {
@@ -77,11 +82,16 @@ public class ProcessUtils {
     }
 
     /**
-     * 调用CMD
-     * @param cmd CMD命令
-     * @param outputBack CMD输入回调函数
-     * @param outputCheckTimeOut 当多少时间内没有输出信息后，返回OUTPUT
-     * @param processLiveTime 进程存活时间
+     * 调用 CMD。
+     * @param cmd CMD 命令。
+     * @param processLiveTime 进程存活时间（毫秒）。
+     * @param outputBack 输出回调，参数为累计输出字符串。
+     * @param outputCheckTimeOut 无输出后多少毫秒触发回调。
+     * @return 是否成功启动进程。
+     * @example
+     * <listing version="3.0">
+     * ProcessUtils.callCMD('dir', 3000, onOut);
+     * </listing>
      */
     public static function callCMD(cmd:String, processLiveTime:int = 5000, outputBack:Function = null,
                                    outputCheckTimeOut:int                                      = 2000
@@ -131,8 +141,13 @@ public class ProcessUtils {
     }
 
     /**
-     * 关闭进程
-     * @param processName 进程名称(qq.exe)
+     * 关闭进程。
+     * @param processName 进程名称（如 <code>qq.exe</code>）。
+     * @return 是否成功发起关闭命令。
+     * @example
+     * <listing version="3.0">
+     * ProcessUtils.closeProcess('notepad.exe');
+     * </listing>
      */
     public static function closeProcess(processName:String):Boolean {
         var cmd:String = 'taskkill /f /t /im "' + processName + '"';
@@ -140,8 +155,14 @@ public class ProcessUtils {
     }
 
     /**
-     * 检查进程是否存在
-     * @param processName 进程名称(qq.exe)
+     * 检查进程是否存在。
+     * @param processName 进程名称（如 <code>qq.exe</code>）。
+     * @param back 回调，参数为是否存在。
+     * @return 是否成功启动查询命令。
+     * @example
+     * <listing version="3.0">
+     * ProcessUtils.processExist('explorer.exe', onExist);
+     * </listing>
      */
     public static function processExist(processName:String, back:Function):Boolean {
 
@@ -155,8 +176,14 @@ public class ProcessUtils {
     }
 
     /**
-     * 打开应用程序
-     * @param path 完整路径
+     * 打开应用程序。
+     * @param path 完整路径。
+     * @param initParam 启动参数。
+     * @return 是否成功发起命令。
+     * @example
+     * <listing version="3.0">
+     * ProcessUtils.openProgram('C:/app.exe', '-debug');
+     * </listing>
      */
     public static function openProgram(path:String, initParam:String = null):Boolean {
         var initp:String = initParam ? ' ' + initParam : '';
@@ -164,18 +191,34 @@ public class ProcessUtils {
     }
 
     /**
-     * 调用资源管理器，打开指定目录
-     * @param floder 完整路径
+     * 调用资源管理器，打开指定目录。
+     * @param floder 完整路径。
+     * @return 是否成功发起命令。
+     * @example
+     * <listing version="3.0">
+     * ProcessUtils.openExplorer('C:/temp');
+     * </listing>
      */
     public static function openExplorer(floder:String):Boolean {
         return callCMD('explorer "' + floder + '"');
     }
 
+    /**
+     * 通过 CMD 执行 bat 文件。
+     * @param filePath bat 完整路径。
+     * @param exitBack 进程退出回调。
+     * @return 是否成功启动进程。
+     * @example
+     * <listing version="3.0">
+     * ProcessUtils.runBAT('C:/scripts/build.bat', onExit);
+     * </listing>
+     */
     public static function runBAT(filePath:String, exitBack:Function = null):Boolean {
         trace('run bat :: ' + filePath);
         return createCMDProcess(["/c", filePath], exitBack) != null;
     }
 
+    /** @private */
     private static function createCMDProcess(param:Object = null, exitBack:Function = null):NativeProcess {
         var process:NativeProcess = createProcess('c:/windows/system32/cmd.exe', param);
 

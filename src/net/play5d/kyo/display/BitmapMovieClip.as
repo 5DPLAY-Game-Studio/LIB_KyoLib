@@ -152,11 +152,7 @@ public class BitmapMovieClip extends Sprite {
         initBMC();
     }
 
-    /**
-     * 由 <code>BitmapData</code> 数组构建帧数据并初始化。
-     *
-     * @param value 位图数组，按顺序转为 <code>BitmapMCFrameVO</code>。
-     */
+    /** @private */
     public function set bitmapDataArray(value:Array):void {
         if (!value) {
             return;
@@ -761,7 +757,10 @@ internal class McGroup extends Sprite {
     /** @private 基帧 MC */
     private var _baseMc:MovieClip;
 
-    /** @private 优先返回基帧标签，否则返回首个非基 MC 的帧标签 */
+    /**
+     * @private 优先返回基帧标签，否则返回首个非基 MC 的帧标签。
+     * @return 帧标签或 <code>null</code>。
+     */
     public function get currentFrameLabel():String {
         if (_baseMc) {
             if (_baseMc.currentFrameLabel) {
@@ -783,13 +782,19 @@ internal class McGroup extends Sprite {
         return null;
     }
 
-    /** @private 添加一层到合成容器 */
+    /**
+     * @private 添加一层到合成容器。
+     * @param d 待添加显示对象。
+     */
     public function addDisplay(d:DisplayObject):void {
         addChild(d);
         _ins.push(d);
     }
 
-    /** @private 各层同步跳转到指定帧 */
+    /**
+     * @private 各层同步跳转到指定帧。
+     * @param frame 帧号。
+     */
     public function gotoAndStop(frame:int):void {
         for each(var d:DisplayObject in _ins) {
             if (d is MovieClip) {
@@ -806,7 +811,11 @@ internal class McGroup extends Sprite {
         }
     }
 
-    /** @private 收集各层指定名称的帧函数数组并清空源属性 */
+    /**
+     * @private 收集各层指定名称的帧函数数组并清空源属性。
+     * @param name 帧函数属性名。
+     * @return <code>Function</code> 数组。
+     */
     public function getFrameFunctions(name:String):Array {
         var fs:Array = [];
         for each(var d:DisplayObject in _ins) {

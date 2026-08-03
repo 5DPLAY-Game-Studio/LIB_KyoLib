@@ -67,6 +67,10 @@ public class FileUtils {
      * @param nativeUrl 相对路径（如 <code>abc/1.txt</code>）。
      * @param content 文件数据。
      * @param fileMode 写入模式。
+     * @example
+     * <listing version="3.0">
+     * FileUtils.writeAppFloderFile('cfg/a.txt', 'hi');
+     * </listing>
      */
     public static function writeAppFloderFile(nativeUrl:String, content:*, fileMode:String = null):void {
         var url:String = getAppFloderFileUrl(nativeUrl);
@@ -77,6 +81,10 @@ public class FileUtils {
      * 取得应用目录下相对路径的完整路径。
      * @param nativeUrl 相对路径。
      * @return 完整 native 路径。
+     * @example
+     * <listing version="3.0">
+     * var u:String = FileUtils.getAppFloderFileUrl('cfg/a.txt');
+     * </listing>
      */
     public static function getAppFloderFileUrl(nativeUrl:String):String {
         var path:File      = File.applicationDirectory;
@@ -88,6 +96,10 @@ public class FileUtils {
     /**
      * 创建目录（完整路径）。
      * @param url 目录完整路径。
+     * @example
+     * <listing version="3.0">
+     * FileUtils.createFloder('C:/temp/logs');
+     * </listing>
      */
     public static function createFloder(url:String):void {
         try {
@@ -103,6 +115,10 @@ public class FileUtils {
      * 以 UTF-8 读取文本文件。
      * @param url 完整路径。
      * @return 文本；失败时为 <code>undefined</code>/<code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var t:String = FileUtils.readTextFile('C:/a.txt');
+     * </listing>
      */
     public static function readTextFile(url:String):String {
         var text:String;
@@ -122,6 +138,10 @@ public class FileUtils {
     /**
      * 删除文件。
      * @param url 完整路径。
+     * @example
+     * <listing version="3.0">
+     * FileUtils.del('C:/a.txt');
+     * </listing>
      */
     public static function del(url:String):void {
         var file:File = new File(url);

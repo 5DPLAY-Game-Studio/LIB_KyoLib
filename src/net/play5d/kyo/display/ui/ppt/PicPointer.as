@@ -140,10 +140,7 @@ public class PicPointer extends Sprite {
         }
     }
 
-    /**
-     * 是否显示加载进度文本层。
-     * @param v <code>true</code> 创建并显示；<code>false</code> 移除。
-     */
+    /** @private */
     public function set showInfo(v:Boolean):void {
         if (v) {
             if (!_infoTxt) {

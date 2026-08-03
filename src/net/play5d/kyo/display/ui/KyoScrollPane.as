@@ -99,6 +99,7 @@ public class KyoScrollPane extends Sprite {
 
     /**
      * @private 相对按下点的鼠标位移。
+     * @return 相对按下点的 <code>Point</code>。
      */
     protected function get mousePoint():Point {
         return KyoScrollDragUtil.mouseDelta(_downPoint, stage.mouseX, stage.mouseY);
@@ -192,6 +193,8 @@ public class KyoScrollPane extends Sprite {
 
     /**
      * @private 根据位移判断是否进入拖拽。
+     * @param xx 水平位移。
+     * @param yy 垂直位移。
      */
     protected function checkDraging(xx:Number, yy:Number):void {
         _draging = KyoScrollDragUtil.updateDragging(
@@ -230,6 +233,7 @@ public class KyoScrollPane extends Sprite {
 
     /**
      * @private 拖拽帧更新。
+     * @param e <code>ENTER_FRAME</code> 事件。
      */
     protected function draging(e:Event):void {
         var pp:Point = mousePoint;
@@ -263,6 +267,7 @@ public class KyoScrollPane extends Sprite {
 
     /**
      * @private 结束拖拽。
+     * @param e 鼠标事件。
      */
     protected function endDrag(e:MouseEvent):void {
         removeListener();

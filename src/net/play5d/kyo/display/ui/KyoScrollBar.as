@@ -77,10 +77,7 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
     /** @private */
     private var _draging:Boolean;
 
-    /**
-     * 设置是否可交互；禁用时立即结束拖拽。
-     * @param v <code>true</code> 为可用。
-     */
+    /** @private */
     public function set enabled(v:Boolean):void {
         ui.mouseEnabled = v;
         if (!v) {

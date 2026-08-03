@@ -93,6 +93,8 @@ public class MCNumber extends Sprite {
 
     /**
      * @private 创建并加入一位数字显示对象。
+     * @param i 数字 0–9。
+     * @return 数字 MC。
      */
     protected function createNum(i:int):DisplayObject {
         var mc:MovieClip = new _mc();

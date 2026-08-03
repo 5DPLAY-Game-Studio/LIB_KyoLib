@@ -54,6 +54,10 @@ public class KyoTimerUtils {
     /**
      * 取消延时。
      * @param id <code>setTimeout</code> 返回值。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerUtils.clearTimeout(id);
+     * </listing>
      */
     public static function clearTimeout(id:int):void {
         var timer:KyoInsTimer = _timers[id];
@@ -66,6 +70,10 @@ public class KyoTimerUtils {
 
     /**
      * 暂停全部未完成定时器。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerUtils.pauseAllTimer();
+     * </listing>
      */
     public static function pauseAllTimer():void {
         for (var i:String in _timers) {
@@ -76,6 +84,10 @@ public class KyoTimerUtils {
 
     /**
      * 恢复全部定时器。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerUtils.resumeAllTimer();
+     * </listing>
      */
     public static function resumeAllTimer():void {
         for (var i:String in _timers) {
@@ -99,9 +111,16 @@ import flash.events.TimerEvent;
 import flash.utils.Timer;
 
 /**
+ * 内部单次定时器封装。
  * @private
  */
 internal class KyoInsTimer extends EventDispatcher {
+    /**
+     * @private 创建并启动单次定时器。
+     * @param delay 延时毫秒。
+     * @param func 到期回调。
+     * @param params 回调参数。
+     */
     public function KyoInsTimer(delay:Number, func:Function, params:Array) {
         this.id = (Math.random() * 100000) << 0;
         _func   = func;
@@ -110,23 +129,30 @@ internal class KyoInsTimer extends EventDispatcher {
         _timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerHandler);
         _timer.start();
     }
+    /** @private 定时器 id */
     public var id:int;
+    /** @private */
     private var _func:Function;
+    /** @private */
     private var _timer:Timer;
+    /** @private */
     private var _params:Array;
 
+    /** @private 暂停计时 */
     public function pause():void {
         if (_timer) {
             _timer.stop();
         }
     }
 
+    /** @private 恢复计时 */
     public function resume():void {
         if (_timer) {
             _timer.start();
         }
     }
 
+    /** @private 停止并释放定时器 */
     public function clear():void {
         if (_timer) {
             _timer.stop();
@@ -137,6 +163,7 @@ internal class KyoInsTimer extends EventDispatcher {
         _params = null;
     }
 
+    /** @private */
     private function timerHandler(e:TimerEvent):void {
         if (_func != null) {
             if (_params) {

@@ -232,6 +232,7 @@ public class BasePPTEffect {
 
     /**
      * @private 松手时是否应翻到下一页。
+     * @return <code>true</code> 表示翻下一页。
      */
     protected function dragNext():Boolean {
         return false;
@@ -239,6 +240,7 @@ public class BasePPTEffect {
 
     /**
      * @private 松手时是否应翻到上一页。
+     * @return <code>true</code> 表示翻上一页。
      */
     protected function dragPrev():Boolean {
         return false;

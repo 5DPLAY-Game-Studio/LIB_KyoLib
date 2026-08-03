@@ -82,6 +82,7 @@ public class ImageLoader extends Loader {
 
     /**
      * 当前加载 URL。
+     * @return URL。
      */
     public function get url():String {
         return _url;
@@ -92,6 +93,7 @@ public class ImageLoader extends Loader {
 
     /**
      * 位图是否平滑；内容为 Bitmap 时同步到 <code>smoothing</code>。
+     * @return 是否平滑。
      * @default false
      */
     public function get smooth():Boolean {

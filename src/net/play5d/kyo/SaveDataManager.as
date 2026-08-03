@@ -47,6 +47,7 @@ public class SaveDataManager {
 
     /**
      * 是否已写入过存档标记 <code>_has_data_</code>。
+     * @return 是否有存档。
      */
     public function get hasData():Boolean {
         return _so.data._has_data_ == true;
@@ -54,6 +55,7 @@ public class SaveDataManager {
 
     /**
      * 底层 SharedObject.data。
+     * @return data 对象。
      */
     public function get data():Object {
         return _so.data;

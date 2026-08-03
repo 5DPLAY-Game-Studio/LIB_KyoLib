@@ -40,6 +40,10 @@ public class KeyBoarder {
     /**
      * 绑定 Stage 并开始监听 KEY_DOWN / KEY_UP（仅首次有效）。
      * @param stage 舞台。
+     * @example
+     * <listing version="3.0">
+     * KeyBoarder.initlize(stage);
+     * </listing>
      */
     public static function initlize(stage:Stage):void {
         if (_inited) {
@@ -55,6 +59,10 @@ public class KeyBoarder {
 
     /**
      * 将焦点设回 Stage。
+     * @example
+     * <listing version="3.0">
+     * KeyBoarder.focus();
+     * </listing>
      */
     public static function focus():void {
         if (!_inited) {
@@ -66,6 +74,10 @@ public class KeyBoarder {
     /**
      * 注册键盘回调（签名接收 <code>KeyboardEvent</code>）。
      * @param handler 回调。
+     * @example
+     * <listing version="3.0">
+     * KeyBoarder.listen(onKey);
+     * </listing>
      */
     public static function listen(handler:Function):void {
         if (!_inited) {
@@ -79,6 +91,10 @@ public class KeyBoarder {
     /**
      * 取消注册。
      * @param handler 先前注册的回调。
+     * @example
+     * <listing version="3.0">
+     * KeyBoarder.unListen(onKey);
+     * </listing>
      */
     public static function unListen(handler:Function):void {
         if (!_inited) {

@@ -48,6 +48,7 @@ public class KyoClock {
 
     /**
      * 是否为上午（小时 &lt; 12）。
+     * @return <code>true</code> 表示上午。
      */
     public function get isam():Boolean {
         return now.hours < 12;
@@ -55,6 +56,7 @@ public class KyoClock {
 
     /**
      * 时分字符串（如 <code>xx:xx</code>）。
+     * @return 时分串。
      */
     public function get time():String {
         return KyoTimerFormat.getTime(now, ':', false);
@@ -62,6 +64,7 @@ public class KyoClock {
 
     /**
      * 时分秒字符串（如 <code>xx:xx:xx</code>）。
+     * @return 时分秒串。
      */
     public function get time2():String {
         return KyoTimerFormat.getTime(now, ':', true);
@@ -69,6 +72,7 @@ public class KyoClock {
 
     /**
      * 日期字符串 <code>年.月.日</code>。
+     * @return 日期串。
      */
     public function get date():String {
         return now.fullYear + '.' + (now.month + 1) + '.' + now.date;
@@ -76,6 +80,7 @@ public class KyoClock {
 
     /**
      * 星期文案。
+     * @return 星期文本。
      */
     public function get day():String {
         return KyoTimerFormat.getDay(now, 2);

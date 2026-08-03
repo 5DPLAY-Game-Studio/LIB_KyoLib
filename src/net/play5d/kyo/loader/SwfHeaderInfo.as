@@ -51,6 +51,7 @@ public class SwfHeaderInfo {
 
     /**
      * SWF 标识（FWS 未压缩 / CWS 压缩）。
+     * @return SWF 标识字符串。
      */
     public function get type():String {
         return _type;
@@ -63,6 +64,7 @@ public class SwfHeaderInfo {
 
     /**
      * SWF 版本号。
+     * @return 版本号。
      */
     public function get version():uint {
         return _version;
@@ -75,6 +77,7 @@ public class SwfHeaderInfo {
 
     /**
      * 文件声明大小（字节）。
+     * @return 字节数。
      */
     public function get size():uint {
         return _size;
@@ -87,6 +90,7 @@ public class SwfHeaderInfo {
 
     /**
      * 舞台宽度（像素）。
+     * @return 宽度。
      */
     public function get width():uint {
         return _width;
@@ -99,6 +103,7 @@ public class SwfHeaderInfo {
 
     /**
      * 舞台高度（像素）。
+     * @return 高度。
      */
     public function get height():uint {
         return _height;
@@ -111,6 +116,7 @@ public class SwfHeaderInfo {
 
     /**
      * 帧率。
+     * @return 帧率。
      */
     public function get fps():uint {
         return _fps;
@@ -123,6 +129,7 @@ public class SwfHeaderInfo {
 
     /**
      * 时间轴帧数。
+     * @return 帧数。
      */
     public function get frames():uint {
         return _frames;

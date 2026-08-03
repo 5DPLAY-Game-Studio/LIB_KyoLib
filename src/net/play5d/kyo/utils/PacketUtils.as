@@ -53,6 +53,10 @@ public class PacketUtils {
      * 为已有字节前插入 2 字节长度头。
      * @param byte 原载荷。
      * @return 新包；长度为负时返回 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var pkt:ByteArray = PacketUtils.addByteArrayHead(payload);
+     * </listing>
      */
     public static function addByteArrayHead(byte:ByteArray):ByteArray {
         byte.position = 0;
@@ -72,6 +76,10 @@ public class PacketUtils {
     /**
      * 压缩占位（历史接口；当前为空实现）。
      * @param byte 待压缩字节。
+     * @example
+     * <listing version="3.0">
+     * PacketUtils.compress(ba);
+     * </listing>
      */
     public static function compress(byte:ByteArray):void {
     }
@@ -79,6 +87,10 @@ public class PacketUtils {
     /**
      * 解压占位（历史接口；当前为空实现）。
      * @param byte 待解压字节。
+     * @example
+     * <listing version="3.0">
+     * PacketUtils.uncompress(ba);
+     * </listing>
      */
     public static function uncompress(byte:ByteArray):void {
     }

@@ -312,6 +312,10 @@ public class KyoDisplayUtils {
      * @param cmX X 厘米。
      * @param cmY Y 厘米。
      * @return 像素坐标。
+     * @example
+     * <listing version="3.0">
+     * var p:Point = KyoDisplayUtils.getPointByCM(1, 2);
+     * </listing>
      */
     public static function getPointByCM(cmX:Number = 0, cmY:Number = 0):Point {
         return new Point(cm2pixel(cmX), cm2pixel(cmY));

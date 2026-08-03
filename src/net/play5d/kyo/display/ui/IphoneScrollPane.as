@@ -197,6 +197,8 @@ public class IphoneScrollPane extends Sprite {
 
     /**
      * @private 根据位移判断是否进入拖拽并禁用舞台子项鼠标。
+     * @param xx 水平位移。
+     * @param yy 垂直位移。
      */
     protected function checkDraging(xx:Number, yy:Number):void {
         _draging = KyoScrollDragUtil.updateDragging(_draging, xx, yy, dragPixel, H_enab, V_enab, stage);

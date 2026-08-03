@@ -70,10 +70,7 @@ public class KyoMCButton extends EventDispatcher implements IKyoButton {
     /** @private */
     private var _unenabledFrame:Object;
 
-    /**
-     * 设置是否焦点：切换到选中帧或普通帧。
-     * @param v <code>true</code> 为焦点。
-     */
+    /** @private */
     public function set focus(v:Boolean):void {
         if (v) {
             goFrame(_selectFrame);
@@ -83,10 +80,7 @@ public class KyoMCButton extends EventDispatcher implements IKyoButton {
         }
     }
 
-    /**
-     * 设置是否可用：控制 <code>mouseEnabled</code> 并切换普通 / 禁用帧。
-     * @param v <code>true</code> 为可用。
-     */
+    /** @private */
     public function set enabled(v:Boolean):void {
         mc.mouseEnabled = v;
         if (v) {

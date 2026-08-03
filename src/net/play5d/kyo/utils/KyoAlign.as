@@ -31,6 +31,10 @@ public class KyoAlign {
      * 左对齐（当前为空实现）。
      * @param A 要对齐的对象。
      * @param B 参照对象。
+     * @example
+     * <listing version="3.0">
+     * KyoAlign.left(a, b);
+     * </listing>
      */
     public static function left(A:DisplayObject, B:DisplayObject):void {
     }
@@ -39,6 +43,10 @@ public class KyoAlign {
      * 右对齐（当前为空实现）。
      * @param A 要对齐的对象。
      * @param B 参照对象。
+     * @example
+     * <listing version="3.0">
+     * KyoAlign.right(a, b);
+     * </listing>
      */
     public static function right(A:DisplayObject, B:DisplayObject):void {
     }
@@ -73,6 +81,10 @@ public class KyoAlign {
      * 顶对齐（当前为空实现）。
      * @param A 要对齐的对象。
      * @param B 参照对象。
+     * @example
+     * <listing version="3.0">
+     * KyoAlign.up(a, b);
+     * </listing>
      */
     public static function up(A:DisplayObject, B:DisplayObject):void {
     }
@@ -81,6 +93,10 @@ public class KyoAlign {
      * 底对齐（当前为空实现）。
      * @param A 要对齐的对象。
      * @param B 参照对象。
+     * @example
+     * <listing version="3.0">
+     * KyoAlign.down(a, b);
+     * </listing>
      */
     public static function down(A:DisplayObject, B:DisplayObject):void {
     }

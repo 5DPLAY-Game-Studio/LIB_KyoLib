@@ -42,6 +42,7 @@ public class ArrayMap {
 
     /**
      * 元素个数（插入顺序数组长度）。
+     * @return 元素个数。
      */
     public function get length():int {
         return _arr.length;

@@ -36,6 +36,7 @@ public class KyoSoundPlayer {
 
     /**
      * 单例。
+     * @return 单例实例。
      */
     public static function get I():KyoSoundPlayer {
         _i ||= new KyoSoundPlayer();
@@ -230,6 +231,7 @@ internal class InsSound {
 
     /**
      * 当前音量。
+     * @return 当前音量。
      */
     public function get volume():Number {
         return _volume;

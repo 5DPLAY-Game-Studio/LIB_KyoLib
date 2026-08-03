@@ -200,6 +200,7 @@ internal class InsCharVO {
 
     /**
      * @private 基于同一 XML 再解析一份，避免布局时改写缓存。
+     * @return 新 <code>InsCharVO</code>。
      */
     public function clone():InsCharVO {
         return new InsCharVO(_xml);

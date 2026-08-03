@@ -43,6 +43,7 @@ public class KyoWeather {
 
     /**
      * 今日天气；未加载成功则为 <code>null</code>。
+     * @return <code>KyoWeaterVO</code> 或 <code>null</code>。
      */
     public static function get todayWeather():KyoWeaterVO {
         if (!_weatherxml) {
@@ -63,6 +64,7 @@ public class KyoWeather {
 
     /**
      * 明日天气；未加载成功则为 <code>null</code>。
+     * @return <code>KyoWeaterVO</code> 或 <code>null</code>。
      */
     public static function get tomorrowWeather():KyoWeaterVO {
         if (!_weatherxml) {

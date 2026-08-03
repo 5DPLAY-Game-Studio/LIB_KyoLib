@@ -41,6 +41,7 @@ public class BitmapDataPool {
 
     /**
      * 单例。
+     * @return 单例实例。
      */
     public static function get I():BitmapDataPool {
         if (!_i) {

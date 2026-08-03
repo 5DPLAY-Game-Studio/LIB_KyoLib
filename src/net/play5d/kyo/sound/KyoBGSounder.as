@@ -37,6 +37,7 @@ public class KyoBGSounder {
 
     /**
      * 单例。
+     * @return 单例实例。
      */
     public static function get I():KyoBGSounder {
         _i ||= new KyoBGSounder();
@@ -64,6 +65,7 @@ public class KyoBGSounder {
 
     /**
      * 音量 0~1。
+     * @return 当前音量。
      * @default 1
      */
     public function get volume():Number {

@@ -67,6 +67,10 @@ public class KyoUtils {
      * @param matchKey
      * @param matchValue
      * @return
+     * @example
+     * <listing version="3.0">
+     * var o:* = KyoUtils.array_findOneByPortal(list, 'id', 1);
+     * </listing>
      */
     public static function array_findOneByPortal(array:Array, matchKey:*, matchValue:*):* {
         for each(var i:* in array) {
@@ -82,7 +86,10 @@ public class KyoUtils {
      * @param array
      * @param matchKey
      * @param matchValue
-     *
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.array_removeByPortal(list, 'id', 1);
+     * </listing>
      */
     public static function array_removeByPortal(array:Array, matchKey:*, matchValue:*):void {
         for (var i:int; i < array.length; i++) {
@@ -99,6 +106,10 @@ public class KyoUtils {
      * @param matchKey
      * @param matchValue
      * @return
+     * @example
+     * <listing version="3.0">
+     * var a:Array = KyoUtils.array_findAllByPortal(list, 'type', 'a');
+     * </listing>
      */
     public static function array_findAllByPortal(array:Array, matchKey:*, matchValue:*):* {
         var r:Array = [];
@@ -111,7 +122,14 @@ public class KyoUtils {
     }
 
     /**
-     * 数组中是否存在对象
+     * 数组中是否存在对象。
+     * @param array 目标数组。
+     * @param item 待查找项。
+     * @return 是否存在。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.array_hasItem(a, 1);
+     * </listing>
      */
     public static function array_hasItem(array:Array, item:*):Boolean {
         var i:int = array.indexOf(item);
@@ -119,7 +137,14 @@ public class KyoUtils {
     }
 
     /**
-     * 插入不存在的对象到数组中
+     * 插入不存在的对象到数组中。
+     * @param array 目标数组。
+     * @param item 待插入项。
+     * @return 是否新插入。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.array_push_notHas(a, item);
+     * </listing>
      */
     public static function array_push_notHas(array:Array, item:*):Boolean {
         if (item == null) {
@@ -140,7 +165,10 @@ public class KyoUtils {
      * @param array
      * @param item 一个或多个对象，多个对象时为Array类型
      * @param index
-     *
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.array_pushAt(a, item, 0);
+     * </listing>
      */
     public static function array_pushAt(array:Array, item:*, index:int):void {
         var items:Array;
@@ -164,7 +192,13 @@ public class KyoUtils {
     }
 
     /**
-     * 从数组中删除对象
+     * 从数组中删除对象。
+     * @param array 目标数组或类数组。
+     * @param item 待删除项。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.array_removeItem(a, item);
+     * </listing>
      */
     public static function array_removeItem(array:Object, item:*):void {
         var i:int = array.indexOf(item);
@@ -174,7 +208,12 @@ public class KyoUtils {
     }
 
     /**
-     * 删除数组中的重复对象
+     * 删除数组中的重复对象。
+     * @param array 目标数组或类数组。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.array_deleteSames(a);
+     * </listing>
      */
     public static function array_deleteSames(array:Object):void {
         var ba:Object = array.concat();
@@ -240,9 +279,14 @@ public class KyoUtils {
     }
 
     /**
-     * 获取属性相同的数据
-     * @param array
-     * @param key 属性K值
+     * 获取属性相同的数据。
+     * @param array 源数组。
+     * @param key 属性名。
+     * @return 属性值重复的项组成的数组。
+     * @example
+     * <listing version="3.0">
+     * var same:Array = KyoUtils.array_getSamePortalItems(list, 'id');
+     * </listing>
      */
     public static function array_getSamePortalItems(array:Array, key:String):Array {
         var vo:Object = {};
@@ -291,7 +335,13 @@ public class KyoUtils {
     }
 
     /**
-     * 获取MC的所有帧的绘制位图
+     * 获取 MC 的所有帧的绘制位图。
+     * @param mc 目标显示对象（<code>MovieClip</code> 则逐帧）。
+     * @return <code>BitmapData</code> 数组。
+     * @example
+     * <listing version="3.0">
+     * var frames:Array = KyoUtils.getBitmapDatasByMC(mc);
+     * </listing>
      */
     public static function getBitmapDatasByMC(mc:DisplayObject):Array {
         var a:Array = [];
@@ -317,6 +367,10 @@ public class KyoUtils {
      * 绘制图形对象
      * @param d 图形对象
      * @param fixPosition 根据注册点位置调节
+     * @example
+     * <listing version="3.0">
+     * var bp:Bitmap = KyoUtils.drawDisplay(mc);
+     * </listing>
      */
     public static function drawDisplay(
             d:DisplayObject, fixPosition:Boolean = true, transparent:Boolean = true, fillColor:uint = 0,
@@ -342,6 +396,10 @@ public class KyoUtils {
      * @param fixPosition 根据注册点位置调节
      * @param filterOffset 绘制大小调节
      * @return
+     * @example
+     * <listing version="3.0">
+     * var bd:BitmapData = KyoUtils.drawBitmapFilter(mc, blur);
+     * </listing>
      */
     public static function drawBitmapFilter(
             d:DisplayObject, filter:BitmapFilter, fixPosition:Boolean = true, filterOffset:Point = null):BitmapData {
@@ -373,7 +431,15 @@ public class KyoUtils {
     }
 
     /**
-     * 绘制图像倒影
+     * 绘制图像倒影。
+     * @param d 源显示对象。
+     * @param height 倒影高度。
+     * @param alpha 透明度。
+     * @return 倒影位图。
+     * @example
+     * <listing version="3.0">
+     * var shadow:Bitmap = KyoUtils.drawInverted(mc, 40);
+     * </listing>
      */
     public static function drawInverted(d:DisplayObject, height:Number, alpha:Number = 0.3):Bitmap {
         var bp:Bitmap     = new Bitmap(new BitmapData(d.width, height, true, 0));
@@ -387,8 +453,13 @@ public class KyoUtils {
     }
 
     /**
-     * 根据帧标签翻译MC
-     * @param label 帧标签
+     * 根据帧标签翻译 MC。
+     * @param mc 目标 MovieClip。
+     * @param label 帧标签。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.translateMC(mc, 'idle');
+     * </listing>
      */
     public static function translateMC(mc:MovieClip, label:String):void {
         if (label == null) {
@@ -446,7 +517,10 @@ public class KyoUtils {
      * @param d 要移动的显示对象
      * @param to 目标显示对象
      * @return
-     *
+     * @example
+     * <listing version="3.0">
+     * var p:Point = KyoUtils.getToChildPoint(child, root);
+     * </listing>
      */
     public static function getToChildPoint(d:DisplayObject, to:DisplayObjectContainer):Point {
         var pt:Point                 = new Point(d.x, d.y);
@@ -468,7 +542,10 @@ public class KyoUtils {
      * @param d 移动的显示对象
      * @param to 目标显示对象
      * @param fixParentPoint 自动调整移动的显示对象的坐标(仅在目标对象是移动对象的父级时有效)
-     *
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.moveDisplay(child, box);
+     * </listing>
      */
     public static function moveDisplay(d:DisplayObject, to:DisplayObjectContainer, fixParentPoint:Boolean = true):void {
         if (fixParentPoint) {
@@ -826,9 +903,14 @@ public class KyoUtils {
     }
 
     /**
-     * 将小数转化为百分比形式
-     * @param v 小数
-     * @param decimal 小数位数，-1时不限制，0时为整数
+     * 将小数转化为百分比形式。
+     * @param v 小数。
+     * @param decimal 小数位数，-1 时不限制，0 时为整数。
+     * @return 百分比字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.num_toPersent(0.25); // '25%'
+     * </listing>
      */
     public static function num_toPersent(v:Number, decimal:int = -1):String {
         var vv:Number = v * 1000 / 10;
@@ -848,6 +930,10 @@ public class KyoUtils {
      * 根据object给对象赋值
      * @param setter
      * @param obj
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.setValueByObject(vo, {x: 1, y: 2});
+     * </listing>
      */
     public static function setValueByObject(setter:*, obj:Object):void {
         if (!obj) {
@@ -895,10 +981,15 @@ public class KyoUtils {
     }
 
     /**
-     * 克隆属性
-     * @param to 克隆出来的对象
-     * @param from 原始对象
-     * @param keys 属性K值
+     * 克隆属性。
+     * @param to 克隆出来的对象。
+     * @param from 原始对象。
+     * @param keys 属性键列表；为 <code>null</code> 时拷贝 from 全部可枚举键。
+     * @return <code>to</code>。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.cloneValue(dst, src, ['x', 'y']);
+     * </listing>
      */
     public static function cloneValue(to:*, from:*, keys:Array = null):* {
         if (keys) {
@@ -992,6 +1083,10 @@ public class KyoUtils {
      * @param direct 排序方向；0=横向,1=竖向
      * @param autoSize 默认：TextFieldAutoSize.LEFT
      * @param offset TextField宽高调整
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.alignTexts([tf1, tf2], NaN, 0);
+     * </listing>
      */
     public static function alignTexts(txts:Array, startPos:Number = NaN, direct:int = 0, autoSize:String = null,
                                       offset:Point                                                       = null
@@ -1097,6 +1192,10 @@ public class KyoUtils {
      * @param mc
      * @param script
      * @param frame -1时，加入到最后一帧
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.addFrameScript(mc, onEnd);
+     * </listing>
      */
     public static function addFrameScript(mc:MovieClip, script:Function, frame:int = -1):void {
         var f:uint;
@@ -1107,9 +1206,14 @@ public class KyoUtils {
     }
 
     /**
-     * 获取字符串的字节数
-     * @param str 字符串
-     * @param encode 编码方式
+     * 获取字符串的字节数。
+     * @param str 字符串。
+     * @param encode 编码方式。
+     * @return 字节数。
+     * @example
+     * <listing version="3.0">
+     * var n:int = KyoUtils.string_length('你好');
+     * </listing>
      */
     public static function string_length(str:String, encode:String = 'gb2312'):int {
         var bt:ByteArray = new ByteArray();
@@ -1118,7 +1222,13 @@ public class KyoUtils {
     }
 
     /**
-     * 去除后缀名
+     * 去除后缀名。
+     * @param v 带扩展名的字符串。
+     * @return 去掉首个 <code>.</code> 及之后部分的字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.str_removePrefix('a.png'); // 'a'
+     * </listing>
      */
     public static function str_removePrefix(v:String):String {
         var x:int = v.indexOf('.');
@@ -1129,7 +1239,15 @@ public class KyoUtils {
     }
 
     /**
-     * 字符串字符替换
+     * 字符串字符替换。
+     * @param v 源字符串。
+     * @param p 被替换片段。
+     * @param repl 替换为。
+     * @return 替换后的字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.str_replaceALL('a-b-c', '-', '_'); // 'a_b_c'
+     * </listing>
      */
     public static function str_replaceALL(v:String, p:*, repl:*):String {
         return v.split(p).join(repl);
@@ -1177,6 +1295,10 @@ public class KyoUtils {
      * 将MC的颜色支除（黑白化）
      * @param mc
      * @param returnOrg 是否还原颜色
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.grayMC(mc);
+     * </listing>
      */
     public static function grayMC(mc:DisplayObject, returnOrg:Boolean = false):void {
         if (!mc) {
@@ -1335,6 +1457,12 @@ public class KyoUtils {
      *     变量名=值
      *     //注释
      *     变量名=值
+     * @param v 文本内容。
+     * @return 键值 Object。
+     * @example
+     * <listing version="3.0">
+     * var o:Object = KyoUtils.readTextVariables('a=1\nb=2');
+     * </listing>
      */
     public static function readTextVariables(v:String):Object {
         var o:Object = {};
@@ -1355,7 +1483,13 @@ public class KyoUtils {
     }
 
     /**
-     * 获取对象类名
+     * 获取对象类定义。
+     * @param o 任意对象。
+     * @return 对应 Class。
+     * @example
+     * <listing version="3.0">
+     * var c:Class = KyoUtils.getClass(sprite);
+     * </listing>
      */
     public static function getClass(o:Object):Class {
         var classname:String = getQualifiedClassName(o);
@@ -1367,6 +1501,10 @@ public class KyoUtils {
      * @param main 原件MC
      * @param menu 菜单名称数组
      * @param select 选择菜单后调用的函数，返回菜单名称。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.customMenu(root, ['About'], onSelect);
+     * </listing>
      */
     public static function customMenu(main:Sprite, menu:Array, select:Function = null):void {
         var cm:ContextMenu = new ContextMenu();
@@ -1389,7 +1527,13 @@ public class KyoUtils {
     }
 
     /**
-     * 将实体类对象转换为object，包含public的所有属性
+     * 将实体类对象转换为 object，包含 public 的所有属性。
+     * @param item 实体实例。
+     * @return 属性键值 Object。
+     * @example
+     * <listing version="3.0">
+     * var o:Object = KyoUtils.itemToObject(vo);
+     * </listing>
      */
     public static function itemToObject(item:*):Object {
         var xml:XML  = describeType(item);
@@ -1404,8 +1548,13 @@ public class KyoUtils {
     }
 
     /**
-     * 获取对象所有的PUBLIC属性
-     * @return 属性名称数组
+     * 获取对象所有的 PUBLIC 属性。
+     * @param item 目标对象。
+     * @return 属性名称数组。
+     * @example
+     * <listing version="3.0">
+     * var keys:Array = KyoUtils.getItemVaribles(vo);
+     * </listing>
      */
     public static function getItemVaribles(item:*):Array {
         var xml:XML = describeType(item);
@@ -1420,8 +1569,13 @@ public class KyoUtils {
     }
 
     /**
-     * 克隆类定义的对象，所有public var的属性将进行克隆 (仅支持简单类型的属性)
-     * @param from
+     * 克隆类定义的对象，所有 public var 的属性将进行克隆（仅支持简单类型的属性）。
+     * @param from 源实例。
+     * @return 新实例。
+     * @example
+     * <listing version="3.0">
+     * var copy:* = KyoUtils.cloneSimpleClassObject(vo);
+     * </listing>
      */
     public static function cloneSimpleClassObject(from:*):* {
         var o:Object  = itemToObject(from);
@@ -1505,6 +1659,10 @@ public class KyoUtils {
      * 设置显示对象色相滤镜（-180 – 180）；为 0 时清除 filters。
      * @param display 目标。
      * @param hue 色相值。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.setHue(mc, 30);
+     * </listing>
      */
     public static function setHue(display:DisplayObject, hue:Number = 0):void {
         if (hue == 0) {
@@ -1519,6 +1677,10 @@ public class KyoUtils {
     /**
      * 递归停止指定影片剪辑的子 MovieClip 播放（不含自身 stop）。
      * @param mc 根影片剪辑。
+     * @example
+     * <listing version="3.0">
+     * KyoUtils.stopAllMovieClips(rootMc);
+     * </listing>
      */
     public static function stopAllMovieClips(mc:MovieClip):void {
         for (var i:int = 0; i < mc.numChildren; i++) {

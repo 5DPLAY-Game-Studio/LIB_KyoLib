@@ -61,6 +61,7 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 当前主场景。
+     * @return 当前 <code>IStage</code>。
      */
     public function get currentStage():IStage {
         return _curStage;
@@ -68,6 +69,7 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 是否没有任何弹出层。
+     * @return <code>true</code> 表示无层。
      */
     public function get noneLayer():Boolean {
         return _layers.length == 0;

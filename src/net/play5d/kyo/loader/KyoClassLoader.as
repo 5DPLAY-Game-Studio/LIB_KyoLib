@@ -75,6 +75,7 @@ public class KyoClassLoader extends EventDispatcher {
 
     /**
      * 已开始加载的个数（含当前项）。
+     * @return 已启动加载数。
      */
     public function get loadedAmount():int {
         return _loadedAmount;

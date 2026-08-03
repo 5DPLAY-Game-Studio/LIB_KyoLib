@@ -128,6 +128,7 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 背景填充色；设为 1 时不绘制背景。
+     * @return 填充色。
      */
     public function get bgColor():uint {
         return _bgColor;
@@ -151,6 +152,7 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 当前播放 URL。
+     * @return URL。
      */
     public function get playingUrl():String {
         return _url;
@@ -158,6 +160,7 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 图片或 SWF 的加载内容；视频时为 <code>null</code>。
+     * @return 内容或 <code>null</code>。
      */
     public function get content():DisplayObject {
         if (_img) {
@@ -171,6 +174,7 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 视频是否正在播放。
+     * @return 是否播放中。
      */
     public function get videoPlaying():Boolean {
         return _video && _video.playing;
@@ -178,6 +182,7 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 视频元数据（时长等）。
+     * @return 元数据对象。
      */
     public function get videoMetaData():Object {
         return _video.metadata;

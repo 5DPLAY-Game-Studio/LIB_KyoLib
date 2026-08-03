@@ -77,6 +77,7 @@ public class KyoSocket {
 
     /**
      * 是否已连接。
+     * @return 连接状态。
      */
     public function get connected():Boolean {
         return _socket.connected;
