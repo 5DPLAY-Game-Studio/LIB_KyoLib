@@ -28,8 +28,6 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import net.play5d.kyo.utils.KyoUtils;
-
 /**
  * 将 MovieClip 或位图帧序列逐帧烘焙为 BitmapData 并播放的 Sprite。
  *
@@ -387,7 +385,7 @@ public class BitmapMovieClip extends Sprite {
 
         _scripts ||= {};
         _scripts[frame] ||= [];
-        KyoUtils.array_push_notHas(_scripts[frame], insf);
+        KyoArrayUtils.pushIfAbsent(_scripts[frame], insf);
     }
 
     /**
@@ -403,7 +401,7 @@ public class BitmapMovieClip extends Sprite {
      * </listing>
      */
     public function addFunctionListener(name:String):void {
-        KyoUtils.array_push_notHas(_listenFunctions, name);
+        KyoArrayUtils.pushIfAbsent(_listenFunctions, name);
     }
 
     /**
@@ -642,8 +640,8 @@ import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 
-import net.play5d.kyo.utils.KyoUtils;
-
+import net.play5d.kyo.utils.KyoDisplayUtils;
+import net.play5d.kyo.utils.KyoArrayUtils;
 /**
  * 单次绘制上下文：源对象与 draw 参数。
  *
@@ -831,7 +829,7 @@ internal class McGroup extends Sprite {
 
     /** @private 移除所有子对象 */
     public function destroy():void {
-        KyoUtils.removeAllChildren(this);
+        KyoDisplayUtils.removeAllChildren(this);
         _ins = null;
     }
 }

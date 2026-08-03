@@ -17,15 +17,11 @@
  */
 
 package net.play5d.kyo.utils {
+import flash.geom.Rectangle;
 import flash.geom.Point;
 
 /**
  * 常用数值与几何计算。
- *
- * @see #fixRange()
- * @see #getDistanceByPoints()
- * @see #velocityFromAngle()
- * @see #int2roman()
  */
 public class KyoMath {
     /** @private 度转弧度系数 */
@@ -50,8 +46,6 @@ public class KyoMath {
     /**
      * 将数字钳制在 [min, max]。
      *
-     * <p>新代码优先使用本方法；旧代码中的 <code>KyoUtils.num_fixRange</code> 仍可用。</p>
-     *
      * @param number 原值。
      * @param min 最小值。
      * @param max 最大值。
@@ -60,7 +54,7 @@ public class KyoMath {
      * <listing version="3.0">
      * KyoMath.fixRange(1.5, 0, 1); // 1
      * </listing>
-     * @see net.play5d.kyo.utils.KyoUtils#num_fixRange()
+     * @see #fixRangeByPoint()
      */
     public static function fixRange(number:Number, min:Number, max:Number):Number {
         if (number < min) {
@@ -75,7 +69,7 @@ public class KyoMath {
     /**
      * 判断数字是否在 [min, max] 内（含边界）。
      *
-     * <p>新代码优先使用本方法（端点需有序）；无序端点见 <code>KyoUtils.math_is_between</code>。</p>
+     * <p>端点需有序；无序端点见 <code>isBetween</code>。</p>
      *
      * @param number 原值。
      * @param min 最小值。
@@ -85,7 +79,7 @@ public class KyoMath {
      * <listing version="3.0">
      * KyoMath.inRange(5, 0, 10); // true
      * </listing>
-     * @see net.play5d.kyo.utils.KyoUtils#math_is_between()
+     * @see #isBetween()
      */
     public static function inRange(number:Number, min:Number, max:Number):Boolean {
         return number >= min && number <= max;
@@ -255,6 +249,199 @@ public class KyoMath {
             number = int(number / 10);
         }
         return roman;
+    }
+
+    /** @private 向零截断取整 */
+    private static function truncateTowardZero(n:Number):Number {
+        return n > 0 ? Math.floor(n) : Math.ceil(n);
+    }
+
+/**
+     * 判断数值是否落在两端点之间（顺序无关）。
+     *
+     * @param num 待测值。
+     * @param num1 端点一。
+     * @param num2 端点二。
+     * @return 是否在区间内。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.isBetween(5, 0, 10);
+     * </listing>
+     * @see #inRange()
+     */
+    public static function isBetween(num:Number, num1:Number, num2:Number):Boolean {
+        if (num1 <= num2) {
+            return KyoMath.inRange(num, num1, num2);
+        }
+        return KyoMath.inRange(num, num2, num1);
+    }
+/**
+     * 向零衰减：正数减 k、负数加 k，越过 0 则置 0。
+     * @param n 原值。
+     * @param k 衰减量。
+     * @return 结果。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.wake(10, 3);
+     * </listing>
+     */
+    public static function wake(n:Number, k:Number):Number {
+        if (n > 0) {
+            n -= k;
+            if (n < 0) {
+                n = 0;
+            }
+        }
+        if (n < 0) {
+            n += k;
+            if (n > 0) {
+                n = 0;
+            }
+        }
+        return n;
+    }
+/**
+     * 沿符号方向增强绝对值。
+     * @param n 原值。
+     * @param k 增量。
+     * @return 结果。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.strong(-2, 1); // -3
+     * </listing>
+     */
+    public static function strong(n:Number, k:Number):Number {
+        if (n < 0) {
+            n -= k;
+        }
+        else {
+            n += k;
+        }
+        return n;
+    }
+/**
+     * 将数值钳制在 Point 表示的 [x, y] 范围。
+     *
+     * @param n 原值。
+     * @param range x=min，y=max。
+     * @return 钳制后的值。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.fixRangeByPoint(v, new Point(0, 1));
+     * </listing>
+     * @see #fixRange()
+     */
+    public static function fixRangeByPoint(n:Number, range:Point):Number {
+        return fixRange(n, range.x, range.y);
+    }
+/**
+     * 将点坐标钳制到矩形（宽高当作右/下边界）。
+     * @param p 点（原地修改）。
+     * @param range 范围矩形。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.fixPointRange(pt, rect);
+     * </listing>
+     */
+    public static function fixPointRange(p:Point, range:Rectangle):void {
+        if (p.x < range.x) {
+            p.x = range.x;
+        }
+        if (p.x > range.width) {
+            p.x = range.width;
+        }
+        if (p.y < range.y) {
+            p.y = range.y;
+        }
+        if (p.y > range.height) {
+            p.y = range.height;
+        }
+    }
+/**
+     * 将小数转化为百分比形式。
+     * @param v 小数。
+     * @param decimal 小数位数，-1 时不限制，0 时为整数。
+     * @return 百分比字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.toPercent(0.25); // '25%'
+     * </listing>
+     */
+    public static function toPercent(v:Number, decimalPlaces:int = -1):String {
+        var vv:Number = v * 1000 / 10;
+        if (decimalPlaces == -1) {
+
+        }
+        else if (decimalPlaces == 0) {
+            vv = int(vv);
+        }
+        else {
+            vv = decimal(vv, decimalPlaces, truncateTowardZero);
+        }
+        return vv.toString() + '%';
+    }
+/**
+     * 比较两点是否完全相同。
+     * @param A 点 A。
+     * @param B 点 B。
+     * @return 是否相等。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.matchPoint(p1, p2);
+     * </listing>
+     */
+    public static function matchPoint(A:Point, B:Point):Boolean {
+        if (!A || !B) {
+            return false;
+        }
+        return A.x == B.x && A.y == B.y;
+    }
+/**
+     * 比较两矩形是否完全相同（历史拼写 <code>Rectangel</code>）。
+     * @param A 矩形 A。
+     * @param B 矩形 B。
+     * @return 是否相等。
+     * @example
+     * <listing version="3.0">
+     * KyoMath.matchRectangle(r1, r2);
+     * </listing>
+     */
+    public static function matchRectangle(A:Rectangle, B:Rectangle):Boolean {
+        if (!A || !B) {
+            return false;
+        }
+        return A.x == B.x && A.y == B.y && A.width == B.width && A.height == B.height;
+    }
+/**
+     * 求两矩形相交区域；无相交则 <code>null</code>（会规范化负宽高）。
+     * @param rectA 矩形 A。
+     * @param rectB 矩形 B。
+     * @return 相交矩形或 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var hit:Rectangle = KyoMath.rectHit(a, b);
+     * </listing>
+     */
+    public static function rectHit(rectA:Rectangle, rectB:Rectangle):Rectangle {
+        function checkRect(rect:Rectangle):void {
+            if (rect.width < 0) {
+                rect.width *= -1;
+                rect.x -= rect.width;
+            }
+            if (rect.height < 0) {
+                rect.height *= -1;
+                rect.y -= rect.height;
+            }
+        }
+
+        checkRect(rectA);
+        checkRect(rectB);
+
+        var r:Rectangle = rectA.intersection(rectB);
+        if (!r.isEmpty()) {
+            return r;
+        }
+        return null;
     }
 
 }

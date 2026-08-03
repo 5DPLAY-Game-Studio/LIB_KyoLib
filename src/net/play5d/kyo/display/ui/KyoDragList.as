@@ -26,8 +26,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.utils.Timer;
 
-import net.play5d.kyo.utils.KyoUtils;
-
+import net.play5d.kyo.utils.KyoMath;
 /**
  * 可拖拽的瓦片列表，支持水平 / 垂直 / 双向拖拽、惯性回弹与自动滚动。
  *
@@ -206,7 +205,7 @@ public class KyoDragList extends KyoTileList {
             break;
         }
         if (_release) {
-            _mouseSpd = KyoUtils.num_wake(_mouseSpd, 3);
+            _mouseSpd = KyoMath.wake(_mouseSpd, 3);
             if (rect.y > _height) {
                 _mouseSpd = 0;
             }

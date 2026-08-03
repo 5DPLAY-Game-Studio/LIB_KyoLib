@@ -176,17 +176,17 @@ public class KyoTimerFormat {
     }
 
     /**
-     * 两位补零（委托 <code>KyoUtils.addZeroBeforNumber</code>）。
+     * 两位补零（委托 <code>KyoStringUtils.padNumber</code>）。
      * @param n 整数。
      * @return 至少两位的字符串。
      * @example
      * <listing version="3.0">
      * KyoTimerFormat.formatNum(5); // '05'
      * </listing>
-     * @see net.play5d.kyo.utils.KyoUtils#addZeroBeforNumber()
+     * @see KyoStringUtils#padNumber()
      */
     public static function formatNum(n:int):String {
-        return KyoUtils.addZeroBeforNumber(n, 2);
+        return KyoStringUtils.padNumber(n, 2);
     }
 
 }

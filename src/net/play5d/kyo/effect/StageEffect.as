@@ -27,8 +27,7 @@ import flash.display.DisplayObjectContainer;
 import flash.events.Event;
 import flash.geom.ColorTransform;
 
-import net.play5d.kyo.utils.KyoUtils;
-
+import net.play5d.kyo.utils.KyoDisplayUtils;
 /**
  * 舞台级特效单例：闪白、衰减抖动、颜色变换、放大残影等。
  *
@@ -169,7 +168,7 @@ public class StageEffect {
         if (!pt) {
             return;
         }
-        var bp:Bitmap = KyoUtils.drawDisplay(stage, false);
+        var bp:Bitmap = KyoDisplayUtils.drawDisplay(stage, false);
         pt.addChild(bp);
         bp.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 

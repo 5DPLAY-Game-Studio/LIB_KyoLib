@@ -26,8 +26,6 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import net.play5d.kyo.utils.KyoUtils;
-
 /**
  * 显示对象特效工具（残影、缩放影、MC 一次性特效、抖动等）。
  *
@@ -204,7 +202,7 @@ public class DisplayEffect {
         bpPrams :Object = null,
         size    :Point = null
     ):InsShadow {
-        var bmp:Bitmap = KyoUtils.drawDisplay(d);
+        var bmp:Bitmap = KyoDisplayUtils.drawDisplay(d);
         if (!bmp) {
             return null;
         }
@@ -243,6 +241,7 @@ import flash.display.DisplayObjectContainer;
 import flash.events.Event;
 import flash.geom.Point;
 
+import net.play5d.kyo.utils.KyoDisplayUtils;
 /**
  * 残影运行时数据与逐帧更新。
  * @private

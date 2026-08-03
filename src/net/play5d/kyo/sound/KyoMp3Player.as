@@ -23,8 +23,7 @@ import flash.media.SoundChannel;
 import flash.net.URLRequest;
 
 import net.play5d.kyo.utils.KyoRandom;
-import net.play5d.kyo.utils.KyoUtils;
-
+import net.play5d.kyo.utils.KyoArrayUtils;
 /**
  * 基于 URL 列表的 MP3 播放器，支持多种播放模式与上一曲 / 下一曲。
  *
@@ -93,7 +92,7 @@ public class KyoMp3Player {
         stop();
         _pausedPos = 0;
         _current   = v;
-        KyoUtils.array_push_notHas(list, v);
+        KyoArrayUtils.pushIfAbsent(list, v);
 
         _sound   = new Sound(new URLRequest(v));
         _channel = _sound.play();

@@ -17,6 +17,16 @@
  */
 
 package net.play5d.kyo.utils {
+import flash.media.SoundTransform;
+import flash.geom.Matrix;
+import flash.geom.ColorTransform;
+import flash.filters.ColorMatrixFilter;
+import flash.filters.BitmapFilter;
+import flash.display.Sprite;
+import flash.display.MovieClip;
+import flash.display.FrameLabel;
+import flash.display.BitmapData;
+import flash.display.Bitmap;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.geom.Point;
@@ -24,13 +34,7 @@ import flash.geom.Rectangle;
 import flash.system.Capabilities;
 
 /**
- * 显示对象克隆、旋转矩形碰撞、置顶检测与厘米像素换算。
- *
- * @see #clone()
- * @see #duplicateDisplayObject()
- * @see #rorationRectCollide()
- * @see #isInTop()
- * @see #cm2pixel()
+ * 显示对象、位图绘制、MovieClip、碰撞检测与厘米像素换算。
  */
 public class KyoDisplayUtils {
     /**
@@ -319,6 +323,421 @@ public class KyoDisplayUtils {
      */
     public static function getPointByCM(cmX:Number = 0, cmY:Number = 0):Point {
         return new Point(cm2pixel(cmX), cm2pixel(cmY));
+    }
+
+/**
+     * 移除 Sprite 全部子显示对象（委托 <code>removeAllChildren</code>）。
+     * @param sp 容器。
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.removeAllChildrenFromSprite(box);
+     * </listing>
+     * @see #removeAllChildren()
+     */
+    public static function removeAllChildrenFromSprite(sp:Sprite):void {
+        removeAllChildren(sp);
+    }
+/**
+     * 获取 MC 的所有帧的绘制位图。
+     * @param mc 目标显示对象（<code>MovieClip</code> 则逐帧）。
+     * @return <code>BitmapData</code> 数组。
+     * @example
+     * <listing version="3.0">
+     * var frames:Array = KyoDisplayUtils.getBitmapDatasByMC(mc);
+     * </listing>
+     */
+    public static function getBitmapDatasByMC(mc:DisplayObject):Array {
+        var a:Array = [];
+        var bd:BitmapData;
+        if (mc is MovieClip) {
+            var mmc:MovieClip = mc as MovieClip;
+            for (var i:int; i < mmc.totalFrames; i++) {
+                mmc.gotoAndStop(i);
+                bd = new BitmapData(mmc.width, mmc.height, true, 0);
+                bd.draw(mmc);
+                a.push(bd);
+            }
+        }
+        else {
+            bd = new BitmapData(mc.width, mc.height, true, 0);
+            bd.draw(mc);
+            a.push(bd);
+        }
+        return a;
+    }
+/**
+     * 绘制图形对象
+     * @param d 图形对象
+     * @param fixPosition 根据注册点位置调节
+     * @example
+     * <listing version="3.0">
+     * var bp:Bitmap = KyoDisplayUtils.drawDisplay(mc);
+     * </listing>
+     */
+    public static function drawDisplay(
+            d:DisplayObject, fixPosition:Boolean = true, transparent:Boolean = true, fillColor:uint = 0,
+            colorTransform:ColorTransform                                                           = null
+    ):Bitmap {
+        if (!d || d.width <= 0 || d.height <= 0) {
+            return null;
+        }
+        var bp:Bitmap = new Bitmap(new BitmapData(d.width, d.height, transparent, fillColor));
+        var matrix:Matrix;
+        if (fixPosition) {
+            var bds:Rectangle = d.getBounds(d);
+            matrix            = new Matrix(1, 0, 0, 1, -bds.x, -bds.y);
+        }
+        bp.bitmapData.draw(d, matrix, colorTransform);
+        return bp;
+    }
+/**
+     * 绘制图形滤镜
+     * @param d 图形对象
+     * @param filter 滤镜对象
+     * @param fixPosition 根据注册点位置调节
+     * @param filterOffset 绘制大小调节
+     * @return
+     * @example
+     * <listing version="3.0">
+     * var bd:BitmapData = KyoDisplayUtils.drawBitmapFilter(mc, blur);
+     * </listing>
+     */
+    public static function drawBitmapFilter(
+            d:DisplayObject, filter:BitmapFilter, fixPosition:Boolean = true, filterOffset:Point = null):BitmapData {
+        var bpd:BitmapData = new BitmapData(d.width, d.height, true, 0);
+
+        var matrix:Matrix;
+        if (fixPosition) {
+            var bds:Rectangle = d.getBounds(d);
+            matrix            = new Matrix(1, 0, 0, 1, -bds.x, -bds.y);
+        }
+
+        bpd.draw(d, matrix);
+
+        var rect:Rectangle = new Rectangle(0, 0, d.width, d.height);
+
+        if (filterOffset) {
+            rect.x -= filterOffset.x;
+            rect.y -= filterOffset.y;
+            rect.width += filterOffset.x * 2;
+            rect.height += filterOffset.y * 2;
+        }
+
+        var bpd2:BitmapData = new BitmapData(rect.width, rect.height, true, 0);
+        bpd2.applyFilter(bpd, rect, new Point(), filter);
+
+        bpd.dispose();
+
+        return bpd2;
+    }
+/**
+     * 绘制图像倒影。
+     * @param d 源显示对象。
+     * @param height 倒影高度。
+     * @param alpha 透明度。
+     * @return 倒影位图。
+     * @example
+     * <listing version="3.0">
+     * var shadow:Bitmap = KyoDisplayUtils.drawInverted(mc, 40);
+     * </listing>
+     */
+    public static function drawInverted(d:DisplayObject, height:Number, alpha:Number = 0.3):Bitmap {
+        var bp:Bitmap     = new Bitmap(new BitmapData(d.width, height, true, 0));
+        var matrix:Matrix = new Matrix();
+        matrix.ty         = -height;
+        bp.bitmapData.draw(d, matrix);
+        bp.scaleY = -1;
+        bp.y      = d.height + height / 1.7;
+        bp.alpha  = alpha;
+        return bp;
+    }
+/**
+     * 根据帧标签翻译 MC。
+     * @param mc 目标 MovieClip。
+     * @param label 帧标签。
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.translateMC(mc, 'idle');
+     * </listing>
+     */
+    public static function translateMC(mc:MovieClip, label:String):void {
+        if (label == null) {
+            return;
+        }
+        for each(var o:Object in mc.currentLabels) {
+            if (o.name == label) {
+                mc.gotoAndStop(label);
+                return;
+            }
+        }
+        for (var i:int; i < mc.numChildren; i++) {
+            var d:DisplayObject = mc.getChildAt(i);
+            if (d is MovieClip) {
+                translateMC(d as MovieClip, label);
+            }
+        }
+    }
+/**
+     * 按阈值将位图某色设为透明。
+     * @param source <code>Bitmap</code> 或 <code>BitmapData</code>。
+     * @param arg1 省略则取 (0,0) 像素；为颜色值；或与 arg2 组成采样坐标 x。
+     * @param arg2 采样坐标 y（当 arg1 为 x 时）。
+     * @return 处理后的位图数据。
+     * @example
+     * <listing version="3.0">
+     * var bd:BitmapData = KyoDisplayUtils.transparent(bmp);
+     * </listing>
+     */
+    public static function transparent(source:*, arg1:* = null, arg2:* = null):BitmapData {
+        var threshold:uint;
+        var s:BitmapData = source is Bitmap ? source.bitmapData : source;
+        if (arg1 == null) {
+            threshold = s.getPixel(0, 0);
+        }
+        else {
+            if (arg2 == null) {
+                threshold = arg1;
+            }
+            else {
+                threshold = s.getPixel(arg1, arg2);
+            }
+        }
+        var rect:Rectangle    = new Rectangle(0, 0, s.width, s.height);
+        var origin:Point      = new Point(0, 0);
+        var result:BitmapData = new BitmapData(s.width, s.height, true);
+        result.copyPixels(s, rect, origin);
+        result.threshold(s, rect, origin, '==', threshold, 0, 0xF0F0F0, true);
+        return result;
+    }
+/**
+     * 获取显示对象在目标对象的坐标
+     * @param d 要移动的显示对象
+     * @param to 目标显示对象
+     * @return
+     * @example
+     * <listing version="3.0">
+     * var p:Point = KyoDisplayUtils.getToChildPoint(child, root);
+     * </listing>
+     */
+    public static function getToChildPoint(d:DisplayObject, to:DisplayObjectContainer):Point {
+        var pt:Point                 = new Point(d.x, d.y);
+        var p:DisplayObjectContainer = d.parent;
+        while (p != null) {
+            pt.x += p.x;
+            pt.y += p.y;
+            if (p == to) {
+                return pt;
+            }
+            p = p.parent;
+        }
+        trace(to, 'is not', d, '\'s parent!');
+        return pt;
+    }
+/**
+     * 将一个显示对象移动到另一个显示对象里面
+     * @param d 移动的显示对象
+     * @param to 目标显示对象
+     * @param fixParentPoint 自动调整移动的显示对象的坐标(仅在目标对象是移动对象的父级时有效)
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.moveDisplay(child, box);
+     * </listing>
+     */
+    public static function moveDisplay(d:DisplayObject, to:DisplayObjectContainer, fixParentPoint:Boolean = true):void {
+        if (fixParentPoint) {
+            var p:Point = getToChildPoint(d, to);
+            d.x         = p.x;
+            d.y         = p.y;
+        }
+        to.addChild(d);
+    }
+/**
+     * 移除容器全部子对象，可对每个子项回调。
+     * @param d 容器。
+     * @param itemCallFunction 每个被移除子对象的回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.removeAllChildren(box);
+     * </listing>
+     */
+    public static function removeAllChildren(d:DisplayObjectContainer, itemCallFunction:Function = null):void {
+        while (d.numChildren) {
+            var dd:DisplayObject = d.removeChildAt(0);
+            if (itemCallFunction != null) {
+                itemCallFunction(dd);
+            }
+        }
+    }
+/**
+     * 按名称移除子对象。
+     * @param d 容器。
+     * @param name 子对象名。
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.removeChildByName(box, 'tip');
+     * </listing>
+     */
+    public static function removeChildByName(d:DisplayObjectContainer, name:String):void {
+        var o:DisplayObject = d.getChildByName(name);
+        if (o) {
+            d.removeChild(o);
+        }
+    }
+/**
+     * 在MC的第N帧中加入方法
+     * @param mc
+     * @param script
+     * @param frame -1时，加入到最后一帧
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.addFrameScript(mc, onEnd);
+     * </listing>
+     */
+    public static function addFrameScript(mc:MovieClip, script:Function, frame:int = -1):void {
+        var f:uint;
+        if (frame == -1) {
+            f = mc.totalFrames - 1;
+        }
+        mc.addFrameScript(f, script);
+    }
+/**
+     * 将MC的颜色支除（黑白化）
+     * @param mc
+     * @param returnOrg 是否还原颜色
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.grayMC(mc);
+     * </listing>
+     */
+    public static function grayMC(mc:DisplayObject, returnOrg:Boolean = false):void {
+        if (!mc) {
+            return;
+        }
+
+        if (returnOrg) {
+            var fs:Array = mc.filters.concat();
+            mc.filters   = null;
+            for each(var i:* in fs) {
+                if (i is ColorMatrixFilter) {
+                    KyoArrayUtils.removeItem(fs, i);
+                }
+            }
+            mc.filters = fs;
+            return;
+        }
+
+        var mtx:Array              = new Array();
+        mtx                        = mtx.concat([0.3086, 0.6094, 0.082, 0, 0]); // red
+        mtx                        = mtx.concat([0.3086, 0.6094, 0.082, 0, 0]); // green
+        mtx                        = mtx.concat([0.3086, 0.6094, 0.082, 0, 0]); // blue
+        mtx                        = mtx.concat([0, 0, 0, 1, 0]); // alpha
+        var gray:ColorMatrixFilter = new ColorMatrixFilter(mtx);
+        mc.filters                 = [gray];
+    }
+/**
+     * 设置 Sprite 音量。
+     * @param mc 目标。
+     * @param volume 0~1。
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.setMcVolume(root, 0.5);
+     * </listing>
+     */
+    public static function setMcVolume(mc:Sprite, volume:Number):void {
+        if (!mc) {
+            return;
+        }
+        var st:SoundTransform = mc.soundTransform;
+        if (st) {
+            st.volume         = volume;
+            mc.soundTransform = st;
+        }
+    }
+/**
+     * 克隆 ColorTransform（不含 color 属性赋值）。
+     * @param ct 源。
+     * @return 新实例。
+     * @example
+     * <listing version="3.0">
+     * var ct2:ColorTransform = KyoDisplayUtils.cloneColorTransform(ct);
+     * </listing>
+     */
+    public static function cloneColorTransform(ct:ColorTransform):ColorTransform {
+        var newCt:ColorTransform = new ColorTransform();
+
+        newCt.alphaMultiplier = ct.alphaMultiplier;
+        newCt.alphaOffset     = ct.alphaOffset;
+
+        newCt.blueMultiplier = ct.blueMultiplier;
+        newCt.blueOffset     = ct.blueOffset;
+
+        newCt.greenMultiplier = ct.greenMultiplier;
+        newCt.greenOffset     = ct.greenOffset;
+
+        newCt.redMultiplier = ct.redMultiplier;
+        newCt.redOffset     = ct.redOffset;
+
+        return newCt;
+
+    }
+/**
+     * 影片剪辑是否具有指定名称帧标签。
+     * @param mc 影片剪辑。
+     * @param label 帧标签名。
+     * @return 是否存在。
+     * @example
+     * <listing version="3.0">
+     * if (KyoDisplayUtils.hasFrameLabel(mc, 'loop')) { ... }
+     * </listing>
+     */
+    public static function hasFrameLabel(mc:MovieClip, label:String):Boolean {
+        var labels:Array = mc.currentLabels;
+
+        for each(var i:FrameLabel in labels) {
+            if (i.name == label) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+/**
+     * 设置显示对象色相滤镜（-180 – 180）；为 0 时清除 filters。
+     * @param display 目标。
+     * @param hue 色相值。
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.setHue(mc, 30);
+     * </listing>
+     */
+    public static function setHue(display:DisplayObject, hue:Number = 0):void {
+        if (hue == 0) {
+            display.filters = null;
+            return;
+        }
+
+        var filter:ColorMatrixFilter = createHueFilter(hue);
+        display.filters              = [filter];
+    }
+/**
+     * 递归停止指定影片剪辑的子 MovieClip 播放（不含自身 stop）。
+     * @param mc 根影片剪辑。
+     * @example
+     * <listing version="3.0">
+     * KyoDisplayUtils.stopAllMovieClips(rootMc);
+     * </listing>
+     */
+    public static function stopAllMovieClips(mc:MovieClip):void {
+        for (var i:int = 0; i < mc.numChildren; i++) {
+            var d:DisplayObject = mc.getChildAt(i);
+
+            if (d && d is MovieClip) {
+                var m:MovieClip = d as MovieClip;
+
+                m.stop();
+                stopAllMovieClips(m);
+            }
+        }
     }
 
 }

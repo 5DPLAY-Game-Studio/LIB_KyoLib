@@ -26,8 +26,7 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import net.play5d.kyo.utils.KyoUtils;
-
+import net.play5d.kyo.utils.KyoMath;
 /**
  * iPhone 风格惯性滚动面板：内容超出可视区时可拖拽，松手后减速并回弹。
  *
@@ -172,7 +171,7 @@ public class IphoneScrollPane extends Sprite {
             rect.y += _downSR.y;
         }
         if (_release) {
-            _mouseSpd.x = KyoUtils.num_wake(_mouseSpd.x, 3);
+            _mouseSpd.x = KyoMath.wake(_mouseSpd.x, 3);
             if (_mouseSpd.x > 6 && rect.x > (_source.width - _size.x) + 100) {
                 _mouseSpd.x = -6;
             }
@@ -180,7 +179,7 @@ public class IphoneScrollPane extends Sprite {
                 _mouseSpd.x = 6;
             }
 
-            _mouseSpd.y = KyoUtils.num_wake(_mouseSpd.y, 3);
+            _mouseSpd.y = KyoMath.wake(_mouseSpd.y, 3);
             if (_mouseSpd.y > 6 && rect.y > (_source.height - _size.y) + 100) {
                 _mouseSpd.y = -6;
             }

@@ -24,8 +24,8 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 
 import net.play5d.kyo.utils.KyoMath;
-import net.play5d.kyo.utils.KyoUtils;
-
+import net.play5d.kyo.utils.KyoDisplayUtils;
+import net.play5d.kyo.utils.KyoArrayUtils;
 /**
  * 表格排行样式瓦片列表：按横竖排数分页排列子项，支持遮罩滚动与滚动条联动。
  *
@@ -251,7 +251,7 @@ public class KyoTileList extends Sprite {
      * @return 被移除的对象。
      */
     public override function removeChild(child:DisplayObject):DisplayObject {
-        KyoUtils.array_removeItem(displays, child);
+        KyoArrayUtils.removeItem(displays, child);
         var d:DisplayObject = super.removeChild(child);
 
         update();
@@ -297,7 +297,7 @@ public class KyoTileList extends Sprite {
      */
     public function removeAllChildren():void {
         displays = [];
-        KyoUtils.removeAllChildren(this);
+        KyoDisplayUtils.removeAllChildren(this);
     }
 
     /**
@@ -378,7 +378,7 @@ public class KyoTileList extends Sprite {
      * @param index 插入位置。
      */
     public function appendChild(d:Object, index:int):void {
-        KyoUtils.array_pushAt(displays, d, index);
+        KyoArrayUtils.pushAt(displays, d, index);
         update();
     }
 
@@ -424,7 +424,7 @@ public class KyoTileList extends Sprite {
      * @param v 每列个数。
      */
     public function list(h:int, v:int):void {
-        KyoUtils.removeAllChildren(this);
+        KyoDisplayUtils.removeAllChildren(this);
 
         var p:Point     = startPos.clone();
         var s:int       = (_page - 1) * _perPage;
