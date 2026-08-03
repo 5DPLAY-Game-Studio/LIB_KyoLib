@@ -21,14 +21,16 @@ import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flash.system.Capabilities;
 
 /**
- * 显示对象克隆、旋转矩形碰撞与置顶检测。
+ * 显示对象克隆、旋转矩形碰撞、置顶检测与厘米像素换算。
  *
  * @see #clone()
  * @see #duplicateDisplayObject()
  * @see #rorationRectCollide()
  * @see #isInTop()
+ * @see #cm2pixel()
  */
 public class KyoDisplayUtils {
     /**
@@ -290,6 +292,29 @@ public class KyoDisplayUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * 将物理厘米换算为屏幕像素（按 <code>Capabilities.screenDPI</code>）。
+     * @param cm 厘米。
+     * @return 像素。
+     * @example
+     * <listing version="3.0">
+     * var px:Number = KyoDisplayUtils.cm2pixel(1);
+     * </listing>
+     */
+    public static function cm2pixel(cm:Number):Number {
+        return (cm * Capabilities.screenDPI) / 2.54;
+    }
+
+    /**
+     * 将厘米坐标换算为像素点。
+     * @param cmX X 厘米。
+     * @param cmY Y 厘米。
+     * @return 像素坐标。
+     */
+    public static function getPointByCM(cmX:Number = 0, cmY:Number = 0):Point {
+        return new Point(cm2pixel(cmX), cm2pixel(cmY));
     }
 
 }
