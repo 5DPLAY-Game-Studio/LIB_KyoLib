@@ -25,6 +25,8 @@ import flash.utils.ByteArray;
 /**
  * AIR 本地文件读写（应用目录相对路径辅助）。
  *
+ * <p><b>仅 AIR</b>：依赖 <code>flash.filesystem</code>，不可用于纯 Flash Player。壳进程存档等本地 IO 首选本类。</p>
+ *
  * @see #writeFile()
  * @see #readTextFile()
  */

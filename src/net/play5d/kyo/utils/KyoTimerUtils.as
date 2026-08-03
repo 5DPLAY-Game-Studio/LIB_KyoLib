@@ -22,7 +22,8 @@ import flash.events.Event;
 /**
  * 基于 <code>Timer</code> 的延时调用：返回 id、可清除，并支持全体暂停/恢复。
  *
- * <p>与帧驱动的 <code>KyoTimeout</code> 互补；适合应用暂停时需冻结的延时（如广告 SDK）。</p>
+ * <p><b>首选</b>广告 SDK 等真实时间延时；应用暂停时用 <code>pauseAllTimer</code> / <code>resumeAllTimer</code>。
+ * 游戏帧同步节奏用 <code>KyoTimeout</code>，勿与本类合并。</p>
  *
  * @see #setTimeout()
  * @see #clearTimeout()

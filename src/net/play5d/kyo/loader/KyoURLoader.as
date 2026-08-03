@@ -30,10 +30,14 @@ import flash.utils.ByteArray;
 /**
  * URL 文本 / 二进制加载与 POST，以及字节 BOM 编码探测。
  *
+ * <p><b>首选</b>文本与字节 HTTP 入口；显示对象加载见 <code>KyoLoaderLite</code>。勿用 <code>AJAX</code> 写新代码。</p>
+ *
  * @see #load()
  * @see #post()
  * @see #getFileType()
+ * @see KyoLoaderLite
  */
+public class KyoURLoader {
 public class KyoURLoader {
     /** Unicode（UTF-16 LE）BOM 探测结果。 */
     public static const TYPE_UNICODE:String = 'Unicode';

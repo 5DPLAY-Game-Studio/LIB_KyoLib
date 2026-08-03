@@ -31,10 +31,13 @@ import flash.utils.ByteArray;
 /**
  * 静态轻量加载工具：显示对象、Loader、二进制与字节转显示对象。
  *
+ * <p><b>首选</b>显示对象加载入口；文本/字节 HTTP 见 <code>KyoURLoader</code>。二者勿合并。</p>
+ *
  * @see #load()
  * @see #loadLoader()
  * @see #loadBytes()
  * @see #bytesToDisplay()
+ * @see KyoURLoader
  */
 public class KyoLoaderLite {
     /**

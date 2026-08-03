@@ -24,11 +24,12 @@ import flash.events.Event;
 /**
  * 基于 ENTER_FRAME 的延时调用（帧数或毫秒转帧）。
  *
- * <p>使用前须调用 <code>init</code>。</p>
+ * <p><b>首选</b>游戏内节奏延时。使用前须 <code>init</code>。广告/应用暂停需冻结的延时用 <code>KyoTimerUtils</code>，勿与本类合并。</p>
  *
  * @see #init()
  * @see #setFrameout()
  * @see #setTimeout()
+ * @see KyoTimerUtils
  */
 public class KyoTimeout {
     /**

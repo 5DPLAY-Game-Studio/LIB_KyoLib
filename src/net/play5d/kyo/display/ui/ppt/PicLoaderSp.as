@@ -21,14 +21,14 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Point;
 
-import net.play5d.kyo.SuperPlayer;
+import net.play5d.kyo.media.SuperPlayer;
 import net.play5d.kyo.utils.KyoStringUtils;
 /**
  * 基于 <code>SuperPlayer</code> 的幻灯片页加载器，支持图片占位与视频播放完成回调。
  *
  * <p>非当前页且判定为位图时，仅画黑底占位而不真正加载，以节省资源。</p>
  *
- * @see SuperPlayer
+ * @see net.play5d.kyo.media.SuperPlayer
  * @see #load()
  * @see #finish()
  */

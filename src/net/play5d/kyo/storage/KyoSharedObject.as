@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.play5d.kyo {
+package net.play5d.kyo.storage {
 import flash.net.SharedObject;
 
 /**
  * 本地 <code>SharedObject</code> 读写封装。
+ *
+ * <p>包路径 <code>net.play5d.kyo.storage</code>。</p>
  *
  * @see #load()
  * @see #save()

@@ -29,6 +29,9 @@ import flash.utils.Dictionary;
 /**
  * 显示对象按钮初始化：简单点击，或按下变暗 / 弹性回弹效果。
  *
+ * <p>供壳层 LAN UI 等；依赖 TweenLite。游戏玩法按钮用内核 <code>BtnUtils</code>（触控/音效），
+ * <b>勿合并</b>两套 API。</p>
+ *
  * @see #initBtn()
  * @see #initSampleBtn()
  * @see #disposeBtn()
