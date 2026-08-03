@@ -360,7 +360,7 @@ public class KyoMath {
 /**
      * 将小数转化为百分比形式。
      * @param v 小数。
-     * @param decimal 小数位数，-1 时不限制，0 时为整数。
+     * @param decimalPlaces 小数位数，-1 时不限制，0 时为整数。
      * @return 百分比字符串。
      * @example
      * <listing version="3.0">
