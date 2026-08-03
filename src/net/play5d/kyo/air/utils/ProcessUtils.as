@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.play5d.kyo.utils {
+package net.play5d.kyo.air.utils {
 import flash.desktop.NativeProcess;
 import flash.desktop.NativeProcessStartupInfo;
 import flash.events.NativeProcessExitEvent;
@@ -29,7 +29,8 @@ import flash.utils.setTimeout;
 /**
  * AIR NativeProcess / CMD 辅助。
  *
- * <p>配置需声明：<code>&lt;supportedProfiles&gt;extendedDesktop desktop&lt;/supportedProfiles&gt;</code>。</p>
+ * <p>位于 <code>net.play5d.kyo.air</code> 下，表示<strong>仅 AIR</strong>可用。
+ * 配置需声明：<code>&lt;supportedProfiles&gt;extendedDesktop desktop&lt;/supportedProfiles&gt;</code>。</p>
  *
  * @see #createProcess()
  * @see #callCMD()

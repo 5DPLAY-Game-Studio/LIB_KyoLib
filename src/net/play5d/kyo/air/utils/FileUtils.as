@@ -16,16 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.play5d.kyo.utils {
+package net.play5d.kyo.air.utils {
 import flash.filesystem.File;
 import flash.filesystem.FileMode;
 import flash.filesystem.FileStream;
 import flash.utils.ByteArray;
 
+import net.play5d.kyo.utils.KyoLog;
+
 /**
  * AIR 本地文件读写（应用目录相对路径辅助）。
  *
- * <p><b>仅 AIR</b>：依赖 <code>flash.filesystem</code>，不可用于纯 Flash Player。壳进程存档等本地 IO 首选本类。</p>
+ * <p>位于 <code>net.play5d.kyo.air</code> 下，表示<strong>仅 AIR</strong>可用（依赖 <code>flash.filesystem</code>）。壳存档等本地 IO 首选本类。</p>
  *
  * @see #writeFile()
  * @see #readTextFile()
