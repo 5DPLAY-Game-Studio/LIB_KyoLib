@@ -67,10 +67,5 @@ public class GhostShadowColorTransform {
         return _blue;
     }
 
-    /**
-     * 构造函数（本类以静态访问器使用，通常无需实例化）。
-     */
-    public function GhostShadowColorTransform() {
-    }
 }
 }

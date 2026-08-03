@@ -89,12 +89,6 @@ public class KeyBoarder {
         }
     }
 
-    /**
-     * 构造函数（本类以静态方法使用，通常无需实例化）。
-     */
-    public function KeyBoarder() {
-    }
-
     /** @private */
     private static function keyBoardHandler(e:KeyboardEvent):void {
         if (!_inited) {

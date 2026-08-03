@@ -63,7 +63,6 @@ public class ProcessUtils {
                 }
             }
 
-
             var nativeProcessStartupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo();
             nativeProcessStartupInfo.executable                   = exeFile;
             nativeProcessStartupInfo.arguments                    = argumentsVec;
@@ -196,9 +195,6 @@ public class ProcessUtils {
         }
 
         return process;
-    }
-
-    public function ProcessUtils() {
     }
 
 }

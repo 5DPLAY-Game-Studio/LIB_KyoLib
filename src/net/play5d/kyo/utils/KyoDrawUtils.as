@@ -128,11 +128,5 @@ public class KyoDrawUtils {
         graphics.endFill();
     }
 
-    /**
-     * 构造函数（本类以静态方法使用，通常无需实例化）。
-     */
-    public function KyoDrawUtils() {
-    }
-
 }
 }
