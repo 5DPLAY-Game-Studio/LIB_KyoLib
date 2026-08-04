@@ -38,8 +38,7 @@ public class KyoScroller {
     public function KyoScroller(d:DisplayObject, size:Point, dsize:Point = null) {
         _d     = d;
         _size  = size;
-        _dsize = dsize;
-        _dsize ||= new Point(_d.width, _d.height);
+        _dsize = dsize ||= new Point(_d.width, _d.height);
 
         updateSC();
     }
@@ -56,7 +55,7 @@ public class KyoScroller {
     /** @private */
     private var _dsize:Point;
     /** @private 当前 scrollRect 原点 */
-    private var _p:Point    = new Point();
+    private var _p:Point = new Point();
     /** @private 滚动方向 */
     private var _direct:int;
 
@@ -71,8 +70,9 @@ public class KyoScroller {
      */
     public function start(direct:int = 1):void {
         _direct = direct;
+
         stop();
-        _d.addEventListener(Event.ENTER_FRAME, moving);
+        _d.addEventListener(Event.ENTER_FRAME, onMoving);
     }
 
     /**
@@ -83,7 +83,7 @@ public class KyoScroller {
      * </listing>
      */
     public function stop():void {
-        _d.removeEventListener(Event.ENTER_FRAME, moving);
+        _d.removeEventListener(Event.ENTER_FRAME, onMoving);
     }
 
     /**
@@ -96,7 +96,7 @@ public class KyoScroller {
     /**
      * @private 按方向推进并循环。
      */
-    private function moving(e:Event):void {
+    private function onMoving(e:Event):void {
         switch (_direct) {
         case 1:
             _p.x += speed;
@@ -123,7 +123,9 @@ public class KyoScroller {
             }
             break;
         }
+
         updateSC();
     }
 }
 }
+

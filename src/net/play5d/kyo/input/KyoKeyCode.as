@@ -25,7 +25,7 @@ package net.play5d.kyo.input {
  */
 public class KyoKeyCode {
     /** 主键盘 <code>0</code>（keyCode 48）。 */
-    public static const N0:KyoKeyVO = new KyoKeyVO('O', 48);
+    public static const N0:KyoKeyVO = new KyoKeyVO('0', 48);
     /** 主键盘 <code>1</code>。 */
     public static const N1:KyoKeyVO = new KyoKeyVO('1', 49);
     /** 主键盘 <code>2</code>。 */
@@ -163,11 +163,12 @@ public class KyoKeyCode {
      * </listing>
      */
     public static function code2name(code:int):String {
-        for each(var i:KyoKeyVO in _keyArray) {
-            if (i.code == code) {
-                return i.name;
+        for each (var key:KyoKeyVO in _keyArray) {
+            if (key.code == code) {
+                return key.name;
             }
         }
+
         return null;
     }
 

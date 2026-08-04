@@ -25,7 +25,7 @@ import flash.events.MouseEvent;
 
 /**
  * 选中项变化时分派。
- * @eventType KyoDragSelecter.EVENT_CHANGE
+ * @eventType KyoDragSelector.EVENT_CHANGE
  */
 [Event(name='select-change-event', type='flash.events.Event')]
 /**
@@ -37,7 +37,7 @@ import flash.events.MouseEvent;
  * @see #selectItem
  * @see #changeEffectObj
  */
-public class KyoDragSelecter extends KyoDragList {
+public class KyoDragSelector extends KyoDragList {
     /**
      * <code>select-change-event</code> 事件的 <code>type</code> 属性值。
      * @eventType select-change-event
@@ -45,20 +45,20 @@ public class KyoDragSelecter extends KyoDragList {
     public static const EVENT_CHANGE:String = 'select-change-event';
 
     /**
-     * @param dispalys 显示对象数组（参数名沿用历史拼写）。
+     * @param displays 显示对象数组。
      * @param dragType 拖拽方向，默认垂直。
      * @param hrow 横排最大个数。
      * @param vrow 竖排最大个数。
      */
-    public function KyoDragSelecter(
-        dispalys:Array,
+    public function KyoDragSelector(
+        displays:Array,
         dragType:int = KyoDragType.DRAG_TYPE_V,
         hrow    :int = int.MAX_VALUE,
         vrow    :int = 1
     ) {
-        super(dispalys, dragType, hrow, vrow);
+        super(displays, dragType, hrow, vrow);
         mouseChildren = false;
-        _haveToDrag   = true;
+        _forceDrag   = true;
     }
 
     /**
@@ -67,7 +67,7 @@ public class KyoDragSelecter extends KyoDragList {
      */
     public var changeEffectObj:Object;
     /** @private 当前选中索引 */
-    private var _seltid:int;
+    private var _selectId:int;
     /** @private */
     private var _selectItem:DisplayObject;
 
@@ -84,8 +84,8 @@ public class KyoDragSelecter extends KyoDragList {
     public function set selectItem(value:DisplayObject):void {
         _selectItem = value;
 
-        _seltid = displays.indexOf(_selectItem);
-        if (_seltid != -1) {
+        _selectId = displays.indexOf(_selectItem);
+        if (_selectId != -1) {
             dragComplete();
         }
     }
@@ -113,8 +113,8 @@ public class KyoDragSelecter extends KyoDragList {
         case KyoDragType.DRAG_TYPE_H:
             break;
         case KyoDragType.DRAG_TYPE_V:
-            to['y']     = -_seltid * (unitySize.y + gap.y);
-            _selectItem = displays[_seltid];
+            to['y']     = -_selectId * (unitySize.y + gap.y);
+            _selectItem = displays[_selectId];
             break;
         }
         TweenLite.to(this, .2, to);
@@ -125,18 +125,18 @@ public class KyoDragSelecter extends KyoDragList {
      */
     private function displayUpdate():void {
         var uh:Number = unitySize.y + gap.y;
-        _seltid       = (-this.y + unitySize.y / 2) / uh;
-        if (_seltid < 0) {
-            _seltid = 0;
+        _selectId       = (-this.y + unitySize.y / 2) / uh;
+        if (_selectId < 0) {
+            _selectId = 0;
         }
-        if (_seltid > displays.length - 1) {
-            _seltid = displays.length - 1;
+        if (_selectId > displays.length - 1) {
+            _selectId = displays.length - 1;
         }
 
         if (changeEffectObj) {
             for (var i:int; i < displays.length; i++) {
                 var d:DisplayObject = displays[i];
-                var ms:int          = Math.abs(i - _seltid);
+                var ms:int          = Math.abs(i - _selectId);
                 for (var s:String in changeEffectObj) {
                     d[s] = ms == 0 ? 1 : (1 / ms) * changeEffectObj[s];
                 }
@@ -145,12 +145,12 @@ public class KyoDragSelecter extends KyoDragList {
     }
 
     /** @inheritDoc */
-    protected override function draging(e:Event):void {
+    protected override function onDragging(e:Event):void {
         var xx:Number = stage.mouseX - _downPoint.x;
         var yy:Number = stage.mouseY - _downPoint.y;
-        checkDraging(xx, yy);
+        checkDragging(xx, yy);
 
-        if (!_draging) {
+        if (!_dragging) {
             return;
         }
 
@@ -167,7 +167,7 @@ public class KyoDragSelecter extends KyoDragList {
     /** @inheritDoc */
     protected override function endDrag(e:MouseEvent):void {
         removeListener();
-        removeEventListener(Event.ENTER_FRAME, draging);
+        removeEventListener(Event.ENTER_FRAME, onDragging);
         mouseEnabled = false;
         dragComplete(true);
     }

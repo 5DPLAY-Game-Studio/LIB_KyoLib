@@ -22,7 +22,7 @@ import flash.events.EventDispatcher;
 import flash.utils.getQualifiedClassName;
 import flash.utils.setTimeout;
 
-import net.play5d.kyo.stage.effect.IStageFadEffect;
+import net.play5d.kyo.stage.effect.IStageFadeEffect;
 import net.play5d.kyo.stage.events.KyoStageEvent;
 
 /**
@@ -161,7 +161,7 @@ public class KyoStageCtrl extends EventDispatcher {
      * </listing>
      */
     public function addLayer(
-            layer:IStage, x:Number = 0, y:Number = 0, removeElse:Boolean = false, effect:IStageFadEffect = null,
+            layer:IStage, x:Number = 0, y:Number = 0, removeElse:Boolean = false, effect:IStageFadeEffect = null,
             addBack:Function = null
     ):void {
         if (removeElse) {
@@ -189,7 +189,7 @@ public class KyoStageCtrl extends EventDispatcher {
         }
         _mainStage.addChild(layer.display);
         if (effect) {
-            effect.fadIn(layer, effectBack);
+            effect.fadeIn(layer, effectBack);
         }
         else {
             effectBack();
@@ -241,10 +241,10 @@ public class KyoStageCtrl extends EventDispatcher {
      * ctrl.removeLayer(dlg);
      * </listing>
      */
-    public function removeLayer(layer:IStage, effect:IStageFadEffect = null, removeBack:Function = null):void {
+    public function removeLayer(layer:IStage, effect:IStageFadeEffect = null, removeBack:Function = null):void {
 
         if (effect) {
-            effect.fadOut(layer, effectFin);
+            effect.fadeOut(layer, effectFin);
         }
         else {
             effectFin();

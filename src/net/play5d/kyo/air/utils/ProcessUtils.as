@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,11 +36,10 @@ import flash.utils.setTimeout;
  * @see #callCMD()
  */
 public class ProcessUtils {
-
     /**
      * 启动程序。
      * @param path 程序路径。
-     * @param arguments 启动参数 Array|String。
+     * @param arguments 启动参数 <code>Array</code> 或 <code>String</code>。
      * @return 已启动的 <code>NativeProcess</code>；不支持或文件不存在时为 <code>null</code>。
      * @example
      * <listing version="3.0">
@@ -50,84 +49,89 @@ public class ProcessUtils {
     public static function createProcess(path:String, arguments:Object = null):NativeProcess {
         if (!NativeProcess.isSupported) {
             trace('NativeProcess is not supported');
+
             return null;
         }
 
         var exeFile:File = new File(path);
+        if (!exeFile.exists) {
 
-        if (exeFile.exists) {
-            var argumentsVec:Vector.<String>;
-            if (arguments) {
-                argumentsVec = new Vector.<String>();
-                if (arguments is String) {
-                    argumentsVec.push(arguments);
-                }
-                if (arguments is Array) {
-                    for (var i:int; i < arguments.length; i++) {
-                        argumentsVec.push(arguments[i]);
-                    }
-                }
-            }
-
-            var nativeProcessStartupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo();
-            nativeProcessStartupInfo.executable                   = exeFile;
-            nativeProcessStartupInfo.arguments                    = argumentsVec;
-            var process:NativeProcess                             = new NativeProcess();
-            process.start(nativeProcessStartupInfo);
-            trace('PC process is created');
-            return process;
+            return null;
         }
 
-        return null;
+        var argumentsVec:Vector.<String>;
+        if (arguments) {
+            argumentsVec = new Vector.<String>();
+            if (arguments is String) {
+                argumentsVec.push(arguments as String);
+            }
+            else if (arguments is Array) {
+                for (var i:int = 0; i < arguments.length; i++) {
+                    argumentsVec.push(arguments[i]);
+                }
+            }
+        }
 
+        var info:NativeProcessStartupInfo = new NativeProcessStartupInfo();
+        info.executable = exeFile;
+        info.arguments  = argumentsVec;
+
+        var process:NativeProcess = new NativeProcess();
+        process.start(info);
+        trace('PC process is created');
+
+        return process;
     }
 
     /**
-     * 调用 CMD。
+     * 调用 CMD 执行命令。
      * @param cmd CMD 命令。
-     * @param processLiveTime 进程存活时间（毫秒）。
+     * @param processLiveTime 进程存活时间（毫秒），默认 5000。
      * @param outputBack 输出回调，参数为累计输出字符串。
-     * @param outputCheckTimeOut 无输出后多少毫秒触发回调。
+     * @param outputCheckTimeOut 无新输出后多少毫秒触发回调，默认 2000。
      * @return 是否成功启动进程。
      * @example
      * <listing version="3.0">
      * ProcessUtils.callCMD('dir', 3000, onOut);
      * </listing>
      */
-    public static function callCMD(cmd:String, processLiveTime:int = 5000, outputBack:Function = null,
-                                   outputCheckTimeOut:int                                      = 2000
+    public static function callCMD(
+            cmd                 :String,
+            processLiveTime     :int = 5000,
+            outputBack          :Function = null,
+            outputCheckTimeOut  :int = 2000
     ):Boolean {
         trace('call cmd ::', cmd);
         cmd += '\n';
+
         var process:NativeProcess = createCMDProcess();
-        if (process) {
-            process.standardInput.writeUTFBytes(cmd);
+        if (!process) {
 
-            if (outputBack != null) {
-
-                var outputFinTimer:Timer = new Timer(outputCheckTimeOut, 1);
-                var output:String        = '';
-                outputFinTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function ():void {
-//						trace('============================cmd output
-// start======================================================'); trace(output); trace('============================cmd
-// output end========================================================');
-
-                    outputBack(output);
-
-                    setTimeout(closeProcess, processLiveTime);
-                }, false, 0, true);
-
-                process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, function (e:ProgressEvent):void {
-                    output += process.standardOutput.readUTFBytes(process.standardOutput.bytesAvailable);
-                    outputFinTimer.reset();
-                    outputFinTimer.start();
-                }, false, 0, true);
-            }
-            else {
-                setTimeout(closeProcess, processLiveTime);
-            }
-            return true;
+            return false;
         }
+
+        process.standardInput.writeUTFBytes(cmd);
+
+        if (outputBack != null) {
+            var outputFinTimer:Timer = new Timer(outputCheckTimeOut, 1);
+            var output:String        = '';
+
+            outputFinTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function ():void {
+                outputBack(output);
+                setTimeout(closeProcess, processLiveTime);
+            }, false, 0, true);
+
+            process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, function (e:ProgressEvent):void {
+                output += process.standardOutput.readUTFBytes(process.standardOutput.bytesAvailable);
+                outputFinTimer.reset();
+                outputFinTimer.start();
+            }, false, 0, true);
+        }
+        else {
+            setTimeout(closeProcess, processLiveTime);
+        }
+
+        return true;
 
         function closeProcess():void {
             try {
@@ -136,13 +140,10 @@ public class ProcessUtils {
             catch (e:Error) {
             }
         }
-
-        return false;
-
     }
 
     /**
-     * 关闭进程。
+     * 强制结束指定进程。
      * @param processName 进程名称（如 <code>qq.exe</code>）。
      * @return 是否成功发起关闭命令。
      * @example
@@ -151,8 +152,7 @@ public class ProcessUtils {
      * </listing>
      */
     public static function closeProcess(processName:String):Boolean {
-        var cmd:String = 'taskkill /f /t /im "' + processName + '"';
-        return callCMD(cmd);
+        return callCMD('taskkill /f /t /im "' + processName + '"');
     }
 
     /**
@@ -162,18 +162,15 @@ public class ProcessUtils {
      * @return 是否成功启动查询命令。
      * @example
      * <listing version="3.0">
-     * ProcessUtils.processExist('explorer.exe', onExist);
+     * ProcessUtils.processExists('explorer.exe', onExist);
      * </listing>
      */
-    public static function processExist(processName:String, back:Function):Boolean {
-
+    public static function processExists(processName:String, back:Function):Boolean {
         function outputHandler(result:String):void {
-            var exist:Boolean = result.indexOf(processName) != -1;
-            back(exist);
+            back(result.indexOf(processName) != -1);
         }
 
-        var cmd:String = 'tasklist';
-        return callCMD(cmd, 2000, outputHandler);
+        return callCMD('tasklist', 2000, outputHandler);
     }
 
     /**
@@ -187,21 +184,20 @@ public class ProcessUtils {
      * </listing>
      */
     public static function openProgram(path:String, initParam:String = null):Boolean {
-        var initp:String = initParam ? ' ' + initParam : '';
-        return callCMD('"' + path + '"' + initp);
+        return callCMD('"' + path + '"' + (initParam ? ' ' + initParam : ''));
     }
 
     /**
-     * 调用资源管理器，打开指定目录。
-     * @param floder 完整路径。
+     * 调用资源管理器打开指定目录。
+     * @param folder 完整路径。
      * @return 是否成功发起命令。
      * @example
      * <listing version="3.0">
      * ProcessUtils.openExplorer('C:/temp');
      * </listing>
      */
-    public static function openExplorer(floder:String):Boolean {
-        return callCMD('explorer "' + floder + '"');
+    public static function openExplorer(folder:String):Boolean {
+        return callCMD('explorer "' + folder + '"');
     }
 
     /**
@@ -219,10 +215,11 @@ public class ProcessUtils {
         return createCMDProcess(['/c', filePath], exitBack) != null;
     }
 
-    /** @private */
+    /**
+     * @private 启动 <code>cmd.exe</code>；可选监听退出。
+     */
     private static function createCMDProcess(param:Object = null, exitBack:Function = null):NativeProcess {
         var process:NativeProcess = createProcess('c:/windows/system32/cmd.exe', param);
-
         if (!process) {
             return null;
         }

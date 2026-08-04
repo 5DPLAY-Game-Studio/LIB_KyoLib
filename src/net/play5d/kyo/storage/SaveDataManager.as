@@ -28,22 +28,25 @@ import flash.net.SharedObject;
  */
 public class SaveDataManager {
     /**
-     * @param soname SharedObject 本地名。
-     * @param localpath 可选路径。
+     * @param soName SharedObject 本地名。
+     * @param localPath 可选路径。
      * @param secure 是否安全存储。
-     * @param autosave 修改后是否自动 <code>save</code>。
+     * @param autoSave 修改后是否自动 <code>save</code>。
      */
-    public function SaveDataManager(soname:String, localpath:String = null, secure:Boolean = false,
-                                    autosave:Boolean = false
+    public function SaveDataManager(
+        soName   :String,
+        localPath:String = null,
+        secure   :Boolean = false,
+        autoSave :Boolean = false
     ) {
-        _so       = SharedObject.getLocal(soname, localpath, secure);
-        _autosave = autosave;
+        _so       = SharedObject.getLocal(soName, localPath, secure);
+        _autoSave = autoSave;
     }
 
     /** @private */
     private var _so:SharedObject;
     /** @private */
-    private var _autosave:Boolean;
+    private var _autoSave:Boolean;
 
     /**
      * 是否已写入过存档标记 <code>_has_data_</code>。
@@ -64,10 +67,10 @@ public class SaveDataManager {
     /**
      * @private 清空后用对象整体覆盖并可选自动保存。
      */
-    public function set data(data:Object):void {
+    public function set data(value:Object):void {
         clear();
-        addDataByObject(data);
-        autosave();
+        addDataByObject(value);
+        tryAutoSave();
     }
 
     /**
@@ -94,7 +97,7 @@ public class SaveDataManager {
      */
     public function updateData(key:String, value:Object):void {
         _so.data[key] = value;
-        autosave();
+        tryAutoSave();
     }
 
     /**
@@ -109,7 +112,7 @@ public class SaveDataManager {
         for (var i:String in o) {
             _so.data[i] = o[i];
         }
-        autosave();
+        tryAutoSave();
     }
 
     /**
@@ -132,24 +135,23 @@ public class SaveDataManager {
      */
     public function save():void {
         if (!hasData) {
-            updateData('_has_data_', true);
+            _so.data._has_data_ = true;
         }
-        updateData('date_time', new Date());
+        _so.data.date_time = new Date();
         _so.flush();
     }
 
     /**
-     * 若开启 autosave 则调用 <code>save</code>。
+     * 若开启 autoSave 则调用 <code>save</code>。
      * @example
      * <listing version="3.0">
-     * mgr.autosave();
+     * mgr.tryAutoSave();
      * </listing>
      */
-    public function autosave():void {
-        if (_autosave) {
+    public function tryAutoSave():void {
+        if (_autoSave) {
             save();
         }
     }
-
 }
 }

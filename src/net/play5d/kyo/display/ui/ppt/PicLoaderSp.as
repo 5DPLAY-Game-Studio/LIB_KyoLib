@@ -35,6 +35,9 @@ import net.play5d.kyo.utils.KyoStringUtils;
  * @see #finish()
  */
 public class PicLoaderSp extends Sprite {
+    /** @private 位图扩展名（小写、无点） */
+    private static const BITMAP_EXTENSIONS:Array = ['jpg', 'jpeg', 'gif', 'png'];
+
     /**
      * @param size 显示区域尺寸。
      */
@@ -48,7 +51,7 @@ public class PicLoaderSp extends Sprite {
      */
     public var onFinish:Function;
     /**
-     * <code>initlize</code> 后是否判定为位图扩展名（jpg/jpeg/gif/png）。
+     * <code>initialize</code> 后是否判定为位图扩展名（jpg/jpeg/gif/png）。
      * @default false
      */
     public var isBitmap:Boolean;
@@ -64,14 +67,12 @@ public class PicLoaderSp extends Sprite {
      * @param v 资源地址。
      * @example
      * <listing version="3.0">
-     * loader.initlize('clip.mp4');
+     * loader.initialize('clip.mp4');
      * </listing>
      */
-    public function initlize(v:String):void {
-        _url           = v;
-        var pfx:String = KyoStringUtils.getExtension(v);
-        var pa:Array   = ['jpg', 'jpeg', 'gif', 'png'];
-        isBitmap       = pa.indexOf(pfx) != -1;
+    public function initialize(v:String):void {
+        _url     = v;
+        isBitmap = BITMAP_EXTENSIONS.indexOf(KyoStringUtils.getExtension(v)) != -1;
     }
 
     /**
@@ -107,11 +108,13 @@ public class PicLoaderSp extends Sprite {
      */
     public final function load(back:Function = null, isCurrent:Boolean = false):void {
         if (!_url) {
-            trace('PicLoader : url is null!');
+            trace('PicLoaderSp : url is null!');
+
             return;
         }
+
         removeLoader();
-        loadurl(_url, back, isCurrent);
+        loadUrl(_url, back, isCurrent);
     }
 
     /**
@@ -128,24 +131,24 @@ public class PicLoaderSp extends Sprite {
         if (_player && _player.type == SuperPlayer.TYPE_VIDEO) {
             return _player.videoPlaying == false;
         }
+
         return true;
     }
 
     /**
      * @private 按是否当前页 / 是否位图决定占位或 SuperPlayer 播放。
      */
-    private function loadurl(url:String, back:Function, isCurrent:Boolean):void {
-        if (!isCurrent) {
-            if (isBitmap) {
-                graphics.beginFill(KyoColor.BLACK, 1);
-                graphics.drawRect(0, 0, _size.x, _size.y);
-                graphics.endFill();
+    private function loadUrl(url:String, back:Function, isCurrent:Boolean):void {
+        if (!isCurrent && isBitmap) {
+            graphics.beginFill(KyoColor.BLACK, 1);
+            graphics.drawRect(0, 0, _size.x, _size.y);
+            graphics.endFill();
 
-                if (back != null) {
-                    back();
-                }
-                return;
+            if (back != null) {
+                back();
             }
+
+            return;
         }
 
         _player = new SuperPlayer(_size.x, _size.y);

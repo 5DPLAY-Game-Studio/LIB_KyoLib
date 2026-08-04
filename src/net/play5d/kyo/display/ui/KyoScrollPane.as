@@ -71,7 +71,7 @@ public class KyoScrollPane extends Sprite {
     /** @private 按下时舞台坐标 */
     protected var _downPoint:Point;
     /** @private 是否已进入拖拽 */
-    protected var _draging:Boolean;
+    protected var _dragging:Boolean;
     /** @private 按下时 scrollRect */
     private var _downSR:Rectangle;
     /** @private 内容宽 */
@@ -139,7 +139,7 @@ public class KyoScrollPane extends Sprite {
      */
     public function destroy():void {
         this.removeEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
-        removeEventListener(Event.ENTER_FRAME, draging);
+        removeEventListener(Event.ENTER_FRAME, onDragging);
         if (stage) {
             stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
         }
@@ -198,9 +198,9 @@ public class KyoScrollPane extends Sprite {
      * @param xx 水平位移。
      * @param yy 垂直位移。
      */
-    protected function checkDraging(xx:Number, yy:Number):void {
-        _draging = KyoScrollDragUtil.updateDragging(
-            _draging, xx, yy, dragPixel,
+    protected function checkDragging(xx:Number, yy:Number):void {
+        _dragging = KyoScrollDragUtil.updateDragging(
+            _dragging, xx, yy, dragPixel,
             KyoScrollDragUtil.allowH(dragType),
             KyoScrollDragUtil.allowV(dragType),
             stage
@@ -237,9 +237,9 @@ public class KyoScrollPane extends Sprite {
      * @private 拖拽帧更新。
      * @param e <code>ENTER_FRAME</code> 事件。
      */
-    protected function draging(e:Event):void {
+    protected function onDragging(e:Event):void {
         var pp:Point = mousePoint;
-        checkDraging(pp.x, pp.y);
+        checkDragging(pp.x, pp.y);
         var w:Number       = maskSize.x;
         var h:Number       = maskSize.y;
         var rect:Rectangle = new Rectangle(0, 0, w, h);
@@ -255,7 +255,7 @@ public class KyoScrollPane extends Sprite {
             rect.y = pp.y;
             break;
         }
-        if (_draging) {
+        if (_dragging) {
             if (_downSR) {
                 rect.x += _downSR.x;
                 rect.y += _downSR.y;
@@ -273,7 +273,7 @@ public class KyoScrollPane extends Sprite {
      */
     protected function endDrag(e:MouseEvent):void {
         removeListener();
-        removeEventListener(Event.ENTER_FRAME, draging);
+        removeEventListener(Event.ENTER_FRAME, onDragging);
     }
 
     /**
@@ -287,8 +287,8 @@ public class KyoScrollPane extends Sprite {
         _downSR    = scrollRect;
         _downPoint = new Point(stage.mouseX, stage.mouseY);
 
-        addEventListener(Event.ENTER_FRAME, draging);
-        _draging = false;
+        addEventListener(Event.ENTER_FRAME, onDragging);
+        _dragging = false;
         if (stage) {
             stage.addEventListener(MouseEvent.MOUSE_UP, endDrag);
         }

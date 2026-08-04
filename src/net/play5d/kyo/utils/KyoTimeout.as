@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,10 +32,8 @@ import flash.events.Event;
  * @see KyoTimerUtils
  */
 public class KyoTimeout {
-    /**
-     * 已绑定的根显示对象（由 <code>init</code> 设置）。
-     */
-    public static var _root:DisplayObject;
+    /** @private */
+    private static var _root:DisplayObject;
     /** @private */
     private static var _functions:Vector.<Object>;
 
@@ -64,7 +62,7 @@ public class KyoTimeout {
      */
     public static function setFrameout(func:Function, frame:int, ...param):void {
         _functions.push({func: func, frame: frame, param: param});
-        setLisnter();
+        setListener();
     }
 
     /**
@@ -83,29 +81,22 @@ public class KyoTimeout {
         setFrameout.apply(null, params);
     }
 
-    /**
-     * @private
-     */
-    private static function setLisnter():void {
-        _root.removeEventListener(Event.ENTER_FRAME, onEnterframe);
-        _root.addEventListener(Event.ENTER_FRAME, onEnterframe);
+    /** @private */
+    private static function setListener():void {
+        _root.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+        _root.addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
 
-    /**
-     * @private
-     */
-    private static function onEnterframe(e:Event):void {
-        var i:int;
+    /** @private */
+    private static function onEnterFrame(e:Event):void {
         var n:int = _functions.length;
-
         if (n < 1) {
-            _root.removeEventListener(Event.ENTER_FRAME, onEnterframe);
+            _root.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
             return;
         }
 
-        for (i = 0; i < n; i++) {
+        for (var i:int = 0; i < n; i++) {
             var fo:Object = _functions[i];
-
             if (!fo) {
                 _functions.splice(i, 1);
                 i = 0;
@@ -115,7 +106,6 @@ public class KyoTimeout {
 
             var func:Function = fo.func;
             var param:Array   = fo.param;
-
             if (fo.frame-- <= 0) {
                 if (param && param.length > 0) {
                     func.apply(null, param);
@@ -125,10 +115,9 @@ public class KyoTimeout {
                 }
                 _functions[i] = null;
             }
-
         }
-
     }
 
 }
 }
+

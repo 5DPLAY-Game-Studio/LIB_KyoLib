@@ -34,16 +34,10 @@ import flash.utils.setTimeout;
  */
 public class KyoSocket {
     /**
-     * 构造函数。
-     */
-    public function KyoSocket() {
-    }
-
-    /**
      * 字符串编码格式。
      * @default UTF-8
      */
-    public var charset:String     = 'UTF-8';
+    public var charset:String = 'UTF-8';
     /**
      * 断线后是否自动重连。
      * @default false
@@ -57,23 +51,25 @@ public class KyoSocket {
     /**
      * 错误回调，参数为错误描述字符串。
      */
-    public var on_error:Function;
+    public var onError:Function;
     /**
      * 连接成功回调，无参数。
      */
-    public var on_connect:Function;
+    public var onConnect:Function;
     /**
      * 连接关闭回调，无参数。
      */
-    public var on_close:Function;
+    public var onClose:Function;
     /**
      * 收到数据回调，参数为 <code>ByteArray</code>。
      */
-    public var on_data:Function;
+    public var onData:Function;
     /** @private */
     private var _socket:Socket;
     /** @private */
-    private var _host:String, _port:int;
+    private var _host:String;
+    /** @private */
+    private var _port:int;
 
     /**
      * 是否已连接。
@@ -100,7 +96,7 @@ public class KyoSocket {
         _socket.addEventListener(Event.CLOSE, closeHandler);
         _socket.addEventListener(Event.CONNECT, connectHandler);
         _socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-        _socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, ercurityErrorHandler);
+        _socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
         _socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
     }
 
@@ -117,18 +113,19 @@ public class KyoSocket {
         if (!connected) {
             return;
         }
+
         if (msg is int) {
             _socket.writeInt(msg);
             _socket.flush();
             return;
         }
+
         if (msg is String) {
             var b:ByteArray = new ByteArray();
             b.writeMultiByte(msg, charset);
             b.length = length;
             sendByteArray(b);
             _socket.flush();
-
         }
     }
 
@@ -144,6 +141,7 @@ public class KyoSocket {
         if (!_socket.connected) {
             return;
         }
+
         _socket.writeBytes(b);
         _socket.flush();
     }
@@ -160,6 +158,7 @@ public class KyoSocket {
         if (!_socket.connected) {
             return;
         }
+
         _socket.writeObject(o);
         _socket.flush();
     }
@@ -168,13 +167,14 @@ public class KyoSocket {
      * 在未连接时用上次主机端口重连。
      * @example
      * <listing version="3.0">
-     * socket.reConnect();
+     * socket.reconnect();
      * </listing>
      */
-    public function reConnect():void {
+    public function reconnect():void {
         if (_socket.connected) {
             return;
         }
+
         _socket.connect(_host, _port);
     }
 
@@ -183,10 +183,10 @@ public class KyoSocket {
      */
     private function onConnectClose():void {
         if (autoConnect) {
-            setTimeout(reConnect, autoConnectGap * 1000);
+            setTimeout(reconnect, autoConnectGap * 1000);
         }
-        if (on_close != null) {
-            on_close();
+        if (onClose != null) {
+            onClose();
         }
     }
 
@@ -203,8 +203,8 @@ public class KyoSocket {
      */
     private function connectHandler(e:Event):void {
         trace('连接成功');
-        if (on_connect != null) {
-            on_connect();
+        if (onConnect != null) {
+            onConnect();
         }
     }
 
@@ -213,8 +213,8 @@ public class KyoSocket {
      */
     private function ioErrorHandler(e:IOErrorEvent):void {
         trace('IO错误');
-        if (on_error != null) {
-            on_error('IO错误');
+        if (onError != null) {
+            onError('IO错误');
         }
         onConnectClose();
     }
@@ -222,10 +222,10 @@ public class KyoSocket {
     /**
      * @private
      */
-    private function ercurityErrorHandler(e:SecurityErrorEvent):void {
+    private function securityErrorHandler(e:SecurityErrorEvent):void {
         trace('安全性错误');
-        if (on_error != null) {
-            on_error('安全性错误');
+        if (onError != null) {
+            onError('安全性错误');
         }
         onConnectClose();
     }
@@ -235,12 +235,11 @@ public class KyoSocket {
      */
     private function dataHandler(e:ProgressEvent):void {
         trace('接收到数据');
-        if (on_data != null) {
+        if (onData != null) {
             var buffer:ByteArray = new ByteArray();
             e.currentTarget.readBytes(buffer, 0, e.currentTarget.bytesAvailable);
-            on_data(buffer);
+            onData(buffer);
         }
     }
-
 }
 }

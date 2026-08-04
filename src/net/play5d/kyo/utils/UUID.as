@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import flash.system.Capabilities;
  */
 public class UUID {
     /** @private */
-    private static var counter:Number = 0;
+    private static var _counter:Number = 0;
 
     /**
      * 生成形如 <code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code> 的 ID。
@@ -37,14 +37,14 @@ public class UUID {
      * </listing>
      */
     public static function create():String {
-        var dt:Date            = new Date();
-        var id1:Number         = dt.getTime();
-        var id2:Number         = Math.random() * Number.MAX_VALUE;
-        var id3:String         = Capabilities.serverString;
-        var rawID:String       = calculate(id1 + id3 + id2 + counter++).toUpperCase();
-        var finalString:String = rawID.substring(0, 8) + '-' + rawID.substring(8, 12) + '-' + rawID.substring(12, 16) +
-                                 '-' + rawID.substring(16, 20) + '-' + rawID.substring(20, 32);
-        return finalString;
+        var dt:Date      = new Date();
+        var id1:Number   = dt.getTime();
+        var id2:Number   = Math.random() * Number.MAX_VALUE;
+        var id3:String   = Capabilities.serverString;
+        var rawID:String = calculate(id1 + id3 + id2 + _counter++).toUpperCase();
+
+        return rawID.substring(0, 8) + '-' + rawID.substring(8, 12) + '-' + rawID.substring(12, 16) +
+               '-' + rawID.substring(16, 20) + '-' + rawID.substring(20, 32);
     }
 
     /**
@@ -159,6 +159,7 @@ public class UUID {
             str += tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) +
                    tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
         }
+
         return str;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,22 +28,24 @@ public class KyoRandom {
     /**
      * 从数组中随机取一个元素。
      * @param array 类数组对象。
-     * @param deleteSelect 为 <code>true</code> 时从原数组 splice 该项。
+     * @param removeSelected 为 <code>true</code> 时从原数组 splice 该项。
      * @return 元素；空数组则 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var v:* = KyoRandom.getRandomInArray([1, 2, 3]);
      * </listing>
      */
-    public static function getRandomInArray(array:Object, deleteSelect:Boolean = false):* {
+    public static function getRandomInArray(array:Object, removeSelected:Boolean = false):* {
         if (array == null || array.length < 1) {
             return null;
         }
+
         var r:int  = Math.random() * array.length << 0;
         var item:* = array[r];
-        if (deleteSelect) {
+        if (removeSelected) {
             array.splice(r, 1);
         }
+
         return item;
     }
 
@@ -61,7 +63,7 @@ public class KyoRandom {
     public static function getRandomSomeInArray(array:Array, amount:int, repeat:Boolean = false):Array {
         var a:Array = array.concat();
         var r:Array = [];
-        for (var i:int; i < amount; i++) {
+        for (var i:int = 0; i < amount; i++) {
             var d:int = Math.random() * a.length << 0;
             var m:*   = a[d];
             r.push(m);
@@ -69,6 +71,7 @@ public class KyoRandom {
                 a.splice(d, 1);
             }
         }
+
         return r;
     }
 
@@ -86,34 +89,21 @@ public class KyoRandom {
     }
 
     /**
-     * 在两个 Number 之间随机（含边界区间内）。
-     * @param A 一端。
-     * @param B 另一端。
+     * 在两端点之间随机（含边界）。
+     * @param a 一端。
+     * @param b 另一端。
      * @return 随机数。
      * @example
      * <listing version="3.0">
      * var n:Number = KyoRandom.between(0, 1);
      * </listing>
      */
-    public static function between(A:Number, B:Number):Number {
-        var s:Number;
-        var e:Number;
-        if (A < B) {
-            s = A;
-            e = B;
-        }
-        else {
-            s = B;
-            e = A;
-        }
+    public static function between(a:Number, b:Number):Number {
+        var s:Number = a < b ? a : b;
+        var e:Number = a < b ? b : a;
         var r:Number = s + Math.random() * (e - s);
-        if (r < s) {
-            r = s;
-        }
-        if (r > e) {
-            r = e;
-        }
-        return r;
+
+        return KyoMath.fixRange(r, s, e);
     }
 
     /**
@@ -133,53 +123,55 @@ public class KyoRandom {
         for (var i:int = 0; i < array.length; i++) {
             max += Number(array[i][attributeName]);
         }
-        var rad:Number = Math.random() * max;
-        if (rad > max - 1) {
-            rad = max - 1;
+
+        var rand:Number = Math.random() * max;
+        if (rand > max - 1) {
+            rand = max - 1;
         }
+
         var rate:Number = 0;
         for (i = 0; i < array.length; i++) {
             var newRate:Number = rate + Number(array[i][attributeName]);
-            if (rad >= rate && rad < newRate) {
+            if (rand >= rate && rand < newRate) {
                 return array[i];
             }
             rate = newRate;
         }
-        throw Error('无法按机率选择，请检查数据');
+
+        throw new Error('无法按几率选择，请检查数据');
     }
 
     /**
      * 按权重随机（轻量；可能返回 <code>null</code>）。
      * @param array 元素对象数组。
      * @param attributeName 权重属性名（建议 0~1）。
-     * @param randMx 随机上界。
+     * @param randMax 随机上界。
      * @return 选中元素或 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var o:* = KyoRandom.getRandomByRateLite(list, 'rate');
      * </listing>
      */
-    public static function getRandomByRateLite(array:Array, attributeName:String, randMx:Number = 1):* {
+    public static function getRandomByRateLite(array:Array, attributeName:String, randMax:Number = 1):* {
         array.sortOn(attributeName, Array.NUMERIC);
 
-        var rad:Number  = Math.random() * randMx;
+        var rand:Number = Math.random() * randMax;
         var rate:Number = 0;
         var a:Array     = [];
         for (var i:int = 0; i < array.length; i++) {
             var m:*      = array[i];
             var n:Number = m[attributeName];
             if (rate == 0) {
-                if (rad <= n) {
+                if (rand <= n) {
                     rate = n;
                     a.push(m);
                 }
             }
-            else {
-                if (n == rate) {
-                    a.push(m);
-                }
+            else if (n == rate) {
+                a.push(m);
             }
         }
+
         return getRandomInArray(a);
     }
 
@@ -199,6 +191,7 @@ public class KyoRandom {
             a.push(i);
         }
         arraySortRandom(a);
+
         return a;
     }
 
@@ -211,17 +204,9 @@ public class KyoRandom {
      * </listing>
      */
     public static function arraySortRandom(array:Array):void {
-        function taxis(element1:*, element2:*):int {
-            var num:Number = Math.random();
-            if (num < 0.5) {
-                return -1;
-            }
-            else {
-                return 1;
-            }
-        }
-
-        array.sort(taxis);
+        array.sort(function (element1:*, element2:*):int {
+            return Math.random() < 0.5 ? -1 : 1;
+        });
     }
 
     /**
@@ -233,6 +218,7 @@ public class KyoRandom {
      * <listing version="3.0">
      * var c:uint = KyoRandom.getRandomColor();
      * </listing>
+     * @see KyoColor
      */
     public static function getRandomColor(from:uint = KyoColor.BLACK, to:uint = KyoColor.WHITE):uint {
         return from + (to - from) * Math.random();
@@ -240,3 +226,4 @@ public class KyoRandom {
 
 }
 }
+

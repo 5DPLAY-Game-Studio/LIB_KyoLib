@@ -75,7 +75,7 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
     /** @private 可拖拽总长度 */
     private var _distance:Number;
     /** @private */
-    private var _draging:Boolean;
+    private var _dragging:Boolean;
 
     /** @private */
     public function set enabled(v:Boolean):void {
@@ -95,6 +95,7 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
      */
     public function update(pos:Number):void {
         var pp:Number = pos * _distance;
+
         if (_type == TYPE_H) {
             ui.x = _dragRange.x + pp;
         }
@@ -107,22 +108,23 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
      * @private 开始拖拽。
      */
     private function startDrag(e:MouseEvent):void {
-        if (_draging) {
+        if (_dragging) {
             return;
         }
-        _draging = true;
+
+        _dragging = true;
 
         ui.stage.addEventListener(MouseEvent.MOUSE_UP, endDrag);
-
-        ui.addEventListener(Event.ENTER_FRAME, onEnterframe);
+        ui.addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
 
     /**
      * @private 拖拽中更新位置并派发 UPDATE。
      */
-    private function onEnterframe(e:Event):void {
+    private function onEnterFrame(e:Event):void {
         var pp:Number;
         var pos:Point = new Point();
+
         if (_type == TYPE_H) {
             pp    = KyoMath.fixRange(ui.parent.mouseX, _dragRange.x, _dragRange.y);
             ui.x  = pp;
@@ -133,6 +135,7 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
             ui.y  = pp;
             pos.y = (pp - _dragRange.x) / _distance;
         }
+
         dispatchEvent(new KyoUIEvent(KyoUIEvent.UPDATE, pos));
     }
 
@@ -140,8 +143,9 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
      * @private 结束拖拽。
      */
     private function endDrag(e:MouseEvent = null):void {
-        _draging = false;
-        ui.removeEventListener(Event.ENTER_FRAME, onEnterframe);
+        _dragging = false;
+
+        ui.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
         if (ui.stage) {
             ui.stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
         }

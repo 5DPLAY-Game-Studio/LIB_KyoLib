@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package net.play5d.kyo.utils {
 import com.adobe.utils.StringUtil;
 
@@ -22,6 +23,9 @@ import flash.utils.ByteArray;
 
 /**
  * 字符串、路径后缀与数字文本格式化。
+ *
+ * @see #padNumber()
+ * @see #getExtension()
  */
 public class KyoStringUtils {
     /**
@@ -36,14 +40,15 @@ public class KyoStringUtils {
      * @see net.play5d.kyo.utils.KyoTimerFormat#formatNum()
      */
     public static function padNumber(n:Number, bit:int = 2):String {
-        var nstr:String    = n.toString();
-        var ii:int         = nstr.indexOf('.', 0);
-        var after0:String  = ii == -1 ? '' : nstr.substr(ii);
-        var before0:String = ii == -1 ? nstr : nstr.substr(0, ii);
+        var nStr:String    = n.toString();
+        var ii:int         = nStr.indexOf('.', 0);
+        var after0:String  = ii == -1 ? '' : nStr.substr(ii);
+        var before0:String = ii == -1 ? nStr : nStr.substr(0, ii);
         var zeros:String   = '';
-        for (var i:int; i < bit - before0.length; i++) {
+        for (var i:int = 0; i < bit - before0.length; i++) {
             zeros += '0';
         }
+
         return zeros + before0 + after0;
     }
 
@@ -56,12 +61,12 @@ public class KyoStringUtils {
      * KyoStringUtils.getExtension('a/b.PNG?x=1'); // 'png'
      * </listing>
      * @see #getPostfix()
-     * @see #getPrefix()
      */
     public static function getExtension(v:String):String {
         if (!v) {
             return '';
         }
+
         var path:String = v;
         var q:int       = path.indexOf('?');
         if (q != -1) {
@@ -71,11 +76,13 @@ public class KyoStringUtils {
         if (h != -1) {
             path = path.substring(0, h);
         }
+
         var slash:int = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
         var i:int     = path.lastIndexOf('.');
         if (i == -1 || i <= slash || i == path.length - 1) {
             return '';
         }
+
         return path.substring(i + 1).toLowerCase();
     }
 
@@ -103,17 +110,21 @@ public class KyoStringUtils {
      * </listing>
      */
     public static function number2CN(n:int):String {
-        var w:int, q:int, b:int, s:int;
+        var w:int;
+        var q:int;
+        var b:int;
+        var s:int;
         var r:String = '';
+
         if (n >= 10000) {
             w = int(n / 10000);
-            n -= 10000;
-            r += num2cnbase(w) + '万';
+            n -= w * 10000;
+            r += num2CnBase(w) + '万';
         }
         if (n >= 1000) {
             q = int(n / 1000);
-            n -= 1000;
-            r += num2cnbase(q) + '千';
+            n -= q * 1000;
+            r += num2CnBase(q) + '千';
         }
         else if (w > 0) {
             r += '零';
@@ -121,14 +132,14 @@ public class KyoStringUtils {
         if (n >= 100) {
             b = int(n / 100);
             n -= b * 100;
-            r += num2cnbase(b) + '百';
+            r += num2CnBase(b) + '百';
         }
         if (n >= 10) {
             s = int(n / 10);
             n -= s * 10;
             if (b > 0) {
                 if (s > 0) {
-                    r += num2cnbase(s) + '十';
+                    r += num2CnBase(s) + '十';
                 }
             }
             if (b == 0) {
@@ -136,25 +147,26 @@ public class KyoStringUtils {
                     r += '十';
                 }
                 if (s > 1) {
-                    r += num2cnbase(s) + '十';
+                    r += num2CnBase(s) + '十';
                 }
             }
         }
         if (n > 0 && s == 0 && b > 0) {
             r += '零';
         }
-        r += num2cnbase(n, r == '');
+        r += num2CnBase(n, r == '');
+
         return r;
     }
 
-    /**
-     * @private 个位中文。
-     */
-    private static function num2cnbase(n:int, showZero:Boolean = true):String {
+    /** @private 个位中文。 */
+    private static function num2CnBase(n:int, showZero:Boolean = true):String {
         if (!showZero && n == 0) {
             return '';
         }
+
         var vv:Array = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
         return vv[n];
     }
 
@@ -171,28 +183,30 @@ public class KyoStringUtils {
     public static function byteLength(str:String, encode:String = 'gb2312'):int {
         var bt:ByteArray = new ByteArray();
         bt.writeMultiByte(str, encode);
+
         return bt.length;
     }
 
     /**
-     * 去除后缀名。
+     * 去除扩展名（最后一个 <code>.</code> 及之后）。
      * @param v 带扩展名的字符串。
-     * @return 去掉首个 <code>.</code> 及之后部分的字符串。
+     * @return 去掉扩展名的字符串。
      * @example
      * <listing version="3.0">
-     * KyoStringUtils.removePrefix('a.png'); // 'a'
+     * KyoStringUtils.removeExtension('a.png'); // 'a'
      * </listing>
      */
-    public static function removePrefix(v:String):String {
-        var x:int = v.indexOf('.');
+    public static function removeExtension(v:String):String {
+        var x:int = v.lastIndexOf('.');
         if (x == -1) {
             return v;
         }
+
         return v.substr(0, x);
     }
 
     /**
-     * 字符串字符替换。
+     * 字符串片段替换（全部）。
      * @param v 源字符串。
      * @param p 被替换片段。
      * @param repl 替换为。
@@ -218,7 +232,7 @@ public class KyoStringUtils {
      */
     public static function matchAll(v:String, p:*):Array {
         var ra:Array = [];
-        for (var i:int; i < 10000; i++) {
+        for (var i:int = 0; i < 10000; i++) {
             var va:Array = v.match(p);
             if (!va || va.length < 1) {
                 break;
@@ -227,30 +241,29 @@ public class KyoStringUtils {
             v             = v.replace(vs, '');
             ra.push(vs);
         }
+
         return ra.reverse();
     }
 
     /**
-     * 获取后缀名（委托 <code>getExtension</code>；历史命名保留）。
+     * 获取后缀名（历史别名，等同 <code>getExtension</code>）。
      * @param v URL 或路径。
      * @return 扩展名小写串。
      * @example
      * <listing version="3.0">
-     * KyoStringUtils.getPrefix('a.PNG'); // 'png'
+     * KyoStringUtils.getSuffix('a.PNG'); // 'png'
      * </listing>
      * @see #getExtension()
      */
-    public static function getPrefix(v:String):String {
+    public static function getSuffix(v:String):String {
         return getExtension(v);
     }
 
     /**
      * 读取字符串格式的变量。
-     * 格式为：
-     *     变量名=值
-     *     变量名=值
-     *     //注释
-     *     变量名=值
+     *
+     * <p>每行 <code>变量名=值</code>；以 <code>//</code> 开头的行为注释。</p>
+     *
      * @param v 文本内容。
      * @return 键值 Object。
      * @example
@@ -261,9 +274,9 @@ public class KyoStringUtils {
     public static function readTextVariables(v:String):Object {
         var o:Object = {};
 
-        v            = StringUtil.replace(v, '\r', '');
+        v = StringUtil.replace(v, '\r', '');
         var ps:Array = v.split('\n');
-        for each(var i:String in ps) {
+        for each (var i:String in ps) {
             if (i.substr(0, 2) == '//') {
                 continue;
             }
@@ -273,8 +286,10 @@ public class KyoStringUtils {
             var vv:Object = p2[1];
             o[k]          = vv;
         }
+
         return o;
     }
 
 }
 }
+

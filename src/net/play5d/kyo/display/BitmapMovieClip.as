@@ -299,12 +299,14 @@ public class BitmapMovieClip extends Sprite {
     public function gotoAndStop(frame:Object):void {
         var f:int = getFrame(frame);
         removeEventListener(Event.ENTER_FRAME, playing);
+
         if (currentFrame == f || f < 1) {
             return;
         }
         if (f > totalFrames) {
-            frame = totalFrames;
+            f = totalFrames;
         }
+
         currentFrame = f;
         render();
     }
@@ -434,14 +436,15 @@ public class BitmapMovieClip extends Sprite {
      */
     public function destroy(clearBitmap:Boolean = false):void {
         stop();
+
         if (clearBitmap) {
-            for each(var i:BitmapMCFrameVO in _insArray) {
-                if (i.bd) {
-                    i.bd.dispose();
+            for each (var frame:BitmapMCFrameVO in _insArray) {
+                if (frame && frame.bd) {
+                    frame.bd.dispose();
                 }
-                i = null;
             }
         }
+
         _insArray = null;
     }
 
@@ -552,15 +555,12 @@ public class BitmapMovieClip extends Sprite {
 
     /** @private 执行当前帧已注册脚本 */
     private function renderScript():void {
-        if (_scripts && _scripts[currentFrame] != null) {
-            for each(var o:Object in _scripts[currentFrame]) {
-                if (o is Function) {
-                    o();
-                }
-                else {
-                    (o.fun as Function).call(null, o.params);
-                }
-            }
+        if (!_scripts || _scripts[currentFrame] == null) {
+            return;
+        }
+
+        for each (var script:InsFunction in _scripts[currentFrame]) {
+            script.call();
         }
     }
 
@@ -578,6 +578,7 @@ public class BitmapMovieClip extends Sprite {
         if (frame is int) {
             return frame as int;
         }
+
         return -1;
     }
 
@@ -603,22 +604,21 @@ public class BitmapMovieClip extends Sprite {
         }
 
         var fs:Array = [];
-        var oo:Object;
-        for each(var n:String in _listenFunctions) {
+        for each (var n:String in _listenFunctions) {
             if (mc is MovieClip) {
                 var mm:MovieClip = mc as MovieClip;
                 if (mm[n]) {
-                    for each(var ff:Object in mm[n]) {
+                    for each (var ff:Object in mm[n]) {
                         fs.push(ff);
                     }
                 }
             }
             if (mc is McGroup) {
-                var gmc:McGroup = mc as McGroup;
-                fs              = gmc.getFrameFunctions(n);
+                fs = (mc as McGroup).getFrameFunctions(n);
             }
         }
-        for each(var f:Object in fs) {
+
+        for each (var f:Object in fs) {
             if (f is Function) {
                 addFrameScript(frame, f as Function);
             }
@@ -672,7 +672,7 @@ internal class DrawVar {
         this.blendMode      = blendMode;
         this.clipRect       = clipRect;
         this.smoothing      = smoothing;
-        initlize();
+        initialize();
     }
 
     /** @private 绘制源 DisplayObject */
@@ -693,6 +693,7 @@ internal class DrawVar {
         if (source is MovieClip) {
             (source as MovieClip).gotoAndStop(1);
         }
+
         source         = null;
         matrix         = null;
         colorTransform = null;
@@ -700,7 +701,7 @@ internal class DrawVar {
     }
 
     /** @private 将 matrix 缩放应用到 source */
-    private function initlize():void {
+    private function initialize():void {
         if (matrix) {
             source.scaleX *= matrix.a;
             source.scaleY *= matrix.d;
@@ -767,18 +768,17 @@ internal class McGroup extends Sprite {
                 return _baseMc.currentFrameLabel;
             }
         }
-        for each(var d:DisplayObject in _ins) {
-            if (!d is MovieClip) {
+        for each (var d:DisplayObject in _ins) {
+            if (!(d is MovieClip) || d == _baseMc) {
                 continue;
             }
-            if (d == _baseMc) {
-                continue;
-            }
+
             var mc:MovieClip = d as MovieClip;
             if (mc.currentFrameLabel) {
                 return mc.currentFrameLabel;
             }
         }
+
         return null;
     }
 

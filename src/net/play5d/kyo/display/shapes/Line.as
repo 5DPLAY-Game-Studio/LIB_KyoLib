@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,16 +34,23 @@ public class Line extends Shape {
     /**
      * 绘制一条线段。
      * @param width 线段长度（像素）。
-     * @param thinkness 线粗（高度），默认 1。
-     * @param color 填充色，默认黑色。
-     * @param angel 旋转角度（度），默认 0。
+     * @param thickness 线粗（高度），默认 1。
+     * @param color 填充色，默认 <code>KyoColor.BLACK</code>。
+     * @param angle 旋转角度（度），默认 0。
      */
-    public function Line(width:Number, thinkness:Number = 1, color:int = KyoColor.BLACK, angel:int = 0) {
+    public function Line(
+            width     :Number,
+            thickness :Number = 1,
+            color     :int = KyoColor.BLACK,
+            angle     :int = 0
+    ) {
         super();
+
         graphics.beginFill(color, 1);
-        graphics.drawRect(0, 0, width, thinkness);
+        graphics.drawRect(0, 0, width, thickness);
         graphics.endFill();
-        this.rotation = angel;
+
+        this.rotation = angle;
     }
 }
 }

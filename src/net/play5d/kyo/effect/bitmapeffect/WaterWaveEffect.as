@@ -30,7 +30,7 @@ import net.play5d.kyo.utils.KyoColor;
  * <p>每帧调用 <code>render</code> 并传入扰动点；构造时会做一次空渲染以初始化缓冲。</p>
  *
  * @see #render()
- * @see #strongth
+ * @see #strength
  * @see #destroy()
  */
 public class WaterWaveEffect extends Sprite {
@@ -39,52 +39,51 @@ public class WaterWaveEffect extends Sprite {
      * @param scale 显示缩放倍数，默认 1。
      */
     public function WaterWaveEffect(img:BitmapData, scale:int = 1) {
-        surface = img;
+        _surface = img;
+        _imgW    = img.width;
+        _imgH    = img.height;
+        _scale   = scale;
 
-        imgW = img.width;
-        imgH = img.height;
-        size = scale;
-
-        buildwave();
+        buildWave();
     }
 
     /**
      * 扰动强度（写入扰动像素时相对中心点的偏移），默认 1。
      * @default 1
      */
-    public var strongth:Number = 1;
+    public var strength:Number = 1;
     /** @private */
-    private var result:BitmapData;
+    private var _result:BitmapData;
     /** @private */
-    private var result2:BitmapData;
+    private var _result2:BitmapData;
     /** @private */
-    private var source:BitmapData;
+    private var _source:BitmapData;
     /** @private */
-    private var buffer:BitmapData;
+    private var _buffer:BitmapData;
     /** @private */
-    private var output:BitmapData;
+    private var _output:BitmapData;
     /** @private */
-    private var surface:BitmapData;
+    private var _surface:BitmapData;
     /** @private */
-    private var bounds:Rectangle;
+    private var _bounds:Rectangle;
     /** @private */
-    private var origin:Point;
+    private var _origin:Point;
     /** @private */
-    private var matrix:Matrix;
+    private var _matrix:Matrix;
     /** @private */
-    private var matrix2:Matrix;
+    private var _matrix2:Matrix;
     /** @private */
-    private var wave:ConvolutionFilter;
+    private var _wave:ConvolutionFilter;
     /** @private */
-    private var damp:ColorTransform;
+    private var _damp:ColorTransform;
     /** @private */
-    private var water:DisplacementMapFilter;
+    private var _water:DisplacementMapFilter;
     /** @private */
-    private var imgW:Number;
+    private var _imgW:Number;
     /** @private */
-    private var imgH:Number;
+    private var _imgH:Number;
     /** @private 显示缩放 */
-    private var size:int;
+    private var _scale:int;
 
     /**
      * 释放内部缓冲与源图。
@@ -94,23 +93,23 @@ public class WaterWaveEffect extends Sprite {
      * </listing>
      */
     public function destroy():void {
-        result.dispose();
-        result2.dispose();
-        source.dispose();
-        buffer.dispose();
-        surface.dispose();
-        output.dispose();
+        _result.dispose();
+        _result2.dispose();
+        _source.dispose();
+        _buffer.dispose();
+        _surface.dispose();
+        _output.dispose();
 
-        result  = null;
-        result2 = null;
-        source  = null;
-        buffer  = null;
-        surface = null;
-        output  = null;
+        _result  = null;
+        _result2 = null;
+        _source  = null;
+        _buffer  = null;
+        _surface = null;
+        _output  = null;
 
-        wave  = null;
-        damp  = null;
-        water = null;
+        _wave  = null;
+        _damp  = null;
+        _water = null;
     }
 
     /**
@@ -123,59 +122,60 @@ public class WaterWaveEffect extends Sprite {
      */
     public function render(points:Array = null):void {
         if (points) {
-            for each(var p:Point in points) {
-                var _x:Number = p.x / 1.5 / size;
-                var _y:Number = p.y / 1.5 / size;
-                source.setPixel(_x + strongth, _y, 16777215);
-                source.setPixel(_x - strongth, _y, 16777215);
-                source.setPixel(_x, _y + strongth, 16777215);
-                source.setPixel(_x, _y - strongth, 16777215);
-                source.setPixel(_x, _y, 16777215);
+            for each (var p:Point in points) {
+                var px:Number = p.x / 1.5 / _scale;
+                var py:Number = p.y / 1.5 / _scale;
+
+                _source.setPixel(px + strength, py, KyoColor.WHITE);
+                _source.setPixel(px - strength, py, KyoColor.WHITE);
+                _source.setPixel(px, py + strength, KyoColor.WHITE);
+                _source.setPixel(px, py - strength, KyoColor.WHITE);
+                _source.setPixel(px, py, KyoColor.WHITE);
             }
         }
 
-        result.applyFilter(source, bounds, origin, wave);
+        _result.applyFilter(_source, _bounds, _origin, _wave);
+        _result.draw(_result, _matrix, null, BlendMode.ADD);
+        _result.draw(_buffer, _matrix, null, BlendMode.DIFFERENCE);
+        _result.draw(_result, _matrix, _damp);
+        _result2.draw(_result, _matrix2, null, null, null, true);
+        _output.applyFilter(_surface, new Rectangle(0, 0, _imgW, _imgH), _origin, _water);
 
-        result.draw(result, matrix, null, BlendMode.ADD);
-        result.draw(buffer, matrix, null, BlendMode.DIFFERENCE);
-        result.draw(result, matrix, damp);
-        result2.draw(result, matrix2, null, null, null, true);
-        output.applyFilter(surface, new Rectangle(0, 0, imgW, imgH), origin, water);
-        buffer = source;
-        source = result.clone();
+        _buffer = _source;
+        _source = _result.clone();
     }
 
     /**
      * @private 创建缓冲、滤镜与显示位图。
      */
-    private function buildwave():void {
-        result  = new BitmapData(imgW, imgH, false, 128);
-        result2 = new BitmapData(imgW, imgH, false, 128);
-        source  = new BitmapData(imgW, imgH, false, 128);
-        buffer  = new BitmapData(imgW, imgH, false, 128);
-        output  = new BitmapData(imgW, imgH, false, 128);
-        bounds  = new Rectangle(0, 0, imgW, imgH);
-        origin  = new Point();
+    private function buildWave():void {
+        _result  = new BitmapData(_imgW, _imgH, false, 128);
+        _result2 = new BitmapData(_imgW, _imgH, false, 128);
+        _source  = new BitmapData(_imgW, _imgH, false, 128);
+        _buffer  = new BitmapData(_imgW, _imgH, false, 128);
+        _output  = new BitmapData(_imgW, _imgH, false, 128);
+        _bounds  = new Rectangle(0, 0, _imgW, _imgH);
+        _origin  = new Point();
 
-        matrix    = new Matrix();
-        matrix2   = new Matrix();
-        matrix2.a = matrix2.d = 2;
+        _matrix    = new Matrix();
+        _matrix2   = new Matrix();
+        _matrix2.a = _matrix2.d = 2;
 
-        wave           = new ConvolutionFilter(3, 3, [1, 1, 1, 1, 1, 1, 1, 1, 1], 9, 0);
-        damp           = new ColorTransform(0, 0, 9.960937E-001, 1, 0, 0, 2, 0);
-        water          = new DisplacementMapFilter(result2, origin, 4, 4, 28, 28);
-        var _bg:Sprite = new Sprite();
-        addChild(_bg);
-        _bg.graphics.beginFill(KyoColor.WHITE, 0);
-        _bg.graphics.drawRect(0, 0, imgW, imgH);
-        _bg.graphics.endFill();
+        _wave  = new ConvolutionFilter(3, 3, [1, 1, 1, 1, 1, 1, 1, 1, 1], 9, 0);
+        _damp  = new ColorTransform(0, 0, 9.960937E-001, 1, 0, 0, 2, 0);
+        _water = new DisplacementMapFilter(_result2, _origin, 4, 4, 28, 28);
 
-        var b:Bitmap = new Bitmap(output);
-        b.scaleX     = b.scaleY = size;
+        var bg:Sprite = new Sprite();
+        addChild(bg);
+        bg.graphics.beginFill(KyoColor.WHITE, 0);
+        bg.graphics.drawRect(0, 0, _imgW, _imgH);
+        bg.graphics.endFill();
+
+        var b:Bitmap = new Bitmap(_output);
+        b.scaleX     = b.scaleY = _scale;
         addChild(b);
 
         render();
     }
-
 }
 }

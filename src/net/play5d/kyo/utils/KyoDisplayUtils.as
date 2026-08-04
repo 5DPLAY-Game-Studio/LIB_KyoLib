@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -83,39 +83,40 @@ public class KyoDisplayUtils {
         if (autoAdd && target.parent) {
             target.parent.addChild(duplicate);
         }
+
         return duplicate;
     }
 
     /**
      * 判断两个矩形是否碰撞（支持旋转）。
-     * @param obj1 含 <code>x/y/width/height</code>（必填）；可选 <code>scaleX/rotation/radian/orginX/orginY</code>。
+     * @param obj1 含 <code>x/y/width/height</code>（必填）；可选 <code>scaleX/rotation/radian/originX/originY</code>。
      * @param obj2 同 obj1。
      * @return 是否碰撞。
      * @throws Error 缺少 x/y/width/height。
      * @example
      * <listing version="3.0">
-     * var hit:Boolean = KyoDisplayUtils.rorationRectCollide(a, b);
+     * var hit:Boolean = KyoDisplayUtils.rotationRectCollide(a, b);
      * </listing>
      */
-    public static function rorationRectCollide(obj1:Object, obj2:Object):Boolean {
+    public static function rotationRectCollide(obj1:Object, obj2:Object):Boolean {
         if (obj1 == null || obj2 == null) {
             return false;
         }
 
-        var cosobj:Object = {};
-        var sinobj:Object = {};
+        var cosCache:Object = {};
+        var sinCache:Object = {};
 
-        //设置一个点旋转一定角度后的新坐标
-        function rodatePoint(origin:Point, p:Point, ro:Number, radian:Number):void {
+        // 将点绕原点旋转
+        function rotatePoint(origin:Point, p:Point, degrees:Number, radian:Number):void {
             if (isNaN(radian) || radian == 0) {
-                radian = ro * 3.14 / 180;
+                radian = degrees * Math.PI / 180;
             }
 
-            var cos:Number = cosobj[ro] ? cosobj[ro] : Math.cos(radian);
-            var sin:Number = sinobj[ro] ? sinobj[ro] : Math.sin(radian);
+            var cos:Number = cosCache[degrees] ? cosCache[degrees] : Math.cos(radian);
+            var sin:Number = sinCache[degrees] ? sinCache[degrees] : Math.sin(radian);
 
-            cosobj[ro] = cos;
-            sinobj[ro] = sin;
+            cosCache[degrees] = cos;
+            sinCache[degrees] = sin;
 
             var x0:Number = (p.x - origin.x) * cos - (p.y - origin.y) * sin;
             var y0:Number = (p.y - origin.y) * cos + (p.x - origin.x) * sin;
@@ -124,12 +125,12 @@ public class KyoDisplayUtils {
             p.y = y0 + origin.y;
         }
 
-        //获取矩形四角点（可旋转）
-        function getRectEachPoint(dis:Rectangle, orgin:Point, angle:int, radian:Number = 0):Array {
+        // 获取矩形四角点（可旋转）
+        function getRectEachPoint(dis:Rectangle, origin:Point, angle:int, radian:Number = 0):Array {
             var fourPointArr:Array = [];
 
-            var tx:int = int(dis.x - orgin.x);
-            var ty:int = int(dis.y - orgin.y);
+            var tx:int = int(dis.x - origin.x);
+            var ty:int = int(dis.y - origin.y);
             var tw:int = int(tx + dis.width);
             var th:int = int(ty + dis.height);
 
@@ -139,9 +140,8 @@ public class KyoDisplayUtils {
             fourPointArr[3] = new Point(tw, th);
 
             var ro:Point = new Point(dis.x, dis.y);
-
             for (var i:int = 0; i < 4; ++i) {
-                rodatePoint(ro, fourPointArr[i], angle, radian);
+                rotatePoint(ro, fourPointArr[i], angle, radian);
             }
 
             return fourPointArr;
@@ -149,55 +149,52 @@ public class KyoDisplayUtils {
 
         var projPoint:Point = new Point();
 
-        function getProjectPoint(axsi:Point, p:Point):Point {
-            var pplus:int = int(p.x * axsi.x + p.y * axsi.y);
+        function getProjectPoint(axis:Point, p:Point):Point {
+            var pPlus:int    = int(p.x * axis.x + p.y * axis.y);
+            var axis2x:int   = int(axis.x * axis.x);
+            var axis2y:int   = int(axis.y * axis.y);
+            var axisPlus:int = axis2x + axis2y;
 
-            var axsi2x:int   = int(axsi.x * axsi.x);
-            var axsi2y:int   = int(axsi.y * axsi.y);
-            var axsiplus:int = axsi2x + axsi2y;
-
-            projPoint.x = pplus / axsiplus * axsi.x;
-            projPoint.y = pplus / axsiplus * axsi.y;
+            projPoint.x = pPlus / axisPlus * axis.x;
+            projPoint.y = pPlus / axisPlus * axis.y;
 
             return projPoint;
         }
 
-        function getScalarValue(arr:Array, axsi:Point):Array {
+        function getScalarValue(arr:Array, axis:Point):Array {
             var minMaxArr:Array = [];
             var tempArray:Array = [];
             for (var i:int = 0; i < 4; ++i) {
-                var pp:Point = getProjectPoint(axsi, arr[i]);
-                tempArray[i] = pp.x * axsi.x + pp.y * axsi.y;
+                var pp:Point = getProjectPoint(axis, arr[i]);
+                tempArray[i] = pp.x * axis.x + pp.y * axis.y;
             }
             tempArray.sort(Array.NUMERIC);
             minMaxArr[0] = tempArray[0];
             minMaxArr[1] = tempArray[3];
             tempArray    = null;
+
             return minMaxArr;
         }
 
-        function projectOverlap(Ax:Point, rectArr1:Array, rectArr2:Array):Boolean {
-            var rect1MinMax:Array = getScalarValue(rectArr1, Ax);
-            var rect2MinMax:Array = getScalarValue(rectArr2, Ax);
-            if (rect2MinMax[0] > rect1MinMax[1] || rect2MinMax[1] < rect1MinMax[0]) {
-                return true;
-            }
-            return false;
+        function projectOverlap(axis:Point, rectArr1:Array, rectArr2:Array):Boolean {
+            var rect1MinMax:Array = getScalarValue(rectArr1, axis);
+            var rect2MinMax:Array = getScalarValue(rectArr2, axis);
+
+            return rect2MinMax[0] > rect1MinMax[1] || rect2MinMax[1] < rect1MinMax[0];
         }
 
         function maybeCollide(p00:Point, p01:Point, p10:Point, p11:Point):Boolean {
-            var r1:int         = getTowPointDistance(p00, p01);
-            var r2:int         = getTowPointDistance(p10, p11);
-            var abDistance:int = getTowPointDistance(p00, p10);
-            if (abDistance > r1 + r2) {
-                return false;
-            }
-            return true;
+            var r1:int         = getTwoPointDistance(p00, p01);
+            var r2:int         = getTwoPointDistance(p10, p11);
+            var abDistance:int = getTwoPointDistance(p00, p10);
+
+            return abDistance <= r1 + r2;
         }
 
-        function getTowPointDistance(p1:Point, p2:Point):int {
+        function getTwoPointDistance(p1:Point, p2:Point):int {
             var ax:int = int(p1.x - p2.x);
             var ay:int = int(p1.y - p2.y);
+
             return Math.sqrt(ax * ax + ay * ay);
         }
 
@@ -211,39 +208,39 @@ public class KyoDisplayUtils {
         var rect1:Rectangle = new Rectangle(obj1.x, obj1.y, obj1.width, obj1.height);
         var rotation1:int   = int(obj1.rotation);
         var scaleX1:Number  = obj1.scaleX != undefined ? obj1.scaleX : 1;
-        var orgin1:Point    = new Point(
-                obj1.orginX != undefined ? obj1.orginX : 0,
-                obj1.orginY != undefined ? obj1.orginY : 0
+        var origin1:Point   = new Point(
+                obj1.originX != undefined ? obj1.originX : 0,
+                obj1.originY != undefined ? obj1.originY : 0
         );
         var radian1:Number  = obj1.radian;
 
         var rect2:Rectangle = new Rectangle(obj2.x, obj2.y, obj2.width, obj2.height);
         var rotation2:int   = int(obj2.rotation);
         var scaleX2:Number  = obj2.scaleX != undefined ? obj2.scaleX : 1;
-        var orgin2:Point    = new Point(
-                obj2.orginX != undefined ? obj2.orginX : 0,
-                obj2.orginY != undefined ? obj2.orginY : 0
+        var origin2:Point   = new Point(
+                obj2.originX != undefined ? obj2.originX : 0,
+                obj2.originY != undefined ? obj2.originY : 0
         );
         var radian2:Number  = obj2.radian;
 
         if (scaleX1 < 0) {
-            orgin1.x = rect1.width - orgin1.x;
-            rect1.x  = rect1.x - rect1.width + obj1.orginX + orgin1.x;
+            origin1.x = rect1.width - origin1.x;
+            rect1.x   = rect1.x - rect1.width + obj1.originX + origin1.x;
         }
 
         if (scaleX2 < 0) {
-            orgin2.x = rect2.width - orgin2.x;
-            rect2.x  = rect2.x - rect2.width + obj2.orginX + orgin2.x;
+            origin2.x = rect2.width - origin2.x;
+            rect2.x   = rect2.x - rect2.width + obj2.originX + origin2.x;
         }
 
-        var arr1:Array = getRectEachPoint(rect1, orgin1, rotation1, radian1);
-        var arr2:Array = getRectEachPoint(rect2, orgin2, rotation2, radian2);
+        var arr1:Array = getRectEachPoint(rect1, origin1, rotation1, radian1);
+        var arr2:Array = getRectEachPoint(rect2, origin2, rotation2, radian2);
 
-        if (maybeCollide(orgin1, arr1[0], orgin2, arr2[0]) == false) {
+        if (!maybeCollide(origin1, arr1[0], origin2, arr2[0])) {
             return false;
         }
 
-        var AsisArr:Array = [
+        var axisArr:Array = [
             new Point(arr1[2].x - arr1[1].x, arr1[2].y - arr1[1].y),
             new Point(arr1[2].x - arr1[3].x, arr1[2].y - arr1[3].y),
             new Point(arr2[1].x - arr2[0].x, arr2[1].y - arr2[0].y),
@@ -251,7 +248,7 @@ public class KyoDisplayUtils {
         ];
 
         for (var i:int = 0; i < 4; ++i) {
-            if (projectOverlap(AsisArr[i], arr1, arr2)) {
+            if (projectOverlap(axisArr[i], arr1, arr2)) {
                 return false;
             }
         }
@@ -284,17 +281,19 @@ public class KyoDisplayUtils {
             catch (e:Error) {
             }
         }
+
         var arr:Array = container.getObjectsUnderPoint(globalPoint);
         if (arr && arr.length > 0) {
             var top:DisplayObject = arr.pop();
             if (child is DisplayObjectContainer) {
                 var dc:DisplayObjectContainer = child as DisplayObjectContainer;
+
                 return dc.contains(top);
             }
-            else {
-                return top == child;
-            }
+
+            return top == child;
         }
+
         return false;
     }
 
@@ -352,7 +351,7 @@ public class KyoDisplayUtils {
         var bd:BitmapData;
         if (mc is MovieClip) {
             var mmc:MovieClip = mc as MovieClip;
-            for (var i:int; i < mmc.totalFrames; i++) {
+            for (var i:int = 1; i <= mmc.totalFrames; i++) {
                 mmc.gotoAndStop(i);
                 bd = new BitmapData(mmc.width, mmc.height, true, 0);
                 bd.draw(mmc);
@@ -364,13 +363,18 @@ public class KyoDisplayUtils {
             bd.draw(mc);
             a.push(bd);
         }
+
         return a;
     }
 
     /**
-     * 绘制图形对象
-     * @param d 图形对象
-     * @param fixPosition 根据注册点位置调节
+     * 绘制显示对象为位图。
+     * @param d 源显示对象。
+     * @param fixPosition 根据注册点位置调节。
+     * @param transparent 是否透明底。
+     * @param fillColor 填充色。
+     * @param colorTransform 可选颜色变换。
+     * @return 位图；无效尺寸时为 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var bp:Bitmap = KyoDisplayUtils.drawDisplay(mc);
@@ -383,6 +387,7 @@ public class KyoDisplayUtils {
         if (!d || d.width <= 0 || d.height <= 0) {
             return null;
         }
+
         var bp:Bitmap = new Bitmap(new BitmapData(d.width, d.height, transparent, fillColor));
         var matrix:Matrix;
         if (fixPosition) {
@@ -390,16 +395,17 @@ public class KyoDisplayUtils {
             matrix            = new Matrix(1, 0, 0, 1, -bds.x, -bds.y);
         }
         bp.bitmapData.draw(d, matrix, colorTransform);
+
         return bp;
     }
 
     /**
-     * 绘制图形滤镜
-     * @param d 图形对象
-     * @param filter 滤镜对象
-     * @param fixPosition 根据注册点位置调节
-     * @param filterOffset 绘制大小调节
-     * @return
+     * 绘制显示对象并应用滤镜，返回位图数据。
+     * @param d 源显示对象。
+     * @param filter 滤镜。
+     * @param fixPosition 根据注册点位置调节。
+     * @param filterOffset 绘制大小调节。
+     * @return 处理后的 <code>BitmapData</code>。
      * @example
      * <listing version="3.0">
      * var bd:BitmapData = KyoDisplayUtils.drawBitmapFilter(mc, blur);
@@ -453,6 +459,7 @@ public class KyoDisplayUtils {
         bp.scaleY = -1;
         bp.y      = d.height + height / 1.7;
         bp.alpha  = alpha;
+
         return bp;
     }
 
@@ -513,14 +520,15 @@ public class KyoDisplayUtils {
         var result:BitmapData = new BitmapData(s.width, s.height, true);
         result.copyPixels(s, rect, origin);
         result.threshold(s, rect, origin, '==', threshold, 0, 0xF0F0F0, true);
+
         return result;
     }
 
     /**
-     * 获取显示对象在目标对象的坐标
-     * @param d 要移动的显示对象
-     * @param to 目标显示对象
-     * @return
+     * 获取显示对象相对目标祖先容器的坐标。
+     * @param d 要移动的显示对象。
+     * @param to 目标显示对象（祖先）。
+     * @return 相对坐标；若 <code>to</code> 非祖先则返回累加坐标并 <code>trace</code> 警告。
      * @example
      * <listing version="3.0">
      * var p:Point = KyoDisplayUtils.getToChildPoint(child, root);
@@ -538,14 +546,15 @@ public class KyoDisplayUtils {
             p = p.parent;
         }
         trace(to, 'is not', d, '\'s parent!');
+
         return pt;
     }
 
     /**
-     * 将一个显示对象移动到另一个显示对象里面
-     * @param d 移动的显示对象
-     * @param to 目标显示对象
-     * @param fixParentPoint 自动调整移动的显示对象的坐标(仅在目标对象是移动对象的父级时有效)
+     * 将显示对象移动到另一容器内。
+     * @param d 移动的显示对象。
+     * @param to 目标容器。
+     * @param fixParentPoint 自动调整坐标（仅当目标为祖先时有效）。
      * @example
      * <listing version="3.0">
      * KyoDisplayUtils.moveDisplay(child, box);
@@ -595,46 +604,44 @@ public class KyoDisplayUtils {
     }
 
     /**
-     * 在MC的第N帧中加入方法
-     * @param mc
-     * @param script
-     * @param frame -1时，加入到最后一帧
+     * 在 MovieClip 指定帧加入脚本。
+     * @param mc 目标 MovieClip。
+     * @param script 帧脚本。
+     * @param frame 帧索引（0 基，传给 <code>addFrameScript</code>）；-1 时为最后一帧。
      * @example
      * <listing version="3.0">
      * KyoDisplayUtils.addFrameScript(mc, onEnd);
      * </listing>
      */
     public static function addFrameScript(mc:MovieClip, script:Function, frame:int = -1):void {
-        var f:uint;
-        if (frame == -1) {
-            f = mc.totalFrames - 1;
-        }
+        var f:uint = frame == -1 ? mc.totalFrames - 1 : uint(frame);
         mc.addFrameScript(f, script);
     }
 
     /**
-     * 将MC的颜色支除（黑白化）
-     * @param mc
-     * @param returnOrg 是否还原颜色
+     * 将显示对象灰度化，或还原并移除灰度滤镜。
+     * @param mc 目标显示对象。
+     * @param restore 为 <code>true</code> 时移除 <code>ColorMatrixFilter</code> 并还原其余滤镜。
      * @example
      * <listing version="3.0">
      * KyoDisplayUtils.grayMC(mc);
      * </listing>
      */
-    public static function grayMC(mc:DisplayObject, returnOrg:Boolean = false):void {
+    public static function grayMC(mc:DisplayObject, restore:Boolean = false):void {
         if (!mc) {
             return;
         }
 
-        if (returnOrg) {
+        if (restore) {
             var fs:Array = mc.filters.concat();
             mc.filters   = null;
-            for each(var i:* in fs) {
-                if (i is ColorMatrixFilter) {
-                    KyoArrayUtils.removeItem(fs, i);
+            for (var i:int = fs.length - 1; i >= 0; i--) {
+                if (fs[i] is ColorMatrixFilter) {
+                    fs.splice(i, 1);
                 }
             }
             mc.filters = fs;
+
             return;
         }
 
@@ -692,7 +699,6 @@ public class KyoDisplayUtils {
         newCt.redOffset     = ct.redOffset;
 
         return newCt;
-
     }
 
     /**

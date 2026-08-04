@@ -34,24 +34,24 @@ import net.play5d.kyo.utils.KyoMath;
  *
  * @see KyoTileList
  * @see KyoDragType
- * @see KyoDragSelecter
+ * @see KyoDragSelector
  * @see #move()
  * @see #autoScroll()
  */
 public class KyoDragList extends KyoTileList {
     /**
-     * @param dispalys 显示对象数组（参数名沿用历史拼写）。
+     * @param displays 显示对象数组。
      * @param dragType 拖拽方向，默认垂直。
      * @param hrow 横排最大个数。
      * @param vrow 竖排最大个数。
      */
     public function KyoDragList(
-        dispalys:Array,
+        displays:Array,
         dragType:int = KyoDragType.DRAG_TYPE_V,
         hrow    :int = int.MAX_VALUE,
         vrow    :int = 1
     ) {
-        super(dispalys, hrow, vrow);
+        super(displays, hrow, vrow);
         this.dragType = dragType;
         addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
     }
@@ -70,9 +70,9 @@ public class KyoDragList extends KyoTileList {
     /** @private 按下时列表坐标（子类可用） */
     protected var _downListPoint:Point;
     /** @private 为 true 时即使内容未超出也可拖拽 */
-    protected var _haveToDrag:Boolean;
+    protected var _forceDrag:Boolean;
     /** @private 是否已进入拖拽 */
-    protected var _draging:Boolean;
+    protected var _dragging:Boolean;
     /** @private */
     private var _tween:TweenLite;
     /** @private 惯性速度 */
@@ -80,13 +80,13 @@ public class KyoDragList extends KyoTileList {
     /** @private 是否松手惯性阶段 */
     private var _release:Boolean;
     /** @private 自动滚动计时器 */
-    private var _asctimer:Timer;
+    private var _autoScrollTimer:Timer;
     /** @private 自动滚动缓动时长 */
     private var _tweenDuration:Number;
     /** @private 每页可视单元数 */
-    private var _perpage:int;
+    private var _perPage:int;
     /** @private 当前对齐单元索引 */
-    private var _curid:int;
+    private var _curId:int;
     /** @private 按下时 scrollRect */
     private var _downSR:Rectangle;
 
@@ -127,7 +127,7 @@ public class KyoDragList extends KyoTileList {
      * </listing>
      */
     public function destroy():void {
-        removeEventListener(Event.ENTER_FRAME, draging);
+        removeEventListener(Event.ENTER_FRAME, onDragging);
         removeEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
         if (stage) {
             stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
@@ -207,7 +207,7 @@ public class KyoDragList extends KyoTileList {
             break;
         }
         if (_release) {
-            _mouseSpd = KyoMath.wake(_mouseSpd, 3);
+            _mouseSpd = KyoMath.weaken(_mouseSpd, 3);
             if (rect.y > _height) {
                 _mouseSpd = 0;
             }
@@ -237,11 +237,11 @@ public class KyoDragList extends KyoTileList {
      */
     public function autoScroll(time:int, tweenDuration:Number = 1):void {
         _tweenDuration = tweenDuration;
-        _perpage       = Math.round(maskSize.y / (unitySize.y + gap.y));
+        _perPage       = Math.round(maskSize.y / (unitySize.y + gap.y));
 
-        _asctimer = new Timer(time);
-        _asctimer.addEventListener(TimerEvent.TIMER, onTimerScroll);
-        _asctimer.start();
+        _autoScrollTimer = new Timer(time);
+        _autoScrollTimer.addEventListener(TimerEvent.TIMER, onTimerScroll);
+        _autoScrollTimer.start();
     }
 
     /**
@@ -252,7 +252,7 @@ public class KyoDragList extends KyoTileList {
             stage.removeEventListener(MouseEvent.MOUSE_UP, endDrag);
         }
         KyoScrollDragUtil.setStageMouseChildren(stage, true);
-        removeEventListener(Event.ENTER_FRAME, draging);
+        removeEventListener(Event.ENTER_FRAME, onDragging);
     }
 
     /**
@@ -268,9 +268,9 @@ public class KyoDragList extends KyoTileList {
      * @param xx 水平位移。
      * @param yy 垂直位移。
      */
-    protected function checkDraging(xx:Number, yy:Number):void {
-        _draging = KyoScrollDragUtil.updateDragging(
-            _draging, xx, yy, dragPixel,
+    protected function checkDragging(xx:Number, yy:Number):void {
+        _dragging = KyoScrollDragUtil.updateDragging(
+            _dragging, xx, yy, dragPixel,
             KyoScrollDragUtil.allowH(dragType),
             KyoScrollDragUtil.allowV(dragType),
             stage
@@ -330,16 +330,16 @@ public class KyoDragList extends KyoTileList {
             _release = false;
             switch (dragType) {
             case KyoDragType.DRAG_TYPE_H:
-                _curid = Math.round(scrollRect.x / unitySize.x);
+                _curId = Math.round(scrollRect.x / unitySize.x);
                 break;
             case KyoDragType.DRAG_TYPE_V:
-                _curid = Math.round(scrollRect.y / unitySize.y);
+                _curId = Math.round(scrollRect.y / unitySize.y);
                 break;
             }
-            moveById(_curid, 0.5);
-            if (_asctimer) {
-                _asctimer.reset();
-                _asctimer.start();
+            moveById(_curId, 0.5);
+            if (_autoScrollTimer) {
+                _autoScrollTimer.reset();
+                _autoScrollTimer.start();
             }
         }
     }
@@ -350,11 +350,11 @@ public class KyoDragList extends KyoTileList {
      */
     protected function endDrag(e:MouseEvent):void {
         _downSR = null;
-        if (!_draging) {
+        if (!_dragging) {
             removeListener();
-            if (_asctimer) {
-                _asctimer.reset();
-                _asctimer.start();
+            if (_autoScrollTimer) {
+                _autoScrollTimer.reset();
+                _autoScrollTimer.start();
             }
             return;
         }
@@ -380,10 +380,10 @@ public class KyoDragList extends KyoTileList {
      * @private 拖拽帧更新。
      * @param e <code>ENTER_FRAME</code> 事件。
      */
-    protected function draging(e:Event):void {
+    protected function onDragging(e:Event):void {
         var pp:Point = mousePoint();
-        checkDraging(pp.x, pp.y);
-        if (_draging) {
+        checkDragging(pp.x, pp.y);
+        if (_dragging) {
             move(pp.x, pp.y);
         }
     }
@@ -392,12 +392,12 @@ public class KyoDragList extends KyoTileList {
      * @private 自动滚动计时回调。
      */
     private function onTimerScroll(e:TimerEvent):void {
-        if (_curid > displays.length - _perpage - 1) {
-            _curid = 0;
-            moveById(_curid, _tweenDuration);
+        if (_curId > displays.length - _perPage - 1) {
+            _curId = 0;
+            moveById(_curId, _tweenDuration);
         }
         else {
-            moveById(++_curid, _tweenDuration);
+            moveById(++_curId, _tweenDuration);
         }
     }
 
@@ -409,7 +409,7 @@ public class KyoDragList extends KyoTileList {
             return;
         }
 
-        if (!_haveToDrag) {
+        if (!_forceDrag) {
             if (!maskSize) {
                 return;
             }
@@ -427,16 +427,16 @@ public class KyoDragList extends KyoTileList {
             }
         }
 
-        if (_asctimer) {
-            _asctimer.stop();
+        if (_autoScrollTimer) {
+            _autoScrollTimer.stop();
         }
 
         _downSR        = scrollRect;
         _downPoint     = new Point(stage.mouseX, stage.mouseY);
         _downListPoint = new Point(this.x, this.y);
 
-        addEventListener(Event.ENTER_FRAME, draging);
-        _draging = false;
+        addEventListener(Event.ENTER_FRAME, onDragging);
+        _dragging = false;
         _release = false;
         if (stage) {
             stage.addEventListener(MouseEvent.MOUSE_UP, endDrag);

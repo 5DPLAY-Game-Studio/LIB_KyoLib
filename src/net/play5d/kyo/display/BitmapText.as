@@ -47,17 +47,17 @@ public class BitmapText extends Bitmap {
     /**
      * @param autoUpdate 样式或文本变更后是否自动重绘。
      * @param color 初始文本颜色。
-     * @param filers 绘制后依次应用的位图滤镜数组；为 <code>null</code> 时不应用滤镜。
+     * @param bitmapFilters 绘制后依次应用的位图滤镜数组；为 <code>null</code> 时不应用滤镜。
      * @default autoUpdate true
      * @default color KyoColor.BLACK
-     * @default filers null
+     * @default bitmapFilters null
      */
-    public function BitmapText(autoUpdate:Boolean = true, color:uint = KyoColor.BLACK, filers:Array = null) {
+    public function BitmapText(autoUpdate:Boolean = true, color:uint = KyoColor.BLACK, bitmapFilters:Array = null) {
         this.autoUpdate = autoUpdate;
         this.smoothing  = true;
 
-        _filers = filers;
-        _tf     = new TextField();
+        _bitmapFilters = bitmapFilters;
+        _tf            = new TextField();
 
         this.color = color;
     }
@@ -71,12 +71,12 @@ public class BitmapText extends Bitmap {
     protected var _tf:TextField;
     /** @private 默认文本格式 */
     private var _format:TextFormat = new TextFormat();
-    /** @private 绘制后应用的位图滤镜列表 */
-    private var _filers:Array;
+    /** @private 绘制后应用的位图滤镜列表（避免与 DisplayObject.filters 冲突） */
+    private var _bitmapFilters:Array;
     /** @private 指定绘制宽度；为 0 时按文本宽度自适应 */
-    private var _width:Number      = 0;
+    private var _width:Number  = 0;
     /** @private 指定绘制高度；为 0 时按文本高度自适应 */
-    private var _height:Number     = 0;
+    private var _height:Number = 0;
 
     /** @private */
     public override function set width(value:Number):void {
@@ -294,33 +294,30 @@ public class BitmapText extends Bitmap {
      * </listing>
      */
     public function update():void {
-        if (!_tf) {
-            return;
-        }
-        if (!_tf.text) {
+        if (!_tf || !_tf.text) {
             return;
         }
 
         var size:int = int(_format.size) > 0 ? int(_format.size) : 12;
 
         _tf.setTextFormat(_format);
-
         _tf.width  = (_width != 0) ? _width : (_tf.textWidth + size);
         _tf.height = (_height != 0) ? _height : (_tf.textHeight + size);
 
         var bd:BitmapData = new BitmapData(_tf.width, _tf.height, true, 0);
-
         bd.draw(_tf);
-        if (_filers) {
-            for each(var i:BitmapFilter in _filers) {
-                bd.applyFilter(bd, new Rectangle(0, 0, bd.width, bd.height), new Point(), i);
+
+        if (_bitmapFilters) {
+            var rect:Rectangle = new Rectangle(0, 0, bd.width, bd.height);
+            var origin:Point   = new Point();
+            for each (var filter:BitmapFilter in _bitmapFilters) {
+                bd.applyFilter(bd, rect, origin, filter);
             }
         }
 
         if (bitmapData) {
             bitmapData.dispose();
         }
-
         bitmapData = bd;
     }
 
@@ -337,11 +334,11 @@ public class BitmapText extends Bitmap {
         }
         catch (e:Error) {
         }
+
         if (bitmapData) {
             bitmapData.dispose();
         }
         _tf = null;
     }
-
 }
 }

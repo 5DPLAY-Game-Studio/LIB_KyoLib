@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,60 +23,61 @@ import flash.events.SecurityErrorEvent;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 
-import net.play5d.kyo.utils.vo.KyoWeaterVO;
+import net.play5d.kyo.utils.vo.KyoWeatherVO;
 
 /**
  * 从 Yahoo Weather RSS 加载天气，并解析今日 / 明日预报。
  *
  * @see #loadWeather()
  * @see #todayWeather
- * @see net.play5d.kyo.utils.vo.KyoWeaterVO
+ * @see net.play5d.kyo.utils.vo.KyoWeatherVO
  */
 public class KyoWeather {
     /** @private */
-    private static var _weatherxml:XML;
+    private static var _weatherXml:XML;
     /** @private */
     private static var yweather:Namespace = new Namespace('http://xml.weather.yahoo.com/ns/rss/1.0');
 
     /** @private */
-    private static var _todayWeather:KyoWeaterVO;
+    private static var _todayWeather:KyoWeatherVO;
+    /** @private */
+    private static var _tomorrowWeather:KyoWeatherVO;
 
     /**
      * 今日天气；未加载成功则为 <code>null</code>。
-     * @return <code>KyoWeaterVO</code> 或 <code>null</code>。
+     * @return <code>KyoWeatherVO</code> 或 <code>null</code>。
      */
-    public static function get todayWeather():KyoWeaterVO {
-        if (!_weatherxml) {
+    public static function get todayWeather():KyoWeatherVO {
+        if (!_weatherXml) {
             return null;
         }
         if (!_todayWeather) {
-            _todayWeather      = new KyoWeaterVO();
-            var x:XML          = _weatherxml.channel.item.yweather::forecast[0];
+            _todayWeather      = new KyoWeatherVO();
+            var x:XML          = _weatherXml.channel.item.yweather::forecast[0];
             _todayWeather.low  = x.@low;
             _todayWeather.high = x.@high;
             _todayWeather.code = x.@code;
         }
+
         return _todayWeather;
     }
 
-    /** @private */
-    private static var _tomorrowWeather:KyoWeaterVO;
-
     /**
      * 明日天气；未加载成功则为 <code>null</code>。
-     * @return <code>KyoWeaterVO</code> 或 <code>null</code>。
+     * @return <code>KyoWeatherVO</code> 或 <code>null</code>。
      */
-    public static function get tomorrowWeather():KyoWeaterVO {
-        if (!_weatherxml) {
+    public static function get tomorrowWeather():KyoWeatherVO {
+        if (!_weatherXml) {
             return null;
         }
         if (!_tomorrowWeather) {
-            _tomorrowWeather      = new KyoWeaterVO();
-            var x:XML             = _weatherxml.channel.item.yweather::forecast[1];
+            _tomorrowWeather      = new KyoWeatherVO();
+            var x:XML             = _weatherXml.channel.item.yweather::forecast[1];
             _tomorrowWeather.low  = x.@low;
             _tomorrowWeather.high = x.@high;
             _tomorrowWeather.code = x.@code;
         }
+
         return _tomorrowWeather;
     }
 
@@ -91,8 +92,7 @@ public class KyoWeather {
      * </listing>
      */
     public static function loadWeather(cityCode:int, back:Function = null, error:Function = null):void {
-        var url:String   = 'http://weather.yahooapis.com/forecastrss' +
-                           '?w=' + cityCode + '&u=c';
+        var url:String   = 'http://weather.yahooapis.com/forecastrss' + '?w=' + cityCode + '&u=c';
         var ul:URLLoader = new URLLoader(new URLRequest(url));
         ul.addEventListener(Event.COMPLETE, success);
         ul.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
@@ -100,7 +100,7 @@ public class KyoWeather {
 
         function success(e:Event):void {
             removeListeners();
-            _weatherxml = new XML(ul.data);
+            _weatherXml = new XML(ul.data);
             if (back != null) {
                 back();
             }
@@ -124,3 +124,4 @@ public class KyoWeather {
 
 }
 }
+

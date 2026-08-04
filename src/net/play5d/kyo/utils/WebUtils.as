@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ import flash.utils.setInterval;
  *
  * @see #getURL()
  * @see #getParameters()
- * @see #addJSCallBack()
+ * @see #addJSCallback()
  */
 public class WebUtils {
     /** @private 缓存的页面 host */
@@ -68,11 +68,11 @@ public class WebUtils {
      * @param debugTxt 可选调试文本。
      * @example
      * <listing version="3.0">
-     * WebUtils.addJSCallBack('flashReady', onCall);
+     * WebUtils.addJSCallback('flashReady', onCall);
      * </listing>
      */
-    public static function addJSCallBack(functionName:String, closure:Function, jsReady:String = null,
-                                         debugTxt:TextField = null
+    public static function addJSCallback(
+            functionName:String, closure:Function, jsReady:String = null, debugTxt:TextField = null
     ):void {
         if (jsReady == null) {
             try {
@@ -81,29 +81,31 @@ public class WebUtils {
             catch (e:Error) {
                 trace(e);
             }
+            return;
         }
-        else {
-            var timer:Timer = new Timer(100);
-            timer.addEventListener(TimerEvent.TIMER, function (e:TimerEvent):void {
-                try {
-                    var jsVar:Boolean = ExternalInterface.call(jsReady);
-                }
-                catch (e:Error) {
-                    trace(e);
-                    timer.stop();
-                    timer = null;
-                }
-                if (debugTxt != null) {
-                    debugTxt.text = jsVar.toString();
-                }
-                if (jsVar) {
-                    addJSCallBack(functionName, closure);
-                    timer.stop();
-                    timer = null;
-                }
-            });
-            timer.start();
-        }
+
+        var timer:Timer = new Timer(100);
+        timer.addEventListener(TimerEvent.TIMER, function (e:TimerEvent):void {
+            var jsVar:Boolean;
+            try {
+                jsVar = ExternalInterface.call(jsReady);
+            }
+            catch (err:Error) {
+                trace(err);
+                timer.stop();
+                timer = null;
+                return;
+            }
+            if (debugTxt != null) {
+                debugTxt.text = jsVar.toString();
+            }
+            if (jsVar) {
+                addJSCallback(functionName, closure);
+                timer.stop();
+                timer = null;
+            }
+        });
+        timer.start();
     }
 
     /**
@@ -116,20 +118,19 @@ public class WebUtils {
      * </listing>
      */
     public static function checkLockedURL(...params):Boolean {
-        for each(var i:Object in params) {
+        for each (var i:Object in params) {
             if (i is Array) {
-                for each(var j:String in i) {
+                for each (var j:String in i) {
                     if (!checkURL(j)) {
                         return false;
                     }
                 }
             }
-            else {
-                if (!checkURL(i as String)) {
-                    return false;
-                }
+            else if (!checkURL(i as String)) {
+                return false;
             }
         }
+
         return true;
     }
 
@@ -145,16 +146,16 @@ public class WebUtils {
      * </listing>
      */
     public static function getParameters(stage:Stage, checkVar:String, back:Function, timeout:int = 0):void {
-        var loadint:int   = setInterval(loadp, 300);
+        var loadInt:int   = setInterval(loadp, 300);
         var loadTimes:int = timeout == 0 ? -1 : Math.ceil(timeout / 300);
 
         function loadp():void {
-            var ckvar:Object = stage.loaderInfo.parameters[checkVar];
+            var ckVar:Object = stage.loaderInfo.parameters[checkVar];
             if (loadTimes > 0) {
                 loadTimes--;
             }
-            if (ckvar || loadTimes == 0) {
-                clearInterval(loadint);
+            if (ckVar || loadTimes == 0) {
+                clearInterval(loadInt);
                 if (back != null) {
                     back(stage.loaderInfo.parameters);
                 }
@@ -174,8 +175,8 @@ public class WebUtils {
     public static function getLocalUrl(s:Stage):String {
         var url:String = s.loaderInfo.url;
         var i:int      = url.lastIndexOf('/');
-        url            = url.substr(0, i + 1);
-        return url;
+
+        return url.substr(0, i + 1);
     }
 
     /**
@@ -192,6 +193,7 @@ public class WebUtils {
     public static function replaceUrl(txt:String, matchKey:String, urlPath:String):String {
         var v:String = txt.replace(matchKey, matchKey + urlPath);
         v            = v.replace(urlPath + 'http://', 'http://');
+
         return v;
     }
 
@@ -201,11 +203,12 @@ public class WebUtils {
      * @return 目录。
      * @example
      * <listing version="3.0">
-     * WebUtils.getUrlFloder(url);
+     * WebUtils.getUrlFolder(url);
      * </listing>
      */
-    public static function getUrlFloder(url:String):String {
+    public static function getUrlFolder(url:String):String {
         var x:int = url.lastIndexOf('/');
+
         return url.substr(0, x + 1);
     }
 
@@ -215,11 +218,12 @@ public class WebUtils {
      * @return 目录。
      * @example
      * <listing version="3.0">
-     * WebUtils.getLocalFloder(path);
+     * WebUtils.getLocalFolder(path);
      * </listing>
      */
-    public static function getLocalFloder(url:String):String {
+    public static function getLocalFolder(url:String):String {
         var x:int = url.lastIndexOf('\\');
+
         return url.substr(0, x + 1);
     }
 
@@ -235,6 +239,7 @@ public class WebUtils {
     public static function getFileName(stage:Stage):String {
         var url:String = stage.loaderInfo.url;
         var x:int      = url.lastIndexOf('/');
+
         return url.substr(x + 1);
     }
 
@@ -244,12 +249,11 @@ public class WebUtils {
      * @return 目录 URL。
      * @example
      * <listing version="3.0">
-     * WebUtils.getStageUrlFloder(stage);
+     * WebUtils.getStageUrlFolder(stage);
      * </listing>
      */
-    public static function getStageUrlFloder(stage:Stage):String {
-        var url:String = stage.loaderInfo.url;
-        return getUrlFloder(url);
+    public static function getStageUrlFolder(stage:Stage):String {
+        return getUrlFolder(stage.loaderInfo.url);
     }
 
     /**
@@ -275,9 +279,7 @@ public class WebUtils {
         getURL('javascript:alert("' + v + '");', '_self');
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     private static function checkURL(url:String):Boolean {
         if (_url == null) {
             try {
@@ -287,13 +289,15 @@ public class WebUtils {
                 trace(e);
                 return false;
             }
-            var s:int = _url.indexOf('//') + 2;
-            var e:int = _url.indexOf('/', s);
-            e         = e == -1 ? int.MAX_VALUE : e - s;
-            _url      = _url.substr(s, e);
+            var s:int        = _url.indexOf('//') + 2;
+            var endIndex:int = _url.indexOf('/', s);
+            endIndex         = endIndex == -1 ? int.MAX_VALUE : endIndex - s;
+            _url             = _url.substr(s, endIndex);
         }
+
         return _url.indexOf(url) != -1;
     }
 
 }
 }
+

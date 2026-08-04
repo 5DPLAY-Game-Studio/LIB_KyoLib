@@ -83,12 +83,12 @@ public class KyoLoaderLite {
             if (l == null) {
                 return;
             }
+
             l.contentLoaderInfo.removeEventListener(Event.COMPLETE, loadComplete);
             l.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);
             l.unloadAndStop(true);
             l = null;
         }
-
     }
 
     /**
@@ -133,10 +133,10 @@ public class KyoLoaderLite {
             if (l == null) {
                 return;
             }
+
             l.contentLoaderInfo.removeEventListener(Event.COMPLETE, loadComplete);
             l.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);
         }
-
     }
 
     /**
@@ -197,6 +197,5 @@ public class KyoLoaderLite {
 
         return loader;
     }
-
 }
 }

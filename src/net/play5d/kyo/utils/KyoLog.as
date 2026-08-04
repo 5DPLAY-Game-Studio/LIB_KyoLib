@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,19 +26,19 @@ import flash.text.TextField;
  *
  * @see #log()
  * @see #showLog()
- * @see #toogleLog()
+ * @see #toggleLog()
  */
 public class KyoLog {
     /**
      * 为 <code>true</code> 时同步 <code>trace</code>。
      * @default true
      */
-    public static var tracelog:Boolean = true;
+    public static var traceLog:Boolean = true;
 
     /** @private */
     private static var _log:String = '';
     /** @private */
-    private static var _logtxt:TextField;
+    private static var _logTxt:TextField;
 
     /**
      * 追加一行日志。
@@ -49,12 +49,12 @@ public class KyoLog {
      * </listing>
      */
     public static function log(...params):void {
-        var logstr:String = params.join(' ');
-        _log += logstr + '\n';
+        var logStr:String = params.join(' ');
+        _log += logStr + '\n';
         updateLogTxt();
 
-        if (tracelog) {
-            trace(logstr);
+        if (traceLog) {
+            trace(logStr);
         }
     }
 
@@ -63,22 +63,22 @@ public class KyoLog {
      * @return 日志字符串。
      * @example
      * <listing version="3.0">
-     * var s:String = KyoLog.getlog();
+     * var s:String = KyoLog.getLog();
      * </listing>
      */
-    public static function getlog():String {
+    public static function getLog():String {
         return _log;
     }
 
     /**
-     * 切换日志面板显示（历史拼写 <code>toogle</code>）。
+     * 切换日志面板显示。
      * @param ct 父容器。
      * @example
      * <listing version="3.0">
-     * KyoLog.toogleLog(root);
+     * KyoLog.toggleLog(root);
      * </listing>
      */
-    public static function toogleLog(ct:Sprite):void {
+    public static function toggleLog(ct:Sprite):void {
         var sp:DisplayObject = ct.getChildByName('kyo_log_sprite');
         if (!sp) {
             showLog(ct);
@@ -99,17 +99,17 @@ public class KyoLog {
     public static function showLog(ct:Sprite):void {
         hideLog(ct);
 
-        if (!_logtxt) {
-            _logtxt           = new TextField();
-            _logtxt.textColor = KyoColor.WHITE;
-            _logtxt.multiline = true;
+        if (!_logTxt) {
+            _logTxt           = new TextField();
+            _logTxt.textColor = KyoColor.WHITE;
+            _logTxt.multiline = true;
             var wh:Number     = ct.stage ? ct.stage.stageWidth : ct.width;
-            _logtxt.width     = wh / 2;
+            _logTxt.width     = wh / 2;
         }
 
         var sp:Sprite = new Sprite();
         sp.name       = 'kyo_log_sprite';
-        sp.addChild(_logtxt);
+        sp.addChild(_logTxt);
         ct.addChild(sp);
 
         updateLogTxt();
@@ -130,27 +130,25 @@ public class KyoLog {
         }
 
         ct.removeChild(sp);
-        sp = null;
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     private static function updateLogTxt():void {
-        if (!_logtxt) {
+        if (!_logTxt) {
             return;
         }
-        _logtxt.text   = _log;
-        _logtxt.height = _logtxt.textHeight + 10;
+        _logTxt.text   = _log;
+        _logTxt.height = _logTxt.textHeight + 10;
 
-        var sp:Sprite = _logtxt.parent as Sprite;
+        var sp:Sprite = _logTxt.parent as Sprite;
         if (sp) {
             sp.graphics.clear();
             sp.graphics.beginFill(KyoColor.BLACK, 0.5);
-            sp.graphics.drawRect(0, 0, _logtxt.width, _logtxt.height);
+            sp.graphics.drawRect(0, 0, _logTxt.width, _logTxt.height);
             sp.graphics.endFill();
         }
     }
 
 }
 }
+

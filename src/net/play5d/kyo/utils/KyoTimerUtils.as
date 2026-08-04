@@ -49,6 +49,7 @@ public class KyoTimerUtils {
         var timer:KyoInsTimer = new KyoInsTimer(delay, func, params);
         timer.addEventListener(Event.COMPLETE, timerCompleteHandler);
         _timers[timer.id] = timer;
+
         return timer.id;
     }
 

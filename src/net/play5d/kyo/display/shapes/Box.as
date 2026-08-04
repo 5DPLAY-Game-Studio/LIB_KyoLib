@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ import net.play5d.kyo.utils.KyoColor;
 /**
  * 实心矩形色块。
  *
- * <p>可选原点偏移：传入 <code>orgin</code> 时，矩形相对该点绘制（便于把注册点放在非左上角）。</p>
+ * <p>可选原点偏移：传入 <code>origin</code> 时，矩形相对该点绘制（便于把注册点放在非左上角）。</p>
  *
  * @example
  * <listing version="3.0">
@@ -38,14 +38,21 @@ public class Box extends Sprite {
      * 绘制实心矩形。
      * @param width 宽。
      * @param height 高。
-     * @param color 填充色，默认黑色。
+     * @param color 填充色，默认 <code>KyoColor.BLACK</code>。
      * @param alpha 透明度，默认 1。
-     * @param orgin 注册点偏移；为 <code>null</code> 时从 (0,0) 起绘。
+     * @param origin 注册点偏移；为 <code>null</code> 时从 (0,0) 起绘。
      */
-    public function Box(width:Number, height:Number, color:int = KyoColor.BLACK, alpha:Number = 1, orgin:Point = null) {
+    public function Box(
+            width :Number,
+            height:Number,
+            color :int = KyoColor.BLACK,
+            alpha :Number = 1,
+            origin:Point = null
+    ) {
         super();
+
         graphics.beginFill(color, alpha);
-        graphics.drawRect(orgin ? -orgin.x : 0, orgin ? -orgin.y : 0, width, height);
+        graphics.drawRect(origin ? -origin.x : 0, origin ? -origin.y : 0, width, height);
         graphics.endFill();
     }
 }

@@ -47,8 +47,8 @@ public class KyoTouchEvent extends Event {
      * @param obj 可选属性字典（键写入本实例，如 <code>direct</code>）。
      */
     public function KyoTouchEvent(type:String, obj:Object = null) {
-        for (var i:String in obj) {
-            this[i] = obj[i];
+        for (var key:String in obj) {
+            this[key] = obj[key];
         }
         super(type, false, false);
     }

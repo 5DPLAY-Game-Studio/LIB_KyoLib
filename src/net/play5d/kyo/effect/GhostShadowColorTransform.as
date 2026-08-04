@@ -31,6 +31,8 @@ import flash.geom.ColorTransform;
 public class GhostShadowColorTransform {
     /** @private */
     private static var _red:ColorTransform;
+    /** @private */
+    private static var _blue:ColorTransform;
 
     /**
      * 红色偏移残影用的颜色变换（<code>redOffset = 255</code>）。
@@ -45,11 +47,9 @@ public class GhostShadowColorTransform {
             _red           = new ColorTransform();
             _red.redOffset = 255;
         }
+
         return _red;
     }
-
-    /** @private */
-    private static var _blue:ColorTransform;
 
     /**
      * 蓝色偏移残影用的颜色变换（<code>blueOffset = 255</code>）。
@@ -64,8 +64,8 @@ public class GhostShadowColorTransform {
             _blue            = new ColorTransform();
             _blue.blueOffset = 255;
         }
+
         return _blue;
     }
-
 }
 }

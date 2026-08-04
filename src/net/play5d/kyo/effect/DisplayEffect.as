@@ -52,25 +52,25 @@ public class DisplayEffect {
      * @see #zoomShadow()
      */
     public static function ghostShadow(
-        d              :DisplayObject,
-        alphaLose      :Number = 0.1,
-        startAlpha     :Number = 1,
-        colorTransFrom :ColorTransform = null
+        d             :DisplayObject,
+        alphaLose     :Number = 0.1,
+        startAlpha    :Number = 1,
+        colorTransFrom:ColorTransform = null
     ):void {
         var pt:DisplayObjectContainer = d.parent;
         if (!pt) {
             return;
         }
 
-        var oo:Object = {
-            parent:    pt,
+        var params:Object = {
+            parent   : pt,
             alphaLose: alphaLose
         };
-        var po:Object = {
+        var bitmapParams:Object = {
             alpha: startAlpha
         };
 
-        var bp:InsShadow = createInsShadow(d, oo, po);
+        var bp:InsShadow = createInsShadow(d, params, bitmapParams);
         if (!bp) {
             return;
         }
@@ -81,7 +81,7 @@ public class DisplayEffect {
         pt.addChild(bp.bitmap);
         pt.addChild(d);
 
-        bp.initlize();
+        bp.initialize();
     }
 
     /**
@@ -101,29 +101,29 @@ public class DisplayEffect {
      * @see #ghostShadow()
      */
     public static function zoomShadow(
-        d              :DisplayObject,
-        scaleAdd       :Number = .1,
-        alphaLose      :Number = 0.05,
-        startAlpha     :Number = 1,
-        colorTransFrom :ColorTransform = null,
-        parent         :DisplayObjectContainer = null,
-        size           :Point = null
+        d             :DisplayObject,
+        scaleAdd      :Number = .1,
+        alphaLose     :Number = 0.05,
+        startAlpha    :Number = 1,
+        colorTransFrom:ColorTransform = null,
+        parent        :DisplayObjectContainer = null,
+        size          :Point = null
     ):DisplayObject {
         parent ||= d.parent;
         if (!parent) {
             return null;
         }
 
-        var oo:Object = {
-            parent:    parent,
+        var params:Object = {
+            parent   : parent,
             alphaLose: alphaLose,
-            scaleAdd:  scaleAdd
+            scaleAdd : scaleAdd
         };
-        var po:Object = {
+        var bitmapParams:Object = {
             alpha: startAlpha
         };
 
-        var bp:InsShadow = createInsShadow(d, oo, po, size);
+        var bp:InsShadow = createInsShadow(d, params, bitmapParams, size);
         if (!bp) {
             return null;
         }
@@ -132,7 +132,7 @@ public class DisplayEffect {
         }
 
         parent.addChild(bp.bitmap);
-        bp.initlize();
+        bp.initialize();
 
         return bp.bitmap;
     }
@@ -151,10 +151,12 @@ public class DisplayEffect {
     public static function mcEffect(child:DisplayObjectContainer, effect:Class, pos:Point = null):MovieClip {
         var mc:MovieClip = new effect();
         mc.mouseEnabled  = mc.mouseChildren = false;
+
         if (pos) {
             mc.x = pos.x;
             mc.y = pos.y;
         }
+
         mc.addFrameScript(mc.totalFrames - 1, function ():void {
             mc.stop();
             mc.parent.removeChild(mc);
@@ -162,6 +164,7 @@ public class DisplayEffect {
         });
         mc.gotoAndPlay(1);
         child.addChild(mc);
+
         return mc;
     }
 
@@ -169,29 +172,30 @@ public class DisplayEffect {
      * 对显示对象做短时位移抖动（结束后坐标归零）。
      * @param stage 被抖动的对象（参数名沿用历史命名）。
      * @param frames 持续帧数，默认 1。
-     * @param strange 每帧位移幅度，默认 2。
+     * @param strength 每帧位移幅度，默认 2。
      * @example
      * <listing version="3.0">
      * DisplayEffect.shake(stageRoot, 6, 3);
      * </listing>
      */
-    public static function shake(stage:DisplayObject, frames:int = 1, strange:int = 2):void {
-        stage.removeEventListener(Event.ENTER_FRAME, enterframe);
+    public static function shake(stage:DisplayObject, frames:int = 1, strength:int = 2):void {
+        stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+        stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-        stage.addEventListener(Event.ENTER_FRAME, enterframe);
         var frame:int;
 
-        function enterframe(e:Event):void {
+        function onEnterFrame(e:Event):void {
             frame++;
             if (frame > frames) {
                 stage.x = 0;
                 stage.y = 0;
-                stage.removeEventListener(Event.ENTER_FRAME, enterframe);
+                stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
                 return;
             }
-            var ii:int = frame % 2 == 0 ? 1 : -1;
-            stage.x += strange * ii;
-            stage.y += strange * ii;
+
+            var dir:int = frame % 2 == 0 ? 1 : -1;
+            stage.x += strength * dir;
+            stage.y += strength * dir;
         }
     }
 
@@ -199,10 +203,10 @@ public class DisplayEffect {
      * @private 截取显示对象为残影并填充参数。
      */
     private static function createInsShadow(
-        d       :DisplayObject,
-        prams   :Object = null,
-        bpPrams :Object = null,
-        size    :Point = null
+        d           :DisplayObject,
+        params      :Object = null,
+        bitmapParams:Object = null,
+        size        :Point = null
     ):InsShadow {
         var bmp:Bitmap = KyoDisplayUtils.drawDisplay(d);
         if (!bmp) {
@@ -217,24 +221,22 @@ public class DisplayEffect {
         var bds:Rectangle = d.getBounds(d);
         bp.bitmap.x       = d.x + bds.x * d.scaleX;
         bp.bitmap.y       = d.y + bds.y * d.scaleY;
+        bp.size           = size;
 
-        bp.size = size;
-
-        var i:String;
-        if (prams) {
-            for (i in prams) {
-                bp[i] = prams[i];
+        var key:String;
+        if (params) {
+            for (key in params) {
+                bp[key] = params[key];
             }
         }
-        if (bpPrams) {
-            for (i in bpPrams) {
-                bp.bitmap[i] = bpPrams[i];
+        if (bitmapParams) {
+            for (key in bitmapParams) {
+                bp.bitmap[key] = bitmapParams[key];
             }
         }
 
         return bp;
     }
-
 }
 }
 
@@ -248,10 +250,6 @@ import flash.geom.Point;
  * @private
  */
 internal class InsShadow {
-    /** @private */
-    public function InsShadow() {
-    }
-
     /** @private 残影位图 */
     public var bitmap:Bitmap;
     /** @private 每帧透明度减量 */
@@ -259,7 +257,7 @@ internal class InsShadow {
     /** @private 残影所在容器 */
     public var parent:DisplayObjectContainer;
     /** @private 每帧缩放增量；0 表示不缩放 */
-    public var scaleAdd:Number  = 0;
+    public var scaleAdd:Number = 0;
     /** @private 参考尺寸，用于缩放时的位置补偿 */
     public var size:Point;
     /** @private 考虑镜像后的每帧缩放增量 */
@@ -270,24 +268,25 @@ internal class InsShadow {
     /**
      * @private 启动 ENTER_FRAME 更新。
      */
-    public function initlize():void {
+    public function initialize():void {
         _scaleAddP = new Point(scaleAdd, scaleAdd);
         size ||= new Point(bitmap.width, bitmap.height);
-        _poLose    = new Point(size.x * scaleAdd / 2, size.y * scaleAdd / 2);
+        _poLose = new Point(size.x * scaleAdd / 2, size.y * scaleAdd / 2);
 
         if (bitmap.scaleX < 0) {
             _scaleAddP.x *= -1;
             _poLose.x *= -1;
         }
 
-        bitmap.addEventListener(Event.ENTER_FRAME, enterFrame);
+        bitmap.addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
 
     /**
      * @private 淡出 / 缩放，结束后移除并 dispose。
      */
-    private function enterFrame(e:Event):void {
+    private function onEnterFrame(e:Event):void {
         bitmap.alpha -= alphaLose;
+
         if (scaleAdd != 0) {
             bitmap.scaleX += _scaleAddP.x;
             bitmap.scaleY += _scaleAddP.y;
@@ -296,7 +295,7 @@ internal class InsShadow {
         }
 
         if (bitmap.alpha <= 0) {
-            bitmap.removeEventListener(Event.ENTER_FRAME, enterFrame);
+            bitmap.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
             parent.removeChild(bitmap);
             bitmap.bitmapData.dispose();
             bitmap = null;

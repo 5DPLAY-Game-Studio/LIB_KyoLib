@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ public class KyoXMLUtils {
      * 将 XML 子节点属性写入 VO 实例列表或字典。
      * @param xml <code>XML</code> 或 <code>XMLList</code>。
      * @param voClass VO 类。
-     * @param KeyId 非空时按该属性作字典键；否则返回数组。
+     * @param keyId 非空时按该属性作字典键；否则返回数组。
      * @param childrenKey 非空时把子节点 XMLList 写入该字段。
      * @param childrenMatches 要按名写入 VO 的子节点名数组。
      * @return 数组或字典。
@@ -37,13 +37,13 @@ public class KyoXMLUtils {
      * var list:Object = KyoXMLUtils.encodeToVO(xml, ItemVO);
      * </listing>
      */
-    public static function encodeToVO(xml:Object, voClass:Class, KeyId:String = null, childrenKey:String = null,
-                                      childrenMatches:Array = null
+    public static function encodeToVO(
+            xml:Object, voClass:Class, keyId:String = null, childrenKey:String = null, childrenMatches:Array = null
     ):Object {
-        var o:Object  = KeyId ? {} : [];
+        var o:Object  = keyId ? {} : [];
         var x:XMLList = xml is XMLList ? xml as XMLList : (xml as XML).children();
 
-        for each(var i:XML in x) {
+        for each (var i:XML in x) {
             var att:XMLList = i.attributes();
             var vo:*        = new voClass();
             for (var j:int = 0; j < att.length(); j++) {
@@ -67,7 +67,7 @@ public class KyoXMLUtils {
             }
 
             if (childrenMatches) {
-                for each(var l:String in childrenMatches) {
+                for each (var l:String in childrenMatches) {
                     var vv:XMLList = i.child(l);
                     if (vv) {
                         vo[l] = vv;
@@ -79,8 +79,7 @@ public class KyoXMLUtils {
                 (o as Array).push(vo);
             }
             else {
-                var kk:String = i.attribute(KeyId);
-                o[kk]         = vo;
+                o[String(i.attribute(keyId))] = vo;
             }
         }
 
@@ -93,14 +92,15 @@ public class KyoXMLUtils {
      * @return 子节点数组。
      * @example
      * <listing version="3.0">
-     * var a:Array = KyoXMLUtils.encodeToString(xml);
+     * var a:Array = KyoXMLUtils.encodeToArray(xml);
      * </listing>
      */
-    public static function encodeToString(x:XML):Array {
+    public static function encodeToArray(x:XML):Array {
         var o:Array = [];
-        for each(var i:XML in x.children()) {
+        for each (var i:XML in x.children()) {
             o.push(i);
         }
+
         return o;
     }
 
@@ -119,6 +119,7 @@ public class KyoXMLUtils {
         if (v > 0) {
             return v;
         }
+
         return defaultNumber;
     }
 
@@ -137,8 +138,10 @@ public class KyoXMLUtils {
         if (!isNaN(v)) {
             return v;
         }
+
         return defaultNumber;
     }
 
 }
 }
+

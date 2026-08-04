@@ -40,17 +40,12 @@ public class KyoSoundPlayer {
      */
     public static function get I():KyoSoundPlayer {
         _i ||= new KyoSoundPlayer();
+
         return _i;
     }
 
-    /**
-     * 构造函数。
-     */
-    public function KyoSoundPlayer() {
-    }
-
     /** @private channelId → InsSound */
-    private var _sounds:Object       = {};
+    private var _sounds:Object = {};
     /** @private 全局默认音量 */
     private var _defaultValue:Number = 1;
     /** @private channelId=-1 时上次播放时间 */
@@ -70,13 +65,20 @@ public class KyoSoundPlayer {
      * KyoSoundPlayer.I.playSound(HitSnd, 1);
      * </listing>
      */
-    public function playSound(s:Object, channelId:int = -1, gap:int = 100, loops:int = 0, volume:Number = -1,
-                              merge:Boolean = false, onComplete:Function = null
+    public function playSound(
+        s         :Object,
+        channelId :int = -1,
+        gap       :int = 100,
+        loops     :int = 0,
+        volume    :Number = -1,
+        merge     :Boolean = false,
+        onComplete:Function = null
     ):void {
         var snd:Sound = getSound(s);
         if (!snd) {
             return;
         }
+
         if (channelId == -1) {
             if (getTimer() - _lastPlay < gap) {
                 return;
@@ -88,6 +90,7 @@ public class KyoSoundPlayer {
             _lastPlay = getTimer();
             return;
         }
+
         if (_sounds[channelId]) {
             var c:InsSound = _sounds[channelId] as InsSound;
             if (!merge && c.playing) {
@@ -98,6 +101,7 @@ public class KyoSoundPlayer {
             }
             c.stop();
         }
+
         var ins:InsSound = new InsSound(snd);
         ins.play(loops, volume);
         ins.onComplete     = onComplete;
@@ -128,7 +132,7 @@ public class KyoSoundPlayer {
      * </listing>
      */
     public function stopAllSounds(clean:Boolean = false):void {
-        for each(var i:InsSound in _sounds) {
+        for each (var i:InsSound in _sounds) {
             i.stop();
         }
         if (clean) {
@@ -150,6 +154,7 @@ public class KyoSoundPlayer {
         if (c) {
             return c.playing;
         }
+
         return false;
     }
 
@@ -165,11 +170,12 @@ public class KyoSoundPlayer {
     public function setVolume(volume:Number, channelId:int = -1):void {
         if (channelId == -1) {
             _defaultValue = volume;
-            for each(var i:InsSound in _sounds) {
+            for each (var i:InsSound in _sounds) {
                 i.volume = volume;
             }
             return;
         }
+
         if (_sounds[channelId]) {
             (_sounds[channelId] as InsSound).volume = volume;
         }
@@ -189,9 +195,9 @@ public class KyoSoundPlayer {
         if (s is Sound) {
             snd = s as Sound;
         }
+
         return snd;
     }
-
 }
 }
 
@@ -207,7 +213,7 @@ internal class InsSound {
     /**
      * @param sound 声音实例。
      */
-    public function InsSound(sound:Sound):void {
+    public function InsSound(sound:Sound) {
         _sound = sound;
     }
 
@@ -225,7 +231,6 @@ internal class InsSound {
     private var _sound:Sound;
     /** @private */
     private var _loop:int;
-
     /** @private */
     private var _volume:Number;
 
@@ -241,9 +246,8 @@ internal class InsSound {
      * @private
      */
     public function set volume(v:Number):void {
-        _volume        = v;
-        var pos:Number = _channel.position;
-        playsound(pos);
+        _volume = v;
+        playSound(_channel.position);
     }
 
     /**
@@ -254,7 +258,7 @@ internal class InsSound {
     public function play(loop:int, volume:Number):void {
         _volume = volume;
         _loop   = loop;
-        playsound();
+        playSound();
     }
 
     /**
@@ -270,7 +274,7 @@ internal class InsSound {
     /**
      * @private
      */
-    private function playsound(startTime:Number = 0):void {
+    private function playSound(startTime:Number = 0):void {
         stop();
         playing  = true;
         _channel = _sound.play(startTime, _loop, new SoundTransform(_volume));

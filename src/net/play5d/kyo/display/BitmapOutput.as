@@ -50,6 +50,7 @@ public class BitmapOutput extends Bitmap {
         smoothing    :Boolean = false
     ) {
         super(null, pixelSnapping, smoothing);
+
         _source      = source;
         _width       = width;
         _height      = height;
@@ -76,7 +77,8 @@ public class BitmapOutput extends Bitmap {
      * </listing>
      */
     public function render():void {
-        bitmapData   = new BitmapData(_width, _height, _transparent, _fillColor);
+        bitmapData = new BitmapData(_width, _height, _transparent, _fillColor);
+
         var m:Matrix = new Matrix(_source.scaleX, 0, 0, _source.scaleY);
         bitmapData.draw(_source, m);
     }
@@ -90,6 +92,7 @@ public class BitmapOutput extends Bitmap {
      */
     public function destroy():void {
         _source = null;
+
         bitmapData.dispose();
         bitmapData = null;
     }

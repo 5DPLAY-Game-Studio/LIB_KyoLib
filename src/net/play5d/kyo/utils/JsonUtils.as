@@ -17,7 +17,6 @@
  */
 
 package net.play5d.kyo.utils {
-
 /**
  * JSON 字符串粗判与安全解析。
  *
@@ -35,11 +34,13 @@ public class JsonUtils {
      * </listing>
      */
     public static function isJsonString(v:Object):Boolean {
-        if (v is String) {
-            var vs:String = v as String;
-            return vs.charAt(0) == '{' || vs.charAt(0) == '[';
+        if (!(v is String)) {
+            return false;
         }
-        return false;
+
+        var c:String = (v as String).charAt(0);
+
+        return c == '{' || c == '[';
     }
 
     /**
@@ -52,18 +53,18 @@ public class JsonUtils {
      * </listing>
      */
     public static function str2json(v:Object):Object {
-        if (isJsonString(v)) {
-            var obj:Object;
-            try {
-                obj = JSON.parse(v as String);
-            }
-            catch (e:Error) {
-                trace(e);
-            }
-            return obj;
+        if (!isJsonString(v)) {
+            return null;
         }
+
+        try {
+            return JSON.parse(v as String);
+        }
+        catch (e:Error) {
+            trace(e);
+        }
+
         return null;
     }
-
 }
 }

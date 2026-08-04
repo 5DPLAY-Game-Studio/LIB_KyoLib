@@ -23,6 +23,7 @@ import flash.text.TextField;
 
 /**
  * 文字显示效果工具。
+ *
  * @author kyo
  * @see #showOneByOne()
  */
@@ -45,19 +46,17 @@ public class WordEffect {
         var str:String = txt.text;
         var len:int    = str.length;
         txt.text       = '';
+
         for (var i:int; i < len; i++) {
-            var f:Function;
-            if (finish != null) {
-                if (i == len - 1) {
-                    f = finish;
-                }
+            var done:Function = (finish != null && i == len - 1) ? finish : null;
+            TweenLite.delayedCall(i * gapTime, appendChar, [i, done]);
+        }
+
+        function appendChar(ci:int, done:Function):void {
+            txt.appendText(str.charAt(ci));
+            if (done != null) {
+                done();
             }
-            TweenLite.delayedCall(i * gapTime, function (ci:int):void {
-                txt.appendText(str.charAt(ci));
-                if (f != null) {
-                    f();
-                }
-            }, [i]);
         }
     }
 }

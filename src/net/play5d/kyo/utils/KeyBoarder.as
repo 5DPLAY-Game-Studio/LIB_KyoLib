@@ -23,7 +23,7 @@ import flash.events.KeyboardEvent;
 /**
  * Stage 键盘事件多监听分发。
  *
- * @see #initlize()
+ * @see #initialize()
  * @see #listen()
  */
 public class KeyBoarder {
@@ -42,17 +42,17 @@ public class KeyBoarder {
      * @param stage 舞台。
      * @example
      * <listing version="3.0">
-     * KeyBoarder.initlize(stage);
+     * KeyBoarder.initialize(stage);
      * </listing>
      */
-    public static function initlize(stage:Stage):void {
+    public static function initialize(stage:Stage):void {
         if (_inited) {
             return;
         }
 
         _inited = true;
+        _stage  = stage;
 
-        _stage = stage;
         stage.addEventListener(KeyboardEvent.KEY_DOWN, keyBoardHandler);
         stage.addEventListener(KeyboardEvent.KEY_UP, keyBoardHandler);
     }
@@ -93,15 +93,16 @@ public class KeyBoarder {
      * @param handler 先前注册的回调。
      * @example
      * <listing version="3.0">
-     * KeyBoarder.unListen(onKey);
+     * KeyBoarder.unlisten(onKey);
      * </listing>
      */
-    public static function unListen(handler:Function):void {
+    public static function unlisten(handler:Function):void {
         if (!_inited) {
             return;
         }
-        if (_keyHandlers.indexOf(handler) != -1) {
-            _keyHandlers.splice(_keyHandlers.indexOf(handler), 1);
+        var i:int = _keyHandlers.indexOf(handler);
+        if (i != -1) {
+            _keyHandlers.splice(i, 1);
         }
     }
 
@@ -110,8 +111,7 @@ public class KeyBoarder {
         if (!_inited) {
             return;
         }
-        var i:int = 0;
-        for (i = 0; i < _keyHandlers.length; i++) {
+        for (var i:int = 0; i < _keyHandlers.length; i++) {
             _keyHandlers[i](e);
         }
     }

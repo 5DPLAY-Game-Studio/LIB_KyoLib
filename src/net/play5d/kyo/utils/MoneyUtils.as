@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,8 @@ package net.play5d.kyo.utils {
  * @author marcoLee
  */
 public class MoneyUtils {
-    //1：个，2：十，3：百，4：千，5：万，6：十万，7：百万，8：千万，9：亿，10：十亿，11：百亿，12：千亿，13：兆, 14：十兆， 15：百兆， 16：千兆
     /** 中文大写数字 0~9。 */
-    public static const NUM_CN:Array        = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '镹'];
+    public static const NUM_CN:Array        = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
     /** 小数单位：角、分。 */
     public static const DECIMAL_UNITS:Array = ['角', '分'];
     /** 节权：元、万、亿、兆。 */
@@ -57,8 +56,7 @@ public class MoneyUtils {
             throw new Error('数字太大，无法处理！');
         }
 
-        var cnMoney:String = convertIntegerStr(dotLeft) + convertDecimalStr(dotRight);
-        return cnMoney;
+        return convertIntegerStr(dotLeft) + convertDecimalStr(dotRight);
     }
 
     /**
@@ -83,6 +81,7 @@ public class MoneyUtils {
             var num:String     = str.substring(startIndex, startIndex + 4);
             nodes.push(convertThousand(num, tCount - i - 1));
         }
+
         return convertNodes(nodes);
     }
 
@@ -103,6 +102,7 @@ public class MoneyUtils {
                 newStr += NUM_CN[n] + DECIMAL_UNITS[i];
             }
         }
+
         return newStr;
     }
 
@@ -119,9 +119,7 @@ public class MoneyUtils {
         return Math.ceil(Math.log(num) / Math.LN10);
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     private static function convertNodes(nodes:Array):String {
         var str:String = '';
         var beforeZero:Boolean;
@@ -144,9 +142,7 @@ public class MoneyUtils {
         return str;
     }
 
-    /**
-     * @private 对四位数进行处理，不够自动补齐。
-     */
+    /** @private 对四位数进行处理，不够自动补齐。 */
     private static function convertThousand(num:String, level:int):ThousandNode {
         var node:ThousandNode = new ThousandNode();
         var len:int           = num.length;
@@ -195,6 +191,7 @@ public class MoneyUtils {
         if (node.desc.length > 0) {
             node.desc += LEVELS[level];
         }
+
         return node;
     }
 
@@ -225,3 +222,4 @@ class ThousandNode {
      */
     public var desc:String = '';
 }
+

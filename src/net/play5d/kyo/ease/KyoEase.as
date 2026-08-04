@@ -56,6 +56,7 @@ public class KyoEase {
             display.x += speed;
             display.y += spdY;
             spdY += g;
+
             if (display.x > target.x && display.y > target.y) {
                 display.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
                 if (callBack != null) {
@@ -64,6 +65,5 @@ public class KyoEase {
             }
         }
     }
-
 }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,11 @@ import flash.utils.flash_proxy;
  *
  * @see #$
  * @see RunJS
+ * @example
+ * <listing version="3.0">
+ * var doc:* = JSEnv.$.document;
+ * doc.body.appendChild(doc.createElement('div'));
+ * </listing>
  */
 public dynamic class JSEnv extends Proxy {
     /**
@@ -35,135 +40,115 @@ public dynamic class JSEnv extends Proxy {
      */
     public static var $:JSEnv = new JSEnv(0);
 
-    /** @private 注册 Notify 回调 */
-    private static var _init:* =
-            ExternalInterface.addCallback('Notify', handleNotify);
+    /** @private 注册 Notify 回调（副作用初始化） */
+    private static var _notifyInited:* = ExternalInterface.addCallback('Notify', handleNotify);
 
     /** @private AS 函数引用表 */
-    private static var FN:Array = [];
+    private static var _fn:Array = [];
 
     /**
-     * @private JS 回调进入 AS。
+     * 构造 JS 对象代理。
+     * @param id JS 侧引用表 id；0 为 window。
      */
-    private static function handleNotify(id:uint, This:String, ...args):void {
-        var AS_Args:Array = [];
-        var arg:*;
-
-        for each(arg in args) {
-            AS_Args.push(toAS(arg));
-        }
-
-        FN[id].apply(toAS(This), AS_Args);
+    public function JSEnv(id:int) {
+        _objId = id;
     }
 
-    /**
-     * @private 将参数转为 JS 侧标记后追加到 base。
-     */
-    private static function InsertArg(base:Array, args:Array):Array {
-        var arg:*;
-        for each(arg in args) {
+    /** @private */
+    private var _objId:int;
+
+    /** @private JS 回调进入 AS。 */
+    private static function handleNotify(id:uint, thisRef:String, ...args):void {
+        var asArgs:Array = [];
+        for each (var arg:* in args) {
+            asArgs.push(toAS(arg));
+        }
+        _fn[id].apply(toAS(thisRef), asArgs);
+    }
+
+    /** @private 将参数转为 JS 侧标记后追加到 base。 */
+    private static function insertArg(base:Array, args:Array):Array {
+        for each (var arg:* in args) {
             base.push(toJS(arg));
         }
 
         return base;
     }
 
-    /**
-     * @private 生成 JS 函数 / 构造代理。
-     */
-    private static function JS_Proxy(id:int):Function {
+    /** @private 生成 JS 函数 / 构造代理。 */
+    private static function jsProxy(id:int):Function {
         return function (...args):* {
             var arr:Array;
-            var ret:*;
-
             if (this == '[object global]') {
                 arr = ['js_call', id];
             }
             else {
                 arr = ['js_new', id];
             }
+            arr = insertArg(arr, args);
 
-            arr = InsertArg(arr, args);
-
-            ret = ExternalInterface.call.apply(null, arr);
-            return toAS(ret);
+            return toAS(ExternalInterface.call.apply(null, arr));
         };
     }
 
-    /**
-     * @private 将 JS 标记还原为 AS 值。
-     */
+    /** @private 将 JS 标记还原为 AS 值。 */
     private static function toAS(val:*):* {
         if (val is String) {
             switch (val.substr(0, 4)) {
             case '_OBJ':
                 return new JSEnv(+val.substr(4));
-
             case '_FUN':
-                return JS_Proxy(+val.substr(4)) as Function;
+                return jsProxy(+val.substr(4)) as Function;
             }
         }
 
         return val;
     }
 
-    /**
-     * @private 将 AS 值编码为传给 JS 的标记。
-     */
+    /** @private 将 AS 值编码为传给 JS 的标记。 */
     private static function toJS(val:*):* {
         if (val is JSEnv) {
-            return '_OBJ' + val.obj_id;
+            return '_OBJ' + val._objId;
         }
-
         if (val is Function) {
-            FN.push(val);
-            return '_FUN' + (FN.length - 1);
+            _fn.push(val);
+
+            return '_FUN' + (_fn.length - 1);
         }
 
         return val;
     }
 
     /**
-     * @param id JS 侧引用表 id；0 为 window。
-     */
-    public function JSEnv(id:int) {
-        obj_id = id;
-    }
-
-    /** @private */
-    private var obj_id:int;
-
-    /**
      * @inheritDoc
      */
     override flash_proxy function hasProperty(name:*):Boolean {
-        return ExternalInterface.call('js_in', obj_id, name + '');
+        return ExternalInterface.call('js_in', _objId, name + '');
     }
 
     /**
      * @inheritDoc
      */
     override flash_proxy function callProperty(name:*, ...args):* {
-        var arr:Array = ['js_method', obj_id, name + ''];
-        arr           = InsertArg(arr, args);
+        var arr:Array = ['js_method', _objId, name + ''];
+        arr           = insertArg(arr, args);
 
-        var ret:* = ExternalInterface.call.apply(null, arr);
-        return toAS(ret);
+        return toAS(ExternalInterface.call.apply(null, arr));
     }
 
     /**
      * @inheritDoc
      */
     override flash_proxy function getProperty(name:*):* {
-        var ret:* = ExternalInterface.call('js_get', obj_id, name + '');
-        return toAS(ret);
+        return toAS(ExternalInterface.call('js_get', _objId, name + ''));
     }
 
     /**
      * @inheritDoc
      */
     override flash_proxy function setProperty(name:*, value:*):void {
-        ExternalInterface.call('js_set', obj_id, name + '', toJS(value));
+        ExternalInterface.call('js_set', _objId, name + '', toJS(value));
     }
 }
 }
+

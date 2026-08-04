@@ -49,14 +49,13 @@ public class BytesSound extends Sound {
         v.position = 0;
 
         while (v.bytesAvailable > 0) {
-            var bytes:ByteArray = new ByteArray();
+            var chunk:ByteArray = new ByteArray();
             var len:uint        = Math.min(v.bytesAvailable, 40 * 1024);
-            v.readBytes(bytes, 0, len);
-            this.loadCompressedDataFromByteArray(bytes, bytes.bytesAvailable);
+            v.readBytes(chunk, 0, len);
+            loadCompressedDataFromByteArray(chunk, chunk.bytesAvailable);
         }
 
         v.clear();
     }
-
 }
 }

@@ -79,9 +79,10 @@ public class KyoScrollDragUtil {
         hEnable:Boolean = true,
         vEnable:Boolean = true
     ):Point {
-        var xx:Number = hEnable ? down.x - stageX : 0;
-        var yy:Number = vEnable ? down.y - stageY : 0;
-        return new Point(xx, yy);
+        return new Point(
+            hEnable ? down.x - stageX : 0,
+            vEnable ? down.y - stageY : 0
+        );
     }
 
     /**
@@ -110,6 +111,7 @@ public class KyoScrollDragUtil {
         if (vEnable && Math.abs(yy) > dragPixel) {
             return true;
         }
+
         return false;
     }
 
@@ -125,7 +127,7 @@ public class KyoScrollDragUtil {
      * @return 更新后的拖拽状态。
      * @example
      * <listing version="3.0">
-     * _draging = KyoScrollDragUtil.updateDragging(_draging, xx, yy, 5, true, true, stage);
+     * _dragging = KyoScrollDragUtil.updateDragging(_dragging, xx, yy, 5, true, true, stage);
      * </listing>
      */
     public static function updateDragging(
@@ -143,6 +145,7 @@ public class KyoScrollDragUtil {
         if (dragging) {
             setStageMouseChildren(stage, false);
         }
+
         return dragging;
     }
 
@@ -182,6 +185,7 @@ public class KyoScrollDragUtil {
     ):void {
         var maxX:Number = contentW - viewW;
         var maxY:Number = contentH - viewH;
+
         if (rect.x > maxX) {
             rect.x = maxX;
         }
@@ -213,3 +217,4 @@ public class KyoScrollDragUtil {
 
 }
 }
+

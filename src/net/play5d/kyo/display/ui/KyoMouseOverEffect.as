@@ -25,18 +25,18 @@ import flash.geom.ColorTransform;
  * 鼠标悬停视觉效果工具（静态方法）。
  *
  * @see #addEffect()
- * @see #EFFECT_TYPE_HILIGHT
+ * @see #EFFECT_TYPE_HIGHLIGHT
  */
 public class KyoMouseOverEffect {
     /**
      * 高亮效果：悬停时 RGB offset 加 128。
      */
-    public static const EFFECT_TYPE_HILIGHT:int = 0;
+    public static const EFFECT_TYPE_HIGHLIGHT:int = 0;
 
     /**
      * 为显示对象注册悬停 / 移出效果。
      * @param display 监听鼠标事件的对象。
-     * @param effectType 效果类型，默认 <code>EFFECT_TYPE_HILIGHT</code>。
+     * @param effectType 效果类型，默认 <code>EFFECT_TYPE_HIGHLIGHT</code>。
      * @param targetDisplay 实际改 transform 的对象；默认与 <code>display</code> 相同。
      * @example
      * <listing version="3.0">
@@ -52,10 +52,10 @@ public class KyoMouseOverEffect {
 
         function doEffect(over:Boolean):void {
             switch (effectType) {
-            case EFFECT_TYPE_HILIGHT:
+            case EFFECT_TYPE_HIGHLIGHT:
                 if (over) {
-                    var ct:ColorTransform                  = new ColorTransform();
-                    ct.redOffset                           = ct.greenOffset = ct.blueOffset = 128;
+                    var ct:ColorTransform = new ColorTransform();
+                    ct.redOffset = ct.greenOffset = ct.blueOffset = 128;
                     targetDisplay.transform.colorTransform = ct;
                 }
                 else {
@@ -75,3 +75,4 @@ public class KyoMouseOverEffect {
 
 }
 }
+

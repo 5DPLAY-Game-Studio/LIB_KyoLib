@@ -65,7 +65,6 @@ public class KyoScrollList extends KyoTileList {
         _rollSpeed = speed;
 
         var addn:int = 0;
-
         switch (_scrollType) {
         case 0:
             addn       = Math.ceil(_size.x / (unitySize.x + gap.x));
@@ -86,21 +85,22 @@ public class KyoScrollList extends KyoTileList {
         }
 
         update();
-
-        addEventListener(Event.ENTER_FRAME, enterFrame);
+        addEventListener(Event.ENTER_FRAME, onEnterFrame);
     }
 
     /**
      * @private 推进 scrollRect 并在边界循环。
      */
-    private function enterFrame(e:Event):void {
+    private function onEnterFrame(e:Event):void {
         if (!_size) {
             return;
         }
 
         var srx:Number = scrollRect.x;
         var sry:Number = scrollRect.y;
-        var sx:Number  = 0, sy:Number = 0;
+        var sx:Number  = 0;
+        var sy:Number  = 0;
+
         switch (_scrollType) {
         case 0:
             sx = _rollSpeed;

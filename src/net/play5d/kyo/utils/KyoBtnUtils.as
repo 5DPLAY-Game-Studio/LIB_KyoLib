@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ import flash.utils.Dictionary;
  * <b>勿合并</b>两套 API。</p>
  *
  * @see #initBtn()
- * @see #initSampleBtn()
+ * @see #initSimpleBtn()
  * @see #disposeBtn()
  */
 public class KyoBtnUtils {
@@ -60,20 +60,21 @@ public class KyoBtnUtils {
      * @param clickParam 传给回调的参数；可省略。
      * @example
      * <listing version="3.0">
-     * KyoBtnUtils.initSampleBtn(mc, onClick);
+     * KyoBtnUtils.initSimpleBtn(mc, onClick);
      * </listing>
      */
-    public static function initSampleBtn(d:DisplayObject, click:Function = null, clickParam:* = null):void {
-
+    public static function initSimpleBtn(d:DisplayObject, click:Function = null, clickParam:* = null):void {
         _btnMap[d] = {
-            x         : d.x, y: d.y,
-            scaleX    : d.scaleX, scaleY: d.scaleY,
+            x         : d.x,
+            y         : d.y,
+            scaleX    : d.scaleX,
+            scaleY    : d.scaleY,
             click     : click,
             clickParam: clickParam
         };
 
         if (click != null) {
-            d.addEventListener(MouseEvent.CLICK, sampleBtnHandler);
+            d.addEventListener(MouseEvent.CLICK, simpleBtnHandler);
         }
     }
 
@@ -82,15 +83,15 @@ public class KyoBtnUtils {
      * @param d 显示对象。
      * @example
      * <listing version="3.0">
-     * KyoBtnUtils.disposeSampleBtn(mc);
+     * KyoBtnUtils.disposeSimpleBtn(mc);
      * </listing>
      */
-    public static function disposeSampleBtn(d:DisplayObject):void {
+    public static function disposeSimpleBtn(d:DisplayObject):void {
         if (d == null) {
             return;
         }
         _btnMap[d] = null;
-        d.removeEventListener(MouseEvent.CLICK, sampleBtnHandler);
+        d.removeEventListener(MouseEvent.CLICK, simpleBtnHandler);
     }
 
     /**
@@ -104,22 +105,24 @@ public class KyoBtnUtils {
      * KyoBtnUtils.initBtn(btn, onClick, null, 2);
      * </listing>
      */
-    public static function initBtn(d:DisplayObject, click:Function = null, clickParam:* = null,
-                                   effectType:int = 1
+    public static function initBtn(
+            d:DisplayObject, click:Function = null, clickParam:* = null, effectType:int = 1
     ):void {
-
         if (d is Sprite) {
             (d as Sprite).mouseChildren = false;
             (d as Sprite).buttonMode    = true;
         }
 
         _btnMap[d] = {
-            x         : d.x, y: d.y,
-            scaleX    : d.scaleX, scaleY: d.scaleY,
+            x         : d.x,
+            y         : d.y,
+            scaleX    : d.scaleX,
+            scaleY    : d.scaleY,
             effectType: effectType,
             click     : click,
             clickParam: clickParam
         };
+
         d.addEventListener(MouseEvent.MOUSE_DOWN, btnHandler);
         d.addEventListener(MouseEvent.MOUSE_UP, btnHandler);
         if (click != null) {
@@ -145,9 +148,7 @@ public class KyoBtnUtils {
         _btnMap[d] = null;
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     private static function doBtnEffect(d:DisplayObject, param:Object, resume:Boolean = false):void {
         switch (param.effectType) {
         case 2:
@@ -157,8 +158,11 @@ public class KyoBtnUtils {
             }
             else {
                 d.transform.colorTransform = _emptyTransform;
-                _btnTween                  = TweenLite.to(
-                        d, 0.5, {y: param.y, ease: Elastic.easeOut, onComplete: btnEffectFin});
+                _btnTween = TweenLite.to(d, 0.5, {
+                    y         : param.y,
+                    ease      : Elastic.easeOut,
+                    onComplete: btnEffectFin
+                });
             }
             break;
         case 1:
@@ -172,9 +176,7 @@ public class KyoBtnUtils {
         }
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     private static function btnEffectFin():void {
         if (_curOnClick != null) {
             if (_curOnClickParam != null) {
@@ -189,10 +191,8 @@ public class KyoBtnUtils {
         }
     }
 
-    /**
-     * @private
-     */
-    private static function sampleBtnHandler(e:MouseEvent):void {
+    /** @private */
+    private static function simpleBtnHandler(e:MouseEvent):void {
         var o:Object = _btnMap[e.currentTarget];
         if (o.click != null) {
             if (o.clickParam != null) {
@@ -204,12 +204,11 @@ public class KyoBtnUtils {
         }
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     private static function btnHandler(e:MouseEvent):void {
         var d:DisplayObject = e.currentTarget as DisplayObject;
         var o:Object        = _btnMap[d];
+
         switch (e.type) {
         case MouseEvent.MOUSE_DOWN:
             if (_btnTween && _btnTween._active) {
@@ -218,13 +217,10 @@ public class KyoBtnUtils {
             doBtnEffect(d, o, false);
             break;
         case MouseEvent.MOUSE_UP:
-
             if (_btnTween && _btnTween._active) {
                 _btnTween.kill();
             }
-
             doBtnEffect(d, o, true);
-
             break;
         case MouseEvent.CLICK:
             _curOnClick      = o.click;
@@ -233,10 +229,10 @@ public class KyoBtnUtils {
             if (o.effectType == 1) {
                 btnEffectFin();
             }
-
             break;
         }
     }
 
 }
 }
+

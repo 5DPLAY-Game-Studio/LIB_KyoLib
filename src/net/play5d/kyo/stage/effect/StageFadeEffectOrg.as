@@ -24,26 +24,30 @@ import net.play5d.kyo.stage.IStage;
 /**
  * 从原点（x/y/alpha 归零后）补间回原值的淡入效果；淡出为空实现。
  *
- * @see IStageFadEffect
+ * @see IStageFadeEffect
  */
-public class StageFadEffectOrg implements IStageFadEffect {
+public class StageFadeEffectOrg implements IStageFadeEffect {
     /**
      * @param time 时长（秒）。
      * @param x 是否对 x 做从 0 补间回原值。
      * @param y 是否对 y 做从 0 补间回原值。
      * @param alpha 是否对 alpha 做从 0 补间回原值。
-     * @param easefun TweenLite ease 函数；可省略。
+     * @param easeFun TweenLite ease 函数；可省略。
      */
-    public function StageFadEffectOrg(
-            time:Number = 0.5, x:Boolean = false, y:Boolean = false,
-            alpha:Boolean = false, easefun:Function = null
+    public function StageFadeEffectOrg(
+        time   :Number = 0.5,
+        x      :Boolean = false,
+        y      :Boolean = false,
+        alpha  :Boolean = false,
+        easeFun:Function = null
     ) {
-        _time        = time;
-        _obj         = {};
-        _obj.x       = x;
-        _obj.y       = y;
-        _obj.alpha   = alpha;
-        _obj.easefun = easefun;
+        _time = time;
+        _obj  = {
+            x      : x,
+            y      : y,
+            alpha  : alpha,
+            easeFun: easeFun
+        };
     }
 
     /** @private */
@@ -57,10 +61,10 @@ public class StageFadEffectOrg implements IStageFadEffect {
      * @param complete 完成回调；可省略。
      * @example
      * <listing version="3.0">
-     * new StageFadEffectOrg(0.5, false, true, true).fadIn(layer);
+     * new StageFadeEffectOrg(0.5, false, true, true).fadeIn(layer);
      * </listing>
      */
-    public function fadIn(stage:IStage, complete:Function = null):void {
+    public function fadeIn(stage:IStage, complete:Function = null):void {
         var to:Object = {};
         if (_obj.x) {
             to.x            = stage.display.x;
@@ -74,12 +78,13 @@ public class StageFadEffectOrg implements IStageFadEffect {
             to.alpha            = stage.display.alpha;
             stage.display.alpha = 0;
         }
-        if (_obj.easefun) {
-            to.ease = _obj.easefun;
+        if (_obj.easeFun) {
+            to.ease = _obj.easeFun;
         }
         if (complete != null) {
             to.onComplete = complete;
         }
+
         TweenLite.to(stage.display, _time, to);
     }
 
@@ -88,7 +93,7 @@ public class StageFadEffectOrg implements IStageFadEffect {
      * @param stage 目标场景。
      * @param complete 完成回调（未调用）。
      */
-    public function fadOut(stage:IStage, complete:Function = null):void {
+    public function fadeOut(stage:IStage, complete:Function = null):void {
     }
 }
 }

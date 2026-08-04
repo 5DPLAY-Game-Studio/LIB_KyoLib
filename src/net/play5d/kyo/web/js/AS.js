@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,8 @@
 
 /**
  * Flash ↔ JS 桥接页脚脚本：对象/函数引用表与 js_* 入口供 ExternalInterface 调用。
- * 需与页面中 id 为 `fla` 的 Flash 对象及 AS 侧 `JSEnv` 配合。
+ *
+ * <p>需与页面中 id 为 <code>fla</code> 的 Flash 对象及 AS 侧 <code>JSEnv</code> 配合。</p>
  */
 +function () {
     var arrRef = [window];
@@ -32,17 +33,17 @@
      * @param {*} val JS 对象或函数。
      * @returns {number} 引用 id。
      */
-    function RefPut(val) {
+    function refPut(val) {
         arrRef[++numRef] = val;
         return numRef;
     }
 
     /**
-     * 把参数转为 AS 可识别形式后调用 Flash `Notify`。
+     * 把参数转为 AS 可识别形式后调用 Flash <code>Notify</code>。
      * @param {number} id 回调 id。
      * @returns {*} Flash 返回值。
      */
-    function AS_Dispatch(id) {
+    function asDispatch(id) {
         var args = [id];
 
         for (var i = 1, n = arguments.length; i < n; i++) {
@@ -57,9 +58,9 @@
      * @param {number} id 函数引用 id。
      * @returns {Function}
      */
-    function AS_Proxy(id) {
+    function asProxy(id) {
         return function () {
-            return AS_Dispatch(id, this, arguments);
+            return asDispatch(id, this, arguments);
         };
     }
 
@@ -70,11 +71,10 @@
      */
     function toAS(val) {
         switch (typeof val) {
-            case 'object':
-                return '_OBJ' + RefPut(val);
-
-            case 'function':
-                return '_FUN' + RefPut(val);
+        case 'object':
+            return '_OBJ' + refPut(val);
+        case 'function':
+            return '_FUN' + refPut(val);
         }
 
         return val;
@@ -86,16 +86,16 @@
      * @returns {*}
      */
     function toJS(val) {
-        if (typeof val == 'string') {
+        if (typeof val === 'string') {
             switch (val.substr(0, 4)) {
-                case '_OBJ':
-                    return arrRef[+val.substr(4)];
-                case '_FUN':
-                    if (!fla) {
-                        fla = document.getElementById('fla');
-                    }
+            case '_OBJ':
+                return arrRef[+val.substr(4)];
+            case '_FUN':
+                if (!fla) {
+                    fla = document.getElementById('fla');
+                }
 
-                    return AS_Proxy(+val.substr(4));
+                return asProxy(+val.substr(4));
             }
         }
 
@@ -119,9 +119,7 @@
      * @returns {*}
      */
     js_get = function (id, name) {
-        var val = arrRef[id][name];
-
-        return toAS(val);
+        return toAS(arrRef[id][name]);
     };
 
     /**
@@ -141,10 +139,12 @@
      * @returns {*}
      */
     js_method = function (id, name) {
-        var i = 0, n = arguments.length - 2, $ = [];
+        var i = 0;
+        var n = arguments.length - 2;
+        var args = [];
 
         for (; i < n; i++) {
-            $[i] = toJS(arguments[i + 2]);
+            args[i] = toJS(arguments[i + 2]);
         }
 
         var obj = arrRef[id];
@@ -152,25 +152,24 @@
         if (isIE && !(obj instanceof Object)) {
             // IE 宿主对象（alert、XMLHTTP 等）可能不是 Function
             switch (n) {
-                case 0:
-                    return toAS(obj[name]());
-                case 1:
-                    return toAS(obj[name]($[0]));
-                case 2:
-                    return toAS(obj[name]($[0], $[1]));
-                case 3:
-                    return toAS(obj[name]($[0], $[1], $[2]));
-                case 4:
-                    return toAS(obj[name]($[0], $[1], $[2], $[3]));
-                case 5:
-                    return toAS(obj[name]($[0], $[1], $[2], $[3], $[4]));
-                default:
-                    return;
+            case 0:
+                return toAS(obj[name]());
+            case 1:
+                return toAS(obj[name](args[0]));
+            case 2:
+                return toAS(obj[name](args[0], args[1]));
+            case 3:
+                return toAS(obj[name](args[0], args[1], args[2]));
+            case 4:
+                return toAS(obj[name](args[0], args[1], args[2], args[3]));
+            case 5:
+                return toAS(obj[name](args[0], args[1], args[2], args[3], args[4]));
+            default:
+                return;
             }
         }
 
-        var ret = obj[name].apply(obj, $);
-        return toAS(ret);
+        return toAS(obj[name].apply(obj, args));
     };
 
     /**
@@ -179,47 +178,51 @@
      * @returns {*}
      */
     js_call = function (id) {
-        var i = 0, n = arguments.length - 1, args = [];
+        var i = 0;
+        var n = arguments.length - 1;
+        var args = [];
 
         for (; i < n; i++) {
             args[i] = toJS(arguments[i + 1]);
         }
 
-        var ret = arrRef[id].apply(null, args);
-        return toAS(ret);
+        return toAS(arrRef[id].apply(null, args));
     };
 
     /**
-     * 以 `new` 方式构造引用表中的构造函数（最多 8 个参数）。
+     * 以 <code>new</code> 方式构造引用表中的构造函数（最多 8 个参数）。
      * @param {number} id
      * @returns {*}
      */
     js_new = function (id) {
-        var i = 0, n = arguments.length - 1, $ = [];
+        var i = 0;
+        var n = arguments.length - 1;
+        var args = [];
 
         for (; i < n; i++) {
-            $[i] = toJS(arguments[i + 1]);
+            args[i] = toJS(arguments[i + 1]);
         }
 
         switch (n) {
-            case 0:
-                return toAS(new arrRef[id]());
-            case 1:
-                return toAS(new arrRef[id]($[0]));
-            case 2:
-                return toAS(new arrRef[id]($[0], $[1]));
-            case 3:
-                return toAS(new arrRef[id]($[0], $[1], $[2]));
-            case 4:
-                return toAS(new arrRef[id]($[0], $[1], $[2], $[3]));
-            case 5:
-                return toAS(new arrRef[id]($[0], $[1], $[2], $[3], $[4]));
-            case 6:
-                return toAS(new arrRef[id]($[0], $[1], $[2], $[3], $[4], $[5]));
-            case 7:
-                return toAS(new arrRef[id]($[0], $[1], $[2], $[3], $[4], $[5], $[6]));
-            case 8:
-                return toAS(new arrRef[id]($[0], $[1], $[2], $[3], $[4], $[5], $[6], $[7]));
+        case 0:
+            return toAS(new arrRef[id]());
+        case 1:
+            return toAS(new arrRef[id](args[0]));
+        case 2:
+            return toAS(new arrRef[id](args[0], args[1]));
+        case 3:
+            return toAS(new arrRef[id](args[0], args[1], args[2]));
+        case 4:
+            return toAS(new arrRef[id](args[0], args[1], args[2], args[3]));
+        case 5:
+            return toAS(new arrRef[id](args[0], args[1], args[2], args[3], args[4]));
+        case 6:
+            return toAS(new arrRef[id](args[0], args[1], args[2], args[3], args[4], args[5]));
+        case 7:
+            return toAS(new arrRef[id](args[0], args[1], args[2], args[3], args[4], args[5], args[6]));
+        case 8:
+            return toAS(new arrRef[id](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]));
         }
     };
 }();
+

@@ -34,14 +34,15 @@ public class BMCNumber extends MCNumber {
      * @param mcWidth 每位宽度；-1 为自动，默认 -1。
      */
     public function BMCNumber(mc:Object, number:uint, startFrame:int = 1, mcWidth:Number = -1) {
-        var mcc:Class;
+        var mcClass:Class;
         if (mc is Class) {
-            mcc = mc as Class;
+            mcClass = mc as Class;
         }
         if (mc is Array) {
             _insArray = mc as Array;
         }
-        super(mcc, number, startFrame, mcWidth);
+
+        super(mcClass, number, startFrame, mcWidth);
     }
 
     /** @private 复用的帧数组 */
@@ -56,12 +57,13 @@ public class BMCNumber extends MCNumber {
             bmc.insArray = _insArray;
         }
         else {
-            var mc:MovieClip = new _mc();
-            bmc.draw(mc);
+            bmc.draw(new _mc());
         }
+
         bmc.gotoAndStop(startFrame + i);
         addChild(bmc);
         _mcs.push(bmc);
+
         return bmc;
     }
 }

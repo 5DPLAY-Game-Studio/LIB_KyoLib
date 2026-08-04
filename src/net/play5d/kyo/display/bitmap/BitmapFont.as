@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import flash.geom.Rectangle;
  *
  * @see BitmapFontText
  * @see BitmapFontLoader
- * @see #translate()
+ * @see #renderText()
  */
 public class BitmapFont {
     /**
@@ -40,7 +40,7 @@ public class BitmapFont {
         _source    = fontBitmap;
         _charWidth = fontXML.info.@size;
 
-        for each(var i:XML in fontXML.chars.char) {
+        for each (var i:XML in fontXML.chars.char) {
             var char:InsCharVO = new InsCharVO(i);
             if (_charHeight < char.height) {
                 _charHeight = char.height;
@@ -92,16 +92,17 @@ public class BitmapFont {
      * @return 含全部字形的透明 <code>BitmapData</code>（调用方负责 dispose）。
      * @example
      * <listing version="3.0">
-     * var bd:BitmapData = font.translate('Hello');
+     * var bd:BitmapData = font.renderText('Hello');
      * </listing>
      * @see #charGap
      * @see #spaceGap
      */
-    public function translate(str:String):BitmapData {
+    public function renderText(str:String):BitmapData {
         var charWidth:Number  = 0;
         var outputChars:Array = [];
         var i:int;
         var char:InsCharVO;
+
         for (i = 0; i < str.length; i++) {
             var code:int = str.charCodeAt(i);
 
@@ -132,23 +133,26 @@ public class BitmapFont {
         for (i = 0; i < outputChars.length; i++) {
             char = outputChars[i];
 
-            var sourceRect:Rectangle = new Rectangle(char.sx, char.sy, char.width, char.height);
-            var destPoint:Point      = new Point(char.x + offsetX, char.y + (char.yoffset - _yOffsetMin) + offsetY);
-
-            output.copyPixels(_source, sourceRect, destPoint, null, null, true);
+            output.copyPixels(
+                _source,
+                new Rectangle(char.sx, char.sy, char.width, char.height),
+                new Point(char.x + offsetX, char.y + (char.yoffset - _yOffsetMin) + offsetY),
+                null,
+                null,
+                true
+            );
         }
 
         return output;
     }
 
-    /**
-     * @private 按字符码取字形副本；无缓存则返回 <code>null</code>。
-     */
+    /** @private 按字符码取字形副本；无缓存则返回 <code>null</code>。 */
     private function getChar(code:int):InsCharVO {
         var char:InsCharVO = _fontCache[code];
         if (char) {
             return char.clone();
         }
+
         return null;
     }
 

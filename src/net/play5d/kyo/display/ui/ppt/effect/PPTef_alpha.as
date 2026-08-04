@@ -34,7 +34,7 @@ public class PPTef_alpha extends BasePPTEffect {
         super();
     }
 
-    /** @private 当前 TweenLite 实例 */
+    /** @private 当前过渡 Tween */
     private var _tween:TweenLite;
 
     /**
@@ -58,8 +58,7 @@ public class PPTef_alpha extends BasePPTEffect {
 
     /** @inheritDoc */
     public override function tweenBack():void {
-        var t:Number = duration / 2;
-        _tween       = TweenLite.to(_sp, t, {alpha: 1});
+        _tween = TweenLite.to(_sp, duration / 2, {alpha: 1});
     }
 
     /** @inheritDoc */

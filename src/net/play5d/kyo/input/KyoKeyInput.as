@@ -45,7 +45,7 @@ public class KyoKeyInput {
      * 是否记录连招顺序队列。
      * @default true
      */
-    public var orderKeyAble:Boolean  = true;
+    public var orderKeyEnabled:Boolean = true;
     /**
      * 连续按键队列的最大值。
      * @default 10
@@ -55,15 +55,15 @@ public class KyoKeyInput {
      * 连续按键时间限定（毫秒）；超时则清空队列。
      * @default 200
      */
-    public var orderKeyDuration:int  = 200;
+    public var orderKeyDuration:int = 200;
     /** @private */
-    private var _orderKeys:Array     = [];
+    private var _orderKeys:Array  = [];
     /** @private */
     private var _lastDownTime:int;
     /** @private */
-    private var _downCodes:Object    = {};
+    private var _downCodes:Object = {};
     /** @private name → KyoKeyVO */
-    private var _keys:Object         = {};
+    private var _keys:Object      = {};
     /** @private code → KyoKeyVO */
     private var _map:Object;
     /** @private */
@@ -85,8 +85,8 @@ public class KyoKeyInput {
      */
     public function mappingKeyCode(array:Array):void {
         clearMappingKeyCode();
-        for each(var i:Object in array) {
-            addMappingKeyCodeVO(i);
+        for each (var item:Object in array) {
+            addMappingKeyCodeVO(item);
         }
         updateMapping();
     }
@@ -107,8 +107,8 @@ public class KyoKeyInput {
         else {
             k = new KyoKeyVO(o.name, o.code);
         }
-        _keys[k.name] = k;
 
+        _keys[k.name] = k;
         updateMapping();
     }
 
@@ -128,6 +128,7 @@ public class KyoKeyInput {
         if (o is KyoKeyVO) {
             s = (o as KyoKeyVO).name;
         }
+
         if (s && _keys[s]) {
             delete _keys[s];
             updateMapping();
@@ -160,6 +161,7 @@ public class KyoKeyInput {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -173,9 +175,10 @@ public class KyoKeyInput {
      */
     public function printKeys():Object {
         var o:Object = {};
-        for each(var i:KyoKeyVO in _keys) {
-            o[i.name] = i.code;
+        for each (var key:KyoKeyVO in _keys) {
+            o[key.name] = key.code;
         }
+
         return o;
     }
 
@@ -192,10 +195,12 @@ public class KyoKeyInput {
         if (_isOn) {
             return;
         }
+
         _isOn = true;
         if (stage == null) {
             throw new Error('stage 不能为 null');
         }
+
         stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
         stage.addEventListener(KeyboardEvent.KEY_UP, keyHandler);
     }
@@ -210,6 +215,7 @@ public class KyoKeyInput {
     public function turnOff():void {
         _isOn      = false;
         _orderKeys = [];
+
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
         stage.removeEventListener(KeyboardEvent.KEY_UP, keyHandler);
     }
@@ -225,13 +231,13 @@ public class KyoKeyInput {
      */
     public function isDownKey(...params):Boolean {
         var isDown:Boolean;
-        for each(var i:Object in params) {
-            var ki:KyoKeyVO = _keys[i] as KyoKeyVO;
-            isDown          = ki.isDown;
+        for each (var name:Object in params) {
+            isDown = (_keys[name] as KyoKeyVO).isDown;
             if (!isDown) {
                 return false;
             }
         }
+
         return isDown;
     }
 
@@ -246,12 +252,13 @@ public class KyoKeyInput {
      */
     public function isDownCode(...params):Boolean {
         var isDown:Boolean;
-        for each(var i:Object in params) {
-            isDown = _downCodes[i] != null;
+        for each (var code:Object in params) {
+            isDown = _downCodes[code] != null;
             if (!isDown) {
                 return false;
             }
         }
+
         return isDown;
     }
 
@@ -267,11 +274,11 @@ public class KyoKeyInput {
     public function isPressKey(...params):Boolean {
         var isDown:Boolean = isDownKey.apply(null, params);
         if (isDown) {
-            for each(var i:Object in params) {
-                var ki:KyoKeyVO = _keys[i] as KyoKeyVO;
-                ki.isDown       = false;
+            for each (var name:Object in params) {
+                (_keys[name] as KyoKeyVO).isDown = false;
             }
         }
+
         return isDown;
     }
 
@@ -287,10 +294,11 @@ public class KyoKeyInput {
     public function isPressCode(...params):Boolean {
         var isDown:Boolean = isDownCode.apply(null, params);
         if (isDown) {
-            for each(var i:Object in params) {
-                delete _downCodes[i];
+            for each (var code:Object in params) {
+                delete _downCodes[code];
             }
         }
+
         return isDown;
     }
 
@@ -319,19 +327,20 @@ public class KyoKeyInput {
      * @see #clearInorder()
      */
     public function inorder(...params):Boolean {
-        var s:int = _orderKeys.length - params.length;
-        if (s < 0) {
+        var start:int = _orderKeys.length - params.length;
+        if (start < 0) {
             return false;
         }
-        var l:int = Math.max(_orderKeys.length, params.length);
-        for (var i:int = 0; i < l; i++) {
-            var ok:KyoKeyVO = _orderKeys[s + i];
-            var pk:KyoKeyVO = params[i];
-            if (pk != ok) {
+
+        var len:int = Math.max(_orderKeys.length, params.length);
+        for (var i:int = 0; i < len; i++) {
+            if (params[i] != _orderKeys[start + i]) {
                 return false;
             }
         }
+
         _orderKeys = [];
+
         return true;
     }
 
@@ -362,8 +371,8 @@ public class KyoKeyInput {
      */
     private function updateMapping():void {
         _map = {};
-        for each(var i:KyoKeyVO in _keys) {
-            _map[i.code] = i;
+        for each (var key:KyoKeyVO in _keys) {
+            _map[key.code] = key;
         }
         turnOn();
     }
@@ -372,14 +381,17 @@ public class KyoKeyInput {
      * @private 写入连招队列。
      */
     private function pushOrder(k:KyoKeyVO):void {
-        if (!orderKeyAble) {
+        if (!orderKeyEnabled) {
             return;
         }
+
         if (getTimer() - _lastDownTime > orderKeyDuration) {
             _orderKeys = [];
         }
+
         _lastDownTime = getTimer();
         _orderKeys.push(k);
+
         if (_orderKeys.length > maxOrderKeyLength) {
             _orderKeys.shift();
         }
@@ -390,7 +402,6 @@ public class KyoKeyInput {
      */
     private function keyHandler(e:KeyboardEvent):void {
         var ki:KyoKeyVO;
-
         if (_map) {
             ki = _map[e.keyCode] as KyoKeyVO;
         }
@@ -405,10 +416,8 @@ public class KyoKeyInput {
                     _downF(ki.name);
                 }
             }
-            else {
-                if (_downF != null) {
-                    _downF(e.keyCode);
-                }
+            else if (_downF != null) {
+                _downF(e.keyCode);
             }
             _downCodes[e.keyCode] = 1;
         }
@@ -419,14 +428,11 @@ public class KyoKeyInput {
                     _upF(ki.name);
                 }
             }
-            else {
-                if (_upF != null) {
-                    _upF(e.keyCode);
-                }
+            else if (_upF != null) {
+                _upF(e.keyCode);
             }
             delete _downCodes[e.keyCode];
         }
     }
-
 }
 }

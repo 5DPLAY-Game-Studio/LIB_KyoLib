@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,8 @@ public class KyoDrawUtils {
      * </listing>
      */
     public static function drawRing(
-            width:Number, radius:Number, angle:int, color:Object = null, alpha:Number = 1):BitmapData {
+            width:Number, radius:Number, angle:int, color:Object = null, alpha:Number = 1
+    ):BitmapData {
         if (color == null) {
             color = KyoColor.YELLOW;
         }
@@ -88,8 +89,8 @@ public class KyoDrawUtils {
      * </listing>
      */
     public static function drawSector(
-            graphics:Graphics, x:Number = 200, y:Number = 200, r:Number = 100, angle:Number = 60, startFrom:Number = 0,
-            color:Object = null, alpha:Number = 1
+            graphics:Graphics, x:Number = 200, y:Number = 200, r:Number = 100, angle:Number = 60,
+            startFrom:Number = 0, color:Object = null, alpha:Number = 1
     ):void {
         if (color == null) {
             color = KyoColor.WHITE;
@@ -98,7 +99,7 @@ public class KyoDrawUtils {
         graphics.clear();
         if (color is Array) {
             var alphaArr:Array = [];
-            for (var j:int; j < color.length; j++) {
+            for (var j:int = 0; j < (color as Array).length; j++) {
                 alphaArr.push(alpha);
             }
             graphics.beginGradientFill(GradientType.LINEAR, color as Array, alphaArr, [128, 255]);
@@ -117,16 +118,13 @@ public class KyoDrawUtils {
 
         graphics.moveTo(x + r * Math.cos(startFrom), y + r * Math.sin(startFrom));
 
-        var i:int;
-        var angleMid:Number, bx:Number, by:Number, cx:Number, cy:Number;
-
-        for (i = 1; i <= n; i++) {
+        for (var i:int = 1; i <= n; i++) {
             startFrom += angleA;
-            angleMid = startFrom - angleA / 2;
-            bx       = x + r / Math.cos(angleA / 2) * Math.cos(angleMid);
-            by       = y + r / Math.cos(angleA / 2) * Math.sin(angleMid);
-            cx       = x + r * Math.cos(startFrom);
-            cy       = y + r * Math.sin(startFrom);
+            var angleMid:Number = startFrom - angleA / 2;
+            var bx:Number       = x + r / Math.cos(angleA / 2) * Math.cos(angleMid);
+            var by:Number       = y + r / Math.cos(angleA / 2) * Math.sin(angleMid);
+            var cx:Number       = x + r * Math.cos(startFrom);
+            var cy:Number       = y + r * Math.sin(startFrom);
             graphics.curveTo(bx, by, cx, cy);
         }
 
@@ -138,3 +136,4 @@ public class KyoDrawUtils {
 
 }
 }
+

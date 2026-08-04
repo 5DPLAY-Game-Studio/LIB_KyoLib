@@ -60,30 +60,33 @@ public class KyoRepeater {
      * </listing>
      */
     public function getItems():Array {
-        var a:Array = [];
+        var items:Array = [];
         for (var i:int; i < dataProvider.length; i++) {
-            a.push(newItem(dataProvider[i]));
+            items.push(newItem(dataProvider[i]));
         }
-        return a;
+
+        return items;
     }
 
     /**
      * @private 创建单项并按 <code>bindProperty</code> 赋值。
      */
     private function newItem(data:Object):Object {
-        var o:Object = new bindClass();
+        var item:Object = new bindClass();
         if (bindProperty) {
             if (bindProperty is String) {
-                o[bindProperty] = bindProperty in data ? data[bindProperty] : data;
+                item[bindProperty] = bindProperty in data ? data[bindProperty] : data;
             }
-            if (bindProperty is Array) {
-                for each(var i:String in bindProperty) {
-                    o[i] = data[bindProperty[i]];
+            else if (bindProperty is Array) {
+                for each (var prop:String in bindProperty as Array) {
+                    item[prop] = data[prop];
                 }
             }
         }
-        return o;
+
+        return item;
     }
 
 }
 }
+

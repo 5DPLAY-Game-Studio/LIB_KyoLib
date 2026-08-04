@@ -27,12 +27,6 @@ import flash.display.BitmapData;
  */
 public class BitmapMCFrameVO {
     /**
-     * 构造空帧数据。
-     */
-    public function BitmapMCFrameVO() {
-    }
-
-    /**
      * 绘制时源对象的 X（播放时取负作为位图偏移）。
      * @default 0
      */

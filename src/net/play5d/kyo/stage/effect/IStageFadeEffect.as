@@ -20,25 +20,25 @@ package net.play5d.kyo.stage.effect {
 import net.play5d.kyo.stage.IStage;
 
 /**
- * 场景层淡入 / 淡出效果接口（历史拼写 <code>Fad</code>）。
+ * 场景层淡入 / 淡出效果接口。
  *
  * @see ElastEffect
  * @see ZoomEffect
- * @see StageFadEffectOrg
+ * @see StageFadeEffectOrg
  */
-public interface IStageFadEffect {
+public interface IStageFadeEffect {
     /**
      * 淡入（弹出）效果。
      * @param stage 目标场景。
      * @param complete 完成回调；可省略。
      */
-    function fadIn(stage:IStage, complete:Function = null):void;
+    function fadeIn(stage:IStage, complete:Function = null):void;
 
     /**
      * 淡出（关闭）效果。
      * @param stage 目标场景。
      * @param complete 完成回调；可省略。
      */
-    function fadOut(stage:IStage, complete:Function = null):void;
+    function fadeOut(stage:IStage, complete:Function = null):void;
 }
 }

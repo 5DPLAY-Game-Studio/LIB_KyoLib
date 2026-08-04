@@ -49,22 +49,22 @@ public class IphoneScrollPane extends Sprite {
      * 判定为拖拽的最小像素位移。
      * @default 5
      */
-    public var dragPixel:int    = 5;
+    public var dragPixel:int   = 5;
     /**
      * 是否允许水平滚动。
      * @default true
      */
-    public var H_enab:Boolean   = true;
+    public var hEnabled:Boolean = true;
     /**
      * 是否允许垂直滚动。
      * @default true
      */
-    public var V_enab:Boolean   = true;
+    public var vEnabled:Boolean = true;
     /**
      * 是否响应拖拽。
      * @default true
      */
-    public var enabled:Boolean  = true;
+    public var enabled:Boolean = true;
     /** @private */
     private var _size:Point;
     /** @private 按下时舞台坐标 */
@@ -76,7 +76,7 @@ public class IphoneScrollPane extends Sprite {
     /** @private 按下时的 scrollRect */
     private var _downSR:Rectangle;
     /** @private 是否已进入拖拽 */
-    private var _draging:Boolean;
+    private var _dragging:Boolean;
     /** @private */
     private var _source:DisplayObject;
 
@@ -149,12 +149,7 @@ public class IphoneScrollPane extends Sprite {
      * @param yy 垂直位移，默认 0。
      */
     public function move(xx:Number, yy:Number = 0):void {
-        var w:Number       = _size.x;
-        var h:Number       = _size.y;
-        var rect:Rectangle = new Rectangle(0, 0, w, h);
-        if (_release) {
-            rect = scrollRect.clone();
-        }
+        var rect:Rectangle = _release ? scrollRect.clone() : new Rectangle(0, 0, _size.x, _size.y);
 
         if (_release) {
             rect.x += _mouseSpd.x;
@@ -172,8 +167,9 @@ public class IphoneScrollPane extends Sprite {
             rect.x += _downSR.x;
             rect.y += _downSR.y;
         }
+
         if (_release) {
-            _mouseSpd.x = KyoMath.wake(_mouseSpd.x, 3);
+            _mouseSpd.x = KyoMath.weaken(_mouseSpd.x, 3);
             if (_mouseSpd.x > 6 && rect.x > (_source.width - _size.x) + 100) {
                 _mouseSpd.x = -6;
             }
@@ -181,7 +177,7 @@ public class IphoneScrollPane extends Sprite {
                 _mouseSpd.x = 6;
             }
 
-            _mouseSpd.y = KyoMath.wake(_mouseSpd.y, 3);
+            _mouseSpd.y = KyoMath.weaken(_mouseSpd.y, 3);
             if (_mouseSpd.y > 6 && rect.y > (_source.height - _size.y) + 100) {
                 _mouseSpd.y = -6;
             }
@@ -193,6 +189,7 @@ public class IphoneScrollPane extends Sprite {
                 finalEndDrag();
             }
         }
+
         updateScrollRect(rect);
     }
 
@@ -201,15 +198,15 @@ public class IphoneScrollPane extends Sprite {
      * @param xx 水平位移。
      * @param yy 垂直位移。
      */
-    protected function checkDraging(xx:Number, yy:Number):void {
-        _draging = KyoScrollDragUtil.updateDragging(_draging, xx, yy, dragPixel, H_enab, V_enab, stage);
+    protected function checkDragging(xx:Number, yy:Number):void {
+        _dragging = KyoScrollDragUtil.updateDragging(_dragging, xx, yy, dragPixel, hEnabled, vEnabled, stage);
     }
 
     /**
      * @private 惯性结束：越界则 Tween 回弹。
      */
     private function finalEndDrag():void {
-        removeEventListener(Event.ENTER_FRAME, draging);
+        removeEventListener(Event.ENTER_FRAME, onDragging);
         var rect:Rectangle = scrollRect.clone();
         var to:Object      = {};
 
@@ -263,13 +260,13 @@ public class IphoneScrollPane extends Sprite {
     }
 
     /**
-     * @private 相对按下点的鼠标位移（受 H/V 开关限制）。
+     * @private 相对按下点的鼠标位移（受 h/v 开关限制）。
      */
     private function mousePoint():Point {
         if (!stage) {
             return null;
         }
-        return KyoScrollDragUtil.mouseDelta(_downPoint, stage.mouseX, stage.mouseY, H_enab, V_enab);
+        return KyoScrollDragUtil.mouseDelta(_downPoint, stage.mouseX, stage.mouseY, hEnabled, vEnabled);
     }
 
     /**
@@ -298,9 +295,9 @@ public class IphoneScrollPane extends Sprite {
         _downPoint = new Point(stage.mouseX, stage.mouseY);
         _downSR    = scrollRect;
 
-        addEventListener(Event.ENTER_FRAME, draging);
-        _draging = false;
-        _release = false;
+        addEventListener(Event.ENTER_FRAME, onDragging);
+        _dragging = false;
+        _release  = false;
         if (stage) {
             stage.addEventListener(MouseEvent.MOUSE_UP, endDrag);
         }
@@ -329,13 +326,13 @@ public class IphoneScrollPane extends Sprite {
     /**
      * @private 拖拽帧更新。
      */
-    private function draging(e:Event):void {
+    private function onDragging(e:Event):void {
         var pp:Point = mousePoint();
         if (!pp) {
             return;
         }
-        checkDraging(pp.x, pp.y);
-        if (_draging) {
+        checkDragging(pp.x, pp.y);
+        if (_dragging) {
             move(pp.x, pp.y);
         }
     }

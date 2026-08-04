@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ public class BitmapFontLoader {
     /** @private 全部完成回调 */
     private var _loadBack:Function;
     /** @private 进度回调，参数为 0–1 */
-    private var _loadProcess:Function;
+    private var _loadProgress:Function;
 
     /**
      * 清空已缓存的字体。
@@ -76,8 +76,8 @@ public class BitmapFontLoader {
      * @see #getFont()
      */
     public function loadFonts(urls:Array, back:Function = null, process:Function = null):void {
-        _loadBack    = back;
-        _loadProcess = process;
+        _loadBack     = back;
+        _loadProgress = process;
 
         _urls       = urls;
         _loadAmount = urls.length;
@@ -99,10 +99,7 @@ public class BitmapFontLoader {
      * @see #addFont()
      */
     public function loadFont(url:String, fontXML:XML, back:Function = null, fail:Function = null):void {
-        var bpurl:String  = fontXML.pages.page.@file;
-        var floder:String = url.substr(0, url.lastIndexOf('/') + 1);
-        var bpUrl:String  = floder + bpurl;
-        loadBitmapData(bpUrl, fontXML, back, fail);
+        loadBitmapData(resolveSiblingPath(url, fontXML.pages.page.@file), fontXML, back, fail);
     }
 
     /**
@@ -116,14 +113,14 @@ public class BitmapFontLoader {
      * @see #getFont()
      */
     public function addFont(xml:XML, bitmap:BitmapData):void {
-        var fontid:String = xml.info.@face;
-        _fontObj[fontid]  = new BitmapFont(xml, bitmap);
+        var fontId:String = xml.info.@face;
+        _fontObj[fontId]  = new BitmapFont(xml, bitmap);
     }
 
     /**
      * 按字体名（XML <code>info.&#64;face</code>）取已缓存的 <code>BitmapFont</code>。
      * @param id 字体 face 名。
-     * @return 对应字体；未加载过则为 <code>undefined</code>/<code>null</code>。
+     * @return 对应字体；未加载过则为 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var font:BitmapFont = loader.getFont('UI');
@@ -133,28 +130,24 @@ public class BitmapFontLoader {
         return _fontObj[id];
     }
 
-    /**
-     * @private 批量加载全部完成。
-     */
+    /** @private 批量加载全部完成。 */
     private function loadComplete():void {
         if (_loadBack != null) {
             _loadBack();
             _loadBack = null;
         }
-        _loadProcess = null;
+        _loadProgress = null;
     }
 
-    /**
-     * @private 队列中取下一个 XML 加载。
-     */
+    /** @private 队列中取下一个 XML 加载。 */
     private function loadNext():void {
-        if (_loadProcess != null) {
-            var cur:int = _loadAmount - _urls.length;
-            _loadProcess(cur / _loadAmount);
+        if (_loadProgress != null) {
+            _loadProgress((_loadAmount - _urls.length) / _loadAmount);
         }
 
         if (_urls.length < 1) {
             loadComplete();
+
             return;
         }
 
@@ -162,11 +155,8 @@ public class BitmapFontLoader {
         KyoURLoader.load(url, loadXMLFin, loadXMLFail);
 
         function loadXMLFin(v:String):void {
-            var xml:XML       = new XML(v);
-            var bpurl:String  = xml.pages.page.@file;
-            var floder:String = url.substr(0, url.lastIndexOf('/') + 1);
-            var bpUrl:String  = floder + bpurl;
-            loadBitmapData(bpUrl, xml, loadNext, loadNext);
+            var xml:XML = new XML(v);
+            loadBitmapData(resolveSiblingPath(url, xml.pages.page.@file), xml, loadNext, loadNext);
         }
 
         function loadXMLFail():void {
@@ -175,28 +165,32 @@ public class BitmapFontLoader {
         }
     }
 
-    /**
-     * @private 加载贴图并注册 <code>BitmapFont</code>。
-     */
-    private function loadBitmapData(bpurl:String, xml:XML, back:Function = null, fail:Function = null):void {
-        var fontid:String = xml.info.@face;
+    /** @private 加载贴图并注册 <code>BitmapFont</code>。 */
+    private function loadBitmapData(bpUrl:String, xml:XML, back:Function = null, fail:Function = null):void {
+        var fontId:String = xml.info.@face;
 
-        var loader:BitmapLoader = new BitmapLoader();
-        loader.load(bpurl, loadBpComplete, loadBpFail);
+        new BitmapLoader().load(bpUrl, loadBpComplete, loadBpFail);
 
         function loadBpComplete(b:Bitmap):void {
-            _fontObj[fontid] = new BitmapFont(xml, b.bitmapData);
+            _fontObj[fontId] = new BitmapFont(xml, b.bitmapData);
             if (back != null) {
                 back();
             }
         }
 
         function loadBpFail(e:Event):void {
-            trace('BitmapFontLoader.loadBpFail::' + bpurl);
+            trace('BitmapFontLoader.loadBpFail::' + bpUrl);
             if (fail != null) {
                 fail();
             }
         }
+    }
+
+    /**
+     * @private 取 <code>baseUrl</code> 所在目录下的兄弟路径。
+     */
+    private function resolveSiblingPath(baseUrl:String, fileName:String):String {
+        return baseUrl.substr(0, baseUrl.lastIndexOf('/') + 1) + fileName;
     }
 
 }

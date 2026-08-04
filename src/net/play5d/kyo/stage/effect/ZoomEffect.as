@@ -28,10 +28,10 @@ import net.play5d.kyo.stage.IStage;
 /**
  * 缩放弹出 / 缩回的场景层效果。
  *
- * @see IStageFadEffect
+ * @see IStageFadeEffect
  * @see ElastEffect
  */
-public class ZoomEffect implements IStageFadEffect {
+public class ZoomEffect implements IStageFadeEffect {
     /**
      * @param duration 时长（秒）。
      * @param back 淡入是否使用 <code>Back.easeOut</code>。
@@ -52,20 +52,22 @@ public class ZoomEffect implements IStageFadEffect {
      * @param complete 完成回调；可省略。
      * @example
      * <listing version="3.0">
-     * new ZoomEffect().fadIn(layer, onDone);
+     * new ZoomEffect().fadeIn(layer, onDone);
      * </listing>
      */
-    public function fadIn(stage:IStage, complete:Function = null):void {
+    public function fadeIn(stage:IStage, complete:Function = null):void {
         var z:Number        = 0.5;
-        var p:Point         = new Point();
         var d:DisplayObject = stage.display;
-        p.x                 = d.x + d.width * z / 2;
-        p.y                 = d.y + d.height * z / 2;
+        var p:Point         = new Point(
+            d.x + d.width * z / 2,
+            d.y + d.height * z / 2
+        );
 
         var to:Object = {scaleX: z, scaleY: z, x: p.x, y: p.y, onComplete: complete};
         if (_back) {
-            to['ease'] = Back.easeOut;
+            to.ease = Back.easeOut;
         }
+
         TweenLite.from(stage.display, _duration, to);
     }
 
@@ -75,16 +77,24 @@ public class ZoomEffect implements IStageFadEffect {
      * @param complete 完成回调；可省略。
      * @example
      * <listing version="3.0">
-     * new ZoomEffect().fadOut(layer, onDone);
+     * new ZoomEffect().fadeOut(layer, onDone);
      * </listing>
      */
-    public function fadOut(stage:IStage, complete:Function = null):void {
+    public function fadeOut(stage:IStage, complete:Function = null):void {
         var z:Number        = 0.1;
-        var p:Point         = new Point();
         var d:DisplayObject = stage.display;
-        p.x                 = d.x + d.width / 2 - d.width * z;
-        p.y                 = d.y + d.height / 2 - d.height * z;
-        TweenLite.to(stage.display, _duration, {scaleX: z, scaleY: z, x: p.x, y: p.y, onComplete: complete});
+        var p:Point         = new Point(
+            d.x + d.width / 2 - d.width * z,
+            d.y + d.height / 2 - d.height * z
+        );
+
+        TweenLite.to(stage.display, _duration, {
+            scaleX    : z,
+            scaleY    : z,
+            x         : p.x,
+            y         : p.y,
+            onComplete: complete
+        });
     }
 }
 }

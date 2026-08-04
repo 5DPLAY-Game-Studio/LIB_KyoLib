@@ -60,10 +60,10 @@ public class AJAX {
     public static function get(url:String, data:URLVariables = null, back:Function = null):void {
         if (data) {
             var sep:String = url.indexOf('?') == -1 ? '?' : '&';
-            url            = url + sep + data.toString();
+            url += sep + data.toString();
         }
+
         KyoURLoader.load(url, back);
     }
-
 }
 }

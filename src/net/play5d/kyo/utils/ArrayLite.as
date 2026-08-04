@@ -26,20 +26,12 @@ package net.play5d.kyo.utils {
  */
 public class ArrayLite {
     /**
-     * 构造函数。
-     */
-    public function ArrayLite() {
-        super();
-        _o = {};
-    }
-
-    /**
      * 当前键值对数量。
      * @default 0
      */
     public var length:int;
     /** @private */
-    private var _o:Object;
+    private var _o:Object = {};
 
     /**
      * 写入或覆盖一项；新键时 <code>length</code> 加一。

@@ -40,7 +40,7 @@ public class PPTef_scrollH extends BasePPTEffect {
      * @default 1
      */
     public var direct:int = 1;
-    /** @private */
+    /** @private 当前过渡 Tween */
     private var _tween:TweenLite;
 
     /**
@@ -88,8 +88,7 @@ public class PPTef_scrollH extends BasePPTEffect {
 
     /** @inheritDoc */
     public override function tweenBack():void {
-        var t:Number = duration / 2;
-        _tween       = TweenLite.to(_sp, t, {x: 0});
+        _tween = TweenLite.to(_sp, duration / 2, {x: 0});
     }
 
     /** @inheritDoc */
@@ -105,7 +104,7 @@ public class PPTef_scrollH extends BasePPTEffect {
     }
 
     /** @inheritDoc */
-    protected override function onDraging():void {
+    protected override function onDragging():void {
         _sp.x = mousePoint().x - _downP.x;
     }
 

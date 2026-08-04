@@ -55,6 +55,7 @@ public class StageEffect {
      */
     public static function get I():StageEffect {
         _i ||= new StageEffect();
+
         return _i;
     }
 
@@ -100,17 +101,18 @@ public class StageEffect {
      * </listing>
      */
     public function shake(x:uint, y:uint, back:Function = null, gapFrame:int = 1):void {
-        var iii:int = 1;
+        var dir:int = 1;
         var n:int;
-        stage.x     = stage.y = 0;
 
-        doBack();
+        stage.x = stage.y = 0;
+
+        invokeShakeBack();
         _shakeBack = back;
 
         stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
         stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-        function doBack():void {
+        function invokeShakeBack():void {
             if (_shakeBack != null) {
                 _shakeBack();
                 _shakeBack = null;
@@ -123,10 +125,9 @@ public class StageEffect {
                 return;
             }
 
-            stage.x = x * iii;
-            stage.y = y * iii;
-
-            iii *= -1;
+            stage.x = x * dir;
+            stage.y = y * dir;
+            dir *= -1;
 
             if (n % 2 == 0) {
                 if (x > 0) {
@@ -141,7 +142,7 @@ public class StageEffect {
                 stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
                 stage.x = 0;
                 stage.y = 0;
-                doBack();
+                invokeShakeBack();
             }
         }
     }
@@ -170,6 +171,7 @@ public class StageEffect {
         if (!pt) {
             return;
         }
+
         var bp:Bitmap = KyoDisplayUtils.drawDisplay(stage, false);
         pt.addChild(bp);
         bp.addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -180,6 +182,7 @@ public class StageEffect {
             bp.scaleX += 0.04;
             bp.scaleY += 0.04;
             bp.alpha -= 0.1;
+
             if (bp.alpha <= 0) {
                 bp.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
                 pt.removeChild(bp);
@@ -188,6 +191,5 @@ public class StageEffect {
             }
         }
     }
-
 }
 }

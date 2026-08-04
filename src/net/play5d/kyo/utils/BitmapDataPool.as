@@ -35,7 +35,8 @@ import flash.utils.Dictionary;
  * </listing>
  */
 public class BitmapDataPool {
-
+    /** @private 每桶最大缓存张数 */
+    private static const MAX_PER_BUCKET:int = 8;
     /** @private */
     private static var _i:BitmapDataPool;
 
@@ -44,9 +45,8 @@ public class BitmapDataPool {
      * @return 单例实例。
      */
     public static function get I():BitmapDataPool {
-        if (!_i) {
-            _i = new BitmapDataPool();
-        }
+        _i ||= new BitmapDataPool();
+
         return _i;
     }
 
@@ -55,9 +55,6 @@ public class BitmapDataPool {
      */
     public function BitmapDataPool() {
     }
-
-    /** @private 每桶最大缓存张数 */
-    private static const MAX_PER_BUCKET:int = 8;
 
     /** @private */
     private var _buckets:Dictionary = new Dictionary();
@@ -72,7 +69,10 @@ public class BitmapDataPool {
      * @return 可绘制的 <code>BitmapData</code>；宽或高非法时为 <code>null</code>。
      */
     public function acquire(
-            width:int, height:int, transparent:Boolean = true, fillColor:uint = KyoColor.BLACK
+        width       :int,
+        height      :int,
+        transparent :Boolean = true,
+        fillColor   :uint = KyoColor.BLACK
     ):BitmapData {
         if (width < 1 || height < 1) {
             return null;
@@ -80,12 +80,13 @@ public class BitmapDataPool {
 
         var key:String               = bucketKey(width, height, transparent);
         var list:Vector.<BitmapData> = _buckets[key] as Vector.<BitmapData>;
-        var bd:BitmapData;
         if (list && list.length > 0) {
-            bd = list.pop();
+            var bd:BitmapData = list.pop();
             bd.fillRect(new Rectangle(0, 0, bd.width, bd.height), fillColor);
+
             return bd;
         }
+
         return new BitmapData(width, height, transparent, fillColor);
     }
 
@@ -98,6 +99,7 @@ public class BitmapDataPool {
         if (!bd) {
             return;
         }
+
         try {
             var key:String               = bucketKey(bd.width, bd.height, bd.transparent);
             var list:Vector.<BitmapData> = _buckets[key] as Vector.<BitmapData>;
@@ -112,6 +114,7 @@ public class BitmapDataPool {
         }
         catch (e:Error) {
         }
+
         try {
             bd.dispose();
         }
@@ -123,11 +126,11 @@ public class BitmapDataPool {
      * 清空并释放池内全部位图。
      */
     public function clear():void {
-        for each(var list:Vector.<BitmapData> in _buckets) {
+        for each (var list:Vector.<BitmapData> in _buckets) {
             if (!list) {
                 continue;
             }
-            for each(var bd:BitmapData in list) {
+            for each (var bd:BitmapData in list) {
                 try {
                     bd.dispose();
                 }
@@ -136,6 +139,7 @@ public class BitmapDataPool {
             }
             list.length = 0;
         }
+
         _buckets = new Dictionary();
     }
 
@@ -143,6 +147,5 @@ public class BitmapDataPool {
     private function bucketKey(width:int, height:int, transparent:Boolean):String {
         return width + 'x' + height + (transparent ? 't' : 'o');
     }
-
 }
 }

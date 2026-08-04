@@ -41,7 +41,7 @@ public class PicLoader extends Sprite {
      */
     public function PicLoader(size:Point, url:String = null) {
         this._size = size;
-        this.url   = url;
+        this._url  = url;
     }
 
     /**
@@ -52,7 +52,7 @@ public class PicLoader extends Sprite {
     /** @private */
     private var _size:Point;
     /** @private 资源 URL */
-    private var url:String;
+    private var _url:String;
     /** @private 是否已成功加载过 */
     private var _isComplete:Boolean;
     /** @private */
@@ -60,7 +60,7 @@ public class PicLoader extends Sprite {
     /** @private */
     private var _failBack:Function;
     /** @private */
-    private var _processBack:Function;
+    private var _progressBack:Function;
     /** @private 内部 ImageLoader / SwfLoader */
     private var _loader:*;
 
@@ -112,7 +112,7 @@ public class PicLoader extends Sprite {
         if (l is ImageLoader) {
             (l as ImageLoader).unloadAndDispose();
         }
-        if (l is SwfLoader) {
+        else if (l is SwfLoader) {
             (l as SwfLoader).unload();
         }
     }
@@ -132,37 +132,39 @@ public class PicLoader extends Sprite {
      * 开始加载；若已成功过则直接回调成功。
      * @param success 成功回调，参数为本实例，可选。
      * @param fail 失败回调，参数为本实例，可选。
-     * @param process 进度回调 <code>(pic, per)</code>，可选。
+     * @param progress 进度回调 <code>(pic, per)</code>，可选。
      * @example
      * <listing version="3.0">
      * pic.load(onOk, onFail, onProgress);
      * </listing>
      */
-    public final function load(success:Function = null, fail:Function = null, process:Function = null):void {
+    public final function load(success:Function = null, fail:Function = null, progress:Function = null):void {
         if (_isComplete) {
             if (success != null) {
                 success(this);
             }
+
             return;
         }
 
-        _succBack    = success;
-        _failBack    = fail;
-        _processBack = process;
+        _succBack     = success;
+        _failBack     = fail;
+        _progressBack = progress;
 
-        if (url.indexOf('|') != -1) {
-            var us:Array      = url.split('|');
-            var url2:String   = us[0];
-            var prefix:String = us[1].toLocaleLowerCase();
-            if (prefix == '.swf') {
-                loader = new SwfLoader(url2, _size, loadSuccess, loadFail, loadProcess);
+        if (_url.indexOf('|') != -1) {
+            var parts:Array      = _url.split('|');
+            var path:String      = parts[0];
+            var extension:String = String(parts[1]).toLowerCase();
+
+            if (extension == '.swf') {
+                loader = new SwfLoader(path, _size, loadSuccess, loadFail, loadProgress);
             }
             else {
-                loader = new ImageLoader(url2, _size, loadSuccess, loadFail, loadProcess);
+                loader = new ImageLoader(path, _size, loadSuccess, loadFail, loadProgress);
             }
         }
         else {
-            loader = new ImageLoader(url, _size, loadSuccess, loadFail);
+            loader = new ImageLoader(_url, _size, loadSuccess, loadFail, loadProgress);
         }
     }
 
@@ -171,13 +173,12 @@ public class PicLoader extends Sprite {
      */
     private function loadSuccess(...params):void {
         _isComplete = true;
+
         if (_succBack != null) {
             _succBack(this);
         }
 
-        _succBack    = null;
-        _failBack    = null;
-        _processBack = null;
+        clearCallbacks();
     }
 
     /**
@@ -185,22 +186,30 @@ public class PicLoader extends Sprite {
      */
     private function loadFail(...params):void {
         Alert.show('加载幻灯片资源出错');
+
         if (_failBack != null) {
             _failBack(this);
         }
 
-        _succBack    = null;
-        _failBack    = null;
-        _processBack = null;
+        clearCallbacks();
     }
 
     /**
      * @private 进度转发。
      */
-    private function loadProcess(l:*, per:Number):void {
-        if (_processBack != null) {
-            _processBack(this, per);
+    private function loadProgress(l:*, per:Number):void {
+        if (_progressBack != null) {
+            _progressBack(this, per);
         }
+    }
+
+    /**
+     * @private 清空回调引用。
+     */
+    private function clearCallbacks():void {
+        _succBack     = null;
+        _failBack     = null;
+        _progressBack = null;
     }
 
     /**

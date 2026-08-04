@@ -43,10 +43,10 @@ public class PicPointerEvent extends Event {
      */
     public static const MOUSE_UP:String      = 'MOUSE_UP';
     /**
-     * <code>LOAD_PROCESS</code> 事件的 <code>type</code> 属性值。
-     * @eventType LOAD_PROCESS
+     * <code>LOAD_PROGRESS</code> 事件的 <code>type</code> 属性值。
+     * @eventType LOAD_PROGRESS
      */
-    public static const LOAD_PROCESS:String  = 'LOAD_PROCESS';
+    public static const LOAD_PROGRESS:String = 'LOAD_PROGRESS';
     /**
      * <code>LOAD_COMPLETE</code> 事件的 <code>type</code> 属性值。
      * @eventType LOAD_COMPLETE

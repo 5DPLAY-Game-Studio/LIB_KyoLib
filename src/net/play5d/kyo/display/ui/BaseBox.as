@@ -101,10 +101,11 @@ public class BaseBox extends Sprite {
      * box.removeAll(null);
      * </listing>
      */
-    public function removeAll(e:Event):void {
+    public function removeAll(e:Event = null):void {
         for (var i:String in _instances) {
             delete _instances[i];
         }
+
         _instances = null;
     }
 }

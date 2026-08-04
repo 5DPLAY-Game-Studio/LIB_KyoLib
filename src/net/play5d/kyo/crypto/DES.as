@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ import flash.utils.ByteArray;
  *
  * @see #encrypt()
  * @see #decrypt()
- * @see #keystr
+ * @see #keyString
  * @author bardpub
  */
 public class DES {
@@ -37,29 +37,30 @@ public class DES {
      * DES 密钥字符串，写入密钥 <code>ByteArray</code> 时按 UTF-8 编码。
      * @default '123456'
      */
-    public static var keystr:String = '123456';
+    public static var keyString:String = '123456';
 
     /**
-     * 使用当前 <code>keystr</code> 对字符串加密。
+     * 使用当前 <code>keyString</code> 对字符串加密。
      * @param str 明文。
-     * @return Base64 编码的密文；<code>str</code> 为空时行为取决于底层 <code>DESKey</code>。
+     * @return Base64 编码的密文。
      * @example
      * <listing version="3.0">
-     * DES.keystr = '12345678';
+     * DES.keyString = '12345678';
      * var cipher:String = DES.encrypt('hello');
      * </listing>
      * @see #decrypt()
-     * @see #keystr
+     * @see #keyString
      */
     public static function encrypt(str:String):String {
         var des:DESKey    = getDESKey();
-        var tmp:ByteArray = string2byteArray(str);
+        var tmp:ByteArray = stringToByteArray(str);
         des.encrypt(tmp);
+
         return Base64.encodeByteArray(tmp);
     }
 
     /**
-     * 使用当前 <code>keystr</code> 对 Base64 密文解密。
+     * 使用当前 <code>keyString</code> 对 Base64 密文解密。
      * @param str Base64 编码的密文。
      * @return 解密后的 UTF-8 明文。
      * @example
@@ -67,45 +68,44 @@ public class DES {
      * var plain:String = DES.decrypt(cipher);
      * </listing>
      * @see #encrypt()
-     * @see #keystr
+     * @see #keyString
      */
     public static function decrypt(str:String):String {
         var des:DESKey    = getDESKey();
         var tmp:ByteArray = Base64.decodeToByteArray(str);
         des.decrypt(tmp);
-        return byteArray2string(tmp);
+
+        return byteArrayToString(tmp);
     }
 
-    /**
-     * @private 将字符串转为 UTF-8 <code>ByteArray</code>。
-     */
-    private static function string2byteArray(str:String):ByteArray {
-        var bytes:ByteArray;
-        if (str) {
-            bytes = new ByteArray();
-            bytes.writeUTFBytes(str);
+    /** @private 将字符串转为 UTF-8 <code>ByteArray</code>。 */
+    private static function stringToByteArray(str:String):ByteArray {
+        if (!str) {
+            return null;
         }
+
+        var bytes:ByteArray = new ByteArray();
+        bytes.writeUTFBytes(str);
+
         return bytes;
     }
 
-    /**
-     * @private 将 <code>ByteArray</code> 按 UTF-8 读为字符串。
-     */
-    private static function byteArray2string(bytes:ByteArray):String {
-        var str:String;
-        if (bytes) {
-            bytes.position = 0;
-            str            = bytes.readUTFBytes(bytes.length);
+    /** @private 将 <code>ByteArray</code> 按 UTF-8 读为字符串。 */
+    private static function byteArrayToString(bytes:ByteArray):String {
+        if (!bytes) {
+            return null;
         }
-        return str;
+
+        bytes.position = 0;
+
+        return bytes.readUTFBytes(bytes.length);
     }
 
-    /**
-     * @private 按 <code>keystr</code> 构造 <code>DESKey</code>。
-     */
+    /** @private 按 <code>keyString</code> 构造 <code>DESKey</code>。 */
     private static function getDESKey():DESKey {
         var key:ByteArray = new ByteArray();
-        key.writeUTFBytes(keystr);
+        key.writeUTFBytes(keyString);
+
         return new DESKey(key);
     }
 

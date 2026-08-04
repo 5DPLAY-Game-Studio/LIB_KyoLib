@@ -68,6 +68,7 @@ public class TabBox extends BaseBox {
         if (!_instances || _instances.length < 1) {
             return;
         }
+
         update();
         select(0);
     }
@@ -77,6 +78,7 @@ public class TabBox extends BaseBox {
         if (repeater) {
             _instances = repeater.getItems();
         }
+
         build();
     }
 
@@ -88,22 +90,23 @@ public class TabBox extends BaseBox {
      * </listing>
      */
     public function update():void {
-        var e:int = numChildren > _instances.length ? numChildren : _instances.length;
-        for (var i:int; i < e; i++) {
+        var count:int = numChildren > _instances.length ? numChildren : _instances.length;
+
+        for (var i:int; i < count; i++) {
             var dc:DisplayObject;
             try {
                 dc = getChildAt(i);
             }
-            catch (e:Error) {
+            catch (err:Error) {
                 dc = null;
             }
+
             var t:ITab = _instances[i];
             if (t && !dc) {
                 addChildItem(t);
             }
             if (!t && dc) {
                 removeChild(dc);
-                dc = null;
             }
         }
     }
@@ -126,17 +129,13 @@ public class TabBox extends BaseBox {
      * @private 加入显示列表并监听点击。
      */
     private function addChildItem(d:ITab):void {
-        var dp:DisplayObject;
-        if (d is DisplayObject) {
-            dp = d as DisplayObject;
-        }
-        else {
-            dp = d.display;
-        }
+        var dp:DisplayObject = (d is DisplayObject) ? d as DisplayObject : d.display;
         dp.x = _lx;
         dp.y = _ly;
         addChild(dp);
+
         d.addEventListener(MouseEvent.CLICK, mouseHandler, false, 0, true);
+
         if (gapX > 0) {
             _lx += dp.width + gapX;
         }
@@ -150,12 +149,14 @@ public class TabBox extends BaseBox {
      */
     private function selectTab(v:ITab):void {
         selectedTab = v;
-        if (v.selected == true) {
+        if (v.selected) {
             return;
         }
-        for each(var i:ITab in _instances) {
+
+        for each (var i:ITab in _instances) {
             i.selected = false;
         }
+
         v.selected = true;
     }
 
@@ -164,8 +165,10 @@ public class TabBox extends BaseBox {
      */
     private function mouseHandler(e:MouseEvent):void {
         selectTab(e.currentTarget as ITab);
+
         dispatchEvent(new Event(Event.SELECT));
     }
 
 }
 }
+

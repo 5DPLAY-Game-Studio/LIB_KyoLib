@@ -71,6 +71,7 @@ public class SWFLoader extends Loader {
                 if (fail != null) {
                     fail();
                 }
+
                 return;
             }
             headInfo = new SwfHeaderInfo(b);
@@ -78,7 +79,6 @@ public class SWFLoader extends Loader {
                 back();
             }
         }
-
     }
 
     /**

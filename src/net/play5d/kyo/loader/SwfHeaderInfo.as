@@ -31,18 +31,18 @@ import flash.utils.Endian;
  */
 public class SwfHeaderInfo {
     /**
-     * @param BA 完整或部分 SWF 字节（至少含头与舞台信息所需长度）。
+     * @param bytes 完整或部分 SWF 字节（至少含头与舞台信息所需长度）。
      * @throws IOError 非 FWS/CWS SWF。
      */
-    public function SwfHeaderInfo(BA:ByteArray) {
-        setWHruleList();
-        parseByteArray(BA);
+    public function SwfHeaderInfo(bytes:ByteArray) {
+        setWhRuleList();
+        parseByteArray(bytes);
     }
 
     /**
      * 宽高解析规则表（按控制码）。
      */
-    protected var w_h_ruleList:Array;
+    protected var whRuleList:Array;
 
     /**
      * @private SWF 标识：FWS / CWS
@@ -149,14 +149,14 @@ public class SwfHeaderInfo {
 
     /**
      * 解析字节中的 SWF 头。
-     * @param BA 源字节。
+     * @param bytes 源字节。
      * @throws IOError 非 swf。
      */
-    protected function parseByteArray(BA:ByteArray):void {
+    protected function parseByteArray(bytes:ByteArray):void {
         var binary:ByteArray = new ByteArray;
         binary.endian        = Endian.LITTLE_ENDIAN;
         //取前8个字节：标识、版本、文件大小
-        BA.readBytes(binary, 0, 8);
+        bytes.readBytes(binary, 0, 8);
         //前3字节：FWS / CWS
         _type    = binary.readUTFBytes(3);
         //第4字节：版本号
@@ -166,7 +166,7 @@ public class SwfHeaderInfo {
 
         binary.position        = 8;
         var mainData:ByteArray = new ByteArray;
-        BA.readBytes(mainData);
+        bytes.readBytes(mainData);
 
         if (_type == 'CWS') {
             mainData.uncompress();
@@ -179,41 +179,41 @@ public class SwfHeaderInfo {
         binary.writeBytes(mainData, 0, 13);
 
         var ctrlCode:String = binary[8].toString(16);
-        var w_h_plist:Array = getW_H_RulePosition(w_h_ruleList, ctrlCode);
-        var len:int         = w_h_plist[2];
+        var whPos:Array     = getWhRulePosition(whRuleList, ctrlCode);
+        var len:int         = whPos[2];
 
         var s:String = '';
         for (var i:int = 0; i < len; i++) {
-            var _temp:String = binary[i + 9].toString(16);
-            if (_temp.length == 1) {
-                _temp = '0' + _temp;
+            var temp:String = binary[i + 9].toString(16);
+            if (temp.length == 1) {
+                temp = '0' + temp;
             }
-            s += _temp;
+            s += temp;
         }
 
-        _width  = Number('0x' + s.substr(w_h_plist[0][0], 4)) / w_h_plist[0][1];
-        _height = Number('0x' + s.substr(w_h_plist[1][0], 4)) / w_h_plist[1][1];
+        _width  = Number('0x' + s.substr(whPos[0][0], 4)) / whPos[0][1];
+        _height = Number('0x' + s.substr(whPos[1][0], 4)) / whPos[1][1];
 
         var pos:int = 8 + len;
         //宽高区后跳一字节为 fps
-        _fps        = binary[pos += 2];
+        _fps    = binary[pos += 2];
         //帧数占两字节，低位在前
-        _frames     = binary[pos + 2] << 8 | binary[pos + 1];
+        _frames = binary[pos + 2] << 8 | binary[pos + 1];
     }
 
     /**
      * 初始化宽高控制码规则表。
      */
-    protected function setWHruleList():void {
-        w_h_ruleList    = [];
-        w_h_ruleList[0] = {ctrlCode: '50', position: [[0, 10], [5, 10], 5]};
-        w_h_ruleList[1] = {ctrlCode: '58', position: [[1, 40], [6, 10], 6]};
-        w_h_ruleList[2] = {ctrlCode: '60', position: [[1, 10], [7, 10], 6]};
-        w_h_ruleList[3] = {ctrlCode: '68', position: [[2, 40], [8, 10], 7]};
-        w_h_ruleList[4] = {ctrlCode: '70', position: [[2, 10], [9, 10], 7]};
-        w_h_ruleList[5] = {ctrlCode: '78', position: [[3, 40], [10, 10], 8]};
-        w_h_ruleList[6] = {ctrlCode: '80', position: [[3, 10], [11, 10], 8]};
-        w_h_ruleList[7] = {ctrlCode: '88', position: [[2, 40], [12, 10], 9]};
+    protected function setWhRuleList():void {
+        whRuleList    = [];
+        whRuleList[0] = {ctrlCode: '50', position: [[0, 10], [5, 10], 5]};
+        whRuleList[1] = {ctrlCode: '58', position: [[1, 40], [6, 10], 6]};
+        whRuleList[2] = {ctrlCode: '60', position: [[1, 10], [7, 10], 6]};
+        whRuleList[3] = {ctrlCode: '68', position: [[2, 40], [8, 10], 7]};
+        whRuleList[4] = {ctrlCode: '70', position: [[2, 10], [9, 10], 7]};
+        whRuleList[5] = {ctrlCode: '78', position: [[3, 40], [10, 10], 8]};
+        whRuleList[6] = {ctrlCode: '80', position: [[3, 10], [11, 10], 8]};
+        whRuleList[7] = {ctrlCode: '88', position: [[2, 40], [12, 10], 9]};
     }
 
     /**
@@ -222,12 +222,13 @@ public class SwfHeaderInfo {
      * @param str 控制码十六进制字符串。
      * @return position 数组。
      */
-    protected function getW_H_RulePosition(list:Array, str:String):Array {
+    protected function getWhRulePosition(list:Array, str:String):Array {
         for (var i:String in list) {
             if (list[i].ctrlCode == str) {
                 break;
             }
         }
+
         return list[i].position;
     }
 

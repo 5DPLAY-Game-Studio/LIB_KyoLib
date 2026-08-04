@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,11 +23,11 @@ import flash.geom.ColorTransform;
 import flash.geom.Rectangle;
 
 /**
- * 位图字体文本显示对象，内部通过 <code>BitmapFont.translate</code> 生成位图。
+ * 位图字体文本显示对象，内部通过 <code>BitmapFont.renderText</code> 生成位图。
  *
  * @see BitmapFont
  * @see #text
- * @see #colorTransform()
+ * @see #applyColorTransform()
  */
 public class BitmapFontText extends Bitmap {
     /**
@@ -61,8 +61,14 @@ public class BitmapFontText extends Bitmap {
 
     /** @private */
     public function set text(v:String):void {
-        _text      = v;
-        bitmapData = _font.translate(v);
+        _text = v;
+
+        disposeOrgBitmap();
+        if (bitmapData) {
+            bitmapData.dispose();
+        }
+
+        bitmapData = _font.renderText(v);
         smoothing  = true;
         width      = bitmapData.width;
     }
@@ -70,27 +76,32 @@ public class BitmapFontText extends Bitmap {
     /**
      * 对当前位图做颜色变换；传入 <code>null</code> 则恢复到着色前的副本。
      *
-     * <p>首次非空调用会缓存当前 <code>bitmapData</code> 的克隆，供之后还原。</p>
+     * <p>首次非空调用会缓存当前 <code>bitmapData</code> 的克隆，供之后还原。
+     * 方法名避开与 <code>DisplayObject.colorTransform</code> 属性冲突。</p>
      *
      * @param ct 颜色变换；为 <code>null</code> 时还原。
      * @example
      * <listing version="3.0">
-     * label.colorTransform(new ColorTransform(1, 0, 0, 1));
-     * label.colorTransform(null); // 还原
+     * label.applyColorTransform(new ColorTransform(1, 0, 0, 1));
+     * label.applyColorTransform(null); // 还原
      * </listing>
      */
-    public function colorTransform(ct:ColorTransform):void {
+    public function applyColorTransform(ct:ColorTransform):void {
         if (ct == null) {
             if (_orgBitmapData) {
-                bitmapData.dispose();
+                if (bitmapData) {
+                    bitmapData.dispose();
+                }
                 bitmapData = _orgBitmapData.clone();
             }
+
             return;
         }
 
         if (!_orgBitmapData) {
             _orgBitmapData = bitmapData.clone();
         }
+
         bitmapData.colorTransform(new Rectangle(0, 0, bitmapData.width, bitmapData.height), ct);
     }
 
@@ -102,11 +113,19 @@ public class BitmapFontText extends Bitmap {
      * </listing>
      */
     public function dispose():void {
+        disposeOrgBitmap();
+        if (bitmapData) {
+            bitmapData.dispose();
+            bitmapData = null;
+        }
+    }
+
+    /** @private */
+    private function disposeOrgBitmap():void {
         if (_orgBitmapData) {
             _orgBitmapData.dispose();
             _orgBitmapData = null;
         }
-        bitmapData.dispose();
     }
 
 }

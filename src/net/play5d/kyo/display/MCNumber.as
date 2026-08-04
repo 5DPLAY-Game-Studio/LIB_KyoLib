@@ -55,7 +55,7 @@ public class MCNumber extends Sprite {
     /** @private MC 类 */
     protected var _mc:Class;
     /** @private 当前位显示对象列表 */
-    protected var _mcs:Array  = [];
+    protected var _mcs:Array = [];
     /** @private 最小位数 */
     protected var _bits:uint;
     /** @private */
@@ -72,22 +72,22 @@ public class MCNumber extends Sprite {
     /** @private */
     public function set number(v:uint):void {
         _number = v;
-        for each(var m:DisplayObject in _mcs) {
+
+        for each (var m:DisplayObject in _mcs) {
             removeChild(m);
         }
-        _mcs              = [];
-        var numStr:String = v.toString();
+        _mcs = [];
 
+        var numStr:String = v.toString();
         while (numStr.length < _bits) {
             numStr = '0' + numStr;
         }
 
         var xx:Number = 0;
         for (var i:int; i < numStr.length; i++) {
-            var w:String          = numStr.charAt(i);
-            var wmc:DisplayObject = createNum(int(w));
-            wmc.x                 = xx;
-            xx += mcWidth == -1 ? wmc.width : mcWidth;
+            var digit:DisplayObject = createNum(int(numStr.charAt(i)));
+            digit.x                 = xx;
+            xx += mcWidth == -1 ? digit.width : mcWidth;
         }
     }
 
@@ -99,8 +99,10 @@ public class MCNumber extends Sprite {
     protected function createNum(i:int):DisplayObject {
         var mc:MovieClip = new _mc();
         mc.gotoAndStop(startFrame + i);
+
         addChild(mc);
         _mcs.push(mc);
+
         return mc;
     }
 }

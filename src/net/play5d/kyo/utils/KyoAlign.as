@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,103 +29,106 @@ import flash.geom.Point;
 public class KyoAlign {
     /**
      * 左对齐（当前为空实现）。
-     * @param A 要对齐的对象。
-     * @param B 参照对象。
+     * @param target 要对齐的对象。
+     * @param ref 参照对象。
      * @example
      * <listing version="3.0">
      * KyoAlign.left(a, b);
      * </listing>
      */
-    public static function left(A:DisplayObject, B:DisplayObject):void {
+    public static function left(target:DisplayObject, ref:DisplayObject):void {
     }
 
     /**
      * 右对齐（当前为空实现）。
-     * @param A 要对齐的对象。
-     * @param B 参照对象。
+     * @param target 要对齐的对象。
+     * @param ref 参照对象。
      * @example
      * <listing version="3.0">
      * KyoAlign.right(a, b);
      * </listing>
      */
-    public static function right(A:DisplayObject, B:DisplayObject):void {
+    public static function right(target:DisplayObject, ref:DisplayObject):void {
     }
 
     /**
-     * 垂直居中：将 <code>A</code> 相对参照高度居中。
-     * @param A 要对齐的对象。
-     * @param B 参照高度：<code>Number</code>、高度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
+     * 垂直居中：将 <code>target</code> 相对参照高度居中。
+     * @param target 要对齐的对象。
+     * @param ref 参照高度：<code>Number</code>、高度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
      * @example
      * <listing version="3.0">
      * KyoAlign.centerH(label, panel);
      * </listing>
      */
-    public static function centerH(A:DisplayObject, B:Object):void {
-        var Bnum:Number;
-        if (B is Number) {
-            Bnum = B as Number;
+    public static function centerH(target:DisplayObject, ref:Object):void {
+        var refSize:Number;
+        if (ref is Number) {
+            refSize = ref as Number;
         }
-        if (B is Point) {
-            var bp:Point = B as Point;
-            Bnum         = bp.y - bp.x;
+        if (ref is Point) {
+            var bp:Point = ref as Point;
+            refSize      = bp.y - bp.x;
         }
-        if (B is DisplayObject) {
-            A.y  = (B as DisplayObject).y;
-            Bnum = (B as DisplayObject).height;
+        if (ref is DisplayObject) {
+            target.y = (ref as DisplayObject).y;
+            refSize  = (ref as DisplayObject).height;
         }
-        var diff:Number = Bnum - A.height;
-        A.y += diff / 2;
+
+        var diff:Number = refSize - target.height;
+        target.y += diff / 2;
     }
 
     /**
      * 顶对齐（当前为空实现）。
-     * @param A 要对齐的对象。
-     * @param B 参照对象。
+     * @param target 要对齐的对象。
+     * @param ref 参照对象。
      * @example
      * <listing version="3.0">
      * KyoAlign.up(a, b);
      * </listing>
      */
-    public static function up(A:DisplayObject, B:DisplayObject):void {
+    public static function up(target:DisplayObject, ref:DisplayObject):void {
     }
 
     /**
      * 底对齐（当前为空实现）。
-     * @param A 要对齐的对象。
-     * @param B 参照对象。
+     * @param target 要对齐的对象。
+     * @param ref 参照对象。
      * @example
      * <listing version="3.0">
      * KyoAlign.down(a, b);
      * </listing>
      */
-    public static function down(A:DisplayObject, B:DisplayObject):void {
+    public static function down(target:DisplayObject, ref:DisplayObject):void {
     }
 
     /**
-     * 水平居中：将 <code>A</code> 相对参照宽度居中。
-     * @param A 要对齐的对象。
-     * @param B 参照宽度：<code>Number</code>、宽度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
+     * 水平居中：将 <code>target</code> 相对参照宽度居中。
+     * @param target 要对齐的对象。
+     * @param ref 参照宽度：<code>Number</code>、宽度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
      * @example
      * <listing version="3.0">
      * KyoAlign.centerW(btn, stage.stageWidth);
      * </listing>
      */
-    public static function centerW(A:DisplayObject, B:Object):void {
-        var Bnum:Number;
-        if (B is Number) {
-            Bnum = B as Number;
+    public static function centerW(target:DisplayObject, ref:Object):void {
+        var refSize:Number;
+        if (ref is Number) {
+            refSize = ref as Number;
         }
-        if (B is Point) {
-            var bp:Point = B as Point;
-            Bnum         = bp.y - bp.x;
+        if (ref is Point) {
+            var bp:Point = ref as Point;
+            refSize      = bp.y - bp.x;
         }
-        if (B is DisplayObject) {
-            A.x  = (B as DisplayObject).x;
-            Bnum = (B as DisplayObject).width;
+        if (ref is DisplayObject) {
+            target.x = (ref as DisplayObject).x;
+            refSize  = (ref as DisplayObject).width;
         }
-        var diff:Number = Bnum - A.width;
-        A.x += diff / 2;
+
+        var diff:Number = refSize - target.width;
+        target.x += diff / 2;
     }
 
 }
 }
+

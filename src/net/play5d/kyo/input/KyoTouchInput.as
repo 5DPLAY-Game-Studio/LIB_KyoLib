@@ -24,24 +24,25 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 
 /**
+ * 滑动时分派。
+ * @eventType net.play5d.kyo.input.KyoTouchEvent.SLIDE
+ */
+[Event(name='event-slide', type='net.play5d.kyo.input.KyoTouchEvent')]
+/**
  * 基于鼠标按下 / 抬起的滑动输入（模拟触摸滑动），派发 <code>KyoTouchEvent.SLIDE</code>。
  *
  * @see KyoTouchEvent
  * @see #slidePos
  * @see #enableArea
- * @see #enbaled
- *
- * @eventType net.play5d.kyo.input.KyoTouchEvent.SLIDE
+ * @see #enabled
  */
-[Event(name='event-slide', type='net.play5d.kyo.input.KyoTouchEvent')]
 public class KyoTouchInput extends EventDispatcher {
     /**
      * @param stage 侦听鼠标事件的舞台。
      */
     public function KyoTouchInput(stage:Stage) {
-        _stage = stage;
-
-        enbaled = true;
+        _stage  = stage;
+        enabled = true;
     }
 
     /**
@@ -58,24 +59,34 @@ public class KyoTouchInput extends EventDispatcher {
     private var _stage:Stage;
     /** @private */
     private var _downPoint:Point;
+    /** @private */
+    private var _enabled:Boolean;
 
     /**
-     * 是否启用监听（历史拼写 <code>enbaled</code>）。
-     * 赋值时会先移除再重新注册 Stage 鼠标监听。
-     * @private
+     * 是否启用监听。
+     * @return 当前是否已注册 Stage 鼠标监听。
+     * @default true
      */
-    public function set enbaled(v:Boolean):void {
+    public function get enabled():Boolean {
+        return _enabled;
+    }
+
+    /** @private */
+    public function set enabled(v:Boolean):void {
         _stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseHandler);
         _stage.removeEventListener(MouseEvent.MOUSE_UP, mouseHandler);
 
-        _stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseHandler);
-        _stage.addEventListener(MouseEvent.MOUSE_UP, mouseHandler);
+        _enabled = v;
+        if (v) {
+            _stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseHandler);
+            _stage.addEventListener(MouseEvent.MOUSE_UP, mouseHandler);
+        }
     }
 
     /**
      * @private 点是否在 enableArea 内。
      */
-    private function checkarea(sx:Number, sy:Number):Boolean {
+    private function checkArea(sx:Number, sy:Number):Boolean {
         if (enableArea) {
             if (sx > enableArea.width || sx < enableArea.x) {
                 return false;
@@ -84,6 +95,7 @@ public class KyoTouchInput extends EventDispatcher {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -94,26 +106,26 @@ public class KyoTouchInput extends EventDispatcher {
         if (!_downPoint) {
             return;
         }
-        if (!checkarea(_stage.mouseX, _stage.mouseY)) {
+        if (!checkArea(_stage.mouseX, _stage.mouseY)) {
             return;
         }
-        var x:Number = _stage.mouseX - _downPoint.x;
-        var y:Number = _stage.mouseY - _downPoint.y;
-        if (Math.abs(x) >= Math.abs(y)) {
-            //横向滑动
-            if (x > slidePos) {
+
+        var dx:Number = _stage.mouseX - _downPoint.x;
+        var dy:Number = _stage.mouseY - _downPoint.y;
+
+        if (Math.abs(dx) >= Math.abs(dy)) {
+            if (dx > slidePos) {
                 dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_RIGHT}));
             }
-            if (x < -slidePos) {
+            if (dx < -slidePos) {
                 dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_LEFT}));
             }
         }
         else {
-            //竖向滑动
-            if (y > slidePos) {
+            if (dy > slidePos) {
                 dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_DOWN}));
             }
-            if (y < -slidePos) {
+            if (dy < -slidePos) {
                 dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_UP}));
             }
         }
@@ -127,7 +139,7 @@ public class KyoTouchInput extends EventDispatcher {
         case MouseEvent.MOUSE_DOWN:
             var sx:Number = _stage.mouseX;
             var sy:Number = _stage.mouseY;
-            if (!checkarea(sx, sy)) {
+            if (!checkArea(sx, sy)) {
                 return;
             }
             _downPoint = new Point(sx, sy);

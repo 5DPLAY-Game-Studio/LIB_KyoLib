@@ -28,15 +28,15 @@ import flash.geom.Point;
 public class DynamicRegistration {
     /**
      * @param target 目标显示对象。
-     * @param regpoint 本地坐标系下的注册点。
+     * @param regPoint 本地坐标系下的注册点。
      */
-    function DynamicRegistration(target:DisplayObject, regpoint:Point) {
-        this._target   = target;
-        this._regpoint = regpoint;
+    public function DynamicRegistration(target:DisplayObject, regPoint:Point) {
+        _target   = target;
+        _regPoint = regPoint;
     }
 
     /** @private 注册点（本地坐标） */
-    private var _regpoint:Point;
+    private var _regPoint:Point;
     /** @private */
     private var _target:DisplayObject;
 
@@ -50,21 +50,21 @@ public class DynamicRegistration {
      * </listing>
      */
     public function flush(prop:String, value:Number):void {
-        var mc:DisplayObject = this._target;
-        //转换为全局坐标
-        var A:Point          = mc.parent.globalToLocal(mc.localToGlobal(_regpoint));
+        var mc:DisplayObject = _target;
+        // 转换为全局坐标
+        var a:Point          = mc.parent.globalToLocal(mc.localToGlobal(_regPoint));
+
         if (prop == 'x' || prop == 'y') {
-            mc[prop] = value - _regpoint[prop];
+            mc[prop] = value - _regPoint[prop];
         }
         else {
-            mc[prop]    = value;
-            //执行旋转等属性后，再重新计算全局坐标
-            var B:Point = mc.parent.globalToLocal(mc.localToGlobal(_regpoint));
-            //把注册点从B点移到A点
-            mc.x += A.x - B.x;
-            mc.y += A.y - B.y;
+            mc[prop] = value;
+            // 执行旋转等属性后，再重新计算全局坐标
+            var b:Point = mc.parent.globalToLocal(mc.localToGlobal(_regPoint));
+            // 把注册点从 b 移到 a
+            mc.x += a.x - b.x;
+            mc.y += a.y - b.y;
         }
     }
-
 }
 }

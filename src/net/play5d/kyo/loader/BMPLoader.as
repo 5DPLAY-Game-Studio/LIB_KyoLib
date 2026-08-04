@@ -136,11 +136,12 @@ public class BMPLoader extends EventDispatcher {
      * @return 字节值。
      * @example
      * <listing version="3.0">
-     * var b:int = bmp.readbyte();
+     * var b:int = bmp.readByte();
      * </listing>
      */
-    public function readbyte():int {
+    public function readByte():int {
         _crtPos++;
+
         return _binaryArray.readByte();
     }
 
@@ -149,11 +150,12 @@ public class BMPLoader extends EventDispatcher {
      * @return 无符号字节。
      * @example
      * <listing version="3.0">
-     * var b:int = bmp.readunsignedbyte();
+     * var b:int = bmp.readUnsignedByte();
      * </listing>
      */
-    public function readunsignedbyte():int {
+    public function readUnsignedByte():int {
         _crtPos++;
+
         return _binaryArray.readUnsignedByte();
     }
 
@@ -162,13 +164,14 @@ public class BMPLoader extends EventDispatcher {
      * @return 16 位值。
      * @example
      * <listing version="3.0">
-     * var s:int = bmp.readshort();
+     * var s:int = bmp.readShort();
      * </listing>
      */
-    public function readshort():int {
+    public function readShort():int {
         _crtPos += 2;
         short1 = _binaryArray.readUnsignedByte();
         short2 = _binaryArray.readUnsignedByte();
+
         return short2 << 8 | short1;
     }
 
@@ -177,15 +180,16 @@ public class BMPLoader extends EventDispatcher {
      * @return 32 位值。
      * @example
      * <listing version="3.0">
-     * var u:int = bmp.readuint();
+     * var u:int = bmp.readUint();
      * </listing>
      */
-    public function readuint():int {
+    public function readUint():int {
         _crtPos += 4;
         int1 = _binaryArray.readUnsignedByte();
         int2 = _binaryArray.readUnsignedByte();
         int3 = _binaryArray.readUnsignedByte();
         int4 = _binaryArray.readUnsignedByte();
+
         return int4 << 24 | int3 << 16 | int2 << 8 | int1;
     }
 
@@ -194,15 +198,16 @@ public class BMPLoader extends EventDispatcher {
      * @return 32 位值。
      * @example
      * <listing version="3.0">
-     * var n:int = bmp.readint();
+     * var n:int = bmp.readInt();
      * </listing>
      */
-    public function readint():int {
+    public function readInt():int {
         _crtPos += 4;
         int1 = _binaryArray.readByte();
         int2 = _binaryArray.readByte();
         int3 = _binaryArray.readByte();
         int4 = _binaryArray.readByte();
+
         return int4 << 24 | int3 << 16 | int2 << 8 | int1;
     }
 
@@ -213,31 +218,32 @@ public class BMPLoader extends EventDispatcher {
         //设置当前的解析字节数为0
         _crtPos       = 0;
         //位图文件的类型
-        var temp1:int = readbyte();
-        var temp2:int = readbyte();
+        var temp1:int = readByte();
+        var temp2:int = readByte();
         var bmd:BitmapData;
         if (temp1 != 66 || temp2 != 77) {
             isBm = false;
             trace('这不是一张BMP格式的图片');
             dispatchEvent(new Event(EVENT_PARSE_ERROR));
+
             return null;
         }
         isBm   = true;
-        bfSize = readint();
-        readshort();
-        readshort();
-        bfoffBits       = readint();
-        biSize          = readint();
-        biWidth         = readuint();
-        biHeight        = readuint();
-        biPlanes        = readshort();
-        biBitCount      = readshort();
-        biCompression   = readint();
-        biSizeImage     = readint();
-        biXpelsPerMeter = readint();
-        biYPelsPerMeter = readint();
-        biClrUsed       = readint();
-        biClrImportant  = readint();
+        bfSize = readInt();
+        readShort();
+        readShort();
+        bfoffBits       = readInt();
+        biSize          = readInt();
+        biWidth         = readUint();
+        biHeight        = readUint();
+        biPlanes        = readShort();
+        biBitCount      = readShort();
+        biCompression   = readInt();
+        biSizeImage     = readInt();
+        biXpelsPerMeter = readInt();
+        biYPelsPerMeter = readInt();
+        biClrUsed       = readInt();
+        biClrImportant  = readInt();
 
         var i:int, j:int;
         var r:int, g:int, b:int;
@@ -249,15 +255,15 @@ public class BMPLoader extends EventDispatcher {
             for (j = biHeight - 1; j >= 0; j--) {
                 numline = 0;
                 for (i = 0; i < biWidth; i++) {
-                    b = readunsignedbyte();
-                    g = readunsignedbyte();
-                    r = readunsignedbyte();
+                    b = readUnsignedByte();
+                    g = readUnsignedByte();
+                    r = readUnsignedByte();
                     bmd.setPixel(i, j, r << 16 | g << 8 | b);
                     numline += 3;
                 }
                 while (numline % 4 != 0) {
                     numline++;
-                    readbyte();
+                    readByte();
                 }
             }
             bmd.unlock();
@@ -267,10 +273,10 @@ public class BMPLoader extends EventDispatcher {
             arrayRGBQuad      = [];
             for (i = 0; i < numcolors; i++) {
                 var rgbObj:Object = {};
-                rgbObj.b          = readunsignedbyte();
-                rgbObj.g          = readunsignedbyte();
-                rgbObj.r          = readunsignedbyte();
-                readunsignedbyte();
+                rgbObj.b          = readUnsignedByte();
+                rgbObj.g          = readUnsignedByte();
+                rgbObj.r          = readUnsignedByte();
+                readUnsignedByte();
                 arrayRGBQuad.push(rgbObj);
             }
             var rgb8:Object;
@@ -283,7 +289,7 @@ public class BMPLoader extends EventDispatcher {
                 for (i = 0; i < biWidth;) {
                     numline += 1;
                     if (biBitCount == 8) {
-                        ix1  = readunsignedbyte();
+                        ix1  = readUnsignedByte();
                         rgb8 = arrayRGBQuad[ix1];
                         r    = rgb8.r;
                         g    = rgb8.g;
@@ -292,7 +298,7 @@ public class BMPLoader extends EventDispatcher {
                         i++;
                     }
                     else if (biBitCount == 4) {
-                        ix1  = readunsignedbyte();
+                        ix1  = readUnsignedByte();
                         ix2  = ix1 >> 4;
                         ix3  = ix1 & 0x0f;
                         rgb8 = arrayRGBQuad[ix2];
@@ -309,7 +315,7 @@ public class BMPLoader extends EventDispatcher {
                         i++;
                     }
                     else if (biBitCount == 1) {
-                        ix0 = readunsignedbyte();
+                        ix0 = readUnsignedByte();
                         ix1 = ix0 >> 4 & 8;
                         ix2 = ix0 >> 4 & 4;
                         ix3 = ix0 >> 4 & 2;
@@ -378,11 +384,12 @@ public class BMPLoader extends EventDispatcher {
                 }
                 while (numline % 4 != 0) {
                     numline++;
-                    readbyte();
+                    readByte();
                 }
             }
             bmd.unlock();
         }
+
         return bmd;
     }
 

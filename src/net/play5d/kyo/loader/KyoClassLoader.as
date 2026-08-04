@@ -97,15 +97,15 @@ public class KyoClassLoader extends EventDispatcher {
         var app:ApplicationDomain = _classes[swf];
         if (!app) {
             throw new Error(swf + '未加载!');
-            return null;
         }
+
         try {
             return app.getDefinition(className) as Class;
         }
         catch (e:Error) {
             throw new Error('在 ' + swf + ' 中找不到 ' + className + ' 的定义!');
-            trace('KyoClassLoader ::', e);
         }
+
         return null;
     }
 
@@ -161,7 +161,9 @@ public class KyoClassLoader extends EventDispatcher {
         if (_urls.length < 1) {
             return false;
         }
+
         _loadedAmount++;
+
         var loader:Loader = new Loader();
         loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
         loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, loadProgress);
@@ -204,11 +206,12 @@ public class KyoClassLoader extends EventDispatcher {
      * @private
      */
     private function loadComplete(e:Event):void {
-        var loaderinfo:LoaderInfo = e.currentTarget as LoaderInfo;
-        var loader:Loader         = loaderinfo.loader;
+        var loaderInfo:LoaderInfo = e.currentTarget as LoaderInfo;
+        var loader:Loader         = loaderInfo.loader;
         var id:String             = _directory[loader];
+
         _defaultId ||= id;
-        _classes[id]              = loaderinfo.applicationDomain;
+        _classes[id] = loaderInfo.applicationDomain;
         removeLoader(loader);
 
         checkComplete();

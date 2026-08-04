@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,31 +28,31 @@ public class RunJS extends Sprite {
     /**
      * 构造后依次运行各演示。
      */
-    function RunJS() {
-        JSLine('DOM Demo:');
-        JSDemo1();
+    public function RunJS() {
+        jsLine('DOM Demo:');
+        demoDom();
 
-        JSLine('Event Demo:');
-        JSDemo2();
+        jsLine('Event Demo:');
+        demoEvent();
 
-        JSLine('Closure Demo:');
-        JSDemo3();
+        jsLine('Closure Demo:');
+        demoClosure();
 
-        JSLine('AJAX Demo:');
-        JSDemo4();
+        jsLine('AJAX Demo:');
+        demoAjax();
     }
 
     /**
      * 浏览器 window 代理。
      */
-    private var window:JSEnv = JSEnv.$;
+    private var _window:JSEnv = JSEnv.$;
 
     /**
      * 在页面插入分隔标题。
      * @param str 标题文本。
      */
-    internal function JSLine(str:*):void {
-        var doc:* = window.document;
+    internal function jsLine(str:*):void {
+        var doc:* = _window.document;
         var div:* = doc.createElement('div');
 
         div.innerHTML = '<p>' + str + '<hr/></p>';
@@ -62,8 +62,8 @@ public class RunJS extends Sprite {
     /**
      * DOM 创建样式盒子演示。
      */
-    internal function JSDemo1():void {
-        var doc:* = window.document;
+    internal function demoDom():void {
+        var doc:* = _window.document;
         var div:* = doc.createElement('div');
 
         div.innerHTML = 'Hello! <i>This box is created by ActionScript!</i>';
@@ -78,14 +78,14 @@ public class RunJS extends Sprite {
     /**
      * 按钮点击与 setInterval 演示。
      */
-    internal function JSDemo2():void {
-        var doc:* = window.document;
+    internal function demoEvent():void {
+        var doc:* = _window.document;
         var btn:* = doc.createElement('button');
 
         btn.innerHTML = 'Click Me!';
         btn.onclick   = function ():void {
             var i:int = 0;
-            window.setInterval(function ():void {
+            _window.setInterval(function ():void {
                 btn.innerHTML = 'Run in ActionScript: i=' + i++;
             }, 10);
         };
@@ -96,29 +96,27 @@ public class RunJS extends Sprite {
     /**
      * 闭包绑定循环索引演示。
      */
-    internal function JSDemo3():void {
-        var doc:* = window.document;
+    internal function demoClosure():void {
+        var doc:* = _window.document;
 
         for (var i:int = 0; i < 5; i++) {
             var btn:* = doc.createElement('button');
             doc.body.appendChild(btn);
 
             btn.innerHTML = 'Button' + i;
-            btn.onclick   = (
-                    function (i:*):* {
-                        return function ():void {
-                            window.alert(i);
-                        };
-                    }
-            )(i);
+            btn.onclick   = (function (idx:*):* {
+                return function ():void {
+                    _window.alert(idx);
+                };
+            })(i);
         }
     }
 
     /**
      * XMLHttpRequest / ActiveX 加载演示。
      */
-    internal function JSDemo4():void {
-        var doc:* = window.document;
+    internal function demoAjax():void {
+        var doc:* = _window.document;
         var btn:* = doc.createElement('button');
 
         doc.body.appendChild(btn);
@@ -126,16 +124,22 @@ public class RunJS extends Sprite {
         btn.innerHTML = 'Load Test.xml';
 
         btn.onclick = function ():void {
-            var xhr:* = window.ActiveXObject ?
-                        new window.ActiveXObject('Microsoft.XMLHTTP') :
-                        new window.XMLHttpRequest;
+            // [] 取构造函数再 new：as3mxml 会把 new _window.XMLHttpRequest 当成类型名
+            var xhr:*;
+            var axCtor:* = _window['ActiveXObject'];
+            if (axCtor) {
+                xhr = new axCtor('Microsoft.XMLHTTP');
+            }
+            else {
+                var xhrCtor:* = _window['XMLHttpRequest'];
+                xhr = new xhrCtor();
+            }
 
             xhr.onreadystatechange = function ():void {
                 if (xhr.readyState != 4) {
                     return;
                 }
-
-                window.alert(xhr.responseText);
+                _window.alert(xhr.responseText);
             };
 
             xhr.open('GET', 'Test.xml', true);
@@ -144,3 +148,4 @@ public class RunJS extends Sprite {
     }
 }
 }
+

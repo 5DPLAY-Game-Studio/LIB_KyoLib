@@ -209,6 +209,7 @@ public class KyoURLoader {
         if (b0 == 0xEF && b1 == 0xBB) {
             return TYPE_UTF8;
         }
+
         return TYPE_ANSI;
     }
 

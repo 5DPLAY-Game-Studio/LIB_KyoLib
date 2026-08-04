@@ -32,7 +32,7 @@ import mx.rpc.events.FaultEvent;
 /**
  * SWF 加载显示容器：按目标尺寸缩放，并支持成功 / 失败 / 进度回调。
  *
- * @see ImageLoader
+ * @see net.play5d.kyo.loader.ImageLoader
  * @see PicLoader
  * @see #loadSwf()
  * @see #unload()
@@ -43,38 +43,36 @@ public class SwfLoader extends Sprite {
      * @param size 显示区域尺寸（同时作为 <code>scrollRect</code>）。
      * @param back 成功无参回调，可选。
      * @param fail 失败无参回调，可选。
-     * @param process 进度回调 <code>(loader, per)</code>，可选。
+     * @param progress 进度回调 <code>(loader, per)</code>，可选。
      */
     public function SwfLoader(
-        url    :String = null,
-        size   :Point = null,
-        back   :Function = null,
-        fail   :Function = null,
-        process:Function = null
+        url     :String = null,
+        size    :Point = null,
+        back    :Function = null,
+        fail    :Function = null,
+        progress:Function = null
     ) {
         super();
 
         _loader = new Loader();
         _loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadSwfComplete);
-        _loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-        _loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProcess);
-        _loader.addEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-        _loader.addEventListener(FaultEvent.FAULT, fatalErrorHandler);
+        _loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+        _loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgress);
+        _loader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+        _loader.addEventListener(FaultEvent.FAULT, faultErrorHandler);
         addChild(_loader);
 
-        _size           = size;
-        this.scrollRect = new Rectangle(0, 0, _size.x, _size.y);
+        _size = size;
+        if (_size) {
+            this.scrollRect = new Rectangle(0, 0, _size.x, _size.y);
+        }
         if (url != null) {
-            loadSwf(url, back, fail, process);
+            loadSwf(url, back, fail, progress);
         }
     }
 
     /** @private */
     private var _size:Point;
-    /** @private SWF 原始宽 */
-    private var _swfWidth:Number  = 0;
-    /** @private SWF 原始高 */
-    private var _swfHeight:Number = 0;
     /** @private */
     private var _loader:Loader;
     /** @private */
@@ -82,24 +80,29 @@ public class SwfLoader extends Sprite {
     /** @private */
     private var _failBack:Function;
     /** @private */
-    private var _process:Function;
+    private var _progressBack:Function;
 
     /**
      * 加载 SWF。
      * @param url 资源地址。
      * @param back 成功无参回调，可选。
      * @param fail 失败无参回调，可选。
-     * @param process 进度回调 <code>(loader, per)</code>，可选。
+     * @param progress 进度回调 <code>(loader, per)</code>，可选。
      * @example
      * <listing version="3.0">
      * swf.loadSwf('page.swf', onOk, onFail);
      * </listing>
      * @see #unload()
      */
-    public function loadSwf(url:String, back:Function = null, fail:Function = null, process:Function = null):void {
-        _loadBack = back;
-        _failBack = fail;
-        _process  = process;
+    public function loadSwf(
+        url     :String,
+        back    :Function = null,
+        fail    :Function = null,
+        progress:Function = null
+    ):void {
+        _loadBack     = back;
+        _failBack     = fail;
+        _progressBack = progress;
 
         _loader.load(new URLRequest(url));
     }
@@ -120,19 +123,23 @@ public class SwfLoader extends Sprite {
     /**
      * @private IO 错误回调。
      */
-    private function IOErrorHandler(event:IOErrorEvent):void {
-        trace('SWFLoader:IOErrorHandler : ' + event);
-        if (_failBack != null) {
-            _failBack();
-            _failBack = null;
-        }
+    private function ioErrorHandler(event:IOErrorEvent):void {
+        trace('SwfLoader:ioErrorHandler : ' + event);
+        invokeFail();
     }
 
     /**
      * @private Fault 错误回调。
      */
-    private function fatalErrorHandler(event:FaultEvent):void {
-        trace('SWFLoader:fatalErrorHandler : ' + event);
+    private function faultErrorHandler(event:FaultEvent):void {
+        trace('SwfLoader:faultErrorHandler : ' + event);
+        invokeFail();
+    }
+
+    /**
+     * @private 调用失败回调一次。
+     */
+    private function invokeFail():void {
         if (_failBack != null) {
             _failBack();
             _failBack = null;
@@ -142,10 +149,9 @@ public class SwfLoader extends Sprite {
     /**
      * @private 进度回调。
      */
-    private function onProcess(e:ProgressEvent):void {
-        if (_process != null) {
-            var per:Number = e.bytesLoaded / e.bytesTotal;
-            _process(this, per);
+    private function onProgress(e:ProgressEvent):void {
+        if (_progressBack != null) {
+            _progressBack(this, e.bytesLoaded / e.bytesTotal);
         }
     }
 
@@ -153,13 +159,11 @@ public class SwfLoader extends Sprite {
      * @private 加载完成：按 <code>_size</code> 缩放并回调。
      */
     private function loadSwfComplete(e:Event):void {
-        var loaderinfo:LoaderInfo = e.currentTarget as LoaderInfo;
-        _swfWidth                 = loaderinfo.width;
-        _swfHeight                = loaderinfo.height;
+        var info:LoaderInfo = e.currentTarget as LoaderInfo;
 
         if (_size) {
-            _loader.scaleX = _size.x / _swfWidth;
-            _loader.scaleY = _size.y / _swfHeight;
+            _loader.scaleX = _size.x / info.width;
+            _loader.scaleY = _size.y / info.height;
         }
 
         if (_loadBack != null) {

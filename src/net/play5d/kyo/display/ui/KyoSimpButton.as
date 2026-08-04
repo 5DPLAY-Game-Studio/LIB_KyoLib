@@ -48,17 +48,16 @@ public class KyoSimpButton extends Sprite {
 
         drawBg([KyoColor.WHITE, KyoColor.SILVER]);
 
-        var txt:TextField     = new TextField();
-        var tf:TextFormat     = new TextFormat();
-        tf.align              = TextFormatAlign.CENTER;
-        tf.size               = 12;
+        var txt:TextField = new TextField();
+        var tf:TextFormat = new TextFormat();
+        tf.align          = TextFormatAlign.CENTER;
+        tf.size           = 12;
         txt.defaultTextFormat = tf;
 
         txt.text   = label;
         txt.width  = width;
         txt.height = txt.textHeight + 5;
-
-        txt.y = (height - txt.height) / 2;
+        txt.y      = (height - txt.height) / 2;
 
         addChild(txt);
 
@@ -95,8 +94,10 @@ public class KyoSimpButton extends Sprite {
      */
     private function drawBg(color:Array):void {
         graphics.lineStyle(1, KyoColor.DIM_GRAY);
+
         var mtx:Matrix = new Matrix();
-        mtx.createGradientBox(btnWidth, btnHeight, 180 * 180 / 3.14, 0, 0);
+        mtx.createGradientBox(btnWidth, btnHeight, Math.PI, 0, 0);
+
         graphics.beginGradientFill(GradientType.LINEAR, color, [1, 1], [0, 255], mtx);
         graphics.drawRect(0, 0, btnWidth, btnHeight);
         graphics.endFill();
@@ -116,3 +117,4 @@ public class KyoSimpButton extends Sprite {
 
 }
 }
+

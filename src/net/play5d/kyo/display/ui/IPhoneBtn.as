@@ -24,7 +24,7 @@ package net.play5d.kyo.display.ui {
  *
  * @see IphoneIconList
  */
-public interface IiphoneBtn {
+public interface IPhoneBtn {
     /**
      * 列表进入拖拽态时回调（如取消按钮自身交互）。
      */

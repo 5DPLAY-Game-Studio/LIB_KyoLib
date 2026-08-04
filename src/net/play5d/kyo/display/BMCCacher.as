@@ -43,18 +43,19 @@ public class BMCCacher {
     /**
      * 缓存一组帧数据；超出上限时先 <code>clean</code>。
      * @param id 缓存键。
-     * @param insarray <code>BitmapMCFrameVO</code> 数组。
+     * @param insArray <code>BitmapMCFrameVO</code> 数组。
      * @example
      * <listing version="3.0">
      * cacher.cache('hero', bmc.insArray);
      * </listing>
      */
-    public function cache(id:String, insarray:Array):void {
-        _amount++;
-        if (_total != -1 && _amount > _total) {
+    public function cache(id:String, insArray:Array):void {
+        if (_total != -1 && _amount >= _total) {
             clean();
         }
-        _cacheObj[id] = insarray;
+
+        _cacheObj[id] = insArray;
+        _amount++;
     }
 
     /**
@@ -75,13 +76,19 @@ public class BMCCacher {
      * @param id 缓存键。
      */
     public function remove(id:String):void {
-        var a:Array = _cacheObj[id];
-        for each(var b:BitmapMCFrameVO in a) {
-            b.destroy();
-            b = null;
+        var frames:Array = _cacheObj[id];
+        if (!frames) {
+            return;
         }
-        a = null;
+
+        for each (var frame:BitmapMCFrameVO in frames) {
+            frame.destroy();
+        }
+
         delete _cacheObj[id];
+        if (_amount > 0) {
+            _amount--;
+        }
     }
 
     /**
@@ -92,19 +99,16 @@ public class BMCCacher {
      * </listing>
      */
     public function clean():void {
-        for each(var i:Array in _cacheObj) {
-            for each(var j:* in i) {
-                if (j is BitmapMCFrameVO) {
-                    var b:BitmapMCFrameVO = j;
-                    b.destroy();
+        for each (var frames:Array in _cacheObj) {
+            for each (var frame:BitmapMCFrameVO in frames) {
+                if (frame) {
+                    frame.destroy();
                 }
-                j = null;
             }
-            i = null;
         }
+
         _cacheObj = {};
         _amount   = 0;
     }
-
 }
 }

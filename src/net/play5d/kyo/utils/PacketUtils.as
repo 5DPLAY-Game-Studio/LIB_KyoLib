@@ -65,12 +65,12 @@ public class PacketUtils {
             return null;
         }
 
-        var newbyte:ByteArray = new ByteArray();
-        newbyte.writeShort(len);
-        newbyte.writeBytes(byte, 0, byte.bytesAvailable);
-        newbyte.position = 0;
+        var newByte:ByteArray = new ByteArray();
+        newByte.writeShort(len);
+        newByte.writeBytes(byte, 0, byte.bytesAvailable);
+        newByte.position = 0;
 
-        return newbyte;
+        return newByte;
     }
 
     /**

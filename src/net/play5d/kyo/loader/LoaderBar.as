@@ -26,7 +26,7 @@ import net.play5d.kyo.utils.KyoColor;
 /**
  * 简单矩形进度条（底框 + 可缩放前景条）。
  *
- * @see #initlize()
+ * @see #initialize()
  * @see #update()
  * @see PreLoader
  */
@@ -39,14 +39,14 @@ public class LoaderBar extends Sprite {
         super();
         size = new Point(width, height);
 
-        initlize();
+        initialize();
     }
 
     /**
      * 前景填充色。
      * @default KyoColor.RED
      */
-    public var color:uint     = KyoColor.RED;
+    public var color:uint = KyoColor.RED;
     /**
      * 边框颜色。
      * @default 0x426F00
@@ -56,7 +56,7 @@ public class LoaderBar extends Sprite {
      * 边框线宽。
      * @default 2
      */
-    public var thinkness:uint = 2;
+    public var thickness:uint = 2;
     /**
      * 背景填充色。
      * @default KyoColor.BLACK
@@ -74,12 +74,12 @@ public class LoaderBar extends Sprite {
      * @example
      * <listing version="3.0">
      * bar.color = KyoColor.LIME;
-     * bar.initlize();
+     * bar.initialize();
      * </listing>
      */
-    public function initlize():void {
+    public function initialize():void {
         graphics.clear();
-        graphics.lineStyle(thinkness, lineColor);
+        graphics.lineStyle(thickness, lineColor);
         graphics.beginFill(backColor, 1);
         graphics.drawRect(0, -1, size.x, size.y + 1);
         graphics.endFill();
@@ -104,6 +104,5 @@ public class LoaderBar extends Sprite {
     public function update(p:Number):void {
         _bar.scaleX = p;
     }
-
 }
 }

@@ -51,7 +51,7 @@ public class BasePPTEffect {
      * 当前是否处于拖拽中。
      * @default false
      */
-    public var draging:Boolean;
+    public var dragging:Boolean;
     /**
      * 过渡动画时长（秒）。
      * @default 1
@@ -80,10 +80,10 @@ public class BasePPTEffect {
      * @param sp 内容容器。
      * @example
      * <listing version="3.0">
-     * effect.initlize(pointer, contentSp);
+     * effect.initialize(pointer, contentSp);
      * </listing>
      */
-    public final function initlize(v:PicPointer, sp:Sprite):void {
+    public final function initialize(v:PicPointer, sp:Sprite):void {
         _pointer = v;
         _size    = _pointer.size.clone();
         _sp      = sp;
@@ -101,9 +101,9 @@ public class BasePPTEffect {
      */
     public final function canClick():Boolean {
         if (_downP) {
-            var jl:Number = Math.abs(_pointer.mouseX - _downP.x) + Math.abs(_pointer.mouseY - _downP.y);
-            return jl < 20;
+            return Math.abs(_pointer.mouseX - _downP.x) + Math.abs(_pointer.mouseY - _downP.y) < 20;
         }
+
         return true;
     }
 
@@ -120,12 +120,11 @@ public class BasePPTEffect {
             _sp = null;
         }
         if (_pointer) {
-            _pointer.removeEventListener(Event.ENTER_FRAME, drag_enterframe);
+            _pointer.removeEventListener(Event.ENTER_FRAME, dragEnterFrame);
             if (_pointer.stage) {
                 _pointer.stage.removeEventListener(MouseEvent.MOUSE_UP, dragUp);
             }
             _pointer.removeEventListener(MouseEvent.MOUSE_UP, dragUp);
-            _pointer.removeEventListener(Event.ENTER_FRAME, drag_enterframe);
         }
     }
 
@@ -142,6 +141,7 @@ public class BasePPTEffect {
         _currentPic = cur;
         _nextPic    = next;
         _prevPic    = prev;
+
         initStart();
     }
 
@@ -227,7 +227,7 @@ public class BasePPTEffect {
     /**
      * @private 拖拽过程中每帧调用（已确认在拖拽中）。
      */
-    protected function onDraging():void {
+    protected function onDragging():void {
     }
 
     /**
@@ -271,19 +271,19 @@ public class BasePPTEffect {
             _pointer.addEventListener(MouseEvent.MOUSE_UP, dragUp);
         }
 
-        _pointer.removeEventListener(Event.ENTER_FRAME, drag_enterframe);
-        _pointer.addEventListener(Event.ENTER_FRAME, drag_enterframe);
+        _pointer.removeEventListener(Event.ENTER_FRAME, dragEnterFrame);
+        _pointer.addEventListener(Event.ENTER_FRAME, dragEnterFrame);
 
         _pointer.pause();
     }
 
     /**
-     * @private 拖拽中判定位移并回调 <code>onDraging</code>。
+     * @private 拖拽中判定位移并回调 <code>onDragging</code>。
      */
-    private function drag_enterframe(e:Event):void {
-        draging ||= Math.abs(_pointer.mouseX - _downP.x) > 10 || Math.abs(_pointer.mouseY - _downP.y) > 10;
-        if (draging) {
-            onDraging();
+    private function dragEnterFrame(e:Event):void {
+        dragging ||= Math.abs(_pointer.mouseX - _downP.x) > 10 || Math.abs(_pointer.mouseY - _downP.y) > 10;
+        if (dragging) {
+            onDragging();
         }
     }
 
@@ -296,22 +296,25 @@ public class BasePPTEffect {
         }
 
         _pointer.removeEventListener(MouseEvent.MOUSE_UP, dragUp);
+        _pointer.removeEventListener(Event.ENTER_FRAME, dragEnterFrame);
 
-        _pointer.removeEventListener(Event.ENTER_FRAME, drag_enterframe);
-
-        if (!draging) {
+        if (!dragging) {
             return;
         }
-        draging = false;
+
+        dragging = false;
 
         if (dragNext()) {
             _pointer.toNext();
+
             return;
         }
         if (dragPrev()) {
             _pointer.toPrev();
+
             return;
         }
+
         tweenBack();
     }
 

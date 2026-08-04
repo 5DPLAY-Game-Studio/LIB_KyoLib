@@ -21,9 +21,9 @@ import flash.events.EventDispatcher;
 
 /**
  * 单页加载进度时分派，<code>data</code> 为当前页进度 0–1。
- * @eventType PicPointerEvent.LOAD_PROCESS
+ * @eventType PicPointerEvent.LOAD_PROGRESS
  */
-[Event(name='LOAD_PROCESS', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
+[Event(name='LOAD_PROGRESS', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
 /**
  * 队列全部加载完成时分派。
  * @eventType PicPointerEvent.LOAD_COMPLETE
@@ -81,13 +81,14 @@ public class PPTLoaderCtrl extends EventDispatcher {
     private function loadNext():void {
         if (_loaders.length < 1) {
             dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_COMPLETE));
+
             return;
         }
 
         curIndex++;
 
         var l:PicLoader = _loaders.shift();
-        l.load(loadSuccess, loadFail, loadProcess);
+        l.load(loadSuccess, loadFail, loadProgress);
     }
 
     /**
@@ -107,8 +108,8 @@ public class PPTLoaderCtrl extends EventDispatcher {
     /**
      * @private 转发单页进度。
      */
-    private function loadProcess(l:PicLoader, per:Number):void {
-        dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_PROCESS, per));
+    private function loadProgress(l:PicLoader, per:Number):void {
+        dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_PROGRESS, per));
     }
 
 }

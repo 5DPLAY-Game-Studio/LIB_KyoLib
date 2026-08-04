@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,9 @@ import flash.text.TextFormat;
 
 /**
  * UI 与 TextField 辅助。
+ *
+ * @see #setText()
+ * @see #alignTexts()
  */
 public class KyoUIUtils {
     /**
@@ -74,7 +77,7 @@ public class KyoUIUtils {
 
     /**
      * 追加文本；若增加滚动行则改为换行追加。
-     * @param txtfield 文本框。
+     * @param textField 文本框。
      * @param text 追加内容。
      * @return 是否因换行而调整。
      * @example
@@ -82,20 +85,22 @@ public class KyoUIUtils {
      * KyoUIUtils.appendTextAutoLine(tf, 'hi');
      * </listing>
      */
-    public static function appendTextAutoLine(txtfield:TextField, text:String):Boolean {
-        var ll:int     = txtfield.maxScrollV;
-        var tmp:String = txtfield.text;
-        txtfield.appendText(text);
-        if (txtfield.maxScrollV > ll) {
-            txtfield.text = tmp + '\n' + text;
+    public static function appendTextAutoLine(textField:TextField, text:String):Boolean {
+        var ll:int     = textField.maxScrollV;
+        var tmp:String = textField.text;
+        textField.appendText(text);
+        if (textField.maxScrollV > ll) {
+            textField.text = tmp + '\n' + text;
+
             return true;
         }
+
         return false;
     }
 
     /**
      * 在文本底部追加行，并裁掉顶部多余行以保持行数。
-     * @param textfield 文本框。
+     * @param textField 文本框。
      * @param text 新行内容。
      * @param totalLines 目标行数（首次会预填空行）。
      * @param html 是否按 htmlText 追加。
@@ -104,28 +109,29 @@ public class KyoUIUtils {
      * KyoUIUtils.appendTextBottom(tf, 'line', 5);
      * </listing>
      */
-    public static function appendTextBottom(textfield:TextField, text:String, totalLines:int,
-                                            html:Boolean = false
+    public static function appendTextBottom(
+            textField:TextField, text:String, totalLines:int, html:Boolean = false
     ):void {
-        if (textfield.numLines <= 1) {
-            for (var i:int; i < totalLines; i++) {
+        if (textField.numLines <= 1) {
+            for (var i:int = 0; i < totalLines; i++) {
                 if (html) {
-                    textfield.htmlText += '<br/>';
+                    textField.htmlText += '<br/>';
                 }
                 else {
-                    textfield.appendText('\n');
+                    textField.appendText('\n');
                 }
             }
         }
         if (html) {
-            textfield.htmlText += text;
+            textField.htmlText += text;
         }
         else {
-            textfield.appendText('\n' + text);
+            textField.appendText('\n' + text);
         }
-        var m:int = textfield.getLineOffset(1);
+
+        var m:int = textField.getLineOffset(1);
         if (m != -1) {
-            textfield.replaceText(0, m, '');
+            textField.replaceText(0, m, '');
         }
     }
 
@@ -134,19 +140,20 @@ public class KyoUIUtils {
      * @param txt 文本框。
      * @param text 内容。
      * @param mouseEnabled 是否可交互。
-     * @param nulltxt text 为 null 时的占位。
+     * @param nullText text 为 null 时的占位。
      * @param autoSize 是否自动缩小字号适配。
      * @example
      * <listing version="3.0">
      * KyoUIUtils.setText(tf, 'hi');
      * </listing>
      */
-    public static function setText(txt:TextField, text:Object = '', mouseEnabled:Boolean = false,
-                                   nulltxt:String = 'null', autoSize:Boolean = false
+    public static function setText(
+            txt:TextField, text:Object = '', mouseEnabled:Boolean = false, nullText:String = 'null',
+            autoSize:Boolean = false
     ):void {
         var t:String = String(text);
         if (t == null) {
-            t = nulltxt;
+            t = nullText;
         }
         txt.mouseEnabled = mouseEnabled;
         txt.text         = t;
@@ -166,7 +173,7 @@ public class KyoUIUtils {
      */
     public static function textFieldAutoSize(txt:TextField):void {
         var tf:TextFormat = txt.getTextFormat();
-        if (txt.multiline == true) {
+        if (txt.multiline) {
             while (txt.textHeight > txt.height) {
                 tf.size = int(tf.size) - 1;
                 txt.setTextFormat(tf);
@@ -178,36 +185,33 @@ public class KyoUIUtils {
                 txt.setTextFormat(tf);
             }
         }
-
     }
 
     /**
-     * 排序多个TextField
-     * @param txts TextField数组
-     * @param startPos 开始位置
-     * @param direct 排序方向；0=横向,1=竖向
-     * @param autoSize 默认：TextFieldAutoSize.LEFT
-     * @param offset TextField宽高调整
+     * 按横向或纵向排列多个 TextField。
+     * @param txts TextField 数组。
+     * @param startPos 起始坐标；NaN 时取首项当前位置。
+     * @param direct 0=横向，1=竖向。
+     * @param autoSize 默认 <code>TextFieldAutoSize.LEFT</code>。
+     * @param offset 宽高微调。
      * @example
      * <listing version="3.0">
      * KyoUIUtils.alignTexts([tf1, tf2], NaN, 0);
      * </listing>
      */
-    public static function alignTexts(txts:Array, startPos:Number = NaN, direct:int = 0, autoSize:String = null,
-                                      offset:Point                                                       = null
+    public static function alignTexts(
+            txts:Array, startPos:Number = NaN, direct:int = 0, autoSize:String = null, offset:Point = null
     ):void {
         autoSize ||= TextFieldAutoSize.LEFT;
 
         var len:Number = startPos;
-
         if (isNaN(len)) {
             var f:TextField = txts[0] as TextField;
             len             = direct == 0 ? f.x : f.y;
         }
 
-        for each(var i:TextField in txts) {
+        for each (var i:TextField in txts) {
             i.autoSize = autoSize;
-
             if (offset) {
                 i.width += offset.x;
                 i.height += offset.y;
@@ -228,3 +232,4 @@ public class KyoUIUtils {
 
 }
 }
+

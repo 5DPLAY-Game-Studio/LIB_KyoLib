@@ -32,12 +32,6 @@ import flash.net.URLRequest;
  * @see #loadPath()
  */
 public class KyoSoundLoader {
-    /**
-     * 构造函数。
-     */
-    public function KyoSoundLoader() {
-    }
-
     /** @private */
     private var _urls:Array;
     /** @private */
@@ -60,7 +54,7 @@ public class KyoSoundLoader {
      */
     public function unload():void {
         if (_soundObj) {
-            for each(var s:Sound in _soundObj) {
+            for each (var s:Sound in _soundObj) {
                 s.close();
             }
             _soundObj = {};
@@ -88,22 +82,22 @@ public class KyoSoundLoader {
 
     /**
      * 获取已加载的 <code>Sound</code>。
-     * @param pathOrname 完整路径（含后缀），或文件名（不含后缀）。
+     * @param pathOrName 完整路径（含后缀），或文件名（不含后缀）。
      * @return 声音实例；未找到则 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var s:Sound = loader.getSound('bgm');
      * </listing>
      */
-    public function getSound(pathOrname:String):Sound {
-        if (_soundObj[pathOrname]) {
-            return _soundObj[pathOrname];
+    public function getSound(pathOrName:String):Sound {
+        if (_soundObj[pathOrName]) {
+            return _soundObj[pathOrName];
         }
 
         for (var i:String in _soundObj) {
             var name:String = i.substr(i.lastIndexOf('/') + 1);
             name            = name.substr(0, name.lastIndexOf('.'));
-            if (name == pathOrname) {
+            if (name == pathOrName) {
                 return _soundObj[i];
             }
         }
@@ -139,12 +133,10 @@ public class KyoSoundLoader {
         l.addEventListener(Event.COMPLETE, function (e:Event):void {
             var xml:XML    = new XML(l.data);
             var urls:Array = [];
-            for each(var i:Object in xml.children()) {
+            for each (var i:Object in xml.children()) {
                 urls.push(path + '/' + i.toString());
             }
-
             loadSounds(urls, back);
-
         });
     }
 
@@ -156,9 +148,9 @@ public class KyoSoundLoader {
         _curUrl        = url;
 
         var sound:Sound = new Sound(new URLRequest(url));
-        sound.addEventListener(Event.COMPLETE, loadCom);
-        sound.addEventListener(ProgressEvent.PROGRESS, loadProcess);
-        sound.addEventListener(IOErrorEvent.IO_ERROR, loadErr);
+        sound.addEventListener(Event.COMPLETE, onLoadComplete);
+        sound.addEventListener(ProgressEvent.PROGRESS, onLoadProgress);
+        sound.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
     }
 
     /**
@@ -174,23 +166,22 @@ public class KyoSoundLoader {
     /**
      * @private
      */
-    private function loadProcess(e:ProgressEvent):void {
+    private function onLoadProgress(e:ProgressEvent):void {
         if (_loadProcess != null) {
             var v:Number   = e.bytesLoaded / e.bytesTotal;
             var cur:Number = _loadLength - _urls.length - 1 + v;
-            var p:Number   = cur / _loadLength;
-            _loadProcess(p);
+            _loadProcess(cur / _loadLength);
         }
     }
 
     /**
      * @private
      */
-    private function loadCom(e:Event):void {
+    private function onLoadComplete(e:Event):void {
         var snd:Sound = e.currentTarget as Sound;
-        snd.removeEventListener(Event.COMPLETE, loadCom);
-        snd.removeEventListener(IOErrorEvent.IO_ERROR, loadErr);
-        snd.removeEventListener(ProgressEvent.PROGRESS, loadProcess);
+        snd.removeEventListener(Event.COMPLETE, onLoadComplete);
+        snd.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+        snd.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
 
         _soundObj[_curUrl] = snd;
 
@@ -200,19 +191,18 @@ public class KyoSoundLoader {
         else {
             loadNext();
         }
-
     }
 
     /**
      * @private
      */
-    private function loadErr(e:IOErrorEvent):void {
+    private function onLoadError(e:IOErrorEvent):void {
         var snd:Sound = e.currentTarget as Sound;
-        snd.removeEventListener(Event.COMPLETE, loadCom);
-        snd.removeEventListener(IOErrorEvent.IO_ERROR, loadErr);
-        snd.removeEventListener(ProgressEvent.PROGRESS, loadProcess);
+        snd.removeEventListener(Event.COMPLETE, onLoadComplete);
+        snd.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+        snd.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
 
-        trace('KyoSoundLoader.loadErr :: 加载声音失败 : ' + snd.url);
+        trace('KyoSoundLoader.onLoadError :: 加载声音失败 : ' + snd.url);
 
         if (_urls.length < 1) {
             loadFin();
@@ -221,6 +211,5 @@ public class KyoSoundLoader {
             loadNext();
         }
     }
-
 }
 }

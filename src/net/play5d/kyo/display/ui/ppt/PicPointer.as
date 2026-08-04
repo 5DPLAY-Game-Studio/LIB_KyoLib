@@ -46,9 +46,9 @@ import net.play5d.kyo.utils.KyoColor;
 [Event(name='MOUSE_UP', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
 /**
  * 资源加载进度；整体进度为 0–1，写入 <code>data</code>。
- * @eventType PicPointerEvent.LOAD_PROCESS
+ * @eventType PicPointerEvent.LOAD_PROGRESS
  */
-[Event(name='LOAD_PROCESS', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
+[Event(name='LOAD_PROGRESS', type='net.play5d.kyo.display.ui.ppt.PicPointerEvent')]
 /**
  * 全部资源加载完成时分派。
  * @eventType PicPointerEvent.LOAD_COMPLETE
@@ -60,7 +60,7 @@ import net.play5d.kyo.utils.KyoColor;
  * @see PicPointerEvent
  * @see BasePPTEffect
  * @see PPTLoaderCtrl
- * @see #initlize()
+ * @see #initialize()
  * @see #toNext()
  * @see #toPrev()
  */
@@ -122,20 +122,20 @@ public class PicPointer extends Sprite {
     }
 
     /** @private */
-    private var _dragAble:Boolean;
+    private var _dragEnabled:Boolean;
 
     /**
      * 是否启用拖拽翻页；设为 <code>true</code> 时调用效果的 <code>initDrag</code>。
      * @return 是否可拖拽。
      * @default false
      */
-    public function get dragAble():Boolean {
-        return _dragAble;
+    public function get dragEnabled():Boolean {
+        return _dragEnabled;
     }
 
     /** @private */
-    public function set dragAble(v:Boolean):void {
-        _dragAble = v;
+    public function set dragEnabled(v:Boolean):void {
+        _dragEnabled = v;
         if (v) {
             _effect.initDrag();
         }
@@ -186,12 +186,12 @@ public class PicPointer extends Sprite {
      * @param data 图片 / 资源 URL 数组。
      * @example
      * <listing version="3.0">
-     * pointer.initlize(['a.jpg', 'b.jpg']);
+     * pointer.initialize(['a.jpg', 'b.jpg']);
      * </listing>
      * @see #update()
      */
-    public function initlize(data:Array):void {
-        _effect.initlize(this, _picSprite);
+    public function initialize(data:Array):void {
+        _effect.initialize(this, _picSprite);
 
         setData(data);
         _curId = 0;
@@ -205,7 +205,7 @@ public class PicPointer extends Sprite {
     /**
      * 用新数据重建幻灯（先 <code>destroy</code> 再加载）。
      * @param data 资源 URL 数组。
-     * @see #initlize()
+     * @see #initialize()
      * @see #destroy()
      */
     public function update(data:Array):void {
@@ -228,7 +228,7 @@ public class PicPointer extends Sprite {
         _curId = -1;
 
         if (_loaders) {
-            for each(var p:PicLoader in _loaders) {
+            for each (var p:PicLoader in _loaders) {
                 try {
                     _picSprite.removeChild(p);
                 }
@@ -277,7 +277,7 @@ public class PicPointer extends Sprite {
      */
     public function toNext():void {
         pause();
-        _curId = fixid(_curId + 1);
+        _curId = wrapIndex(_curId + 1);
         dispatchEvent(new PicPointerEvent(PicPointerEvent.CHANGE_START, _curId));
         _effect.tweenNext(tweenFinish);
     }
@@ -288,7 +288,7 @@ public class PicPointer extends Sprite {
      */
     public function toPrev():void {
         pause();
-        _curId = fixid(_curId - 1);
+        _curId = wrapIndex(_curId - 1);
         dispatchEvent(new PicPointerEvent(PicPointerEvent.CHANGE_START, _curId));
         _effect.tweenPrev(tweenFinish);
     }
@@ -306,7 +306,7 @@ public class PicPointer extends Sprite {
             return;
         }
 
-        _curId = fixid(id - 1);
+        _curId = wrapIndex(id - 1);
         resetLoaders();
 
         toNext();
@@ -318,6 +318,7 @@ public class PicPointer extends Sprite {
     private function setData(v:Array):void {
         _loaders            = {};
         var needLoads:Array = [];
+
         for (var i:int; i < v.length; i++) {
             var url:String   = v[i];
             var pl:PicLoader = new PicLoader(size, url);
@@ -325,9 +326,10 @@ public class PicPointer extends Sprite {
             _loaders[pl.id]  = pl;
             needLoads.push(pl);
         }
+
         _datas = v;
 
-        _loaderCtrl.addEventListener(PicPointerEvent.LOAD_PROCESS, onLoadProcess);
+        _loaderCtrl.addEventListener(PicPointerEvent.LOAD_PROGRESS, onLoadProgress);
         _loaderCtrl.addEventListener(PicPointerEvent.LOAD_COMPLETE, onLoadComplete);
         _loaderCtrl.loadQueue(needLoads);
     }
@@ -356,13 +358,14 @@ public class PicPointer extends Sprite {
     /**
      * @private 将索引环绕到合法范围。
      */
-    private function fixid(id:int):int {
+    private function wrapIndex(id:int):int {
         if (id > _datas.length - 1) {
             id = 0;
         }
         if (id < 0) {
             id = _datas.length - 1;
         }
+
         return id;
     }
 
@@ -372,6 +375,7 @@ public class PicPointer extends Sprite {
     private function tweenFinish():void {
         resetLoaders();
         resume();
+
         dispatchEvent(new PicPointerEvent(PicPointerEvent.CHANGE_FINISH, _curId));
     }
 
@@ -383,9 +387,9 @@ public class PicPointer extends Sprite {
             return;
         }
 
-        var curLoader:PicLoader  = _loaders[fixid(_curId)];
-        var nextLoader:PicLoader = _loaders[fixid(_curId + 1)];
-        var prevLoader:PicLoader = _loaders[fixid(_curId - 1)];
+        var curLoader:PicLoader  = _loaders[wrapIndex(_curId)];
+        var nextLoader:PicLoader = _loaders[wrapIndex(_curId + 1)];
+        var prevLoader:PicLoader = _loaders[wrapIndex(_curId - 1)];
 
         _effect.setPics(curLoader, nextLoader, prevLoader);
 
@@ -401,13 +405,18 @@ public class PicPointer extends Sprite {
     /**
      * @private 汇总加载进度并转发事件。
      */
-    private function onLoadProcess(e:PicPointerEvent):void {
-        var per:Number        = Number(e.data);
-        var percentStr:String = int(per * 100) + '%';
-        infoMsg('正在加载资源：' + percentStr + ' (' + _loaderCtrl.curIndex + '/' + _loaderCtrl.totalIndex + ')');
+    private function onLoadProgress(e:PicPointerEvent):void {
+        var per:Number = Number(e.data);
 
-        var allProcess:Number = (_loaderCtrl.curIndex - 1 + per) / _loaderCtrl.totalIndex;
-        this.dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_PROCESS, allProcess));
+        infoMsg(
+            '正在加载资源：' + int(per * 100) + '% (' +
+            _loaderCtrl.curIndex + '/' + _loaderCtrl.totalIndex + ')'
+        );
+
+        dispatchEvent(new PicPointerEvent(
+            PicPointerEvent.LOAD_PROGRESS,
+            (_loaderCtrl.curIndex - 1 + per) / _loaderCtrl.totalIndex
+        ));
     }
 
     /**
@@ -415,7 +424,8 @@ public class PicPointer extends Sprite {
      */
     private function onLoadComplete(e:PicPointerEvent):void {
         showInfo = false;
-        this.dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_COMPLETE));
+
+        dispatchEvent(new PicPointerEvent(PicPointerEvent.LOAD_COMPLETE));
     }
 
     /**

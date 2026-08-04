@@ -45,12 +45,6 @@ public class KyoMp3Player {
     public static const MODE_RANDOM:String   = 'random_mode';
 
     /**
-     * 构造函数。
-     */
-    public function KyoMp3Player() {
-    }
-
-    /**
      * 播放模式，见 <code>MODE_ALL_LOOP</code> 等常量。
      */
     public var playMode:String;
@@ -98,7 +92,6 @@ public class KyoMp3Player {
         _sound   = new Sound(new URLRequest(v));
         _channel = _sound.play();
         _channel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
-
     }
 
     /**
@@ -141,6 +134,7 @@ public class KyoMp3Player {
         if (!list) {
             return;
         }
+
         var id:int = list.indexOf(_current) + 1;
         if (id >= list.length) {
             if (loop) {
@@ -151,6 +145,7 @@ public class KyoMp3Player {
                 return;
             }
         }
+
         play(list[id]);
     }
 
@@ -166,6 +161,7 @@ public class KyoMp3Player {
         if (!list) {
             return;
         }
+
         var id:int = list.indexOf(_current) - 1;
         if (id < 0) {
             if (loop) {
@@ -176,6 +172,7 @@ public class KyoMp3Player {
                 return;
             }
         }
+
         play(list[id]);
     }
 
@@ -203,6 +200,5 @@ public class KyoMp3Player {
             break;
         }
     }
-
 }
 }

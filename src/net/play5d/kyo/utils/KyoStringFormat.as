@@ -125,7 +125,7 @@ public class KyoStringFormat {
                     missing = [];
                 }
                 missing[missing.length] = name;
-                parts[parts.length] = '{' + name + '}';
+                parts[parts.length]     = '{' + name + '}';
             }
             else {
                 var val:*           = params[name];

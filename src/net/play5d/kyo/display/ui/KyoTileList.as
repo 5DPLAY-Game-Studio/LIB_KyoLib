@@ -363,11 +363,12 @@ public class KyoTileList extends Sprite {
      * @param fun 方法名字符串。
      * @param params 可变参数列表。
      */
-    public function anyoneDoFunction(fun:String, ...params):void {
-        for each(var d:DisplayObject in displays) {
+    public function callAll(fun:String, ...params):void {
+        for each (var d:DisplayObject in displays) {
             if (d == null) {
                 continue;
             }
+
             var f:Function = d[fun];
             f.apply(null, params);
         }

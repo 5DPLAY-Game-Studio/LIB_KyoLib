@@ -103,15 +103,15 @@ public class SuperPlayer extends Sprite {
     /**
      * 视为视频的扩展名列表。
      */
-    public var video_pfxs:Array  = ['flv', 'mp4'];
+    public var videoExts:Array = ['flv', 'mp4'];
     /**
      * 视为 SWF 的扩展名列表。
      */
-    public var flash_pfxs:Array  = ['swf'];
+    public var flashExts:Array = ['swf'];
     /**
      * 视为图片的扩展名列表。
      */
-    public var pic_pfxs:Array    = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
+    public var picExts:Array   = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
     /** @private */
     private var _url:String;
     /** @private */
@@ -207,21 +207,20 @@ public class SuperPlayer extends Sprite {
 
         var dxName:String = url.substr(url.lastIndexOf('.') + 1).toLocaleLowerCase();
 
-        if (video_pfxs.indexOf(dxName) != -1) {
+        if (videoExts.indexOf(dxName) != -1) {
             type = TYPE_VIDEO;
             playVideo(url);
         }
 
-        if (flash_pfxs.indexOf(dxName) != -1) {
+        if (flashExts.indexOf(dxName) != -1) {
             type = TYPE_FLASH;
             loadSwf(url);
         }
 
-        if (pic_pfxs.indexOf(dxName) != -1) {
+        if (picExts.indexOf(dxName) != -1) {
             type = TYPE_BITMAP;
             loadBitmap(url);
         }
-
     }
 
     /**
@@ -366,7 +365,7 @@ public class SuperPlayer extends Sprite {
         if (autoPlay) {
             _video.play();
         }
-        _video.addEventListener(InsVideo.PLAY_COMPLETE, onVideComplete);
+        _video.addEventListener(InsVideo.PLAY_COMPLETE, onVideoComplete);
         _video.addEventListener(InsVideo.PLAY_FAIL, onLoadContentFail);
         _video.addEventListener(InsVideo.META_DATA, onLoadContentComplete);
     }
@@ -429,7 +428,7 @@ public class SuperPlayer extends Sprite {
     /**
      * @private
      */
-    private function onVideComplete(e:Event):void {
+    private function onVideoComplete(e:Event):void {
         dispatchEvent(new Event(EVENT_PLAY_COMPLETE));
         if (_loopPlay) {
             playNow();
@@ -489,27 +488,27 @@ internal class InsVideo extends Sprite {
      */
     public function InsVideo(url:String, size:Point) {
         var flvObject:Object = {};
-        flvURL               = url;
+        _flvURL               = url;
 
-        flvNC = new NetConnection();
-        flvNC.connect(null);
+        _flvNC = new NetConnection();
+        _flvNC.connect(null);
 
-        flvNS = new NetStream(flvNC);
-        flvNS.addEventListener(AsyncErrorEvent.ASYNC_ERROR, videoFail);
-        flvNS.addEventListener(NetStatusEvent.NET_STATUS, videoState);
-        flvNS.client = flvObject;
-        flvNS.play(flvURL);
+        _flvNS = new NetStream(_flvNC);
+        _flvNS.addEventListener(AsyncErrorEvent.ASYNC_ERROR, videoFail);
+        _flvNS.addEventListener(NetStatusEvent.NET_STATUS, videoState);
+        _flvNS.client = flvObject;
+        _flvNS.play(_flvURL);
 
-        flvVideo = new Video(size.x, size.y);
-        flvVideo.attachNetStream(flvNS);
+        _flvVideo = new Video(size.x, size.y);
+        _flvVideo.attachNetStream(_flvNS);
 
-        flvNS.pause();
+        _flvNS.pause();
 
         var obj:Object = {};
         obj.onMetaData = onMetaData;
-        flvNS.client   = obj;
+        _flvNS.client   = obj;
 
-        addChild(flvVideo);
+        addChild(_flvVideo);
     }
 
     /**
@@ -525,13 +524,13 @@ internal class InsVideo extends Sprite {
      */
     public var metadata:Object;
     /** @private */
-    private var flvVideo:Video;
+    private var _flvVideo:Video;
     /** @private */
-    private var flvURL:String;
+    private var _flvURL:String;
     /** @private */
-    private var flvNC:NetConnection;
+    private var _flvNC:NetConnection;
     /** @private */
-    private var flvNS:NetStream;
+    private var _flvNS:NetStream;
     /** @private */
     private var _siint:int;
 
@@ -543,8 +542,8 @@ internal class InsVideo extends Sprite {
 
         clearTimeout(_siint);
 
-        flvNS.play(flvURL);
-        flvNS.seek(0);
+        _flvNS.play(_flvURL);
+        _flvNS.seek(0);
 
     }
 
@@ -553,7 +552,7 @@ internal class InsVideo extends Sprite {
      */
     public function pause():void {
         playing = false;
-        flvNS.pause();
+        _flvNS.pause();
     }
 
     /**
@@ -561,7 +560,7 @@ internal class InsVideo extends Sprite {
      */
     public function resume():void {
         playing = true;
-        flvNS.resume();
+        _flvNS.resume();
     }
 
     /**
@@ -569,10 +568,10 @@ internal class InsVideo extends Sprite {
      */
     public function stop():void {
         playing = false;
-        flvNS.pause();
-        flvNS.seek(0);
+        _flvNS.pause();
+        _flvNS.seek(0);
         clearTimeout(_siint);
-        _siint = setTimeout(flvNS.close, 1000);
+        _siint = setTimeout(_flvNS.close, 1000);
     }
 
     /**
@@ -581,26 +580,26 @@ internal class InsVideo extends Sprite {
     public function destroy():void {
         stop();
 
-        if (flvNC) {
-            flvNC.close();
-            flvNC = null;
+        if (_flvNC) {
+            _flvNC.close();
+            _flvNC = null;
         }
 
-        if (flvNS) {
-            flvNS.removeEventListener(AsyncErrorEvent.ASYNC_ERROR, videoFail);
-            flvNS.removeEventListener(NetStatusEvent.NET_STATUS, videoState);
-            flvNS = null;
+        if (_flvNS) {
+            _flvNS.removeEventListener(AsyncErrorEvent.ASYNC_ERROR, videoFail);
+            _flvNS.removeEventListener(NetStatusEvent.NET_STATUS, videoState);
+            _flvNS = null;
         }
 
-        if (flvVideo) {
+        if (_flvVideo) {
             try {
-                removeChild(flvVideo);
+                removeChild(_flvVideo);
             }
             catch (e:Error) {
             }
 
-            flvVideo.clear();
-            flvVideo = null;
+            _flvVideo.clear();
+            _flvVideo = null;
         }
 
     }

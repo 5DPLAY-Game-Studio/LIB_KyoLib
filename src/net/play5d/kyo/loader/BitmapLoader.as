@@ -29,12 +29,6 @@ import flash.display.Bitmap;
  */
 public class BitmapLoader {
     /**
-     * 构造函数。
-     */
-    public function BitmapLoader() {
-    }
-
-    /**
      * 加载完成的位图；失败或未加载时为 <code>null</code>。
      */
     public var bitmap:Bitmap;
@@ -74,6 +68,5 @@ public class BitmapLoader {
             }
         }
     }
-
 }
 }

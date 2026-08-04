@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,68 +15,73 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package net.play5d.kyo.utils {
 /**
  * 数组查找、增删、分组与去重。
+ *
+ * @see #findOneByProperty()
+ * @see #groupByProperty()
  */
 public class KyoArrayUtils {
     /**
-     * 根据子元素属性查找一个对象
-     * @param array
-     * @param matchKey
-     * @param matchValue
-     * @return
+     * 按子元素属性查找第一个匹配项。
+     * @param array 源数组。
+     * @param matchKey 属性名。
+     * @param matchValue 属性值。
+     * @return 匹配项；未找到返回 <code>null</code>。
      * @example
      * <listing version="3.0">
-     * var o:* = KyoArrayUtils.findOneByPortal(list, 'id', 1);
+     * var o:* = KyoArrayUtils.findOneByProperty(list, 'id', 1);
      * </listing>
      */
-    public static function findOneByPortal(array:Array, matchKey:*, matchValue:*):* {
-        for each(var i:* in array) {
+    public static function findOneByProperty(array:Array, matchKey:*, matchValue:*):* {
+        for each (var i:* in array) {
             if (i[matchKey] == matchValue) {
                 return i;
             }
         }
+
         return null;
     }
 
     /**
-     * 根据子元素属性删除对象
-     * @param array
-     * @param matchKey
-     * @param matchValue
+     * 按子元素属性删除所有匹配项。
+     * @param array 源数组。
+     * @param matchKey 属性名。
+     * @param matchValue 属性值。
      * @example
      * <listing version="3.0">
-     * KyoArrayUtils.removeByPortal(list, 'id', 1);
+     * KyoArrayUtils.removeByProperty(list, 'id', 1);
      * </listing>
      */
-    public static function removeByPortal(array:Array, matchKey:*, matchValue:*):void {
-        for (var i:int; i < array.length; i++) {
-            var m:* = array[i];
-            if (m[matchKey] == matchValue) {
+    public static function removeByProperty(array:Array, matchKey:*, matchValue:*):void {
+        for (var i:int = array.length - 1; i >= 0; i--) {
+            if (array[i][matchKey] == matchValue) {
                 array.splice(i, 1);
             }
         }
     }
 
     /**
-     * 根据子元素属性查找所有符合的对象
-     * @param array
-     * @param matchKey
-     * @param matchValue
-     * @return
+     * 按子元素属性查找全部匹配项。
+     * @param array 源数组。
+     * @param matchKey 属性名。
+     * @param matchValue 属性值。
+     * @return 匹配项数组。
      * @example
      * <listing version="3.0">
-     * var a:Array = KyoArrayUtils.findAllByPortal(list, 'type', 'a');
+     * var a:Array = KyoArrayUtils.findAllByProperty(list, 'type', 'a');
      * </listing>
      */
-    public static function findAllByPortal(array:Array, matchKey:*, matchValue:*):* {
+    public static function findAllByProperty(array:Array, matchKey:*, matchValue:*):Array {
         var r:Array = [];
-        for each(var i:* in array) {
+        for each (var i:* in array) {
             if (i[matchKey] == matchValue) {
                 r.push(i);
             }
         }
+
         return r;
     }
 
@@ -91,8 +96,7 @@ public class KyoArrayUtils {
      * </listing>
      */
     public static function hasItem(array:Array, item:*):Boolean {
-        var i:int = array.indexOf(item);
-        return i != -1;
+        return array.indexOf(item) != -1;
     }
 
     /**
@@ -109,21 +113,20 @@ public class KyoArrayUtils {
         if (item == null) {
             return false;
         }
-        var i:int = array.indexOf(item);
-        if (i == -1) {
-            array.push(item);
-            return true;
-        }
-        else {
+        if (array.indexOf(item) != -1) {
             return false;
         }
+
+        array.push(item);
+
+        return true;
     }
 
     /**
-     * 将对象插入到指定的index中
-     * @param array
-     * @param item 一个或多个对象，多个对象时为Array类型
-     * @param index
+     * 将对象插入到指定下标。
+     * @param array 目标数组。
+     * @param item 一个或多个对象；多个时为 <code>Array</code>。
+     * @param index 插入下标。
      * @example
      * <listing version="3.0">
      * KyoArrayUtils.pushAt(a, item, 0);
@@ -139,9 +142,7 @@ public class KyoArrayUtils {
         }
 
         for (var i:int = array.length; i > index; i--) {
-            var ii:int = i + (
-                    items.length - 1
-            );
+            var ii:int = i + (items.length - 1);
             array[ii]  = array[i - 1];
         }
 
@@ -167,7 +168,7 @@ public class KyoArrayUtils {
     }
 
     /**
-     * 删除数组中的重复对象。
+     * 删除数组中的重复对象（保留首次出现）。
      * @param array 目标数组或类数组。
      * @example
      * <listing version="3.0">
@@ -204,6 +205,7 @@ public class KyoArrayUtils {
                 n++;
             }
         }
+
         return n;
     }
 
@@ -218,27 +220,28 @@ public class KyoArrayUtils {
      */
     public static function fixIds(array:Array):Array {
         var a:Array = [];
-        for each(var i:* in array) {
+        for each (var i:* in array) {
             a.push(i);
         }
+
         return a;
     }
 
     /**
-     * 获取属性相同的数据。
+     * 获取属性值重复的项。
      * @param array 源数组。
      * @param key 属性名。
      * @return 属性值重复的项组成的数组。
      * @example
      * <listing version="3.0">
-     * var same:Array = KyoArrayUtils.getSamePortalItems(list, 'id');
+     * var same:Array = KyoArrayUtils.getSamePropertyItems(list, 'id');
      * </listing>
      */
-    public static function getSamePortalItems(array:Array, key:String):Array {
+    public static function getSamePropertyItems(array:Array, key:String):Array {
         var vo:Object = {};
         var vs:Object = {};
 
-        for each(var i:* in array) {
+        for each (var i:* in array) {
             var v:* = i[key];
             if (vo[v]) {
                 vs[v] = 1;
@@ -247,14 +250,16 @@ public class KyoArrayUtils {
                 vo[v] = 1;
             }
         }
+
         var r:Array = [];
         for (var j:String in vs) {
-            for each(i in array) {
+            for each (i in array) {
                 if (i[key] == j) {
                     r.push(i);
                 }
             }
         }
+
         return r;
     }
 
@@ -265,20 +270,20 @@ public class KyoArrayUtils {
      * @return key → 同组元素数组。
      * @example
      * <listing version="3.0">
-     * var g:Object = KyoArrayUtils.groupByPortal(list, 'type');
+     * var g:Object = KyoArrayUtils.groupByProperty(list, 'type');
      * </listing>
      */
-    public static function groupByPortal(array:Array, key:String):Object {
+    public static function groupByProperty(array:Array, key:String):Object {
         var o:Object = {};
-        for each(var i:* in array) {
+        for each (var i:* in array) {
             var v:* = i[key];
             o[v] ||= [];
-            (
-                    o[v] as Array
-            ).push(i);
+            (o[v] as Array).push(i);
         }
+
         return o;
     }
 
 }
 }
+

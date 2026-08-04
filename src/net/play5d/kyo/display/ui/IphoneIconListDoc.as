@@ -41,8 +41,8 @@ public class IphoneIconListDoc extends Sprite {
     public function IphoneIconListDoc(docClass:Class, list:IphoneIconList) {
         super();
         _docClass = docClass;
-        _iplist   = list;
-        _iplist.addEventListener(IphoneIconListEvent.PAGE_CHANGE, update);
+        _iconList = list;
+        _iconList.addEventListener(IphoneIconListEvent.PAGE_CHANGE, update);
         update();
     }
 
@@ -52,7 +52,7 @@ public class IphoneIconListDoc extends Sprite {
      */
     public var gap:Point = new Point(20, 0);
     /** @private */
-    private var _iplist:IphoneIconList;
+    private var _iconList:IphoneIconList;
     /** @private */
     private var _docClass:Class;
     /** @private 指示器 tile 列表 */
@@ -67,15 +67,15 @@ public class IphoneIconListDoc extends Sprite {
      * </listing>
      */
     public function update(...params):void {
-        var current:int = _iplist.curPage;
-        var total:int   = _iplist.totalPage;
+        var current:int = _iconList.curPage;
+        var total:int   = _iconList.totalPage;
 
         var ds:Array = [];
         for (var i:int; i < total; i++) {
             var c:MovieClip = new _docClass();
             c.pg            = i + 1;
             c.gotoAndStop((i + 1 == current) ? 1 : 2);
-            c.addEventListener(MouseEvent.CLICK, onccclick);
+            c.addEventListener(MouseEvent.CLICK, onDocClick);
             ds.push(c);
         }
         if (!_list) {
@@ -88,7 +88,7 @@ public class IphoneIconListDoc extends Sprite {
         _list.setDisplays(ds);
 
         _list.x = 0;
-        KyoAlign.centerW(_list, _iplist.touchSize.x);
+        KyoAlign.centerW(_list, _iconList.touchSize.x);
     }
 
     /**
@@ -99,8 +99,8 @@ public class IphoneIconListDoc extends Sprite {
      * </listing>
      */
     public function destroy():void {
-        if (_iplist) {
-            _iplist.removeEventListener(IphoneIconListEvent.PAGE_CHANGE, update);
+        if (_iconList) {
+            _iconList.removeEventListener(IphoneIconListEvent.PAGE_CHANGE, update);
         }
         if (_list) {
             _list.removeAllChildren();
@@ -110,9 +110,9 @@ public class IphoneIconListDoc extends Sprite {
     /**
      * @private 点击指示器跳页。
      */
-    private function onccclick(e:MouseEvent):void {
+    private function onDocClick(e:MouseEvent):void {
         var c:MovieClip = e.currentTarget as MovieClip;
-        _iplist.goPage(c.pg);
+        _iconList.goPage(c.pg);
     }
 
 }

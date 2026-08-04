@@ -69,6 +69,5 @@ public class KyoKeyVO {
     public function clone():KyoKeyVO {
         return new KyoKeyVO(name, code);
     }
-
 }
 }

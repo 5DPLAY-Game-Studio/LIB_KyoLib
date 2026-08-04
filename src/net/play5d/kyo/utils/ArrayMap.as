@@ -26,19 +26,10 @@ package net.play5d.kyo.utils {
  * @see #getItemByIndex()
  */
 public class ArrayMap {
-    /**
-     * 构造函数。
-     */
-    public function ArrayMap() {
-        super();
-        _o   = {};
-        _arr = [];
-    }
-
     /** @private */
-    private var _o:Object;
+    private var _o:Object = {};
     /** @private */
-    private var _arr:Array;
+    private var _arr:Array = [];
 
     /**
      * 元素个数（插入顺序数组长度）。
@@ -107,7 +98,6 @@ public class ArrayMap {
         }
 
         delete _o[id];
-
     }
 }
 }

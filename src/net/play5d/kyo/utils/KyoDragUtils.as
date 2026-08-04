@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ import flash.geom.Rectangle;
 public class KyoDragUtils {
     /**
      * 在按下对象上挂钩 DOWN/MOVE/UP；回调返回 <code>false</code> 可取消后续。
-     * @param downmc 按下目标。
+     * @param downMc 按下目标。
      * @param onDown 按下回调；可返回 Boolean。
      * @param onUp 抬起回调；可返回 Boolean。
      * @param onMove 移动回调。
@@ -40,13 +40,13 @@ public class KyoDragUtils {
      * KyoDragUtils.dragBase(mc, onDown, onUp, onMove);
      * </listing>
      */
-    public static function dragBase(downmc:DisplayObject, onDown:Function = null, onUp:Function = null,
-                                    onMove:Function = null
+    public static function dragBase(
+            downMc:DisplayObject, onDown:Function = null, onUp:Function = null, onMove:Function = null
     ):void {
-        downmc.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+        downMc.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 
         function onMouseDown(e:MouseEvent):void {
-            if (!downmc.stage) {
+            if (!downMc.stage) {
                 return;
             }
             if (onDown != null) {
@@ -56,15 +56,14 @@ public class KyoDragUtils {
                 }
             }
 
-            if (downmc.stage) {
-                downmc.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-                downmc.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+            if (downMc.stage) {
+                downMc.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+                downMc.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
             }
             else {
-                downmc.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-                downmc.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+                downMc.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+                downMc.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
             }
-
         }
 
         function onMouseUp(e:MouseEvent):void {
@@ -75,15 +74,14 @@ public class KyoDragUtils {
                 }
             }
 
-            if (downmc.stage) {
-                downmc.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-                downmc.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+            if (downMc.stage) {
+                downMc.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+                downMc.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
             }
             else {
-                downmc.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-                downmc.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+                downMc.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+                downMc.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
             }
-
         }
 
         function onMouseMove(e:MouseEvent):void {
@@ -95,33 +93,39 @@ public class KyoDragUtils {
 
     /**
      * 基于 <code>dragBase</code> 调用 <code>startDrag</code> / <code>stopDrag</code>。
-     * @param downmc 按下的 Sprite。
-     * @param params 可选键：<code>onDown/onUp/onMove/dragmc/bounds/lockCenter</code>。
+     * @param downMc 按下的 Sprite。
+     * @param params 可选键：<code>onDown/onUp/onMove/dragMc/bounds/lockCenter</code>。
      * @example
      * <listing version="3.0">
      * KyoDragUtils.dragSimple(panel, {bounds: rect});
      * </listing>
      */
-    public static function dragSimple(downmc:Sprite, params:Object = null):void {
-        var onDown:Function, onUp:Function, onMove:Function;
-        var dragmc:Sprite, bounds:Rectangle, lockCenter:Boolean;
+    public static function dragSimple(downMc:Sprite, params:Object = null):void {
+        var onDown:Function;
+        var onUp:Function;
+        var onMove:Function;
+        var dragMc:Sprite;
+        var bounds:Rectangle;
+        var lockCenter:Boolean;
+
         if (params) {
             onDown     = params.onDown;
             onUp       = params.onUp;
             onMove     = params.onMove;
-            dragmc     = params.dragmc;
+            dragMc     = params.dragMc;
             bounds     = params.bounds;
             lockCenter = params.lockCenter;
         }
 
-        dragmc ||= downmc;
-        dragBase(downmc, simDown, simUp, simMove);
+        dragMc ||= downMc;
+        dragBase(downMc, simDown, simUp, simMove);
 
         function simDown():Boolean {
             if (onDown != null && !onDown()) {
                 return false;
             }
-            dragmc.startDrag(lockCenter, bounds);
+            dragMc.startDrag(lockCenter, bounds);
+
             return true;
         }
 
@@ -129,7 +133,8 @@ public class KyoDragUtils {
             if (onUp != null && !onUp()) {
                 return false;
             }
-            dragmc.stopDrag();
+            dragMc.stopDrag();
+
             return true;
         }
 
@@ -142,3 +147,4 @@ public class KyoDragUtils {
 
 }
 }
+

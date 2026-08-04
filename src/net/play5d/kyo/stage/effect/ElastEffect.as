@@ -23,12 +23,12 @@ import com.greensock.easing.Elastic;
 import net.play5d.kyo.stage.IStage;
 
 /**
- * 弹性上下位移的场景淡入 / 淡出效果（历史拼写 fadIn / fadOut）。
+ * 弹性上下位移的场景淡入 / 淡出效果。
  *
- * @see IStageFadEffect
+ * @see IStageFadeEffect
  * @see ZoomEffect
  */
-public class ElastEffect implements IStageFadEffect {
+public class ElastEffect implements IStageFadeEffect {
     /**
      * @param duration 动画时长（秒）。
      */
@@ -45,10 +45,10 @@ public class ElastEffect implements IStageFadEffect {
      * @param complete 完成回调（当前实现未调用）。
      * @example
      * <listing version="3.0">
-     * new ElastEffect().fadIn(stage);
+     * new ElastEffect().fadeIn(stage);
      * </listing>
      */
-    public function fadIn(stage:IStage, complete:Function = null):void {
+    public function fadeIn(stage:IStage, complete:Function = null):void {
         TweenLite.from(stage.display, _duration, {y: -stage.display.height, ease: Elastic.easeOut});
     }
 
@@ -58,10 +58,10 @@ public class ElastEffect implements IStageFadEffect {
      * @param complete 完成回调（当前实现未调用）。
      * @example
      * <listing version="3.0">
-     * new ElastEffect().fadOut(stage);
+     * new ElastEffect().fadeOut(stage);
      * </listing>
      */
-    public function fadOut(stage:IStage, complete:Function = null):void {
+    public function fadeOut(stage:IStage, complete:Function = null):void {
         TweenLite.to(stage.display, _duration, {y: -stage.display.height, ease: Elastic.easeOut});
     }
 }

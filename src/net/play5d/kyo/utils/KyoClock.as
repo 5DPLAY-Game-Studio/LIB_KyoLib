@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,8 @@ public class KyoClock {
     /**
      * 当前时间；由定时器刷新。
      */
-    public var now:Date          = new Date();
+    public var now:Date = new Date();
+
     /** @private */
     private var _timer:Timer;
     /** @private */
@@ -50,7 +51,7 @@ public class KyoClock {
      * 是否为上午（小时 &lt; 12）。
      * @return <code>true</code> 表示上午。
      */
-    public function get isam():Boolean {
+    public function get isAm():Boolean {
         return now.hours < 12;
     }
 
@@ -89,7 +90,7 @@ public class KyoClock {
     /**
      * 自定义时间字符串。
      * @param type24 是否 24 小时制。
-     * @param srcond 是否含秒（历史拼写）。
+     * @param second 是否含秒。
      * @param ampm 是否追加 am/pm。
      * @return 时间字符串。
      * @example
@@ -97,12 +98,13 @@ public class KyoClock {
      * clock.getTime(true, true);
      * </listing>
      */
-    public function getTime(type24:Boolean = true, srcond:Boolean = false, ampm:Boolean = false):String {
-        var sr:String = KyoTimerFormat.getTime(now, ':', srcond, type24);
+    public function getTime(type24:Boolean = true, second:Boolean = false, ampm:Boolean = false):String {
+        var sr:String = KyoTimerFormat.getTime(now, ':', second, type24);
         if (ampm) {
             var apm:String = now.hours < 12 ? 'am' : 'pm';
             sr += ' ' + apm;
         }
+
         return sr;
     }
 
@@ -118,8 +120,8 @@ public class KyoClock {
      * </listing>
      */
     public function getDateStr(ys:String = '年', ms:String = '月', ds:String = '日'):String {
-        return now.fullYear + ys + KyoTimerFormat.formatNum(now.month + 1) + ms + KyoTimerFormat.formatNum(now.date) +
-               ds;
+        return now.fullYear + ys + KyoTimerFormat.formatNum(now.month + 1) + ms +
+               KyoTimerFormat.formatNum(now.date) + ds;
     }
 
     /**
@@ -128,14 +130,16 @@ public class KyoClock {
      * @param params 传给 <code>apply</code> 的参数数组；可省略。
      * @example
      * <listing version="3.0">
-     * clock.addCallBack(onTick);
+     * clock.addCallback(onTick);
      * </listing>
      */
-    public function addCallBack(fun:Function, params:Array = null):void {
-        var i:int = _functions.indexOf(fun);
-        if (i == -1) {
-            _functions.push([fun, params]);
+    public function addCallback(fun:Function, params:Array = null):void {
+        for each (var entry:Array in _functions) {
+            if (entry[0] == fun) {
+                return;
+            }
         }
+        _functions.push([fun, params]);
     }
 
     /**
@@ -143,13 +147,15 @@ public class KyoClock {
      * @param fun 曾注册的回调。
      * @example
      * <listing version="3.0">
-     * clock.removeCallBack(onTick);
+     * clock.removeCallback(onTick);
      * </listing>
      */
-    public function removeCallBack(fun:Function):void {
-        var i:int = _functions.indexOf(fun);
-        if (i == -1) {
-            _functions.splice(i, 1);
+    public function removeCallback(fun:Function):void {
+        for (var i:int = 0; i < _functions.length; i++) {
+            if (_functions[i][0] == fun) {
+                _functions.splice(i, 1);
+                return;
+            }
         }
     }
 
@@ -214,12 +220,10 @@ public class KyoClock {
         _functions = null;
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     private function onTimer(e:TimerEvent):void {
         now = new Date();
-        for each(var i:Array in _functions) {
+        for each (var i:Array in _functions) {
             var f:Function = i[0];
             var p:Array    = i[1];
             f.apply(null, p);
@@ -227,3 +231,4 @@ public class KyoClock {
     }
 }
 }
+

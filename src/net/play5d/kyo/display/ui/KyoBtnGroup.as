@@ -43,14 +43,16 @@ public class KyoBtnGroup {
      * </listing>
      */
     public function focus(btn:IKyoButton):void {
-        for each(var i:IKyoButton in _btns) {
+        for each (var i:IKyoButton in _btns) {
             if (i == btn) {
                 continue;
             }
             i.focus = false;
         }
+
         btn.focus = true;
     }
 
 }
 }
+

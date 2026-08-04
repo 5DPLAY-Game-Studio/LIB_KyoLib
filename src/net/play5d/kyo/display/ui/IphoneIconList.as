@@ -39,7 +39,7 @@ import net.play5d.kyo.utils.KyoColor;
  *
  * @see IphoneIconListEvent
  * @see IphoneIconListDoc
- * @see IiphoneBtn
+ * @see IPhoneBtn
  * @see #setDisplay()
  * @see #goPage()
  */
@@ -47,14 +47,14 @@ public class IphoneIconList extends Sprite {
     /**
      * @param touchSize 单页触摸 / 可视区域尺寸。
      * @param unitSize 单个图标单元尺寸；参与自动计算间距。
-     * @param perpage 每页图标数，默认 16。
-     * @param hrow 每行图标数，默认 4。
+     * @param perPage 每页图标数，默认 16。
+     * @param hRow 每行图标数，默认 4。
      */
-    public function IphoneIconList(touchSize:Point, unitSize:Point = null, perpage:int = 16, hrow:int = 4) {
+    public function IphoneIconList(touchSize:Point, unitSize:Point = null, perPage:int = 16, hRow:int = 4) {
         this.touchSize = touchSize;
         _unitSize      = unitSize;
-        this.perpage   = perpage;
-        this.hrow      = hrow;
+        this.perPage   = perPage;
+        this.hRow      = hRow;
     }
 
     /**
@@ -70,26 +70,26 @@ public class IphoneIconList extends Sprite {
     /**
      * 每页图标数。
      */
-    public var perpage:int;
+    public var perPage:int;
     /**
-     * 列表水平位移（与 <code>scrollRect</code> 联动；Tween 目标属性）。
+     * 内容水平偏移（与 <code>scrollRect</code> 联动；Tween 目标属性）。
      * @default 0
      */
-    public var _thisX:Number        = 0;
+    public var contentX:Number      = 0;
     /**
      * 每行图标数。
      * @default 4
      */
-    public var hrow:int             = 4;
+    public var hRow:int             = 4;
     /**
      * 单页可视尺寸。
      */
     public var touchSize:Point;
     /**
-     * 是否响应滑动翻页（历史命名拼写）。
+     * 是否响应滑动翻页。
      * @default true
      */
-    public var enalbed:Boolean      = true;
+    public var enabled:Boolean      = true;
     /**
      * 翻页所需的滑动速度阈值。
      * @default 30
@@ -112,8 +112,8 @@ public class IphoneIconList extends Sprite {
     public var listPos:Point;
     /** @private 单元尺寸 */
     private var _unitSize:Point;
-    /** @private 按下时的列表 X */
-    private var _oldthisX:Number    = 0;
+    /** @private 按下时的内容 X */
+    private var _oldContentX:Number = 0;
     /** @private 翻页目标 X */
     private var _tweenX:Number      = 0;
     /** @private 各页 KyoTileList */
@@ -135,7 +135,7 @@ public class IphoneIconList extends Sprite {
      * 当前水平间距。
      * @return 间距 X。
      */
-    public function get gapx():Number {
+    public function get gapX():Number {
         return _gap.x;
     }
 
@@ -143,7 +143,7 @@ public class IphoneIconList extends Sprite {
      * 当前垂直间距。
      * @return 间距 Y。
      */
-    public function get gapy():Number {
+    public function get gapY():Number {
         return _gap.y;
     }
 
@@ -168,18 +168,18 @@ public class IphoneIconList extends Sprite {
     }
 
     /**
-     * @private 拖拽时禁用/恢复子项交互，并对 <code>IiphoneBtn</code> 调 <code>onDrag</code>。
+     * @private 拖拽时禁用/恢复子项交互，并对 <code>IPhoneBtn</code> 调 <code>onDrag</code>。
      */
     private function set listsEnable(v:Boolean):void {
         if (_listEnable == v) {
             return;
         }
         _listEnable = v;
-        for each(var i:KyoTileList in _lists) {
+        for each (var i:KyoTileList in _lists) {
             i.mouseEnabled = i.mouseChildren = v;
-            for each(var n:DisplayObject in i.displays) {
-                if (n is IiphoneBtn) {
-                    (n as IiphoneBtn).onDrag();
+            for each (var n:DisplayObject in i.displays) {
+                if (n is IPhoneBtn) {
+                    (n as IPhoneBtn).onDrag();
                 }
             }
         }
@@ -191,11 +191,11 @@ public class IphoneIconList extends Sprite {
      * @param params 传给该方法的参数。
      * @example
      * <listing version="3.0">
-     * list.anyoneDoFunction('destroy');
+     * list.callAll('destroy');
      * </listing>
      */
-    public function anyoneDoFunction(fun:String, ...params):void {
-        for each(var d:DisplayObject in displays) {
+    public function callAll(fun:String, ...params):void {
+        for each (var d:DisplayObject in displays) {
             if (d == null) {
                 continue;
             }
@@ -212,14 +212,14 @@ public class IphoneIconList extends Sprite {
      * </listing>
      */
     public function destroy():void {
-        this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-        this.removeEventListener(MouseEvent.MOUSE_DOWN, downHanlder);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+        removeEventListener(MouseEvent.MOUSE_DOWN, downHandler);
         if (stage) {
             stage.removeEventListener(MouseEvent.MOUSE_UP, upHandler);
         }
 
-        for each(var i:KyoTileList in _lists) {
-            i.anyoneDoFunction('destroy');
+        for each (var i:KyoTileList in _lists) {
+            i.callAll('destroy');
         }
 
         removeLists();
@@ -258,7 +258,7 @@ public class IphoneIconList extends Sprite {
             return;
         }
         var list:KyoTileList = _lists[_lists.length - 1];
-        if (!list || list.displays.length >= perpage) {
+        if (!list || list.displays.length >= perPage) {
             var cp:int = curPage;
             update();
             if (curPage != cp) {
@@ -305,20 +305,20 @@ public class IphoneIconList extends Sprite {
     public function update():void {
         _gap = new Point();
 
-        var vrow:int = Math.ceil(perpage / hrow);
+        var vRow:int = Math.ceil(perPage / hRow);
 
-        var fristP:Point = new Point();
+        var firstP:Point = new Point();
 
         if (!gap) {
             var l1:Number = _unitSize.x;
             var l:Number  = touchSize.x - l1;
-            _gap.x   = (l - _unitSize.x) / (hrow - 1) - _unitSize.x;
-            fristP.x = l1 / 2;
+            _gap.x   = (l - _unitSize.x) / (hRow - 1) - _unitSize.x;
+            firstP.x = l1 / 2;
 
             var h1:Number = _unitSize.y;
             var h2:Number = touchSize.y - h1;
-            _gap.y   = (h2 - _unitSize.y) / (vrow - 1) - _unitSize.y;
-            fristP.y = h1 / 2;
+            _gap.y   = (h2 - _unitSize.y) / (vRow - 1) - _unitSize.y;
+            firstP.y = h1 / 2;
         }
         else {
             _gap.x = gap.x;
@@ -326,7 +326,7 @@ public class IphoneIconList extends Sprite {
         }
 
         if (listPos) {
-            fristP = listPos.clone();
+            firstP = listPos.clone();
         }
 
         removeLists();
@@ -334,20 +334,20 @@ public class IphoneIconList extends Sprite {
         updateScrollRect();
 
         curPage   = 1;
-        totalPage = Math.ceil(_displays.length / perpage);
+        totalPage = Math.ceil(_displays.length / perPage);
 
         for (var i:int = curPage; i <= totalPage; i++) {
             var list:KyoTileList = createList(i);
-            list.x = fristP.x + (i - 1) * touchSize.x;
-            list.y = fristP.y;
+            list.x = firstP.x + (i - 1) * touchSize.x;
+            list.y = firstP.y;
             addChild(list);
             _lists.push(list);
         }
 
-        this.graphics.clear();
-        this.graphics.beginFill(KyoColor.BLACK, 0);
-        this.graphics.drawRect(0, 0, touchSize.x * totalPage, touchSize.y * 1.1);
-        this.graphics.endFill();
+        graphics.clear();
+        graphics.beginFill(KyoColor.BLACK, 0);
+        graphics.drawRect(0, 0, touchSize.x * totalPage, touchSize.y * 1.1);
+        graphics.endFill();
 
         _tweenX = 0;
         resumeComplete();
@@ -392,14 +392,18 @@ public class IphoneIconList extends Sprite {
             return false;
         }
 
-        this.removeEventListener(MouseEvent.MOUSE_DOWN, downHanlder);
+        removeEventListener(MouseEvent.MOUSE_DOWN, downHandler);
 
         _tweenX += (curPage - p) * touchSize.x;
         if (tween) {
-            _tween = TweenLite.to(this, .5, {_thisX: _tweenX, onComplete: resumeComplete, onUpdate: updateScrollRect});
+            _tween = TweenLite.to(this, .5, {
+                contentX  : _tweenX,
+                onComplete: resumeComplete,
+                onUpdate  : updateScrollRect
+            });
         }
         else {
-            _thisX = _tweenX;
+            contentX = _tweenX;
             resumeComplete();
         }
 
@@ -413,7 +417,7 @@ public class IphoneIconList extends Sprite {
      * @private 移除各页列表。
      */
     private function removeLists():void {
-        for each(var i:KyoTileList in _lists) {
+        for each (var i:KyoTileList in _lists) {
             try {
                 removeChild(i);
             }
@@ -425,31 +429,31 @@ public class IphoneIconList extends Sprite {
     }
 
     /**
-     * @private 按 <code>_thisX</code> 更新 scrollRect。
+     * @private 按 <code>contentX</code> 更新 scrollRect。
      */
     private function updateScrollRect():void {
-        this.scrollRect = new Rectangle(-_thisX, 0, touchSize.x, touchSize.y * 1.1);
+        scrollRect = new Rectangle(-contentX, 0, touchSize.x, touchSize.y * 1.1);
     }
 
     /**
      * @private 创建指定页的 <code>KyoTileList</code>。
      */
     private function createList(page:int):KyoTileList {
-        var ppp:int = page * perpage;
-        var ss:int  = ppp - perpage;
+        var ss:int = (page - 1) * perPage;
         if (ss < 0) {
             ss = 0;
         }
-        var ee:int    = Math.min((ss + perpage), _displays.length);
-        var pps:Array = _displays.slice(ss, ee);
 
-        var vr:int = perpage / hrow;
-
-        var list:KyoTileList = new KyoTileList(pps, hrow, vr);
-        list.lockSize        = true;
-        list.unitySize       = _unitSize;
-        list.gap             = _gap;
+        var list:KyoTileList = new KyoTileList(
+            _displays.slice(ss, Math.min(ss + perPage, _displays.length)),
+            hRow,
+            perPage / hRow
+        );
+        list.lockSize  = true;
+        list.unitySize = _unitSize;
+        list.gap       = _gap;
         list.update();
+
         return list;
     }
 
@@ -457,10 +461,11 @@ public class IphoneIconList extends Sprite {
      * @private 翻页/回弹结束后恢复交互。
      */
     private function resumeComplete():void {
-        _thisX    = _tweenX;
-        _oldthisX = 0;
+        contentX     = _tweenX;
+        _oldContentX = 0;
+
         updateScrollRect();
-        this.addEventListener(MouseEvent.MOUSE_DOWN, downHanlder);
+        addEventListener(MouseEvent.MOUSE_DOWN, downHandler);
         listsEnable = true;
     }
 
@@ -469,7 +474,6 @@ public class IphoneIconList extends Sprite {
      */
     private function resume():void {
         if (Math.abs(_mouseSpd) > touchPow) {
-
             if (_mouseSpd > 0) {
                 if (prevPage()) {
                     return;
@@ -480,12 +484,10 @@ public class IphoneIconList extends Sprite {
                     return;
                 }
             }
-
         }
         else {
-
-            if (Math.abs(_thisX - _oldthisX) > touchSize.x * touchDis) {
-                if (_thisX > _oldthisX) {
+            if (Math.abs(contentX - _oldContentX) > touchSize.x * touchDis) {
+                if (contentX > _oldContentX) {
                     if (prevPage()) {
                         return;
                     }
@@ -496,33 +498,36 @@ public class IphoneIconList extends Sprite {
                     }
                 }
             }
-
         }
 
-        _tweenX = _oldthisX;
-        _tween  = TweenLite.to(this, .5, {_thisX: _tweenX, onComplete: resumeComplete, onUpdate: updateScrollRect});
+        _tweenX = _oldContentX;
+        _tween  = TweenLite.to(this, .5, {
+            contentX : _tweenX,
+            onComplete: resumeComplete,
+            onUpdate  : updateScrollRect
+        });
     }
 
     /**
      * @private 按下开始拖拽跟踪。
      */
-    private function downHanlder(e:Event):void {
-        if (!enalbed) {
+    private function downHandler(e:Event):void {
+        if (!enabled) {
             return;
         }
 
-        this.removeEventListener(MouseEvent.MOUSE_DOWN, downHanlder);
+        removeEventListener(MouseEvent.MOUSE_DOWN, downHandler);
 
         if (stage == null) {
             return;
         }
 
-        _oldX      = stage.mouseX;
-        _oldthisX  = _thisX;
-        _curMouseX = stage.mouseX;
+        _oldX        = stage.mouseX;
+        _oldContentX = contentX;
+        _curMouseX   = stage.mouseX;
 
-        if (!this.hasEventListener(Event.ENTER_FRAME)) {
-            this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+        if (!hasEventListener(Event.ENTER_FRAME)) {
+            addEventListener(Event.ENTER_FRAME, onEnterFrame);
         }
 
         stage.removeEventListener(MouseEvent.MOUSE_UP, upHandler);
@@ -533,7 +538,7 @@ public class IphoneIconList extends Sprite {
      * @private 抬起结束拖拽。
      */
     private function upHandler(e:Event):void {
-        this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 
         resume();
 
@@ -569,7 +574,7 @@ public class IphoneIconList extends Sprite {
                 pp = 2;
             }
         }
-        _thisX = (msx - _oldX) / pp + _oldthisX;
+        contentX = (msx - _oldX) / pp + _oldContentX;
         if (Math.abs(msx - _oldX) > 5) {
             listsEnable = false;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,8 +27,11 @@ package net.play5d.kyo.utils {
  * </listing>
  */
 public function superTrace(...args):void {
-    var e:Error       = new Error();
-    var caller:String = '[' + e.getStackTrace().match(/[\w\/]*\(\)/g)[1] + ']';
+    var e:Error = new Error();
+    var stack:String = e.getStackTrace();
+    var matches:Array = stack ? stack.match(/[\w\/]*\(\)/g) : null;
+    var caller:String = matches && matches.length > 1 ? '[' + matches[1] + ']' : '[?]';
     trace(caller, args);
 }
 }
+

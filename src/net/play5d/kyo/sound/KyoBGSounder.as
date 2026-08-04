@@ -41,6 +41,7 @@ public class KyoBGSounder {
      */
     public static function get I():KyoBGSounder {
         _i ||= new KyoBGSounder();
+
         return _i;
     }
 
@@ -53,7 +54,6 @@ public class KyoBGSounder {
      * @default false
      */
     public var playing:Boolean;
-
     /** @private */
     private var _snd:Sound;
     /** @private */
@@ -107,6 +107,7 @@ public class KyoBGSounder {
             trace('没有可播放的音乐');
             return;
         }
+
         if (sound is String) {
             _snd = new Sound(new URLRequest(sound as String));
         }
@@ -117,7 +118,7 @@ public class KyoBGSounder {
             _snd = sound as Sound;
         }
 
-        playsnd(0, isLoop);
+        playSound(0, isLoop);
         playing = true;
     }
 
@@ -173,18 +174,18 @@ public class KyoBGSounder {
     public function resume():void {
         trace('bgm resume');
         if (_channel) {
-            playsnd(_channelPausePosition);
+            playSound(_channelPausePosition);
         }
     }
 
     /**
-     * 播放中则停止，否则播放（历史方法名 <code>toogle</code>）。
+     * 播放中则停止，否则播放。
      * @example
      * <listing version="3.0">
-     * KyoBGSounder.I.toogle();
+     * KyoBGSounder.I.toggle();
      * </listing>
      */
-    public function toogle():void {
+    public function toggle():void {
         if (playing) {
             stop();
         }
@@ -196,10 +197,11 @@ public class KyoBGSounder {
     /**
      * @private
      */
-    private function playsnd(position:int = 0, isLoop:Boolean = true):void {
+    private function playSound(position:int = 0, isLoop:Boolean = true):void {
         if (!_snd) {
             return;
         }
+
         _channel = _snd.play(position, 1, _soundTransform);
 
         // 如没有声卡驱动，_channel 将返回 null
@@ -208,7 +210,6 @@ public class KyoBGSounder {
         }
 
         _channel.removeEventListener(Event.SOUND_COMPLETE, playCompleteHandler);
-
         if (isLoop) {
             _channel.addEventListener(Event.SOUND_COMPLETE, playCompleteHandler);
         }
@@ -222,8 +223,7 @@ public class KyoBGSounder {
             _channel.removeEventListener(Event.SOUND_COMPLETE, playCompleteHandler);
             _channel = null;
         }
-        playsnd(0);
+        playSound(0);
     }
-
 }
 }

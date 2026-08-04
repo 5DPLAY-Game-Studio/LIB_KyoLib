@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import flash.display.BitmapData;
  */
 public class KyoCacheManager {
     /**
-     * 已缓存条目计数（每次 <code>cacheById</code> 递增；覆盖同 ID 仍会加一）。
+     * 当前缓存条目数（仅新建 ID 时递增；覆盖已有 ID 不增加）。
      * @default 0
      */
     public static var count:int          = 0;
@@ -45,7 +45,9 @@ public class KyoCacheManager {
      * </listing>
      */
     public static function cacheById(obj:*, id:String):void {
-        count++;
+        if (!(id in _cacheObjs)) {
+            count++;
+        }
         _cacheObjs[id] = obj;
     }
 
@@ -59,12 +61,7 @@ public class KyoCacheManager {
      * </listing>
      */
     public static function getById(id:String):* {
-        var obj:* = _cacheObjs[id];
-        if (!obj || obj == undefined) {
-            return null;
-        }
-
-        return obj;
+        return (id in _cacheObjs) ? _cacheObjs[id] : null;
     }
 
     /**
@@ -75,7 +72,7 @@ public class KyoCacheManager {
      * </listing>
      */
     public static function clear():void {
-        for each(var item:* in _cacheObjs) {
+        for each (var item:* in _cacheObjs) {
             clearItem(item);
         }
 
@@ -83,20 +80,16 @@ public class KyoCacheManager {
         _cacheObjs = {};
     }
 
-    /**
-     * @private 释放 BitmapData 或递归清理数组元素。
-     */
+    /** @private 释放 BitmapData 或递归清理数组元素。 */
     private static function clearItem(item:*):void {
         if (item is BitmapData) {
             (item as BitmapData).dispose();
         }
         else if (item is Array) {
-            for each(var k:* in (item as Array)) {
+            for each (var k:* in (item as Array)) {
                 clearItem(k);
             }
         }
-
-        item = null;
     }
 
 }

@@ -22,11 +22,9 @@ import flash.net.SharedObject;
 /**
  * 本地 <code>SharedObject</code> 读写封装。
  *
- * <p>包路径 <code>net.play5d.kyo.storage</code>。</p>
- *
  * @see #load()
  * @see #save()
- * @see #deletee()
+ * @see #clearLocal()
  * @see SaveDataManager
  */
 public class KyoSharedObject {
@@ -43,6 +41,7 @@ public class KyoSharedObject {
         var so:SharedObject = SharedObject.getLocal(id);
         var d:Object        = so.data;
         so.close();
+
         return d;
     }
 
@@ -58,25 +57,26 @@ public class KyoSharedObject {
     public static function save(id:String, data:Object):void {
         var so:SharedObject = SharedObject.getLocal(id);
         so.clear();
+
         for (var i:String in data) {
             so.data[i] = data[i];
         }
+
         so.flush();
         so.close();
     }
 
     /**
-     * 清空指定本地 SharedObject（历史方法名 <code>deletee</code>）。
+     * 清空指定本地 SharedObject。
      * @param id 本地名。
      * @example
      * <listing version="3.0">
-     * KyoSharedObject.deletee('save1');
+     * KyoSharedObject.clearLocal('save1');
      * </listing>
      */
-    public static function deletee(id:String):void {
+    public static function clearLocal(id:String):void {
         var so:SharedObject = SharedObject.getLocal(id);
         so.clear();
     }
-
 }
 }

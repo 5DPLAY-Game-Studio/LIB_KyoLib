@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,11 +27,11 @@ package net.play5d.kyo.utils {
  * @author kyo
  */
 public class KyoTimerFormat {
-    /** @private 英文星期（周二拼写历史为 Tuesdry） */
+    /** @private 英文星期 */
     private static const EN_DAYS:Object = {
         0: 'Sunday',
         1: 'Monday',
-        2: 'Tuesdry',
+        2: 'Tuesday',
         3: 'Wednesday',
         4: 'Thursday',
         5: 'Friday',
@@ -73,8 +73,8 @@ public class KyoTimerFormat {
      * KyoTimerFormat.getTime(new Date());
      * </listing>
      */
-    public static function getTime(date:Date, sign:String = ' : ', second:Boolean = true,
-                                   type24:Boolean = true
+    public static function getTime(
+            date:Date, sign:String = ' : ', second:Boolean = true, type24:Boolean = true
     ):String {
         var h:int    = date.hours;
         var m:String = formatNum(date.minutes);
@@ -82,8 +82,8 @@ public class KyoTimerFormat {
         if (!type24 && h > 12) {
             h -= 12;
         }
-        var hh:String = formatNum(h);
-        return hh + sign + m + s;
+
+        return formatNum(h) + sign + m + s;
     }
 
     /**
@@ -103,8 +103,8 @@ public class KyoTimerFormat {
     /**
      * 日期 + 时间。
      * @param date 日期。
-     * @param sign_date 日期分隔符。
-     * @param sign_time 时间分隔符。
+     * @param signDate 日期分隔符。
+     * @param signTime 时间分隔符。
      * @param second 是否含秒。
      * @param type24 是否 24 小时制。
      * @return 组合字符串。
@@ -113,10 +113,10 @@ public class KyoTimerFormat {
      * KyoTimerFormat.getDateTime(new Date());
      * </listing>
      */
-    public static function getDateTime(date:Date, sign_date:String = '/', sign_time:String = ' : ',
-                                       second:Boolean = true, type24:Boolean = true
+    public static function getDateTime(
+            date:Date, signDate:String = '/', signTime:String = ' : ', second:Boolean = true, type24:Boolean = true
     ):String {
-        return getDate(date, sign_date) + ' ' + getTime(date, sign_time, second, type24);
+        return getDate(date, signDate) + ' ' + getTime(date, signTime, second, type24);
     }
 
     /**
@@ -172,6 +172,7 @@ public class KyoTimerFormat {
             ss = s >= 10 ? s.toString() : '0' + s;
             ss = gap + ss;
         }
+
         return hs + ms + ss;
     }
 
@@ -191,3 +192,4 @@ public class KyoTimerFormat {
 
 }
 }
+

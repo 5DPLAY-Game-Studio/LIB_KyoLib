@@ -28,11 +28,11 @@ import flash.utils.getDefinitionByName;
  * <p>子类需设置 <code>_mainClass</code> 为完整类名。</p>
  *
  * @see LoaderBar
- * @see #initlize()
+ * @see #initialize()
  */
 public class PreLoader extends MovieClip {
     /**
-     * 构造函数；加入舞台后自动 <code>initlize</code>。
+     * 构造函数；加入舞台后自动 <code>initialize</code>。
      */
     public function PreLoader() {
         super();
@@ -61,10 +61,10 @@ public class PreLoader extends MovieClip {
      * @param height 可用高（当前实现未用于布局，保留形参）。
      * @example
      * <listing version="3.0">
-     * initlize(stage.stageWidth, stage.stageHeight);
+     * initialize(stage.stageWidth, stage.stageHeight);
      * </listing>
      */
-    public function initlize(width:Number, height:Number):void {
+    public function initialize(width:Number, height:Number):void {
         if (showLoadbar) {
             _loadbar           = new LoaderBar(800, 15);
             _loadbar.x         = 100;
@@ -72,11 +72,11 @@ public class PreLoader extends MovieClip {
             _loadbar.color     = 0x426F00;
             _loadbar.lineColor = 0x64A600;
             _loadbar.backColor = 0x1C2F00;
-            _loadbar.initlize();
+            _loadbar.initialize();
             addChild(_loadbar);
         }
 
-        loaderInfo.addEventListener(ProgressEvent.PROGRESS, loadProgress);
+        loaderInfo.addEventListener(ProgressEvent.PROGRESS, onLoadProgress);
         loaderInfo.addEventListener(Event.COMPLETE, loadComplete);
     }
 
@@ -99,10 +99,11 @@ public class PreLoader extends MovieClip {
             removeChild(_loadbar);
         }
 
-        loaderInfo.removeEventListener(ProgressEvent.PROGRESS, loadProgress);
+        loaderInfo.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
         loaderInfo.removeEventListener(Event.COMPLETE, loadComplete);
 
         this.gotoAndStop(2);
+
         var main:Class = getDefinitionByName(_mainClass) as Class;
         addChild(new main());
     }
@@ -111,19 +112,14 @@ public class PreLoader extends MovieClip {
      * @private
      */
     private function onAddStage(e:Event):void {
-        var w:Number = stage.stageWidth - 200;
-        var h:Number = stage.stageHeight - 50;
-
-        initlize(w, h);
+        initialize(stage.stageWidth - 200, stage.stageHeight - 50);
     }
 
     /**
      * @private
      */
-    private function loadProgress(e:ProgressEvent):void {
-        var p:Number = e.bytesLoaded / e.bytesTotal;
-        onProgress(p);
+    private function onLoadProgress(e:ProgressEvent):void {
+        onProgress(e.bytesLoaded / e.bytesTotal);
     }
-
 }
 }

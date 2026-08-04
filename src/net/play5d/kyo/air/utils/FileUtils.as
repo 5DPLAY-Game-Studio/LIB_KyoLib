@@ -38,7 +38,7 @@ public class FileUtils {
      * 写文件（不存在则新建，存在则按模式写入）。
      * @param url 完整路径。
      * @param content <code>String</code> 或 <code>ByteArray</code>。
-     * @param fileMode 默认 <code>FileMode.WRITE</code>。
+     * @param fileMode 写入模式，默认 <code>FileMode.WRITE</code>。
      * @example
      * <listing version="3.0">
      * FileUtils.writeFile('C:/a.txt', 'hi');
@@ -55,7 +55,7 @@ public class FileUtils {
             if (content is String) {
                 fs.writeUTFBytes(content);
             }
-            if (content is ByteArray) {
+            else if (content is ByteArray) {
                 var byte:ByteArray = content as ByteArray;
                 fs.writeBytes(byte, 0, byte.bytesAvailable);
             }
@@ -74,12 +74,12 @@ public class FileUtils {
      * @param fileMode 写入模式。
      * @example
      * <listing version="3.0">
-     * FileUtils.writeAppFloderFile('cfg/a.txt', 'hi');
+     * FileUtils.writeAppFolderFile('cfg/a.txt', 'hi');
      * </listing>
+     * @see #getAppFolderFileUrl()
      */
-    public static function writeAppFloderFile(nativeUrl:String, content:*, fileMode:String = null):void {
-        var url:String = getAppFloderFileUrl(nativeUrl);
-        writeFile(url, content, fileMode);
+    public static function writeAppFolderFile(nativeUrl:String, content:*, fileMode:String = null):void {
+        writeFile(getAppFolderFileUrl(nativeUrl), content, fileMode);
     }
 
     /**
@@ -88,56 +88,56 @@ public class FileUtils {
      * @return 完整 native 路径。
      * @example
      * <listing version="3.0">
-     * var u:String = FileUtils.getAppFloderFileUrl('cfg/a.txt');
+     * var u:String = FileUtils.getAppFolderFileUrl('cfg/a.txt');
      * </listing>
      */
-    public static function getAppFloderFileUrl(nativeUrl:String):String {
-        var path:File      = File.applicationDirectory;
-        var pathUrl:String = path.nativePath;
-        var url:String     = pathUrl + '/' + nativeUrl;
-        return url;
+    public static function getAppFolderFileUrl(nativeUrl:String):String {
+        return File.applicationDirectory.nativePath + '/' + nativeUrl;
     }
+
 
     /**
      * 创建目录（完整路径）。
      * @param url 目录完整路径。
      * @example
      * <listing version="3.0">
-     * FileUtils.createFloder('C:/temp/logs');
+     * FileUtils.createFolder('C:/temp/logs');
      * </listing>
      */
-    public static function createFloder(url:String):void {
+    public static function createFolder(url:String):void {
         try {
-            var dir:File = new File(url);
-            dir.createDirectory();
+            new File(url).createDirectory();
         }
         catch (e:Error) {
-            KyoLog.log('FileUtils.createFloder', e);
+            KyoLog.log('FileUtils.createFolder', e);
         }
     }
 
     /**
      * 以 UTF-8 读取文本文件。
      * @param url 完整路径。
-     * @return 文本；失败时为 <code>undefined</code>/<code>null</code>。
+     * @return 文本；失败时为 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var t:String = FileUtils.readTextFile('C:/a.txt');
      * </listing>
      */
     public static function readTextFile(url:String):String {
-        var text:String;
         try {
             var file:File     = new File(url);
             var fs:FileStream = new FileStream();
             fs.open(file, FileMode.READ);
-            text = fs.readUTFBytes(fs.bytesAvailable);
+
+            var text:String = fs.readUTFBytes(fs.bytesAvailable);
             fs.close();
+
+            return text;
         }
         catch (e:Error) {
             KyoLog.log('FileUtils.readTextFile', url, e);
         }
-        return text;
+
+        return null;
     }
 
     /**
@@ -145,16 +145,15 @@ public class FileUtils {
      * @param url 完整路径。
      * @example
      * <listing version="3.0">
-     * FileUtils.del('C:/a.txt');
+     * FileUtils.deleteFile('C:/a.txt');
      * </listing>
      */
-    public static function del(url:String):void {
-        var file:File = new File(url);
+    public static function deleteFile(url:String):void {
         try {
-            file.deleteFile();
+            new File(url).deleteFile();
         }
         catch (e:Error) {
-            KyoLog.log('FileUtils.del', e);
+            KyoLog.log('FileUtils.deleteFile', e);
         }
     }
 

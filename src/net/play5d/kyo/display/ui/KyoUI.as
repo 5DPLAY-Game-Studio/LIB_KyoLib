@@ -33,7 +33,7 @@ import net.play5d.kyo.utils.KyoColor;
  *
  * @see #stage
  * @see #alert()
- * @see #confrim()
+ * @see #confirm()
  * @see KyoSimpButton
  */
 public class KyoUI {
@@ -65,36 +65,19 @@ public class KyoUI {
      * </listing>
      */
     public static function alert(msg:String, width:Number = 200, height:Number = 100):void {
-        var sp:Sprite     = newBox(width, height);
-        var txt:TextField = newTxt(msg, width);
-        sp.addChild(txt);
-        stage.addChild(sp);
+        var sp:Sprite = openPanel(msg, width, height);
 
         var btn:KyoSimpButton = new KyoSimpButton('确定', btnSize.x, btnSize.y);
-        btn.x                 = (width - btn.width) / 2;
-        btn.y                 = height - btn.height - 10;
-        btn.onClick(close);
+        btn.x = (width - btn.width) / 2;
+        btn.y = height - btn.height - 10;
+        btn.onClick(function (e:Event = null):void {
+            closePanel(sp, true);
+        });
         sp.addChild(btn);
 
         if (tween) {
             sp.alpha = 0;
             TweenLite.to(sp, .5, {alpha: 1});
-        }
-
-        function close(e:Event = null):void {
-            if (tween) {
-                TweenLite.to(sp, .5, {
-                    alpha     : 0,
-                    onComplete: function ():void {
-                        stage.removeChild(sp);
-                        sp = null;
-                    }
-                });
-            }
-            else {
-                stage.removeChild(sp);
-                sp = null;
-            }
         }
     }
 
@@ -102,51 +85,75 @@ public class KyoUI {
      * 显示「确定 / 取消」确认框。
      * @param msg 文案。
      * @param ok 确定回调，可选。
-     * @param no 取消回调，可选。
+     * @param cancel 取消回调，可选。
      * @param width 框宽，默认 200。
      * @param height 框高，默认 100。
      * @example
      * <listing version="3.0">
-     * KyoUI.confrim('删除？', onOk, onCancel);
+     * KyoUI.confirm('删除？', onOk, onCancel);
      * </listing>
      */
-    public static function confrim(
+    public static function confirm(
         msg   :String,
         ok    :Function = null,
-        no    :Function = null,
+        cancel:Function = null,
         width :Number = 200,
         height:Number = 100
     ):void {
-        var sp:Sprite     = newBox(width, height);
-        var txt:TextField = newTxt(msg, width);
-        sp.addChild(txt);
-        stage.addChild(sp);
+        var sp:Sprite = openPanel(msg, width, height);
 
-        var btny:KyoSimpButton = new KyoSimpButton('确定', btnSize.x, btnSize.y);
-        btny.x                 = width - btny.width * 2 - 20;
-        btny.y                 = height - btny.height - 10;
-        btny.onClick(function ():void {
+        var okBtn:KyoSimpButton = new KyoSimpButton('确定', btnSize.x, btnSize.y);
+        okBtn.x = width - okBtn.width * 2 - 20;
+        okBtn.y = height - okBtn.height - 10;
+        okBtn.onClick(function ():void {
             if (ok != null) {
                 ok();
             }
-            close();
+            closePanel(sp, false);
         });
-        sp.addChild(btny);
+        sp.addChild(okBtn);
 
-        var btnn:KyoSimpButton = new KyoSimpButton('取消', btnSize.x, btnSize.y);
-        btnn.x                 = width - btnn.width - 10;
-        btnn.y                 = height - btnn.height - 10;
-        btnn.onClick(function ():void {
-            if (no != null) {
-                no();
+        var cancelBtn:KyoSimpButton = new KyoSimpButton('取消', btnSize.x, btnSize.y);
+        cancelBtn.x = width - cancelBtn.width - 10;
+        cancelBtn.y = height - cancelBtn.height - 10;
+        cancelBtn.onClick(function ():void {
+            if (cancel != null) {
+                cancel();
             }
-            close();
+            closePanel(sp, false);
         });
-        sp.addChild(btnn);
+        sp.addChild(cancelBtn);
+    }
 
-        function close(e:Event = null):void {
-            stage.removeChild(sp);
-            sp = null;
+    /**
+     * @private 创建文案框并加入舞台。
+     */
+    private static function openPanel(msg:String, width:Number, height:Number):Sprite {
+        var sp:Sprite = newBox(width, height);
+        sp.addChild(newTxt(msg, width));
+        stage.addChild(sp);
+
+        return sp;
+    }
+
+    /**
+     * @private 关闭弹层；可选淡出。
+     */
+    private static function closePanel(sp:Sprite, useTween:Boolean):void {
+        if (useTween && tween) {
+            TweenLite.to(sp, .5, {
+                alpha     : 0,
+                onComplete: function ():void {
+                    if (sp.parent) {
+                        stage.removeChild(sp);
+                    }
+                }
+            });
+        }
+        else {
+            if (sp.parent) {
+                stage.removeChild(sp);
+            }
         }
     }
 
@@ -154,8 +161,9 @@ public class KyoUI {
      * @private 创建居中文本。
      */
     private static function newTxt(msg:String, width:Number):TextField {
-        var tf:TextFormat     = new TextFormat();
-        tf.align              = TextFormatAlign.CENTER;
+        var tf:TextFormat = new TextFormat();
+        tf.align          = TextFormatAlign.CENTER;
+
         var txt:TextField     = new TextField();
         txt.defaultTextFormat = tf;
         txt.mouseEnabled      = false;
@@ -185,3 +193,4 @@ public class KyoUI {
 
 }
 }
+

@@ -24,20 +24,20 @@ import com.hurlant.util.Hex;
 import flash.utils.ByteArray;
 
 /**
- * MD5 / AES 加解密工具（历史拼写 <code>Encript</code>）。
+ * MD5 / AES 加解密工具。
  *
  * @see #md5()
- * @see #encriptAES()
+ * @see #encryptAES()
  * @see #decryptAES()
  */
-public class EncriptUtils {
+public class EncryptUtils {
     /**
      * 对字节做 MD5（大文件仅取头尾各 1KB）。
      * @param bytes 源字节。
      * @return MD5 十六进制字符串。
      * @example
      * <listing version="3.0">
-     * var h:String = EncriptUtils.md5(ba);
+     * var h:String = EncryptUtils.md5(ba);
      * </listing>
      */
     public static function md5(bytes:ByteArray):String {
@@ -52,17 +52,15 @@ public class EncriptUtils {
      * @return 密文字节。
      * @example
      * <listing version="3.0">
-     * var c:ByteArray = EncriptUtils.encriptAES('hi', key, iv);
+     * var c:ByteArray = EncryptUtils.encryptAES('hi', key, iv);
      * </listing>
      */
-    public static function encriptAES(source:Object, key:String, iv:String):ByteArray {
+    public static function encryptAES(source:Object, key:String, iv:String):ByteArray {
         var keyByte:ByteArray = Hex.toArray(key);
         var ivByte:ByteArray  = Hex.toArray(iv);
-
-        var aes:AES = new AES(keyByte, ivByte, 'aes-128-cbc', 'null');
+        var aes:AES           = new AES(keyByte, ivByte, 'aes-128-cbc', 'null');
 
         var byte:ByteArray;
-
         if (source is String) {
             byte = new ByteArray();
             byte.writeUTFBytes(source as String);
@@ -71,9 +69,7 @@ public class EncriptUtils {
             byte = source as ByteArray;
         }
 
-        var encryptBytes:ByteArray = aes.encrypt(byte);
-
-        return encryptBytes;
+        return aes.encrypt(byte);
     }
 
     /**
@@ -84,16 +80,14 @@ public class EncriptUtils {
      * @return 明文。
      * @example
      * <listing version="3.0">
-     * var s:String = EncriptUtils.decryptAES(code, key, iv);
+     * var s:String = EncryptUtils.decryptAES(code, key, iv);
      * </listing>
      */
     public static function decryptAES(code:ByteArray, key:String, iv:String):String {
         var byte:ByteArray = decryptAESBytes(code, key, iv);
+        byte.position      = 0;
 
-        byte.position     = 0;
-        var decode:String = byte.readUTFBytes(byte.length);
-
-        return decode;
+        return byte.readUTFBytes(byte.length);
     }
 
     /**
@@ -104,17 +98,15 @@ public class EncriptUtils {
      * @return 明文字节。
      * @example
      * <listing version="3.0">
-     * var b:ByteArray = EncriptUtils.decryptAESBytes(code, key, iv);
+     * var b:ByteArray = EncryptUtils.decryptAESBytes(code, key, iv);
      * </listing>
      */
     public static function decryptAESBytes(code:ByteArray, key:String, iv:String):ByteArray {
         var keyByte:ByteArray = Hex.toArray(key);
         var ivByte:ByteArray  = Hex.toArray(iv);
+        var aes:AES           = new AES(keyByte, ivByte, 'aes-128-cbc', 'null');
 
-        var aes:AES        = new AES(keyByte, ivByte, 'aes-128-cbc', 'null');
-        var byte:ByteArray = aes.decrypt(code);
-
-        return byte;
+        return aes.decrypt(code);
     }
 
     /**
@@ -133,9 +125,7 @@ public class EncriptUtils {
             bytes.writeBytes(fileBytes, length - 1024, 1024);
         }
 
-        var hash:String = MD5.hashBinary(bytes);
-        return hash;
+        return MD5.hashBinary(bytes);
     }
-
 }
 }

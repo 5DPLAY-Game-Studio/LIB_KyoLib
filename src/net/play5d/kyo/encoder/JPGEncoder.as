@@ -212,6 +212,7 @@ public class JPGEncoder {
         }
 
         writeWord(0xFFD9); //EOI
+
         return byteout;
     }
 

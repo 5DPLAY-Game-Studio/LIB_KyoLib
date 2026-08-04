@@ -18,17 +18,11 @@
 
 package net.play5d.kyo.utils.vo {
 /**
- * 天气数据值对象（历史拼写 <code>Weater</code>）：最高 / 最低温与天气代码。
+ * 天气数据值对象：最高 / 最低温与天气代码。
  *
  * @see net.play5d.kyo.utils.KyoWeather
  */
-public class KyoWeaterVO {
-    /**
-     * 构造函数。
-     */
-    public function KyoWeaterVO() {
-    }
-
+public class KyoWeatherVO {
     /**
      * 最高温度。
      * @default 0
@@ -44,6 +38,5 @@ public class KyoWeaterVO {
      * @default 0
      */
     public var code:int;
-
 }
 }

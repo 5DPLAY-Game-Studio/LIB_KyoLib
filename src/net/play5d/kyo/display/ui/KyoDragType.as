@@ -21,7 +21,7 @@ package net.play5d.kyo.display.ui {
  * 拖拽方向常量，供 <code>KyoDragList</code> 等使用。
  *
  * @see KyoDragList
- * @see KyoDragSelecter
+ * @see KyoDragSelector
  * @see KyoScrollPane
  * @see IphoneScrollPane
  * @see KyoScrollDragUtil
@@ -41,3 +41,4 @@ public class KyoDragType {
     public static const DRAG_TYPE_BOTH:int = 3;
 }
 }
+

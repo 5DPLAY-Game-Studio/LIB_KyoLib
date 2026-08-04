@@ -33,28 +33,29 @@ import flash.events.MouseEvent;
 public class KyoMCButton extends EventDispatcher implements IKyoButton {
     /**
      * @param mc 按钮皮肤 MovieClip。
-     * @param nornalFrame 普通态帧（标签或帧号），默认 1。
+     * @param normalFrame 普通态帧（标签或帧号），默认 1。
      * @param selectFrame 选中 / 焦点态帧，可选。
      * @param overFrame 悬停态帧，可选（当前未自动切换）。
-     * @param unenabledFrame 禁用态帧，可选。
+     * @param disabledFrame 禁用态帧，可选。
      */
     public function KyoMCButton(
-        mc            :MovieClip,
-        nornalFrame   :Object = 1,
-        selectFrame   :Object = null,
-        overFrame     :Object = null,
-        unenabledFrame:Object = null
+        mc           :MovieClip,
+        normalFrame  :Object = 1,
+        selectFrame  :Object = null,
+        overFrame    :Object = null,
+        disabledFrame:Object = null
     ) {
         this.mc = mc;
         mc.addEventListener(MouseEvent.CLICK, handler);
         mc.addEventListener(MouseEvent.MOUSE_DOWN, handler);
         mc.addEventListener(MouseEvent.MOUSE_UP, handler);
-        _nornalFrame    = nornalFrame;
-        _selectFrame    = selectFrame;
-        _overFrame      = overFrame;
-        _unenabledFrame = unenabledFrame;
 
-        goFrame(_nornalFrame);
+        _normalFrame   = normalFrame;
+        _selectFrame   = selectFrame;
+        _overFrame     = overFrame;
+        _disabledFrame = disabledFrame;
+
+        goFrame(_normalFrame);
     }
 
     /**
@@ -64,31 +65,21 @@ public class KyoMCButton extends EventDispatcher implements IKyoButton {
     /** @private */
     private var _selectFrame:Object;
     /** @private */
-    private var _nornalFrame:Object;
+    private var _normalFrame:Object;
     /** @private */
     private var _overFrame:Object;
     /** @private */
-    private var _unenabledFrame:Object;
+    private var _disabledFrame:Object;
 
     /** @private */
     public function set focus(v:Boolean):void {
-        if (v) {
-            goFrame(_selectFrame);
-        }
-        else {
-            goFrame(_nornalFrame);
-        }
+        goFrame(v ? _selectFrame : _normalFrame);
     }
 
     /** @private */
     public function set enabled(v:Boolean):void {
         mc.mouseEnabled = v;
-        if (v) {
-            goFrame(_nornalFrame);
-        }
-        else {
-            goFrame(_unenabledFrame);
-        }
+        goFrame(v ? _normalFrame : _disabledFrame);
     }
 
     /**
@@ -109,3 +100,4 @@ public class KyoMCButton extends EventDispatcher implements IKyoButton {
 
 }
 }
+

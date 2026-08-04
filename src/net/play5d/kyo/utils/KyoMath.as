@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024, 5DPLAY Game Studio
+ * Copyright (C) 2021-2026, 5DPLAY Game Studio
  * All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -99,6 +99,7 @@ public class KyoMath {
     public static function decimal(num:Number, n:int, mathFun:Function = null):Number {
         mathFun ||= Math.round;
         var tn:int = Math.pow(10, n);
+
         return mathFun(num * tn) / tn;
     }
 
@@ -114,6 +115,7 @@ public class KyoMath {
     public static function average(...params):Number {
         var array:Array = params[0] is Array ? params[0] : params;
         var num:Number  = sum(array);
+
         return num / array.length;
     }
 
@@ -129,9 +131,10 @@ public class KyoMath {
     public static function sum(...params):Number {
         var array:Array = params[0] is Array ? params[0] : params;
         var num:Number  = 0;
-        for each(var i:Number in array) {
+        for each (var i:Number in array) {
             num += i;
         }
+
         return num;
     }
 
@@ -154,6 +157,7 @@ public class KyoMath {
         if (yy < 0) {
             return -angle;
         }
+
         return angle;
     }
 
@@ -176,7 +180,7 @@ public class KyoMath {
     /**
      * 按弧度旋转点（可选 y 轴缩放）。
      * @param point 原点。
-     * @param radious 弧度（历史拼写）。
+     * @param radians 弧度。
      * @param scale y 分量缩放。
      * @return 新点。
      * @example
@@ -184,10 +188,11 @@ public class KyoMath {
      * var p:Point = KyoMath.getPointByRadians(pt, Math.PI / 2);
      * </listing>
      */
-    public static function getPointByRadians(point:Point, radious:Number, scale:Number = 1):Point {
+    public static function getPointByRadians(point:Point, radians:Number, scale:Number = 1):Point {
         var rp:Point = new Point();
-        rp.x         = point.x * Math.cos(radious) - point.y * Math.sin(radious) * scale;
-        rp.y         = point.x * Math.sin(radious) + point.y * Math.cos(radious) * scale;
+        rp.x         = point.x * Math.cos(radians) - point.y * Math.sin(radians) * scale;
+        rp.y         = point.x * Math.sin(radians) + point.y * Math.cos(radians) * scale;
+
         return rp;
     }
 
@@ -248,6 +253,7 @@ public class KyoMath {
             roman  = ROMAN_DIGITS[i][number % 10] + roman;
             number = int(number / 10);
         }
+
         return roman;
     }
 
@@ -283,10 +289,10 @@ public class KyoMath {
      * @return 结果。
      * @example
      * <listing version="3.0">
-     * KyoMath.wake(10, 3);
+     * KyoMath.weaken(10, 3);
      * </listing>
      */
-    public static function wake(n:Number, k:Number):Number {
+    public static function weaken(n:Number, k:Number):Number {
         if (n > 0) {
             n -= k;
             if (n < 0) {
@@ -299,6 +305,7 @@ public class KyoMath {
                 n = 0;
             }
         }
+
         return n;
     }
 
@@ -309,16 +316,17 @@ public class KyoMath {
      * @return 结果。
      * @example
      * <listing version="3.0">
-     * KyoMath.strong(-2, 1); // -3
+     * KyoMath.strengthen(-2, 1); // -3
      * </listing>
      */
-    public static function strong(n:Number, k:Number):Number {
+    public static function strengthen(n:Number, k:Number):Number {
         if (n < 0) {
             n -= k;
         }
         else {
             n += k;
         }
+
         return n;
     }
 
@@ -383,6 +391,7 @@ public class KyoMath {
         else {
             vv = decimal(vv, decimalPlaces, truncateTowardZero);
         }
+
         return vv.toString() + '%';
     }
 
@@ -400,11 +409,12 @@ public class KyoMath {
         if (!A || !B) {
             return false;
         }
+
         return A.x == B.x && A.y == B.y;
     }
 
     /**
-     * 比较两矩形是否完全相同（历史拼写 <code>Rectangel</code>）。
+     * 比较两矩形是否完全相同。
      * @param A 矩形 A。
      * @param B 矩形 B。
      * @return 是否相等。
@@ -417,6 +427,7 @@ public class KyoMath {
         if (!A || !B) {
             return false;
         }
+
         return A.x == B.x && A.y == B.y && A.width == B.width && A.height == B.height;
     }
 
@@ -449,6 +460,7 @@ public class KyoMath {
         if (!r.isEmpty()) {
             return r;
         }
+
         return null;
     }
 

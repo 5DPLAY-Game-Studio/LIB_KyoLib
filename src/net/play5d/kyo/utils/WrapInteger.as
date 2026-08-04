@@ -63,8 +63,7 @@ public class WrapInteger {
      * @return 当前值的字符串形式。
      */
     public function toString():String {
-        var tmp:int = _w ^ _rndArr[_offset];
-        return tmp.toString();
+        return getValue().toString();
     }
 }
 }

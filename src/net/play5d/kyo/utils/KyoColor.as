@@ -373,15 +373,17 @@ public class KyoColor {
 
         if (s == 0) {
             var gray:int = Math.round(l * 255);
+
             return rgb(gray, gray, gray);
         }
 
-        var q:Number = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        var p:Number = 2 * l - q;
+        var q:Number  = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p:Number  = 2 * l - q;
         var hk:Number = h / 360;
-        var r:Number = hueToRgb(p, q, hk + 1 / 3);
-        var g:Number = hueToRgb(p, q, hk);
-        var b:Number = hueToRgb(p, q, hk - 1 / 3);
+        var r:Number  = hueToRgb(p, q, hk + 1 / 3);
+        var g:Number  = hueToRgb(p, q, hk);
+        var b:Number  = hueToRgb(p, q, hk - 1 / 3);
+
         return rgb(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
     }
 
@@ -437,15 +439,15 @@ public class KyoColor {
      * @see #hsl()
      */
     public static function toHsl(color:uint):Object {
-        var r:Number = getR(color) / 255;
-        var g:Number = getG(color) / 255;
-        var b:Number = getB(color) / 255;
+        var r:Number   = getR(color) / 255;
+        var g:Number   = getG(color) / 255;
+        var b:Number   = getB(color) / 255;
         var max:Number = Math.max(r, g, b);
         var min:Number = Math.min(r, g, b);
-        var h:Number = 0;
-        var s:Number = 0;
-        var l:Number = (max + min) / 2;
-        var d:Number = max - min;
+        var h:Number   = 0;
+        var s:Number   = 0;
+        var l:Number   = (max + min) / 2;
+        var d:Number   = max - min;
 
         if (d != 0) {
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
