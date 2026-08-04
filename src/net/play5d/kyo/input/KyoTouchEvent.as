@@ -34,11 +34,11 @@ public class KyoTouchEvent extends Event {
     public static const SLIDE:String = 'event-slide';
 
     /** 向上滑动。 */
-    public static const DIRECT_UP:int = 0;
+    public static const DIRECT_UP:int    = 0;
     /** 向下滑动。 */
-    public static const DIRECT_DOWN:int = 6;
+    public static const DIRECT_DOWN:int  = 6;
     /** 向左滑动。 */
-    public static const DIRECT_LEFT:int = 9;
+    public static const DIRECT_LEFT:int  = 9;
     /** 向右滑动。 */
     public static const DIRECT_RIGHT:int = 3;
 

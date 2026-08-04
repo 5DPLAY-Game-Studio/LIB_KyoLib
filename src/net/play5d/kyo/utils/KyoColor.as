@@ -42,11 +42,11 @@ public class KyoColor {
     public static const WHITE:uint = 0xFFFFFF;
 
     /** 红 <code>0xFF0000</code> */
-    public static const RED:uint = 0xFF0000;
+    public static const RED:uint   = 0xFF0000;
     /** 绿 <code>0x00FF00</code> */
     public static const GREEN:uint = 0x00FF00;
     /** 蓝 <code>0x0000FF</code> */
-    public static const BLUE:uint = 0x0000FF;
+    public static const BLUE:uint  = 0x0000FF;
 
     /** 黄 <code>0xFFFF00</code>（红|绿） */
     public static const YELLOW:uint = RED | GREEN;
@@ -54,76 +54,76 @@ public class KyoColor {
      * 品红 <code>0xFF00FF</code>（红|蓝）。
      * <p>历史别名，等同 <code>MAGENTA</code>。</p>
      */
-    public static const PINK:uint = RED | BLUE;
+    public static const PINK:uint   = RED | BLUE;
     /** 青 <code>0x00FFFF</code>（绿|蓝） */
-    public static const CYAN:uint = GREEN | BLUE;
+    public static const CYAN:uint   = GREEN | BLUE;
 
     // ----- 扩展原色 / 别名 -----
 
     /** 品红 <code>0xFF00FF</code> */
     public static const MAGENTA:uint = PINK;
     /** 青绿别名，等同 <code>CYAN</code> */
-    public static const AQUA:uint = CYAN;
+    public static const AQUA:uint    = CYAN;
     /** 亮绿别名，等同 <code>GREEN</code> */
-    public static const LIME:uint = GREEN;
+    public static const LIME:uint    = GREEN;
     /** 紫红别名，等同 <code>MAGENTA</code> */
     public static const FUCHSIA:uint = MAGENTA;
 
     // ----- 灰阶 -----
 
     /** 深灰 <code>0x404040</code> */
-    public static const DARK_GRAY:uint = 0x404040;
+    public static const DARK_GRAY:uint  = 0x404040;
     /** 灰 <code>0x808080</code> */
-    public static const GRAY:uint = 0x808080;
+    public static const GRAY:uint       = 0x808080;
     /** 银 <code>0xC0C0C0</code> */
-    public static const SILVER:uint = 0xC0C0C0;
+    public static const SILVER:uint     = 0xC0C0C0;
     /** 浅灰 <code>0xD3D3D3</code> */
     public static const LIGHT_GRAY:uint = 0xD3D3D3;
 
     // ----- 常用命名色 -----
 
     /** 橙 <code>0xFFA500</code> */
-    public static const ORANGE:uint = 0xFFA500;
+    public static const ORANGE:uint          = 0xFFA500;
     /** 金 <code>0xFFD700</code> */
-    public static const GOLD:uint = 0xFFD700;
+    public static const GOLD:uint            = 0xFFD700;
     /** 珊瑚 <code>0xFF7F50</code> */
-    public static const CORAL:uint = 0xFF7F50;
+    public static const CORAL:uint           = 0xFF7F50;
     /** 褐 <code>0xA52A2A</code> */
-    public static const BROWN:uint = 0xA52A2A;
+    public static const BROWN:uint           = 0xA52A2A;
     /** 栗色 <code>0x800000</code> */
-    public static const MAROON:uint = 0x800000;
+    public static const MAROON:uint          = 0x800000;
     /** 橄榄 <code>0x808000</code> */
-    public static const OLIVE:uint = 0x808000;
+    public static const OLIVE:uint           = 0x808000;
     /** 海军蓝 <code>0x000080</code> */
-    public static const NAVY:uint = 0x000080;
+    public static const NAVY:uint            = 0x000080;
     /** 青绿 <code>0x008080</code> */
-    public static const TEAL:uint = 0x008080;
+    public static const TEAL:uint            = 0x008080;
     /** 紫 <code>0x800080</code> */
-    public static const PURPLE:uint = 0x800080;
+    public static const PURPLE:uint          = 0x800080;
     /** 靛 <code>0x4B0082</code> */
-    public static const INDIGO:uint = 0x4B0082;
+    public static const INDIGO:uint          = 0x4B0082;
     /** 紫罗兰 <code>0xEE82EE</code> */
-    public static const VIOLET:uint = 0xEE82EE;
+    public static const VIOLET:uint          = 0xEE82EE;
     /** 粉红 <code>0xFFC0CB</code>（浅粉，区别于 <code>PINK</code> 品红） */
-    public static const LIGHT_PINK:uint = 0xFFC0CB;
+    public static const LIGHT_PINK:uint      = 0xFFC0CB;
     /** 天空蓝 <code>0x87CEEB</code> */
-    public static const SKY_BLUE:uint = 0x87CEEB;
+    public static const SKY_BLUE:uint        = 0x87CEEB;
     /** 深蓝 <code>0x00008B</code> */
-    public static const DARK_BLUE:uint = 0x00008B;
+    public static const DARK_BLUE:uint       = 0x00008B;
     /** 深绿 <code>0x006400</code> */
-    public static const DARK_GREEN:uint = 0x006400;
+    public static const DARK_GREEN:uint      = 0x006400;
     /** 深红 <code>0x8B0000</code> */
-    public static const DARK_RED:uint = 0x8B0000;
+    public static const DARK_RED:uint        = 0x8B0000;
     /** 卡其 <code>0xF0E68C</code> */
-    public static const KHAKI:uint = 0xF0E68C;
+    public static const KHAKI:uint           = 0xF0E68C;
     /** 米色 <code>0xF5F5DC</code> */
-    public static const BEIGE:uint = 0xF5F5DC;
+    public static const BEIGE:uint           = 0xF5F5DC;
     /** 象牙 <code>0xFFFFF0</code> */
-    public static const IVORY:uint = 0xFFFFF0;
+    public static const IVORY:uint           = 0xFFFFF0;
     /** 番茄红 <code>0xFF6347</code> */
-    public static const TOMATO:uint = 0xFF6347;
+    public static const TOMATO:uint          = 0xFF6347;
     /** 巧克力 <code>0xD2691E</code> */
-    public static const CHOCOLATE:uint = 0xD2691E;
+    public static const CHOCOLATE:uint       = 0xD2691E;
     /** 深蓝灰 <code>0x2F4F4F</code> */
     public static const DARK_SLATE_GRAY:uint = 0x2F4F4F;
 

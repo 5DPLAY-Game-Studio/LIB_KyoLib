@@ -67,6 +67,7 @@ public class UUID {
     private static function core_sha1(x:Array, len:Number):Array {
         x[len >> 5] |= 0x80 << (24 - len % 32);
         x[((len + 64 >> 9) << 4) + 15] = len;
+
         var w:Array  = new Array(80), a:Number = 1732584193;
         var b:Number = -271733879, c:Number = -1732584194;
         var d:Number = 271733878, e:Number = -1009589776;
@@ -94,7 +95,7 @@ public class UUID {
             d = safe_add(d, oldd);
             e = safe_add(e, olde);
         }
-        return new Array(a, b, c, d, e);
+        return [a, b, c, d, e];
     }
 
     /**
@@ -140,7 +141,7 @@ public class UUID {
      * @private
      */
     private static function str2binb(str:String):Array {
-        var bin:Array   = new Array();
+        var bin:Array   = [];
         var mask:Number = (1 << 8) - 1;
         for (var i:Number = 0; i < str.length * 8; i += 8) {
             bin[i >> 5] |= (str.charCodeAt(i / 8) & mask) << (24 - i % 32);
@@ -152,8 +153,8 @@ public class UUID {
      * @private
      */
     private static function binb2hex(binarray:Array):String {
-        var str:String = new String('');
-        var tab:String = new String('0123456789abcdef');
+        var str:String = String('');
+        var tab:String = String('0123456789abcdef');
         for (var i:Number = 0; i < binarray.length * 4; i++) {
             str += tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) +
                    tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);

@@ -152,15 +152,15 @@ public class KyoUI {
      * @private 创建居中文本。
      */
     private static function newTxt(msg:String, width:Number):TextField {
-        var tf:TextFormat = new TextFormat();
-        tf.align          = TextFormatAlign.CENTER;
-        var txt:TextField = new TextField();
+        var tf:TextFormat     = new TextFormat();
+        tf.align              = TextFormatAlign.CENTER;
+        var txt:TextField     = new TextField();
         txt.defaultTextFormat = tf;
-        txt.mouseEnabled  = false;
-        txt.text          = msg;
-        txt.width         = width;
-        txt.height        = txt.textHeight + 5;
-        txt.y             = 10;
+        txt.mouseEnabled      = false;
+        txt.text              = msg;
+        txt.width             = width;
+        txt.height            = txt.textHeight + 5;
+        txt.y                 = 10;
 
         return txt;
     }

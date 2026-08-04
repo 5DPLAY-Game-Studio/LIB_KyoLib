@@ -26,13 +26,13 @@ package net.play5d.kyo.utils {
 public class MoneyUtils {
     //1：个，2：十，3：百，4：千，5：万，6：十万，7：百万，8：千万，9：亿，10：十亿，11：百亿，12：千亿，13：兆, 14：十兆， 15：百兆， 16：千兆
     /** 中文大写数字 0~9。 */
-    public static const NUM_CN:Array = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '镹'];
+    public static const NUM_CN:Array        = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '镹'];
     /** 小数单位：角、分。 */
     public static const DECIMAL_UNITS:Array = ['角', '分'];
     /** 节权：元、万、亿、兆。 */
-    public static const LEVELS:Array = ['元', '万', '亿', '兆'];
+    public static const LEVELS:Array        = ['元', '万', '亿', '兆'];
     /** 千百十。 */
-    public static const UNITS:Array = ['千', '百', '拾'];
+    public static const UNITS:Array         = ['千', '百', '拾'];
 
     /**
      * 把阿拉伯数字转换成中文大写金额。

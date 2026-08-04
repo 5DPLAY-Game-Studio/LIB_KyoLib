@@ -130,6 +130,7 @@ internal class KyoInsTimer extends EventDispatcher {
         _timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerHandler);
         _timer.start();
     }
+
     /** @private 定时器 id */
     public var id:int;
     /** @private */

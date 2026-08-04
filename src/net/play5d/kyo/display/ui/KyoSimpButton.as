@@ -46,10 +46,10 @@ public class KyoSimpButton extends Sprite {
 
         drawBg([0xffffff, 0xcccccc]);
 
-        var txt:TextField = new TextField();
-        var tf:TextFormat = new TextFormat();
-        tf.align          = TextFormatAlign.CENTER;
-        tf.size           = 12;
+        var txt:TextField     = new TextField();
+        var tf:TextFormat     = new TextFormat();
+        tf.align              = TextFormatAlign.CENTER;
+        tf.size               = 12;
         txt.defaultTextFormat = tf;
 
         txt.text   = label;

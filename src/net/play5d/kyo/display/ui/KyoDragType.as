@@ -30,11 +30,11 @@ public class KyoDragType {
     /**
      * 仅水平拖拽。
      */
-    public static const DRAG_TYPE_H:int = 1;
+    public static const DRAG_TYPE_H:int    = 1;
     /**
      * 仅垂直拖拽。
      */
-    public static const DRAG_TYPE_V:int = 2;
+    public static const DRAG_TYPE_V:int    = 2;
     /**
      * 水平与垂直均可拖拽。
      */

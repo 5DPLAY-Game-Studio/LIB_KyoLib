@@ -109,7 +109,7 @@ public class PicPointer extends Sprite {
     /** @private 自动翻页计时器 */
     private var _timer:Timer;
     /** @private 当前页索引；未初始化为 -1 */
-    private var _curId:int = -1;
+    private var _curId:int                = -1;
 
     /**
      * 当前页索引。

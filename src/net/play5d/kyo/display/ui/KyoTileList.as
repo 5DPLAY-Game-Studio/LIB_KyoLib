@@ -23,9 +23,10 @@ import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import net.play5d.kyo.utils.KyoMath;
-import net.play5d.kyo.utils.KyoDisplayUtils;
 import net.play5d.kyo.utils.KyoArrayUtils;
+import net.play5d.kyo.utils.KyoDisplayUtils;
+import net.play5d.kyo.utils.KyoMath;
+
 /**
  * 表格排行样式瓦片列表：按横竖排数分页排列子项，支持遮罩滚动与滚动条联动。
  *
@@ -426,8 +427,8 @@ public class KyoTileList extends Sprite {
     public function list(h:int, v:int):void {
         KyoDisplayUtils.removeAllChildren(this);
 
-        var p:Point     = startPos.clone();
-        var s:int       = (_page - 1) * _perPage;
+        var p:Point = startPos.clone();
+        var s:int   = (_page - 1) * _perPage;
         var e:int;
         if (h >= int.MAX_VALUE || v >= int.MAX_VALUE) {
             e = int.MAX_VALUE;

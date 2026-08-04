@@ -31,7 +31,7 @@ public class PicPointerEvent extends Event {
      * <code>CHANGE_START</code> 事件的 <code>type</code> 属性值。
      * @eventType CHANGE_START
      */
-    public static const CHANGE_START:String = 'CHANGE_START';
+    public static const CHANGE_START:String  = 'CHANGE_START';
     /**
      * <code>CHANGE_FINISH</code> 事件的 <code>type</code> 属性值。
      * @eventType CHANGE_FINISH
@@ -41,12 +41,12 @@ public class PicPointerEvent extends Event {
      * <code>MOUSE_UP</code> 事件的 <code>type</code> 属性值。
      * @eventType MOUSE_UP
      */
-    public static const MOUSE_UP:String = 'MOUSE_UP';
+    public static const MOUSE_UP:String      = 'MOUSE_UP';
     /**
      * <code>LOAD_PROCESS</code> 事件的 <code>type</code> 属性值。
      * @eventType LOAD_PROCESS
      */
-    public static const LOAD_PROCESS:String = 'LOAD_PROCESS';
+    public static const LOAD_PROCESS:String  = 'LOAD_PROCESS';
     /**
      * <code>LOAD_COMPLETE</code> 事件的 <code>type</code> 属性值。
      * @eventType LOAD_COMPLETE

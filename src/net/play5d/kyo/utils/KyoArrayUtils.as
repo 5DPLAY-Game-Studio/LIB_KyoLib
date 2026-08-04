@@ -20,7 +20,7 @@ package net.play5d.kyo.utils {
  * 数组查找、增删、分组与去重。
  */
 public class KyoArrayUtils {
-/**
+    /**
      * 根据子元素属性查找一个对象
      * @param array
      * @param matchKey
@@ -40,7 +40,7 @@ public class KyoArrayUtils {
         return null;
     }
 
-/**
+    /**
      * 根据子元素属性删除对象
      * @param array
      * @param matchKey
@@ -59,7 +59,7 @@ public class KyoArrayUtils {
         }
     }
 
-/**
+    /**
      * 根据子元素属性查找所有符合的对象
      * @param array
      * @param matchKey
@@ -80,7 +80,7 @@ public class KyoArrayUtils {
         return r;
     }
 
-/**
+    /**
      * 数组中是否存在对象。
      * @param array 目标数组。
      * @param item 待查找项。
@@ -95,7 +95,7 @@ public class KyoArrayUtils {
         return i != -1;
     }
 
-/**
+    /**
      * 插入不存在的对象到数组中。
      * @param array 目标数组。
      * @param item 待插入项。
@@ -119,7 +119,7 @@ public class KyoArrayUtils {
         }
     }
 
-/**
+    /**
      * 将对象插入到指定的index中
      * @param array
      * @param item 一个或多个对象，多个对象时为Array类型
@@ -150,7 +150,7 @@ public class KyoArrayUtils {
         }
     }
 
-/**
+    /**
      * 从数组中删除对象。
      * @param array 目标数组或类数组。
      * @param item 待删除项。
@@ -166,7 +166,7 @@ public class KyoArrayUtils {
         }
     }
 
-/**
+    /**
      * 删除数组中的重复对象。
      * @param array 目标数组或类数组。
      * @example
@@ -187,7 +187,7 @@ public class KyoArrayUtils {
         }
     }
 
-/**
+    /**
      * 统计数组中某项出现次数。
      * @param array 数组或类数组。
      * @param item 目标项。
@@ -207,7 +207,7 @@ public class KyoArrayUtils {
         return n;
     }
 
-/**
+    /**
      * 将数组元素浅拷贝到新数组（重排下标）。
      * @param array 源数组。
      * @return 新数组。
@@ -224,7 +224,7 @@ public class KyoArrayUtils {
         return a;
     }
 
-/**
+    /**
      * 获取属性相同的数据。
      * @param array 源数组。
      * @param key 属性名。
@@ -258,7 +258,7 @@ public class KyoArrayUtils {
         return r;
     }
 
-/**
+    /**
      * 按属性值分组。
      * @param array 源数组。
      * @param key 属性名。

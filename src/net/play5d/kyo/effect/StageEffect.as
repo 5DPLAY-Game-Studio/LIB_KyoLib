@@ -28,6 +28,7 @@ import flash.events.Event;
 import flash.geom.ColorTransform;
 
 import net.play5d.kyo.utils.KyoDisplayUtils;
+
 /**
  * 舞台级特效单例：闪白、衰减抖动、颜色变换、放大残影等。
  *

@@ -50,7 +50,7 @@ public class KyoSoundPlayer {
     }
 
     /** @private channelId → InsSound */
-    private var _sounds:Object = {};
+    private var _sounds:Object       = {};
     /** @private 全局默认音量 */
     private var _defaultValue:Number = 1;
     /** @private channelId=-1 时上次播放时间 */

@@ -266,7 +266,7 @@ public class BMPLoader extends EventDispatcher {
             var numcolors:int = bfoffBits - _crtPos / 4;
             arrayRGBQuad      = [];
             for (i = 0; i < numcolors; i++) {
-                var rgbObj:Object = new Object;
+                var rgbObj:Object = {};
                 rgbObj.b          = readunsignedbyte();
                 rgbObj.g          = readunsignedbyte();
                 rgbObj.r          = readunsignedbyte();

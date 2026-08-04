@@ -30,7 +30,7 @@ public class PicScrollEvent extends Event {
      * <code>CHANGE</code> 事件的 <code>type</code> 属性值。
      * @eventType CHANGE
      */
-    public static const CHANGE:String = 'CHANGE';
+    public static const CHANGE:String          = 'CHANGE';
     /**
      * <code>CHANGE_COMPLETE</code> 事件的 <code>type</code> 属性值。
      * @eventType CHANGE_COMPLETE
@@ -40,7 +40,7 @@ public class PicScrollEvent extends Event {
      * <code>MOUSE_UP</code> 事件的 <code>type</code> 属性值。
      * @eventType MOUSE_UP
      */
-    public static const MOUSE_UP:String = 'MOUSE_UP';
+    public static const MOUSE_UP:String        = 'MOUSE_UP';
 
     /**
      * @param type 事件类型。

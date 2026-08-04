@@ -216,7 +216,7 @@ public class ProcessUtils {
      */
     public static function runBAT(filePath:String, exitBack:Function = null):Boolean {
         trace('run bat :: ' + filePath);
-        return createCMDProcess(["/c", filePath], exitBack) != null;
+        return createCMDProcess(['/c', filePath], exitBack) != null;
     }
 
     /** @private */

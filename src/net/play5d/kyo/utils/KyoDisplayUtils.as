@@ -17,20 +17,20 @@
  */
 
 package net.play5d.kyo.utils {
-import flash.media.SoundTransform;
-import flash.geom.Matrix;
-import flash.geom.ColorTransform;
-import flash.filters.ColorMatrixFilter;
-import flash.filters.BitmapFilter;
-import flash.display.Sprite;
-import flash.display.MovieClip;
-import flash.display.FrameLabel;
-import flash.display.BitmapData;
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
+import flash.display.FrameLabel;
+import flash.display.MovieClip;
+import flash.display.Sprite;
+import flash.filters.BitmapFilter;
+import flash.filters.ColorMatrixFilter;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flash.media.SoundTransform;
 import flash.system.Capabilities;
 
 /**
@@ -325,7 +325,7 @@ public class KyoDisplayUtils {
         return new Point(cm2pixel(cmX), cm2pixel(cmY));
     }
 
-/**
+    /**
      * 移除 Sprite 全部子显示对象（委托 <code>removeAllChildren</code>）。
      * @param sp 容器。
      * @example
@@ -337,7 +337,8 @@ public class KyoDisplayUtils {
     public static function removeAllChildrenFromSprite(sp:Sprite):void {
         removeAllChildren(sp);
     }
-/**
+
+    /**
      * 获取 MC 的所有帧的绘制位图。
      * @param mc 目标显示对象（<code>MovieClip</code> 则逐帧）。
      * @return <code>BitmapData</code> 数组。
@@ -365,7 +366,8 @@ public class KyoDisplayUtils {
         }
         return a;
     }
-/**
+
+    /**
      * 绘制图形对象
      * @param d 图形对象
      * @param fixPosition 根据注册点位置调节
@@ -390,7 +392,8 @@ public class KyoDisplayUtils {
         bp.bitmapData.draw(d, matrix, colorTransform);
         return bp;
     }
-/**
+
+    /**
      * 绘制图形滤镜
      * @param d 图形对象
      * @param filter 滤镜对象
@@ -430,7 +433,8 @@ public class KyoDisplayUtils {
 
         return bpd2;
     }
-/**
+
+    /**
      * 绘制图像倒影。
      * @param d 源显示对象。
      * @param height 倒影高度。
@@ -451,7 +455,8 @@ public class KyoDisplayUtils {
         bp.alpha  = alpha;
         return bp;
     }
-/**
+
+    /**
      * 根据帧标签翻译 MC。
      * @param mc 目标 MovieClip。
      * @param label 帧标签。
@@ -477,7 +482,8 @@ public class KyoDisplayUtils {
             }
         }
     }
-/**
+
+    /**
      * 按阈值将位图某色设为透明。
      * @param source <code>Bitmap</code> 或 <code>BitmapData</code>。
      * @param arg1 省略则取 (0,0) 像素；为颜色值；或与 arg2 组成采样坐标 x。
@@ -509,7 +515,8 @@ public class KyoDisplayUtils {
         result.threshold(s, rect, origin, '==', threshold, 0, 0xF0F0F0, true);
         return result;
     }
-/**
+
+    /**
      * 获取显示对象在目标对象的坐标
      * @param d 要移动的显示对象
      * @param to 目标显示对象
@@ -533,7 +540,8 @@ public class KyoDisplayUtils {
         trace(to, 'is not', d, '\'s parent!');
         return pt;
     }
-/**
+
+    /**
      * 将一个显示对象移动到另一个显示对象里面
      * @param d 移动的显示对象
      * @param to 目标显示对象
@@ -551,7 +559,8 @@ public class KyoDisplayUtils {
         }
         to.addChild(d);
     }
-/**
+
+    /**
      * 移除容器全部子对象，可对每个子项回调。
      * @param d 容器。
      * @param itemCallFunction 每个被移除子对象的回调；可省略。
@@ -568,7 +577,8 @@ public class KyoDisplayUtils {
             }
         }
     }
-/**
+
+    /**
      * 按名称移除子对象。
      * @param d 容器。
      * @param name 子对象名。
@@ -583,7 +593,8 @@ public class KyoDisplayUtils {
             d.removeChild(o);
         }
     }
-/**
+
+    /**
      * 在MC的第N帧中加入方法
      * @param mc
      * @param script
@@ -600,7 +611,8 @@ public class KyoDisplayUtils {
         }
         mc.addFrameScript(f, script);
     }
-/**
+
+    /**
      * 将MC的颜色支除（黑白化）
      * @param mc
      * @param returnOrg 是否还原颜色
@@ -626,7 +638,7 @@ public class KyoDisplayUtils {
             return;
         }
 
-        var mtx:Array              = new Array();
+        var mtx:Array              = [];
         mtx                        = mtx.concat([0.3086, 0.6094, 0.082, 0, 0]); // red
         mtx                        = mtx.concat([0.3086, 0.6094, 0.082, 0, 0]); // green
         mtx                        = mtx.concat([0.3086, 0.6094, 0.082, 0, 0]); // blue
@@ -634,7 +646,8 @@ public class KyoDisplayUtils {
         var gray:ColorMatrixFilter = new ColorMatrixFilter(mtx);
         mc.filters                 = [gray];
     }
-/**
+
+    /**
      * 设置 Sprite 音量。
      * @param mc 目标。
      * @param volume 0~1。
@@ -653,7 +666,8 @@ public class KyoDisplayUtils {
             mc.soundTransform = st;
         }
     }
-/**
+
+    /**
      * 克隆 ColorTransform（不含 color 属性赋值）。
      * @param ct 源。
      * @return 新实例。
@@ -680,7 +694,8 @@ public class KyoDisplayUtils {
         return newCt;
 
     }
-/**
+
+    /**
      * 影片剪辑是否具有指定名称帧标签。
      * @param mc 影片剪辑。
      * @param label 帧标签名。
@@ -701,7 +716,8 @@ public class KyoDisplayUtils {
 
         return false;
     }
-/**
+
+    /**
      * 设置显示对象色相滤镜（-180 – 180）；为 0 时清除 filters。
      * @param display 目标。
      * @param hue 色相值。
@@ -719,7 +735,8 @@ public class KyoDisplayUtils {
         var filter:ColorMatrixFilter = createHueFilter(hue);
         display.filters              = [filter];
     }
-/**
+
+    /**
      * 递归停止指定影片剪辑的子 MovieClip 播放（不含自身 stop）。
      * @param mc 根影片剪辑。
      * @example

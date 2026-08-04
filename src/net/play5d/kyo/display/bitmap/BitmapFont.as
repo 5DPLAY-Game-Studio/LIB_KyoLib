@@ -56,22 +56,22 @@ public class BitmapFont {
      * 字与字之间的额外间距（像素）。
      * @default 0
      */
-    public var charGap:Number = 0;
+    public var charGap:Number     = 0;
     /**
      * 空格（字符码 32）的宽度；为 0 时回退为 <code>_charWidth + charGap</code>。
      * @default 0
      */
-    public var spaceGap:Number = 0;
+    public var spaceGap:Number    = 0;
     /**
      * 绘制时整体 X 偏移。
      * @default 0
      */
-    public var offsetX:Number = 0;
+    public var offsetX:Number     = 0;
     /**
      * 绘制时整体 Y 偏移。
      * @default 0
      */
-    public var offsetY:Number = 0;
+    public var offsetY:Number     = 0;
     /** @private 源贴图 */
     private var _source:BitmapData;
     /** @private 字符码 → 字形缓存 */
@@ -81,7 +81,7 @@ public class BitmapFont {
     /** @private 单字高度（取各字形最大 height） */
     private var _charHeight:int;
     /** @private 各字形 yoffset 最小值，用于基线对齐 */
-    private var _yOffsetMin:int = 999;
+    private var _yOffsetMin:int   = 999;
 
     /**
      * 将字符串渲染为位图。

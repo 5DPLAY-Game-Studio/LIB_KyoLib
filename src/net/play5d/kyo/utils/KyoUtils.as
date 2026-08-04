@@ -36,7 +36,7 @@ public class KyoUtils {
     /** @private 根类限定名 → AMF 相关类型名列表 */
     private static var _cloneTypeNameCache:Object   = {};
 
-/**
+    /**
      * 根据object给对象赋值
      * @param setter
      * @param obj
@@ -90,7 +90,7 @@ public class KyoUtils {
         }
     }
 
-/**
+    /**
      * 克隆属性。
      * @param to 克隆出来的对象。
      * @param from 原始对象。
@@ -116,7 +116,7 @@ public class KyoUtils {
         return to;
     }
 
-/**
+    /**
      * 浅拷贝动态 Object 的可枚举键。
      * @param from 源对象。
      * @return 新对象。
@@ -134,7 +134,7 @@ public class KyoUtils {
         return o;
     }
 
-/**
+    /**
      * 统计 Object 中真值属性个数。
      * @param obj 对象。
      * @return 个数。
@@ -156,7 +156,7 @@ public class KyoUtils {
         return l;
     }
 
-/**
+    /**
      * 通过 ByteArray AMF 深拷贝。
      *
      * <p>拷贝前按类型图 <code>registerClassAlias</code>（有缓存），尽量还原为原 Class。
@@ -258,7 +258,7 @@ public class KyoUtils {
         }
     }
 
-/**
+    /**
      * 获取对象类定义。
      * @param o 任意对象。
      * @return 对应 Class。
@@ -272,7 +272,7 @@ public class KyoUtils {
         return getDefinitionByName(classname) as Class;
     }
 
-/**
+    /**
      * 自定义右键菜单
      * @param main 原件MC
      * @param menu 菜单名称数组
@@ -302,7 +302,7 @@ public class KyoUtils {
         main.contextMenu = cm;
     }
 
-/**
+    /**
      * 将实体类对象转换为 object，包含 public 的所有属性。
      * @param item 实体实例。
      * @return 属性键值 Object。
@@ -323,7 +323,7 @@ public class KyoUtils {
         return o;
     }
 
-/**
+    /**
      * 获取对象所有的 PUBLIC 属性。
      * @param item 目标对象。
      * @return 属性名称数组。
@@ -344,7 +344,7 @@ public class KyoUtils {
         return a;
     }
 
-/**
+    /**
      * 克隆类定义的对象，所有 public var 的属性将进行克隆（仅支持简单类型的属性）。
      * @param from 源实例。
      * @return 新实例。

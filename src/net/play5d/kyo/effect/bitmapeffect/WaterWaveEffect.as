@@ -52,15 +52,15 @@ public class WaterWaveEffect extends Sprite {
      */
     public var strongth:Number = 1;
     /** @private */
-    private var result :BitmapData;
+    private var result:BitmapData;
     /** @private */
     private var result2:BitmapData;
     /** @private */
-    private var source :BitmapData;
+    private var source:BitmapData;
     /** @private */
-    private var buffer :BitmapData;
+    private var buffer:BitmapData;
     /** @private */
-    private var output :BitmapData;
+    private var output:BitmapData;
     /** @private */
     private var surface:BitmapData;
     /** @private */
@@ -68,7 +68,7 @@ public class WaterWaveEffect extends Sprite {
     /** @private */
     private var origin:Point;
     /** @private */
-    private var matrix :Matrix;
+    private var matrix:Matrix;
     /** @private */
     private var matrix2:Matrix;
     /** @private */

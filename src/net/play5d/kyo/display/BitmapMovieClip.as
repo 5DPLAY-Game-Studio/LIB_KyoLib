@@ -643,6 +643,7 @@ import flash.geom.Matrix;
 import flash.geom.Rectangle;
 
 import net.play5d.kyo.utils.KyoDisplayUtils;
+
 /**
  * 单次绘制上下文：源对象与 draw 参数。
  *
@@ -677,15 +678,15 @@ internal class DrawVar {
     /** @private 绘制源 DisplayObject */
     public var source:DisplayObject;
     /** @private 变换矩阵 */
-    public var matrix:Matrix = null;
+    public var matrix:Matrix                 = null;
     /** @private 颜色变换 */
     public var colorTransform:ColorTransform = null;
     /** @private 混合模式 */
-    public var blendMode:String = null;
+    public var blendMode:String              = null;
     /** @private 裁剪矩形 */
-    public var clipRect:Rectangle = null;
+    public var clipRect:Rectangle            = null;
     /** @private 是否平滑缩放 */
-    public var smoothing:Boolean = false;
+    public var smoothing:Boolean             = false;
 
     /** @private 复位源 MC 并清空引用 */
     public function destroy():void {

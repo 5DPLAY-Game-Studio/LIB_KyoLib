@@ -56,7 +56,7 @@ public class KyoScroller {
     /** @private */
     private var _dsize:Point;
     /** @private 当前 scrollRect 原点 */
-    private var _p:Point = new Point();
+    private var _p:Point    = new Point();
     /** @private 滚动方向 */
     private var _direct:int;
 

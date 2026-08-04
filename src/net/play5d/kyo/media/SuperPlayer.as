@@ -66,12 +66,12 @@ public class SuperPlayer extends Sprite {
      * 加载失败事件类型。
      * @eventType load_fail
      */
-    public static const EVENT_LOAD_FAIL:String = 'load_fail';
+    public static const EVENT_LOAD_FAIL:String     = 'load_fail';
 
     /** 当前为 Flash/SWF。 */
-    public static const TYPE_FLASH:String = 'type_is_flash';
+    public static const TYPE_FLASH:String  = 'type_is_flash';
     /** 当前为视频。 */
-    public static const TYPE_VIDEO:String = 'type_is_video';
+    public static const TYPE_VIDEO:String  = 'type_is_video';
     /** 当前为位图。 */
     public static const TYPE_BITMAP:String = 'type_is_bitmap';
 
@@ -92,7 +92,7 @@ public class SuperPlayer extends Sprite {
      * 视频是否在加载后立即播放。
      * @default true
      */
-    public var autoPlay:Boolean = true;
+    public var autoPlay:Boolean  = true;
     /**
      * 图片是否锁定宽高比。
      * @default false
@@ -101,15 +101,15 @@ public class SuperPlayer extends Sprite {
     /**
      * 视为视频的扩展名列表。
      */
-    public var video_pfxs:Array = ['flv', 'mp4'];
+    public var video_pfxs:Array  = ['flv', 'mp4'];
     /**
      * 视为 SWF 的扩展名列表。
      */
-    public var flash_pfxs:Array = ['swf'];
+    public var flash_pfxs:Array  = ['swf'];
     /**
      * 视为图片的扩展名列表。
      */
-    public var pic_pfxs:Array = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
+    public var pic_pfxs:Array    = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
     /** @private */
     private var _url:String;
     /** @private */
@@ -474,19 +474,19 @@ internal class InsVideo extends Sprite {
      * 播放失败。
      * @eventType insvideo.play.fail
      */
-    public static const PLAY_FAIL:String = 'insvideo.play.fail';
+    public static const PLAY_FAIL:String     = 'insvideo.play.fail';
     /**
      * 元数据就绪。
      * @eventType insvideo.event.metadata
      */
-    public static const META_DATA:String = 'insvideo.event.metadata';
+    public static const META_DATA:String     = 'insvideo.event.metadata';
 
     /**
      * @param url 视频 URL。
      * @param size 显示尺寸。
      */
     public function InsVideo(url:String, size:Point) {
-        var flvObject:Object = new Object();
+        var flvObject:Object = {};
         flvURL               = url;
 
         flvNC = new NetConnection();

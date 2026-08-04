@@ -72,9 +72,9 @@ public class BitmapText extends Bitmap {
     /** @private 绘制后应用的位图滤镜列表 */
     private var _filers:Array;
     /** @private 指定绘制宽度；为 0 时按文本宽度自适应 */
-    private var _width:Number = 0;
+    private var _width:Number      = 0;
     /** @private 指定绘制高度；为 0 时按文本高度自适应 */
-    private var _height:Number = 0;
+    private var _height:Number     = 0;
 
     /** @private */
     public override function set width(value:Number):void {
@@ -305,6 +305,7 @@ public class BitmapText extends Bitmap {
 
         _tf.width  = (_width != 0) ? _width : (_tf.textWidth + size);
         _tf.height = (_height != 0) ? _height : (_tf.textHeight + size);
+
         var bd:BitmapData = new BitmapData(_tf.width, _tf.height, true, 0);
 
         bd.draw(_tf);

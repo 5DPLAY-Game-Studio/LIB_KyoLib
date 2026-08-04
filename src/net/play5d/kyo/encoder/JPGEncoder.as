@@ -152,13 +152,13 @@ public class JPGEncoder {
     /** @private 当前字节内位位置 */
     private var bytepos:int                      = 7;
     /** @private 8×8 块 ZigZag 重排缓冲 */
-    private var DU:Array  = new Array(64);
+    private var DU:Array                         = new Array(64);
     /** @private 8×8 亮度块 */
-    private var YDU:Array = new Array(64);
+    private var YDU:Array                        = new Array(64);
     /** @private 8×8 U 色度块 */
-    private var UDU:Array = new Array(64);
+    private var UDU:Array                        = new Array(64);
     /** @private 8×8 V 色度块 */
-    private var VDU:Array = new Array(64);
+    private var VDU:Array                        = new Array(64);
 
     /**
      * 将位图编码为 JPEG 字节流。
@@ -289,7 +289,7 @@ public class JPGEncoder {
     private function computeHuffmanTbl(nrcodes:Array, std_table:Array):Array {
         var codevalue:int    = 0;
         var pos_in_table:int = 0;
-        var HT:Array         = new Array();
+        var HT:Array         = [];
         for (var k:int = 1; k <= 16; k++) {
             for (var j:int = 1; j <= nrcodes[k]; j++) {
                 HT[std_table[pos_in_table]]     = new BitString();
@@ -635,7 +635,7 @@ public class JPGEncoder {
                   ); end0pos--
         ) {
         }
-        ;
+
         //end0pos = first element in reverse order !=0
         if (end0pos == 0) {
             writeBits(EOB);

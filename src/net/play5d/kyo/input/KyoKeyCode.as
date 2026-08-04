@@ -120,26 +120,26 @@ public class KyoKeyCode {
     public static const Z:KyoKeyVO = new KyoKeyVO('Z', 90);
 
     /** 方向键上。 */
-    public static const UP:KyoKeyVO = new KyoKeyVO('UP', 38);
+    public static const UP:KyoKeyVO    = new KyoKeyVO('UP', 38);
     /** 方向键下。 */
-    public static const DOWN:KyoKeyVO = new KyoKeyVO('DOWN', 40);
+    public static const DOWN:KyoKeyVO  = new KyoKeyVO('DOWN', 40);
     /** 方向键左。 */
-    public static const LEFT:KyoKeyVO = new KyoKeyVO('LEFT', 37);
+    public static const LEFT:KyoKeyVO  = new KyoKeyVO('LEFT', 37);
     /** 方向键右。 */
     public static const RIGHT:KyoKeyVO = new KyoKeyVO('RIGHT', 39);
 
     /** Delete。 */
-    public static const Delete:KyoKeyVO = new KyoKeyVO('DELETE', 46);
+    public static const Delete:KyoKeyVO   = new KyoKeyVO('DELETE', 46);
     /** End。 */
-    public static const End:KyoKeyVO = new KyoKeyVO('END', 35);
+    public static const End:KyoKeyVO      = new KyoKeyVO('END', 35);
     /** PageDown。 */
     public static const PageDown:KyoKeyVO = new KyoKeyVO('PAGEDOWN', 34);
     /** PageUp。 */
-    public static const PageUp:KyoKeyVO = new KyoKeyVO('PAGEUP', 33);
+    public static const PageUp:KyoKeyVO   = new KyoKeyVO('PAGEUP', 33);
     /** Insert。 */
-    public static const Insert:KyoKeyVO = new KyoKeyVO('INSERT', 45);
+    public static const Insert:KyoKeyVO   = new KyoKeyVO('INSERT', 45);
     /** Home。 */
-    public static const Home:KyoKeyVO = new KyoKeyVO('HOME', 36);
+    public static const Home:KyoKeyVO     = new KyoKeyVO('HOME', 36);
 
     /** 空格。 */
     public static const SPACE:KyoKeyVO = new KyoKeyVO('SPACE', 32);

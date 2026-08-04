@@ -17,10 +17,10 @@
  */
 
 package net.play5d.kyo.utils {
-import flash.geom.Point;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextField;
 import flash.display.DisplayObject;
+import flash.geom.Point;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
 /**
@@ -71,7 +71,8 @@ public class KyoUIUtils {
         catch (e:Error) {
         }
     }
-/**
+
+    /**
      * 追加文本；若增加滚动行则改为换行追加。
      * @param txtfield 文本框。
      * @param text 追加内容。
@@ -91,7 +92,8 @@ public class KyoUIUtils {
         }
         return false;
     }
-/**
+
+    /**
      * 在文本底部追加行，并裁掉顶部多余行以保持行数。
      * @param textfield 文本框。
      * @param text 新行内容。
@@ -126,7 +128,8 @@ public class KyoUIUtils {
             textfield.replaceText(0, m, '');
         }
     }
-/**
+
+    /**
      * 设置 TextField 文本与是否可鼠标交互。
      * @param txt 文本框。
      * @param text 内容。
@@ -152,7 +155,8 @@ public class KyoUIUtils {
             textFieldAutoSize(txt);
         }
     }
-/**
+
+    /**
      * 缩小字号直到文本宽/高适配 TextField。
      * @param txt 文本框。
      * @example
@@ -176,7 +180,8 @@ public class KyoUIUtils {
         }
 
     }
-/**
+
+    /**
      * 排序多个TextField
      * @param txts TextField数组
      * @param startPos 开始位置

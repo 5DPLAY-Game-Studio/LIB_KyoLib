@@ -27,7 +27,8 @@ import net.play5d.kyo.utils.KyoLog;
 /**
  * AIR 本地文件读写（应用目录相对路径辅助）。
  *
- * <p>位于 <code>net.play5d.kyo.air</code> 下，表示<strong>仅 AIR</strong>可用（依赖 <code>flash.filesystem</code>）。壳存档等本地 IO 首选本类。</p>
+ * <p>位于 <code>net.play5d.kyo.air</code> 下，表示<strong>仅 AIR</strong>可用（依赖 <code>flash.filesystem</code>）。壳存档等本地 IO
+ * 首选本类。</p>
  *
  * @see #writeFile()
  * @see #readTextFile()

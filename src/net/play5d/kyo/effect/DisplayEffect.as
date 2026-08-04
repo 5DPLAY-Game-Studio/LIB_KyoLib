@@ -63,7 +63,7 @@ public class DisplayEffect {
         }
 
         var oo:Object = {
-            parent   : pt,
+            parent:    pt,
             alphaLose: alphaLose
         };
         var po:Object = {
@@ -115,9 +115,9 @@ public class DisplayEffect {
         }
 
         var oo:Object = {
-            parent   : parent,
+            parent:    parent,
             alphaLose: alphaLose,
-            scaleAdd : scaleAdd
+            scaleAdd:  scaleAdd
         };
         var po:Object = {
             alpha: startAlpha
@@ -243,7 +243,6 @@ import flash.display.DisplayObjectContainer;
 import flash.events.Event;
 import flash.geom.Point;
 
-import net.play5d.kyo.utils.KyoDisplayUtils;
 /**
  * 残影运行时数据与逐帧更新。
  * @private
@@ -260,7 +259,7 @@ internal class InsShadow {
     /** @private 残影所在容器 */
     public var parent:DisplayObjectContainer;
     /** @private 每帧缩放增量；0 表示不缩放 */
-    public var scaleAdd:Number = 0;
+    public var scaleAdd:Number  = 0;
     /** @private 参考尺寸，用于缩放时的位置补偿 */
     public var size:Point;
     /** @private 考虑镜像后的每帧缩放增量 */

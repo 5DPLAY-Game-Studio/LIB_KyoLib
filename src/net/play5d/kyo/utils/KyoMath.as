@@ -17,8 +17,8 @@
  */
 
 package net.play5d.kyo.utils {
-import flash.geom.Rectangle;
 import flash.geom.Point;
+import flash.geom.Rectangle;
 
 /**
  * 常用数值与几何计算。
@@ -256,7 +256,7 @@ public class KyoMath {
         return n > 0 ? Math.floor(n) : Math.ceil(n);
     }
 
-/**
+    /**
      * 判断数值是否落在两端点之间（顺序无关）。
      *
      * @param num 待测值。
@@ -275,7 +275,8 @@ public class KyoMath {
         }
         return KyoMath.inRange(num, num2, num1);
     }
-/**
+
+    /**
      * 向零衰减：正数减 k、负数加 k，越过 0 则置 0。
      * @param n 原值。
      * @param k 衰减量。
@@ -300,7 +301,8 @@ public class KyoMath {
         }
         return n;
     }
-/**
+
+    /**
      * 沿符号方向增强绝对值。
      * @param n 原值。
      * @param k 增量。
@@ -319,7 +321,8 @@ public class KyoMath {
         }
         return n;
     }
-/**
+
+    /**
      * 将数值钳制在 Point 表示的 [x, y] 范围。
      *
      * @param n 原值。
@@ -334,7 +337,8 @@ public class KyoMath {
     public static function fixRangeByPoint(n:Number, range:Point):Number {
         return fixRange(n, range.x, range.y);
     }
-/**
+
+    /**
      * 将点坐标钳制到矩形（宽高当作右/下边界）。
      * @param p 点（原地修改）。
      * @param range 范围矩形。
@@ -357,7 +361,8 @@ public class KyoMath {
             p.y = range.height;
         }
     }
-/**
+
+    /**
      * 将小数转化为百分比形式。
      * @param v 小数。
      * @param decimalPlaces 小数位数，-1 时不限制，0 时为整数。
@@ -380,7 +385,8 @@ public class KyoMath {
         }
         return vv.toString() + '%';
     }
-/**
+
+    /**
      * 比较两点是否完全相同。
      * @param A 点 A。
      * @param B 点 B。
@@ -396,7 +402,8 @@ public class KyoMath {
         }
         return A.x == B.x && A.y == B.y;
     }
-/**
+
+    /**
      * 比较两矩形是否完全相同（历史拼写 <code>Rectangel</code>）。
      * @param A 矩形 A。
      * @param B 矩形 B。
@@ -412,7 +419,8 @@ public class KyoMath {
         }
         return A.x == B.x && A.y == B.y && A.width == B.width && A.height == B.height;
     }
-/**
+
+    /**
      * 求两矩形相交区域；无相交则 <code>null</code>（会规范化负宽高）。
      * @param rectA 矩形 A。
      * @param rectB 矩形 B。

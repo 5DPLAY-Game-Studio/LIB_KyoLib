@@ -17,13 +17,14 @@
  */
 package net.play5d.kyo.utils {
 import com.adobe.utils.StringUtil;
+
 import flash.utils.ByteArray;
 
 /**
  * 字符串、路径后缀与数字文本格式化。
  */
 public class KyoStringUtils {
-/**
+    /**
      * 在数字前补 0 至指定整数位数（小数部分保留）。
      * @param n 数字。
      * @param bit 整数部分目标位数，默认 2。
@@ -46,7 +47,7 @@ public class KyoStringUtils {
         return zeros + before0 + after0;
     }
 
-/**
+    /**
      * 取 URL / 路径的扩展名（小写，不含点；忽略 <code>?</code> / <code>#</code> 查询与锚点）。
      * @param v 完整 URL 或文件路径。
      * @return 扩展名；无扩展名时为空串。
@@ -78,7 +79,7 @@ public class KyoStringUtils {
         return path.substring(i + 1).toLowerCase();
     }
 
-/**
+    /**
      * 获取 URL 的后缀名（委托 <code>getExtension</code>）。
      * @param v URL 或路径。
      * @return 扩展名小写串。
@@ -92,7 +93,7 @@ public class KyoStringUtils {
         return getExtension(v);
     }
 
-/**
+    /**
      * 整数转中文数字（简易，支持到万）。
      * @param n 非负整数。
      * @return 中文数字串。
@@ -157,7 +158,7 @@ public class KyoStringUtils {
         return vv[n];
     }
 
-/**
+    /**
      * 获取字符串的字节数。
      * @param str 字符串。
      * @param encode 编码方式。
@@ -173,7 +174,7 @@ public class KyoStringUtils {
         return bt.length;
     }
 
-/**
+    /**
      * 去除后缀名。
      * @param v 带扩展名的字符串。
      * @return 去掉首个 <code>.</code> 及之后部分的字符串。
@@ -190,7 +191,7 @@ public class KyoStringUtils {
         return v.substr(0, x);
     }
 
-/**
+    /**
      * 字符串字符替换。
      * @param v 源字符串。
      * @param p 被替换片段。
@@ -205,7 +206,7 @@ public class KyoStringUtils {
         return v.split(p).join(repl);
     }
 
-/**
+    /**
      * 反复 match 并收集捕获组（最多一万次）。
      * @param v 源字符串。
      * @param p 正则或匹配模式。
@@ -229,7 +230,7 @@ public class KyoStringUtils {
         return ra.reverse();
     }
 
-/**
+    /**
      * 获取后缀名（委托 <code>getExtension</code>；历史命名保留）。
      * @param v URL 或路径。
      * @return 扩展名小写串。
@@ -243,7 +244,7 @@ public class KyoStringUtils {
         return getExtension(v);
     }
 
-/**
+    /**
      * 读取字符串格式的变量。
      * 格式为：
      *     变量名=值

@@ -31,7 +31,7 @@ public class KyoCacheManager {
      * 已缓存条目计数（每次 <code>cacheById</code> 递增；覆盖同 ID 仍会加一）。
      * @default 0
      */
-    public static var count:int = 0;
+    public static var count:int          = 0;
     /** @private id → 缓存对象 */
     private static var _cacheObjs:Object = {};
 

@@ -44,7 +44,7 @@ public class LoaderBar extends Sprite {
      * 前景填充色。
      * @default 0xff0000
      */
-    public var color:uint = 0xff0000;
+    public var color:uint     = 0xff0000;
     /**
      * 边框颜色。
      * @default 0x426F00

@@ -154,17 +154,17 @@ public class SwfHeaderInfo {
      */
     protected function parseByteArray(BA:ByteArray):void {
         var binary:ByteArray = new ByteArray;
-        binary.endian = Endian.LITTLE_ENDIAN;
+        binary.endian        = Endian.LITTLE_ENDIAN;
         //取前8个字节：标识、版本、文件大小
         BA.readBytes(binary, 0, 8);
         //前3字节：FWS / CWS
-        _type = binary.readUTFBytes(3);
+        _type    = binary.readUTFBytes(3);
         //第4字节：版本号
         _version = binary[3];
         //文件大小：字节 8,7,6,5 小端
-        _size = binary[7] << 24 | binary[6] << 16 | binary[5] << 8 | binary[4];
+        _size    = binary[7] << 24 | binary[6] << 16 | binary[5] << 8 | binary[4];
 
-        binary.position = 8;
+        binary.position        = 8;
         var mainData:ByteArray = new ByteArray;
         BA.readBytes(mainData);
 
@@ -191,21 +191,21 @@ public class SwfHeaderInfo {
             s += _temp;
         }
 
-        _width  = new Number('0x' + s.substr(w_h_plist[0][0], 4)) / w_h_plist[0][1];
-        _height = new Number('0x' + s.substr(w_h_plist[1][0], 4)) / w_h_plist[1][1];
+        _width  = Number('0x' + s.substr(w_h_plist[0][0], 4)) / w_h_plist[0][1];
+        _height = Number('0x' + s.substr(w_h_plist[1][0], 4)) / w_h_plist[1][1];
 
         var pos:int = 8 + len;
         //宽高区后跳一字节为 fps
-        _fps    = binary[pos += 2];
+        _fps        = binary[pos += 2];
         //帧数占两字节，低位在前
-        _frames = binary[pos + 2] << 8 | binary[pos + 1];
+        _frames     = binary[pos + 2] << 8 | binary[pos + 1];
     }
 
     /**
      * 初始化宽高控制码规则表。
      */
     protected function setWHruleList():void {
-        w_h_ruleList = [];
+        w_h_ruleList    = [];
         w_h_ruleList[0] = {ctrlCode: '50', position: [[0, 10], [5, 10], 5]};
         w_h_ruleList[1] = {ctrlCode: '58', position: [[1, 40], [6, 10], 6]};
         w_h_ruleList[2] = {ctrlCode: '60', position: [[1, 10], [7, 10], 6]};

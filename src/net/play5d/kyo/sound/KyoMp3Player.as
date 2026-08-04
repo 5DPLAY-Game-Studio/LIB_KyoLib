@@ -22,8 +22,9 @@ import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.net.URLRequest;
 
-import net.play5d.kyo.utils.KyoRandom;
 import net.play5d.kyo.utils.KyoArrayUtils;
+import net.play5d.kyo.utils.KyoRandom;
+
 /**
  * 基于 URL 列表的 MP3 播放器，支持多种播放模式与上一曲 / 下一曲。
  *
@@ -41,7 +42,7 @@ public class KyoMp3Player {
     /** 单曲播完停止。 */
     public static const MODE_ONE_ONCE:String = 'one_once_mode';
     /** 随机下一曲。 */
-    public static const MODE_RANDOM:String = 'random_mode';
+    public static const MODE_RANDOM:String   = 'random_mode';
 
     /**
      * 构造函数。

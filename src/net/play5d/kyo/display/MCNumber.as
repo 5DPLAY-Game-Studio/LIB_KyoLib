@@ -55,7 +55,7 @@ public class MCNumber extends Sprite {
     /** @private MC 类 */
     protected var _mc:Class;
     /** @private 当前位显示对象列表 */
-    protected var _mcs:Array = [];
+    protected var _mcs:Array  = [];
     /** @private 最小位数 */
     protected var _bits:uint;
     /** @private */

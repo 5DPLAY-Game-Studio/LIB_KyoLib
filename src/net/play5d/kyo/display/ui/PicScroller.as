@@ -129,7 +129,7 @@ public class PicScroller extends Sprite {
     /** @private 是否处于拖动状态 */
     private var _draging:Boolean;
     /** @private 当前页索引；未初始化为 -1 */
-    private var _curId:int = -1;
+    private var _curId:int         = -1;
 
     /**
      * 当前页索引。

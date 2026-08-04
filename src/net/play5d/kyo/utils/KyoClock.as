@@ -40,7 +40,7 @@ public class KyoClock {
     /**
      * 当前时间；由定时器刷新。
      */
-    public var now:Date = new Date();
+    public var now:Date          = new Date();
     /** @private */
     private var _timer:Timer;
     /** @private */

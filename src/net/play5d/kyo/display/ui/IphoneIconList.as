@@ -73,12 +73,12 @@ public class IphoneIconList extends Sprite {
      * 列表水平位移（与 <code>scrollRect</code> 联动；Tween 目标属性）。
      * @default 0
      */
-    public var _thisX:Number = 0;
+    public var _thisX:Number        = 0;
     /**
      * 每行图标数。
      * @default 4
      */
-    public var hrow:int = 4;
+    public var hrow:int             = 4;
     /**
      * 单页可视尺寸。
      */
@@ -87,17 +87,17 @@ public class IphoneIconList extends Sprite {
      * 是否响应滑动翻页（历史命名拼写）。
      * @default true
      */
-    public var enalbed:Boolean = true;
+    public var enalbed:Boolean      = true;
     /**
      * 翻页所需的滑动速度阈值。
      * @default 30
      */
-    public var touchPow:Number = 30;
+    public var touchPow:Number      = 30;
     /**
      * 翻页所需的滑动距离比例（相对 <code>touchSize.x</code>）。
      * @default 0.3
      */
-    public var touchDis:Number = 0.3;
+    public var touchDis:Number      = 0.3;
     /**
      * 手动指定单元间距；为 <code>null</code> 时按尺寸自动计算。
      * @default null
@@ -111,21 +111,21 @@ public class IphoneIconList extends Sprite {
     /** @private 单元尺寸 */
     private var _unitSize:Point;
     /** @private 按下时的列表 X */
-    private var _oldthisX:Number = 0;
+    private var _oldthisX:Number    = 0;
     /** @private 翻页目标 X */
-    private var _tweenX:Number = 0;
+    private var _tweenX:Number      = 0;
     /** @private 各页 KyoTileList */
     private var _lists:Array;
     /** @private 实际使用的间距 */
-    private var _gap:Point = new Point();
+    private var _gap:Point          = new Point();
     /** @private 列表子项是否可交互 */
     private var _listEnable:Boolean = true;
     /** @private 按下时舞台 mouseX */
     private var _oldX:Number;
     /** @private 当前帧滑动速度 */
-    private var _mouseSpd:Number = 0;
+    private var _mouseSpd:Number    = 0;
     /** @private 上一帧 mouseX */
-    private var _curMouseX:Number = -1;
+    private var _curMouseX:Number   = -1;
     /** @private 翻页 Tween */
     private var _tween:TweenLite;
 

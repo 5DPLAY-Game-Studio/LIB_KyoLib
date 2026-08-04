@@ -72,7 +72,7 @@ public class SwfLoader extends Sprite {
     /** @private */
     private var _size:Point;
     /** @private SWF 原始宽 */
-    private var _swfWidth:Number = 0;
+    private var _swfWidth:Number  = 0;
     /** @private SWF 原始高 */
     private var _swfHeight:Number = 0;
     /** @private */

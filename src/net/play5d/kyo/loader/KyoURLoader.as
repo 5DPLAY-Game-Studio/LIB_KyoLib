@@ -39,18 +39,18 @@ import flash.utils.ByteArray;
  */
 public class KyoURLoader {
     /** Unicode（UTF-16 LE）BOM 探测结果。 */
-    public static const TYPE_UNICODE:String = 'Unicode';
+    public static const TYPE_UNICODE:String            = 'Unicode';
     /** Unicode big endian（UTF-16 BE）BOM 探测结果。 */
     public static const TYPE_UNICODE_BIG_ENDIAN:String = 'Unicode big endian';
     /** UTF-8 BOM 探测结果。 */
-    public static const TYPE_UTF8:String = 'UTF-8';
+    public static const TYPE_UTF8:String               = 'UTF-8';
     /** 无已知 BOM 时视为 ANSI。 */
-    public static const TYPE_ANSI:String = 'ANSI';
+    public static const TYPE_ANSI:String               = 'ANSI';
     /**
      * 为 <code>true</code> 时 IO 错误会 <code>trace</code>。
      * @default true
      */
-    public static var showDebug:Boolean = true;
+    public static var showDebug:Boolean                = true;
     /**
      * 最近一次 <code>load</code> 失败时的错误字符串；成功前会清空。
      */

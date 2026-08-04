@@ -57,7 +57,7 @@ public class KyoStageCtrl extends EventDispatcher {
     /** @private */
     private var _curStage:IStage;
     /** @private */
-    private var _layers:Array = [];
+    private var _layers:Array          = [];
 
     /**
      * 当前主场景。

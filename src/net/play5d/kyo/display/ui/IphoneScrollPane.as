@@ -27,6 +27,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 
 import net.play5d.kyo.utils.KyoMath;
+
 /**
  * iPhone 风格惯性滚动面板：内容超出可视区时可拖拽，松手后减速并回弹。
  *
@@ -47,22 +48,22 @@ public class IphoneScrollPane extends Sprite {
      * 判定为拖拽的最小像素位移。
      * @default 5
      */
-    public var dragPixel:int = 5;
+    public var dragPixel:int    = 5;
     /**
      * 是否允许水平滚动。
      * @default true
      */
-    public var H_enab:Boolean = true;
+    public var H_enab:Boolean   = true;
     /**
      * 是否允许垂直滚动。
      * @default true
      */
-    public var V_enab:Boolean = true;
+    public var V_enab:Boolean   = true;
     /**
      * 是否响应拖拽。
      * @default true
      */
-    public var enabled:Boolean = true;
+    public var enabled:Boolean  = true;
     /** @private */
     private var _size:Point;
     /** @private 按下时舞台坐标 */

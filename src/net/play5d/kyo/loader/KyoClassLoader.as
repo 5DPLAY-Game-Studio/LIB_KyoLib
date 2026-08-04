@@ -60,7 +60,7 @@ public class KyoClassLoader extends EventDispatcher {
     }
 
     /** @private id → ApplicationDomain */
-    private var _classes:Object = {};
+    private var _classes:Object       = {};
     /** @private */
     private var _urls:Array;
     /** @private 默认查询用的 SWF id（首次成功加载的 URL） */
