@@ -101,7 +101,7 @@ public class KyoLog {
 
         if (!_logtxt) {
             _logtxt           = new TextField();
-            _logtxt.textColor = 0xFFFFFF;
+            _logtxt.textColor = KyoColor.WHITE;
             _logtxt.multiline = true;
             var wh:Number     = ct.stage ? ct.stage.stageWidth : ct.width;
             _logtxt.width     = wh / 2;
@@ -146,7 +146,7 @@ public class KyoLog {
         var sp:Sprite = _logtxt.parent as Sprite;
         if (sp) {
             sp.graphics.clear();
-            sp.graphics.beginFill(0, 0.5);
+            sp.graphics.beginFill(KyoColor.BLACK, 0.5);
             sp.graphics.drawRect(0, 0, _logtxt.width, _logtxt.height);
             sp.graphics.endFill();
         }

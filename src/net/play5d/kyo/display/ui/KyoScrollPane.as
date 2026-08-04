@@ -24,6 +24,8 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 可拖拽滚动面板：内容超出 <code>maskSize</code> 时可拖动，并可同步外部滚动条。
  *
@@ -157,7 +159,7 @@ public class KyoScrollPane extends Sprite {
         scrollRect = new Rectangle(0, 0, maskSize.x, maskSize.y);
 
         graphics.clear();
-        graphics.beginFill(0, 0);
+        graphics.beginFill(KyoColor.BLACK, 0);
         graphics.drawRect(0, 0, _width, _height);
         graphics.endFill();
 

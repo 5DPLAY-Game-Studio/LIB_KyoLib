@@ -22,6 +22,7 @@ import flash.events.Event;
 import flash.geom.Point;
 
 import net.play5d.kyo.media.SuperPlayer;
+import net.play5d.kyo.utils.KyoColor;
 import net.play5d.kyo.utils.KyoStringUtils;
 
 /**
@@ -136,7 +137,7 @@ public class PicLoaderSp extends Sprite {
     private function loadurl(url:String, back:Function, isCurrent:Boolean):void {
         if (!isCurrent) {
             if (isBitmap) {
-                graphics.beginFill(0, 1);
+                graphics.beginFill(KyoColor.BLACK, 1);
                 graphics.drawRect(0, 0, _size.x, _size.y);
                 graphics.endFill();
 

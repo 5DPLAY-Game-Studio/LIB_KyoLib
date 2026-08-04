@@ -20,6 +20,8 @@ package net.play5d.kyo.display.shapes {
 import flash.display.Sprite;
 import flash.geom.Point;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 实心矩形色块。
  *
@@ -40,7 +42,7 @@ public class Box extends Sprite {
      * @param alpha 透明度，默认 1。
      * @param orgin 注册点偏移；为 <code>null</code> 时从 (0,0) 起绘。
      */
-    public function Box(width:Number, height:Number, color:int = 0, alpha:Number = 1, orgin:Point = null) {
+    public function Box(width:Number, height:Number, color:int = KyoColor.BLACK, alpha:Number = 1, orgin:Point = null) {
         super();
         graphics.beginFill(color, alpha);
         graphics.drawRect(orgin ? -orgin.x : 0, orgin ? -orgin.y : 0, width, height);

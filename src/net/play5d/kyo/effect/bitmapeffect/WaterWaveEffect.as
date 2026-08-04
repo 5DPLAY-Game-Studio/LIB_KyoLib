@@ -22,6 +22,8 @@ import flash.filters.ConvolutionFilter;
 import flash.filters.DisplacementMapFilter;
 import flash.geom.*;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 位图水波纹效果：在源图上按点扰动并位移映射输出。
  *
@@ -164,7 +166,7 @@ public class WaterWaveEffect extends Sprite {
         water          = new DisplacementMapFilter(result2, origin, 4, 4, 28, 28);
         var _bg:Sprite = new Sprite();
         addChild(_bg);
-        _bg.graphics.beginFill(0xFFFFFF, 0);
+        _bg.graphics.beginFill(KyoColor.WHITE, 0);
         _bg.graphics.drawRect(0, 0, imgW, imgH);
         _bg.graphics.endFill();
 

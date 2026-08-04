@@ -26,6 +26,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.utils.Timer;
 
+import net.play5d.kyo.utils.KyoColor;
 import net.play5d.kyo.utils.KyoMath;
 
 /**
@@ -94,7 +95,7 @@ public class KyoDragList extends KyoTileList {
      */
     public override function update():void {
         super.update();
-        this.graphics.beginFill(0, 0);
+        this.graphics.beginFill(KyoColor.BLACK, 0);
         this.graphics.drawRect(0, 0, _width, _height);
         this.graphics.endFill();
     }

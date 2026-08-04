@@ -22,6 +22,8 @@ import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.geom.Matrix;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 将显示对象按固定尺寸绘制到自身 <code>bitmapData</code> 的位图输出。
  *
@@ -34,7 +36,7 @@ public class BitmapOutput extends Bitmap {
      * @param width 输出宽。
      * @param height 输出高。
      * @param transparent 是否透明，默认 <code>false</code>。
-     * @param fillColor 填充色，默认 0。
+     * @param fillColor 填充色，默认 <code>KyoColor.BLACK</code>。
      * @param pixelSnapping 像素对齐，默认 <code>'auto'</code>。
      * @param smoothing 是否平滑，默认 <code>false</code>。
      */
@@ -43,7 +45,7 @@ public class BitmapOutput extends Bitmap {
         width        :int,
         height       :int,
         transparent  :Boolean = false,
-        fillColor    :int = 0,
+        fillColor    :int = KyoColor.BLACK,
         pixelSnapping:String = 'auto',
         smoothing    :Boolean = false
     ) {

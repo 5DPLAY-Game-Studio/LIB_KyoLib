@@ -26,6 +26,7 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import net.play5d.kyo.utils.KyoColor;
 import net.play5d.kyo.utils.KyoMath;
 
 /**
@@ -97,7 +98,7 @@ public class IphoneScrollPane extends Sprite {
         addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
 
         graphics.clear();
-        graphics.beginFill(0, 0);
+        graphics.beginFill(KyoColor.BLACK, 0);
         graphics.drawRect(0, 0, _source.width, _source.height);
         graphics.endFill();
     }

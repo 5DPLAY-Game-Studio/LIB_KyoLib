@@ -21,6 +21,8 @@ import flash.display.Shape;
 import flash.display.Sprite;
 import flash.geom.Point;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 简单矩形进度条（底框 + 可缩放前景条）。
  *
@@ -42,9 +44,9 @@ public class LoaderBar extends Sprite {
 
     /**
      * 前景填充色。
-     * @default 0xff0000
+     * @default KyoColor.RED
      */
-    public var color:uint     = 0xff0000;
+    public var color:uint     = KyoColor.RED;
     /**
      * 边框颜色。
      * @default 0x426F00
@@ -57,9 +59,9 @@ public class LoaderBar extends Sprite {
     public var thinkness:uint = 2;
     /**
      * 背景填充色。
-     * @default 0
+     * @default KyoColor.BLACK
      */
-    public var backColor:uint = 0;
+    public var backColor:uint = KyoColor.BLACK;
     /**
      * 尺寸（x=宽，y=高）。
      */
@@ -71,7 +73,7 @@ public class LoaderBar extends Sprite {
      * 按当前颜色与尺寸重绘底框与进度条。
      * @example
      * <listing version="3.0">
-     * bar.color = 0x00ff00;
+     * bar.color = KyoColor.LIME;
      * bar.initlize();
      * </listing>
      */

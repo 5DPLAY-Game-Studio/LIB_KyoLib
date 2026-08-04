@@ -26,6 +26,8 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 简易舞台弹层工具：提示框与确认框（依赖静态 <code>stage</code>）。
  *
@@ -170,8 +172,8 @@ public class KyoUI {
      */
     private static function newBox(width:Number, height:Number):Sprite {
         var bg:Sprite = new Sprite();
-        bg.graphics.lineStyle(1, 0);
-        bg.graphics.beginFill(0xffffff, 1);
+        bg.graphics.lineStyle(1, KyoColor.BLACK);
+        bg.graphics.beginFill(KyoColor.WHITE, 1);
         bg.graphics.drawRect(0, 0, width, height);
         bg.graphics.endFill();
 

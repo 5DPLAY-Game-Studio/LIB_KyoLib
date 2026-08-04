@@ -28,6 +28,8 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.net.URLRequest;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 加载完成时派发。
  * @eventType SuperPlayer.EVENT_LOAD_COMPLETE
@@ -402,7 +404,7 @@ public class SuperPlayer extends Sprite {
      */
     private function loadSwfComplete(e:Event):void {
         var back:Shape = new Shape();
-        back.graphics.beginFill(0, 1);
+        back.graphics.beginFill(KyoColor.BLACK, 1);
         back.graphics.drawRect(0, 0, _size.x, _size.y);
         back.graphics.endFill();
         addChild(back);

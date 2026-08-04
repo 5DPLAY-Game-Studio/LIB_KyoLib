@@ -38,16 +38,20 @@ public class KyoDrawUtils {
      * @param width 环宽。
      * @param radius 外半径。
      * @param angle 扇形角度。
-     * @param color 填充色或渐变色数组。
+     * @param color 单色 <code>uint</code> 或渐变色 <code>Array</code>；为 <code>null</code> 时用 <code>KyoColor.YELLOW</code>。
      * @param alpha 透明度。
      * @return 位图。
      * @example
      * <listing version="3.0">
      * var bd:BitmapData = KyoDrawUtils.drawRing(10, 50, 90);
+     * var g:BitmapData = KyoDrawUtils.drawRing(10, 29, 180, [KyoColor.YELLOW, KyoColor.RED]);
      * </listing>
      */
     public static function drawRing(
-            width:Number, radius:Number, angle:int, color:Object = 0xffff00, alpha:Number = 1):BitmapData {
+            width:Number, radius:Number, angle:int, color:Object = null, alpha:Number = 1):BitmapData {
+        if (color == null) {
+            color = KyoColor.YELLOW;
+        }
 
         var bd:BitmapData = new BitmapData(radius * 2, radius * 2, true, 0);
 
@@ -58,7 +62,7 @@ public class KyoDrawUtils {
         bd.draw(_drawShape);
         _drawShape.graphics.clear();
 
-        _drawShape.graphics.beginFill(0xff0000, 1);
+        _drawShape.graphics.beginFill(KyoColor.RED, 1);
         _drawShape.graphics.drawCircle(radius, radius, radius - width);
         _drawShape.graphics.endFill();
 
@@ -76,17 +80,21 @@ public class KyoDrawUtils {
      * @param r 半径。
      * @param angle 角度（绝对值超过 360 按 360）。
      * @param startFrom 起始角度（度）。
-     * @param color 单色 <code>uint</code> 或渐变色 <code>Array</code>。
+     * @param color 单色 <code>uint</code> 或渐变色 <code>Array</code>；为 <code>null</code> 时用 <code>KyoColor.WHITE</code>。
      * @param alpha 透明度。
      * @example
      * <listing version="3.0">
-     * KyoDrawUtils.drawSector(g, 100, 100, 50, 90, 0, 0xff0000);
+     * KyoDrawUtils.drawSector(g, 100, 100, 50, 90, 0, KyoColor.RED);
      * </listing>
      */
     public static function drawSector(
             graphics:Graphics, x:Number = 200, y:Number = 200, r:Number = 100, angle:Number = 60, startFrom:Number = 0,
-            color:Object = 0xFFFFFF, alpha:Number = 1
+            color:Object = null, alpha:Number = 1
     ):void {
+        if (color == null) {
+            color = KyoColor.WHITE;
+        }
+
         graphics.clear();
         if (color is Array) {
             var alphaArr:Array = [];

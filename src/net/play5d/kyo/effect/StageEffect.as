@@ -27,6 +27,7 @@ import flash.display.DisplayObjectContainer;
 import flash.events.Event;
 import flash.geom.ColorTransform;
 
+import net.play5d.kyo.utils.KyoColor;
 import net.play5d.kyo.utils.KyoDisplayUtils;
 
 /**
@@ -78,10 +79,10 @@ public class StageEffect {
      * @param alpha 着色强度（tintAmount），默认 0.5。
      * @example
      * <listing version="3.0">
-     * StageEffect.I.shine(0.4, 0xffffff, 0.6);
+     * StageEffect.I.shine(0.4, KyoColor.WHITE, 0.6);
      * </listing>
      */
-    public function shine(duration:Number = 1, color:uint = 0xffffff, alpha:Number = 0.5):void {
+    public function shine(duration:Number = 1, color:uint = KyoColor.WHITE, alpha:Number = 0.5):void {
         TweenPlugin.activate([ColorTransformPlugin]);
         stage.transform.colorTransform = new ColorTransform();
         TweenLite.from(stage, duration, {colorTransform: {tint: color, tintAmount: alpha}});

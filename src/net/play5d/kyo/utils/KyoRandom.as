@@ -234,7 +234,7 @@ public class KyoRandom {
      * var c:uint = KyoRandom.getRandomColor();
      * </listing>
      */
-    public static function getRandomColor(from:uint = 0, to:uint = 0xffffff):uint {
+    public static function getRandomColor(from:uint = KyoColor.BLACK, to:uint = KyoColor.WHITE):uint {
         return from + (to - from) * Math.random();
     }
 

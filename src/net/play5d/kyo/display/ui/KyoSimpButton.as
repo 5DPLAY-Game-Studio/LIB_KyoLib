@@ -25,6 +25,8 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 简易程序绘制按钮：渐变底 + 居中标签，悬停变色。
  *
@@ -44,7 +46,7 @@ public class KyoSimpButton extends Sprite {
         btnWidth  = width;
         btnHeight = height;
 
-        drawBg([0xffffff, 0xcccccc]);
+        drawBg([KyoColor.WHITE, KyoColor.SILVER]);
 
         var txt:TextField     = new TextField();
         var tf:TextFormat     = new TextFormat();
@@ -92,7 +94,7 @@ public class KyoSimpButton extends Sprite {
      * @private 绘制线性渐变背景。
      */
     private function drawBg(color:Array):void {
-        graphics.lineStyle(1, 0x666666);
+        graphics.lineStyle(1, KyoColor.DIM_GRAY);
         var mtx:Matrix = new Matrix();
         mtx.createGradientBox(btnWidth, btnHeight, 180 * 180 / 3.14, 0, 0);
         graphics.beginGradientFill(GradientType.LINEAR, color, [1, 1], [0, 255], mtx);
@@ -105,10 +107,10 @@ public class KyoSimpButton extends Sprite {
      */
     private function overHandler(e:MouseEvent):void {
         if (e.type == MouseEvent.MOUSE_OVER) {
-            drawBg([0xffffff, 0xF2F2F2]);
+            drawBg([KyoColor.WHITE, KyoColor.WHITE_SMOKE]);
         }
         else {
-            drawBg([0xffffff, 0xcccccc]);
+            drawBg([KyoColor.WHITE, KyoColor.SILVER]);
         }
     }
 

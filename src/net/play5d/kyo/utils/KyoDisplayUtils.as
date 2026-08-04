@@ -377,7 +377,7 @@ public class KyoDisplayUtils {
      * </listing>
      */
     public static function drawDisplay(
-            d:DisplayObject, fixPosition:Boolean = true, transparent:Boolean = true, fillColor:uint = 0,
+            d:DisplayObject, fixPosition:Boolean = true, transparent:Boolean = true, fillColor:uint = KyoColor.BLACK,
             colorTransform:ColorTransform                                                           = null
     ):Bitmap {
         if (!d || d.width <= 0 || d.height <= 0) {

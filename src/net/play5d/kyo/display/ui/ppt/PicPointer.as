@@ -27,6 +27,7 @@ import flash.utils.Timer;
 
 import net.play5d.kyo.display.ui.ppt.effect.BasePPTEffect;
 import net.play5d.kyo.display.ui.ppt.effect.PPTef_scrollH;
+import net.play5d.kyo.utils.KyoColor;
 
 /**
  * 翻页开始时分派，<code>data</code> 为当前页索引。
@@ -81,7 +82,7 @@ public class PicPointer extends Sprite {
         _picSprite = new Sprite();
         addChild(_picSprite);
 
-        _picSprite.graphics.beginFill(0, 0);
+        _picSprite.graphics.beginFill(KyoColor.BLACK, 0);
         _picSprite.graphics.drawRect(0, 0, size.x, size.y);
         _picSprite.graphics.endFill();
     }
@@ -145,7 +146,7 @@ public class PicPointer extends Sprite {
         if (v) {
             if (!_infoTxt) {
                 _infoTxt              = new TextField();
-                _infoTxt.textColor    = 0xffffff;
+                _infoTxt.textColor    = KyoColor.WHITE;
                 _infoTxt.mouseEnabled = false;
                 _infoTxt.width        = size.x;
                 _infoTxt.height       = size.y;

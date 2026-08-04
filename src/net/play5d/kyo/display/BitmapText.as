@@ -25,6 +25,8 @@ import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 基于 <code>TextField</code> 绘制的位图文本显示对象。
  *
@@ -36,7 +38,7 @@ import flash.text.TextFormat;
  * @see #destroy()
  * @example
  * <listing version="3.0">
- * var label:BitmapText = new BitmapText(true, 0xffffff);
+ * var label:BitmapText = new BitmapText(true, KyoColor.WHITE);
  * label.text = 'Hello';
  * addChild(label);
  * </listing>
@@ -47,10 +49,10 @@ public class BitmapText extends Bitmap {
      * @param color 初始文本颜色。
      * @param filers 绘制后依次应用的位图滤镜数组；为 <code>null</code> 时不应用滤镜。
      * @default autoUpdate true
-     * @default color 0
+     * @default color KyoColor.BLACK
      * @default filers null
      */
-    public function BitmapText(autoUpdate:Boolean = true, color:uint = 0, filers:Array = null) {
+    public function BitmapText(autoUpdate:Boolean = true, color:uint = KyoColor.BLACK, filers:Array = null) {
         this.autoUpdate = autoUpdate;
         this.smoothing  = true;
 
@@ -255,7 +257,7 @@ public class BitmapText extends Bitmap {
      * @default endIndex -1
      * @example
      * <listing version="3.0">
-     * var fmt:TextFormat = new TextFormat('Arial', 14, 0xff0000);
+     * var fmt:TextFormat = new TextFormat('Arial', 14, KyoColor.RED);
      * label.setTextFormat(fmt);
      * </listing>
      */

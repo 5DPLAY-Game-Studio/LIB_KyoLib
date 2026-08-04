@@ -19,12 +19,14 @@
 package net.play5d.kyo.display.shapes {
 import flash.display.Shape;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 线段形状：用细矩形模拟线段，可设置旋转角。
  *
  * @example
  * <listing version="3.0">
- * var line:Line = new Line(100, 2, 0xff0000, 45);
+ * var line:Line = new Line(100, 2, KyoColor.RED, 45);
  * addChild(line);
  * </listing>
  */
@@ -36,7 +38,7 @@ public class Line extends Shape {
      * @param color 填充色，默认黑色。
      * @param angel 旋转角度（度），默认 0。
      */
-    public function Line(width:Number, thinkness:Number = 1, color:int = 0, angel:int = 0) {
+    public function Line(width:Number, thinkness:Number = 1, color:int = KyoColor.BLACK, angel:int = 0) {
         super();
         graphics.beginFill(color, 1);
         graphics.drawRect(0, 0, width, thinkness);

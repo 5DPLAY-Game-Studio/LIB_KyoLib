@@ -27,6 +27,8 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import net.play5d.kyo.utils.KyoColor;
+
 /**
  * 翻页完成时分派。
  * @eventType IphoneIconListEvent.PAGE_CHANGE
@@ -343,7 +345,7 @@ public class IphoneIconList extends Sprite {
         }
 
         this.graphics.clear();
-        this.graphics.beginFill(0, 0);
+        this.graphics.beginFill(KyoColor.BLACK, 0);
         this.graphics.drawRect(0, 0, touchSize.x * totalPage, touchSize.y * 1.1);
         this.graphics.endFill();
 

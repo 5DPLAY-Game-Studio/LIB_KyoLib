@@ -72,7 +72,7 @@ public class BitmapDataPool {
      * @return 可绘制的 <code>BitmapData</code>；宽或高非法时为 <code>null</code>。
      */
     public function acquire(
-            width:int, height:int, transparent:Boolean = true, fillColor:uint = 0
+            width:int, height:int, transparent:Boolean = true, fillColor:uint = KyoColor.BLACK
     ):BitmapData {
         if (width < 1 || height < 1) {
             return null;
