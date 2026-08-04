@@ -740,5 +740,39 @@ public class KyoDisplayUtils {
         }
     }
 
+    /** @private 创建色相 ColorMatrixFilter。 */
+    private static function createHueFilter(n:Number):ColorMatrixFilter {
+        const p1:Number = Math.cos(n * Math.PI / 180);
+        const p2:Number = Math.sin(n * Math.PI / 180);
+        const p4:Number = 0.213;
+        const p5:Number = 0.715;
+        const p6:Number = 0.072;
+
+        const matrix:Array = [
+            p4 + p1 * (1 - p4) + p2 * (0 - p4),
+            p5 + p1 * (0 - p5) + p2 * (0 - p5),
+            p6 + p1 * (0 - p6) + p2 * (1 - p6),
+            0,
+            0,
+            p4 + p1 * (0 - p4) + p2 * 0.143,
+            p5 + p1 * (1 - p5) + p2 * 0.14,
+            p6 + p1 * (0 - p6) + p2 * -0.283,
+            0,
+            0,
+            p4 + p1 * (0 - p4) + p2 * (0 - (1 - p4)),
+            p5 + p1 * (0 - p5) + p2 * p5,
+            p6 + p1 * (1 - p6) + p2 * p6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+        ];
+
+        return new ColorMatrixFilter(matrix);
+    }
+
 }
 }

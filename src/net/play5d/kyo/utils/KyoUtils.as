@@ -195,6 +195,69 @@ public class KyoUtils {
         return null;
     }
 
+    /** @private 收集源对象类型图上的限定名（按根类缓存） */
+    private static function collectCloneTypeNames(object:*):Array {
+        var rootName:String = getQualifiedClassName(object);
+        var cached:Array    = _cloneTypeNameCache[rootName] as Array;
+        if (cached) {
+            return cached;
+        }
+
+        var result:Array          = [];
+        var dictionary:Dictionary = new Dictionary();
+        var xml:XML               = describeType(object);
+
+        addCloneTypeName(dictionary, String(xml.@name));
+        collectCloneTypeAttrs(dictionary, xml.extendsClass);
+        collectCloneTypeAttrs(dictionary, xml.implementsInterface);
+        collectCloneTypeAttrs(dictionary, xml.variable);
+        collectCloneTypeAttrs(dictionary, xml.accessor);
+
+        for each (var methodXml:XML in xml.method) {
+            addCloneTypeName(dictionary, String(methodXml.@returnType));
+            collectCloneTypeAttrs(dictionary, methodXml.parameter);
+        }
+
+        for (var key:* in dictionary) {
+            result.push(String(key));
+        }
+
+        _cloneTypeNameCache[rootName] = result;
+        return result;
+    }
+
+    /** @private */
+    private static function collectCloneTypeAttrs(dict:Dictionary, list:XMLList):void {
+        for each (var node:XML in list) {
+            addCloneTypeName(dict, String(node.@type));
+        }
+    }
+
+    /** @private */
+    private static function addCloneTypeName(dict:Dictionary, typeName:String):void {
+        if (!typeName || typeName == 'void' || typeName == '*' || typeName == 'null') {
+            return;
+        }
+        dict[typeName] = true;
+    }
+
+    /** @private 按限定名注册 AMF 别名（只注册一次） */
+    private static function ensureCloneClassAlias(qname:String):void {
+        if (_cloneAliasRegistered[qname]) {
+            return;
+        }
+        try {
+            var cls:Class = getDefinitionByName(qname) as Class;
+            if (cls) {
+                registerClassAlias(qname, cls);
+                _cloneAliasRegistered[qname] = true;
+            }
+        }
+        catch (e:Error) {
+            // 内置类型或无法解析时跳过
+        }
+    }
+
 /**
      * 获取对象类定义。
      * @param o 任意对象。

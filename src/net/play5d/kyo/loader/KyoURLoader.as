@@ -38,7 +38,6 @@ import flash.utils.ByteArray;
  * @see KyoLoaderLite
  */
 public class KyoURLoader {
-public class KyoURLoader {
     /** Unicode（UTF-16 LE）BOM 探测结果。 */
     public static const TYPE_UNICODE:String = 'Unicode';
     /** Unicode big endian（UTF-16 BE）BOM 探测结果。 */

@@ -26,6 +26,8 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import net.play5d.kyo.utils.KyoDisplayUtils;
+
 /**
  * 显示对象特效工具（残影、缩放影、MC 一次性特效、抖动等）。
  *

@@ -17,6 +17,7 @@
  */
 
 package net.play5d.kyo.utils {
+import flash.geom.Point;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextField;
 import flash.display.DisplayObject;

@@ -17,6 +17,7 @@
  */
 package net.play5d.kyo.utils {
 import com.adobe.utils.StringUtil;
+import flash.utils.ByteArray;
 
 /**
  * 字符串、路径后缀与数字文本格式化。
@@ -143,6 +144,17 @@ public class KyoStringUtils {
         }
         r += num2cnbase(n, r == '');
         return r;
+    }
+
+    /**
+     * @private 个位中文。
+     */
+    private static function num2cnbase(n:int, showZero:Boolean = true):String {
+        if (!showZero && n == 0) {
+            return '';
+        }
+        var vv:Array = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+        return vv[n];
     }
 
 /**

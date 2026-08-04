@@ -28,6 +28,8 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import net.play5d.kyo.utils.KyoArrayUtils;
+
 /**
  * 将 MovieClip 或位图帧序列逐帧烘焙为 BitmapData 并播放的 Sprite。
  *
@@ -641,7 +643,6 @@ import flash.geom.Matrix;
 import flash.geom.Rectangle;
 
 import net.play5d.kyo.utils.KyoDisplayUtils;
-import net.play5d.kyo.utils.KyoArrayUtils;
 /**
  * 单次绘制上下文：源对象与 draw 参数。
  *
