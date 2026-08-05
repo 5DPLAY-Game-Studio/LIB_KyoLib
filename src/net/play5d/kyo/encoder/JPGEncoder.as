@@ -55,7 +55,7 @@ public class JPGEncoder {
     }
 
     /** @private ZigZag 扫描顺序表 */
-    private var ZigZag:Array                     = [
+    private var ZigZag:Vector.<int>              = new <int>[
         0, 1, 5, 6, 14, 15, 27, 28,
         2, 4, 7, 13, 16, 26, 29, 42,
         3, 8, 12, 17, 25, 30, 41, 43,
@@ -66,13 +66,13 @@ public class JPGEncoder {
         35, 36, 48, 49, 57, 58, 62, 63
     ];
     /** @private 亮度量化表 */
-    private var YTable:Array                     = new Array(64);
+    private var YTable:Vector.<int>              = new Vector.<int>(64, true);
     /** @private 色度量化表 */
-    private var UVTable:Array                    = new Array(64);
+    private var UVTable:Vector.<int>             = new Vector.<int>(64, true);
     /** @private 亮度 DCT 量化缩放因子表 */
-    private var fdtbl_Y:Array                    = new Array(64);
+    private var fdtbl_Y:Vector.<Number>          = new Vector.<Number>(64, true);
     /** @private 色度 DCT 量化缩放因子表 */
-    private var fdtbl_UV:Array                   = new Array(64);
+    private var fdtbl_UV:Vector.<Number>         = new Vector.<Number>(64, true);
     /** @private 亮度 DC 霍夫曼表 */
     private var YDC_HT:Array;
     /** @private 色度 DC 霍夫曼表 */
@@ -82,13 +82,13 @@ public class JPGEncoder {
     /** @private 色度 AC 霍夫曼表 */
     private var UVAC_HT:Array;
     /** @private 标准亮度 DC 码长表 */
-    private var std_dc_luminance_nrcodes:Array   = [0, 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0];
+    private var std_dc_luminance_nrcodes:Vector.<int> = new <int>[0, 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0];
     /** @private 标准亮度 DC 码字表 */
-    private var std_dc_luminance_values:Array    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    private var std_dc_luminance_values:Vector.<int>  = new <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     /** @private 标准亮度 AC 码长表 */
-    private var std_ac_luminance_nrcodes:Array   = [0, 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 0x7d];
+    private var std_ac_luminance_nrcodes:Vector.<int> = new <int>[0, 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 0x7d];
     /** @private 标准亮度 AC 码字表 */
-    private var std_ac_luminance_values:Array    = [
+    private var std_ac_luminance_values:Vector.<int>  = new <int>[
         0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12,
         0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07,
         0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xa1, 0x08,
@@ -112,13 +112,13 @@ public class JPGEncoder {
         0xf9, 0xfa
     ];
     /** @private 标准色度 DC 码长表 */
-    private var std_dc_chrominance_nrcodes:Array = [0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0];
+    private var std_dc_chrominance_nrcodes:Vector.<int> = new <int>[0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0];
     /** @private 标准色度 DC 码字表 */
-    private var std_dc_chrominance_values:Array  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    private var std_dc_chrominance_values:Vector.<int>  = new <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     /** @private 标准色度 AC 码长表 */
-    private var std_ac_chrominance_nrcodes:Array = [0, 0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 0x77];
+    private var std_ac_chrominance_nrcodes:Vector.<int> = new <int>[0, 0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 0x77];
     /** @private 标准色度 AC 码字表 */
-    private var std_ac_chrominance_values:Array  = [
+    private var std_ac_chrominance_values:Vector.<int>  = new <int>[
         0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21,
         0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71,
         0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91,
@@ -142,9 +142,9 @@ public class JPGEncoder {
         0xf9, 0xfa
     ];
     /** @private AC 系数位编码查找表 */
-    private var bitcode:Array                    = new Array(65535);
+    private var bitcode:Vector.<BitString>       = new Vector.<BitString>(65535);
     /** @private AC 系数类别查找表 */
-    private var category:Array                   = new Array(65535);
+    private var category:Vector.<int>            = new Vector.<int>(65535);
     /** @private 输出字节流 */
     private var byteout:ByteArray;
     /** @private 当前输出字节缓存 */
@@ -152,13 +152,13 @@ public class JPGEncoder {
     /** @private 当前字节内位位置 */
     private var bytepos:int                      = 7;
     /** @private 8×8 块 ZigZag 重排缓冲 */
-    private var DU:Array                         = new Array(64);
+    private var DU:Vector.<Number>               = new Vector.<Number>(64, true);
     /** @private 8×8 亮度块 */
-    private var YDU:Array                        = new Array(64);
+    private var YDU:Vector.<Number>              = new Vector.<Number>(64, true);
     /** @private 8×8 U 色度块 */
-    private var UDU:Array                        = new Array(64);
+    private var UDU:Vector.<Number>              = new Vector.<Number>(64, true);
     /** @private 8×8 V 色度块 */
-    private var VDU:Array                        = new Array(64);
+    private var VDU:Vector.<Number>              = new Vector.<Number>(64, true);
 
     /**
      * 将位图编码为 JPEG 字节流。
@@ -287,7 +287,7 @@ public class JPGEncoder {
     }
 
     /** @private 由标准码长/码字表生成霍夫曼查找表 */
-    private function computeHuffmanTbl(nrcodes:Array, std_table:Array):Array {
+    private function computeHuffmanTbl(nrcodes:Vector.<int>, std_table:Vector.<int>):Array {
         var codevalue:int    = 0;
         var pos_in_table:int = 0;
         var HT:Array         = [];
@@ -381,7 +381,7 @@ public class JPGEncoder {
     }
 
     /** @private 8×8 块前向 DCT 并量化 */
-    private function fDCTQuant(data:Array, fdtbl:Array):Array {
+    private function fDCTQuant(data:Vector.<Number>, fdtbl:Vector.<Number>):Vector.<Number> {
         var tmp0:Number, tmp1:Number, tmp2:Number, tmp3:Number, tmp4:Number, tmp5:Number, tmp6:Number, tmp7:Number;
         var tmp10:Number, tmp11:Number, tmp12:Number, tmp13:Number;
         var z1:Number, z2:Number, z3:Number, z4:Number, z5:Number, z11:Number, z13:Number;
@@ -606,12 +606,12 @@ public class JPGEncoder {
     }
 
     /** @private DCT 后 ZigZag 重排并霍夫曼编码一个 8×8 块 */
-    private function processDU(CDU:Array, fdtbl:Array, DC:Number, HTDC:Array, HTAC:Array):Number {
+    private function processDU(CDU:Vector.<Number>, fdtbl:Vector.<Number>, DC:Number, HTDC:Array, HTAC:Array):Number {
         var EOB:BitString       = HTAC[0x00];
         var M16zeroes:BitString = HTAC[0xF0];
         var i:int;
 
-        var DU_DCT:Array = fDCTQuant(CDU, fdtbl);
+        var DU_DCT:Vector.<Number> = fDCTQuant(CDU, fdtbl);
         //ZigZag reorder
         for (i = 0; i < 64; i++) {
             DU[ZigZag[i]] = DU_DCT[i];

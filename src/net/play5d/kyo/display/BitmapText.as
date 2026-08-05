@@ -52,6 +52,7 @@ public class BitmapText extends Bitmap {
      * @default color KyoColor.BLACK
      * @default bitmapFilters null
      */
+    [ArrayElementType('flash.filters.BitmapFilter')]
     public function BitmapText(autoUpdate:Boolean = true, color:uint = KyoColor.BLACK, bitmapFilters:Array = null) {
         this.autoUpdate = autoUpdate;
         this.smoothing  = true;
@@ -72,6 +73,7 @@ public class BitmapText extends Bitmap {
     /** @private 默认文本格式 */
     private var _format:TextFormat = new TextFormat();
     /** @private 绘制后应用的位图滤镜列表（避免与 DisplayObject.filters 冲突） */
+    [ArrayElementType('flash.filters.BitmapFilter')]
     private var _bitmapFilters:Array;
     /** @private 指定绘制宽度；为 0 时按文本宽度自适应 */
     private var _width:Number  = 0;

@@ -33,6 +33,7 @@ public class KyoScrollList extends KyoTileList {
      * @param size 可视区域尺寸。
      * @param scrollType 0 水平，1 垂直；默认 0。
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public function KyoScrollList(displays:Array = null, size:Point = null, scrollType:int = 0) {
         _scrollType  = scrollType;
         _size        = size;

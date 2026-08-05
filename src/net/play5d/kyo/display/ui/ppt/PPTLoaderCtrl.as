@@ -56,17 +56,17 @@ public class PPTLoaderCtrl extends EventDispatcher {
      */
     public var totalIndex:int;
     /** @private 待加载队列 */
-    private var _loaders:Array;
+    private var _loaders:Vector.<PicLoader>;
 
     /**
      * 开始按队列加载。
-     * @param loaders <code>PicLoader</code> 数组（会被 <code>shift</code> 消费）。
+     * @param loaders <code>PicLoader</code> 队列（会被 <code>shift</code> 消费）。
      * @example
      * <listing version="3.0">
-     * ctrl.loadQueue([loader0, loader1]);
+     * ctrl.loadQueue(loaders);
      * </listing>
      */
-    public function loadQueue(loaders:Array):void {
+    public function loadQueue(loaders:Vector.<PicLoader>):void {
         _loaders = loaders;
 
         curIndex   = 0;

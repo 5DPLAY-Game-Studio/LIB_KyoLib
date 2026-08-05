@@ -77,6 +77,8 @@ public dynamic class JSEnv extends Proxy {
 
     /** @private 生成 JS 函数 / 构造代理。 */
     private static function jsProxy(id:int):Function {
+        // 必须用调用现场 this（非外层 JSEnv）：fn() → global → js_call；new fn() → 实例 → js_new
+        // as3mxml 20000 会提示闭包 this，此处为有意行为，勿改成绑定方法
         return function (...args):* {
             var arr:Array;
             if (this == '[object global]') {
@@ -151,4 +153,4 @@ public dynamic class JSEnv extends Proxy {
     }
 }
 }
-
+

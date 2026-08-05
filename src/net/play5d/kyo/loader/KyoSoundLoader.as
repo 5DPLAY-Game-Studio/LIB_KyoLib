@@ -33,6 +33,7 @@ import flash.net.URLRequest;
  */
 public class KyoSoundLoader {
     /** @private */
+    [ArrayElementType('String')]
     private var _urls:Array;
     /** @private */
     private var _curUrl:String;
@@ -71,6 +72,7 @@ public class KyoSoundLoader {
      * loader.loadSounds(['a.mp3', 'b.mp3'], onAll);
      * </listing>
      */
+    [ArrayElementType('String')]
     public function loadSounds(urls:Array, back:Function = null, process:Function = null):void {
         _loadBack    = back;
         _loadProcess = process;

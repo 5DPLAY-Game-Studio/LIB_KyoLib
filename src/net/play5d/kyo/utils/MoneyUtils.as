@@ -25,13 +25,13 @@ package net.play5d.kyo.utils {
  */
 public class MoneyUtils {
     /** 中文大写数字 0~9。 */
-    public static const NUM_CN:Array        = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+    public static const NUM_CN:Vector.<String>        = new <String>['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
     /** 小数单位：角、分。 */
-    public static const DECIMAL_UNITS:Array = ['角', '分'];
+    public static const DECIMAL_UNITS:Vector.<String> = new <String>['角', '分'];
     /** 节权：元、万、亿、兆。 */
-    public static const LEVELS:Array        = ['元', '万', '亿', '兆'];
+    public static const LEVELS:Vector.<String>        = new <String>['元', '万', '亿', '兆'];
     /** 千百十。 */
-    public static const UNITS:Array         = ['千', '百', '拾'];
+    public static const UNITS:Vector.<String>         = new <String>['千', '百', '拾'];
 
     /**
      * 把阿拉伯数字转换成中文大写金额。
@@ -69,9 +69,9 @@ public class MoneyUtils {
      * </listing>
      */
     public static function convertIntegerStr(str:String):String {
-        var tCount:int  = Math.floor(str.length / 4);
-        var rCount:int  = str.length % 4;
-        var nodes:Array = [];
+        var tCount:int                  = Math.floor(str.length / 4);
+        var rCount:int                  = str.length % 4;
+        var nodes:Vector.<ThousandNode> = new Vector.<ThousandNode>();
         if (rCount > 0) {
             nodes.push(convertThousand(str.substr(0, rCount), tCount));
         }
@@ -120,11 +120,11 @@ public class MoneyUtils {
     }
 
     /** @private */
-    private static function convertNodes(nodes:Array):String {
+    private static function convertNodes(nodes:Vector.<ThousandNode>):String {
         var str:String = '';
         var beforeZero:Boolean;
         for (var i:int = 0; i < nodes.length; i++) {
-            var node:ThousandNode = nodes[i] as ThousandNode;
+            var node:ThousandNode = nodes[i];
             if ((beforeZero && node.desc.length > 0) ||
                 (node.beforeZero && node.desc.length > 0 && str.length > 0)) {
                 str += NUM_CN[0];
@@ -222,4 +222,4 @@ class ThousandNode {
      */
     public var desc:String = '';
 }
-
+

@@ -114,13 +114,13 @@ public class WaterWaveEffect extends Sprite {
 
     /**
      * 推进一帧水波演算；可选在指定点写入扰动。
-     * @param points 扰动坐标数组（元素为 <code>Point</code>）；为 <code>null</code> 时仅做传播衰减。
+     * @param points 扰动坐标列表（元素为 <code>Point</code>）；为 <code>null</code> 时仅做传播衰减。
      * @example
      * <listing version="3.0">
-     * wave.render([new Point(mouseX, mouseY)]);
+     * wave.render(points);
      * </listing>
      */
-    public function render(points:Array = null):void {
+    public function render(points:Vector.<Point> = null):void {
         if (points) {
             for each (var p:Point in points) {
                 var px:Number = p.x / 1.5 / _scale;

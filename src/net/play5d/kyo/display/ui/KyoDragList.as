@@ -45,6 +45,7 @@ public class KyoDragList extends KyoTileList {
      * @param hrow 横排最大个数。
      * @param vrow 竖排最大个数。
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public function KyoDragList(
         displays:Array,
         dragType:int = KyoDragType.DRAG_TYPE_V,

@@ -182,15 +182,20 @@ public class KyoRandom {
      * @return 打乱后的数组。
      * @example
      * <listing version="3.0">
-     * var a:Array = KyoRandom.getRandomInts(0, 5);
+     * var ints:Vector.&lt;int&gt; = KyoRandom.getRandomInts(0, 5);
      * </listing>
      */
-    public static function getRandomInts(from:int, to:int):Array {
-        var a:Array = [];
+    public static function getRandomInts(from:int, to:int):Vector.<int> {
+        var a:Vector.<int> = new Vector.<int>();
         for (var i:int = from; i < to; i++) {
             a.push(i);
         }
-        arraySortRandom(a);
+        for (var j:int = a.length - 1; j > 0; j--) {
+            var k:int = int(Math.random() * (j + 1));
+            var t:int = a[j];
+            a[j] = a[k];
+            a[k] = t;
+        }
 
         return a;
     }
@@ -226,4 +231,4 @@ public class KyoRandom {
 
 }
 }
-
+

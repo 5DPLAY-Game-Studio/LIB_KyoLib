@@ -57,7 +57,7 @@ public class KyoKeyInput {
      */
     public var orderKeyDuration:int = 200;
     /** @private */
-    private var _orderKeys:Array  = [];
+    private var _orderKeys:Vector.<KyoKeyVO> = new Vector.<KyoKeyVO>();
     /** @private */
     private var _lastDownTime:int;
     /** @private */
@@ -75,7 +75,7 @@ public class KyoKeyInput {
 
     /**
      * 批量设置按键映射（先清空再添加）。
-     * @param array 元素为 <code>{name:String, code:int}</code> 或 <code>KyoKeyVO</code>。
+     * @param array 元素为 <code>&#123;name:String, code:int&#125;</code> 或 <code>KyoKeyVO</code>。
      * @example
      * <listing version="3.0">
      * input.mappingKeyCode([KyoKeyCode.A, KyoKeyCode.S]);
@@ -93,7 +93,7 @@ public class KyoKeyInput {
 
     /**
      * 增加一条按键映射。
-     * @param o <code>{name:String, code:int}</code> 或 <code>KyoKeyVO</code>。
+     * @param o <code>&#123;name:String, code:int&#125;</code> 或 <code>KyoKeyVO</code>。
      * @example
      * <listing version="3.0">
      * input.addMappingKeyCodeVO(KyoKeyCode.SPACE);
@@ -214,7 +214,7 @@ public class KyoKeyInput {
      */
     public function turnOff():void {
         _isOn      = false;
-        _orderKeys = [];
+        _orderKeys.length = 0;
 
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
         stage.removeEventListener(KeyboardEvent.KEY_UP, keyHandler);
@@ -339,7 +339,7 @@ public class KyoKeyInput {
             }
         }
 
-        _orderKeys = [];
+        _orderKeys.length = 0;
 
         return true;
     }
@@ -352,7 +352,7 @@ public class KyoKeyInput {
      * </listing>
      */
     public function clearInorder():void {
-        _orderKeys = [];
+        _orderKeys.length = 0;
     }
 
     /**
@@ -386,7 +386,7 @@ public class KyoKeyInput {
         }
 
         if (getTimer() - _lastDownTime > orderKeyDuration) {
-            _orderKeys = [];
+            _orderKeys.length = 0;
         }
 
         _lastDownTime = getTimer();

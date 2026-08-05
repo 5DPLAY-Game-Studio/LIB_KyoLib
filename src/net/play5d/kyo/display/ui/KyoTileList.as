@@ -47,6 +47,7 @@ public class KyoTileList extends Sprite {
      * var list:KyoTileList = new KyoTileList([a, b, c], 3, 2);
      * </listing>
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public function KyoTileList(displays:Array = null, hrow:int = int.MAX_VALUE, vrow:int = 1) {
         _hrow = hrow;
         _vrow = vrow;
@@ -78,6 +79,7 @@ public class KyoTileList extends Sprite {
     /**
      * 当前管理的显示对象数组。
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public var displays:Array;
     /**
      * 布局起始坐标。
@@ -267,6 +269,7 @@ public class KyoTileList extends Sprite {
      * list.setDisplays([icon1, icon2]);
      * </listing>
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public function setDisplays(v:Array):void {
         removeAllChildren();
         displays = v;

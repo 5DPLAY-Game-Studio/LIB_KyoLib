@@ -34,4 +34,4 @@ public function superTrace(...args):void {
     trace(caller, args);
 }
 }
-
+

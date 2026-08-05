@@ -46,6 +46,7 @@ public class BMCNumber extends MCNumber {
     }
 
     /** @private 复用的帧数组 */
+    [ArrayElementType('net.play5d.kyo.display.BitmapMCFrameVO')]
     private var _insArray:Array;
 
     /**

@@ -317,7 +317,7 @@ public class PicPointer extends Sprite {
      */
     private function setData(v:Array):void {
         _loaders            = {};
-        var needLoads:Array = [];
+        var needLoads:Vector.<PicLoader> = new Vector.<PicLoader>();
 
         for (var i:int; i < v.length; i++) {
             var url:String   = v[i];

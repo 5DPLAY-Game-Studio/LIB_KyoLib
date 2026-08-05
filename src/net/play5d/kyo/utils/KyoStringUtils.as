@@ -230,6 +230,7 @@ public class KyoStringUtils {
      * var a:Array = KyoStringUtils.matchAll(s, /\{(\w+)\}/);
      * </listing>
      */
+    [ArrayElementType('String')]
     public static function matchAll(v:String, p:*):Array {
         var ra:Array = [];
         for (var i:int = 0; i < 10000; i++) {
@@ -292,4 +293,4 @@ public class KyoStringUtils {
 
 }
 }
-
+

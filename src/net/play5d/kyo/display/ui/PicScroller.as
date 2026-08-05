@@ -107,6 +107,7 @@ public class PicScroller extends Sprite {
      */
     public var showNear:Boolean    = true;
     /** @private 资源 URL 列表 */
+    [ArrayElementType('String')]
     private var _datas:Array;
     /** @private 当前页 Loader */
     private var _loader:Loader;
@@ -169,6 +170,7 @@ public class PicScroller extends Sprite {
      * scroller.initialize(['a.jpg', 'b.jpg']);
      * </listing>
      */
+    [ArrayElementType('String')]
     public function initialize(data:Array):void {
         _datas  = data;
         _direct = direct;
@@ -185,6 +187,7 @@ public class PicScroller extends Sprite {
      * scroller.update(['c.jpg']);
      * </listing>
      */
+    [ArrayElementType('String')]
     public function update(data:Array):void {
         destroy();
         _datas  = data;

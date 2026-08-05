@@ -41,4 +41,4 @@ public class KyoDragType {
     public static const DRAG_TYPE_BOTH:int = 3;
 }
 }
-
+

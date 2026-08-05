@@ -103,6 +103,7 @@ public class KyoUtils {
      * KyoUtils.cloneValue(dst, src, ['x', 'y']);
      * </listing>
      */
+    [ArrayElementType('String')]
     public static function cloneValue(to:*, from:*, keys:Array = null):* {
         if (keys) {
             for each (var i:String in keys) {
@@ -180,7 +181,7 @@ public class KyoUtils {
             return null;
         }
 
-        var names:Array = collectCloneTypeNames(v);
+        var names:Vector.<String> = collectCloneTypeNames(v);
         for each (var aliasName:String in names) {
             ensureCloneClassAlias(aliasName);
         }
@@ -202,16 +203,16 @@ public class KyoUtils {
     }
 
     /** @private 收集源对象类型图上的限定名（按根类缓存） */
-    private static function collectCloneTypeNames(object:*):Array {
-        var rootName:String = getQualifiedClassName(object);
-        var cached:Array    = _cloneTypeNameCache[rootName] as Array;
+    private static function collectCloneTypeNames(object:*):Vector.<String> {
+        var rootName:String           = getQualifiedClassName(object);
+        var cached:Vector.<String>    = _cloneTypeNameCache[rootName] as Vector.<String>;
         if (cached) {
             return cached;
         }
 
-        var result:Array          = [];
-        var dictionary:Dictionary = new Dictionary();
-        var xml:XML               = describeType(object);
+        var result:Vector.<String>    = new Vector.<String>();
+        var dictionary:Dictionary     = new Dictionary();
+        var xml:XML                   = describeType(object);
 
         addCloneTypeName(dictionary, String(xml.@name));
         collectCloneTypeAttrs(dictionary, xml.extendsClass);
@@ -290,6 +291,7 @@ public class KyoUtils {
      * KyoUtils.customMenu(root, ['About'], onSelect);
      * </listing>
      */
+    [ArrayElementType('String')]
     public static function customMenu(main:Sprite, menu:Array, select:Function = null):void {
         var cm:ContextMenu = new ContextMenu();
         for each (var i:String in menu) {
@@ -337,6 +339,7 @@ public class KyoUtils {
      * var keys:Array = KyoUtils.getItemVariables(vo);
      * </listing>
      */
+    [ArrayElementType('String')]
     public static function getItemVariables(item:*):Array {
         var xml:XML = describeType(item);
         var a:Array = [];
@@ -368,4 +371,4 @@ public class KyoUtils {
 
 }
 }
-
+

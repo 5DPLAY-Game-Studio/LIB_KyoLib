@@ -25,12 +25,12 @@ package net.play5d.kyo.utils {
  */
 public class KyoStringFormat {
     /**
-     * 使用命名占位符 <code>{name}</code> 格式化字符串。
+     * 使用命名占位符格式化字符串（形如花括号包裹的 name）。
      *
-     * <p>字面量大括号写作 <code>{{</code> 与 <code>}}</code>。
-     * 占位符名须符合 <code>[A-Za-z_][A-Za-z0-9_]*</code>；个数不限，单次线性扫描。</p>
+     * <p>字面量大括号需双写转义。占位符名须为标识符
+     * （字母或下划线开头，后接字母、数字或下划线）；个数不限，单次线性扫描。</p>
      *
-     * @param format 源字符串；空或无 <code>{</code> 时原样返回。
+     * @param format 源字符串；空或不含左花括号时原样返回。
      * @param params 占位符名到替换值的映射；可为 <code>null</code>（视为空对象）。
      * @return 格式化后的字符串。
      * @throws ArgumentError 模板含命名占位符而 <code>params</code> 缺对应键。

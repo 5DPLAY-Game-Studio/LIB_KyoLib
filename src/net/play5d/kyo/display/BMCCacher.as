@@ -49,6 +49,7 @@ public class BMCCacher {
      * cacher.cache('hero', bmc.insArray);
      * </listing>
      */
+    [ArrayElementType('net.play5d.kyo.display.BitmapMCFrameVO')]
     public function cache(id:String, insArray:Array):void {
         if (_total != -1 && _amount >= _total) {
             clean();
@@ -67,6 +68,7 @@ public class BMCCacher {
      * var frames:Array = cacher.get('hero');
      * </listing>
      */
+    [ArrayElementType('net.play5d.kyo.display.BitmapMCFrameVO')]
     public function get(id:String):Array {
         return _cacheObj[id];
     }

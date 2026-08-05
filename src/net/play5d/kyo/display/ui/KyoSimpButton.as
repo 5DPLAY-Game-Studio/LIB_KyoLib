@@ -117,4 +117,4 @@ public class KyoSimpButton extends Sprite {
 
 }
 }
-
+

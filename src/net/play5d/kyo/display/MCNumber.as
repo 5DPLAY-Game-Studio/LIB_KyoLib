@@ -55,7 +55,7 @@ public class MCNumber extends Sprite {
     /** @private MC 类 */
     protected var _mc:Class;
     /** @private 当前位显示对象列表 */
-    protected var _mcs:Array = [];
+    protected var _mcs:Vector.<DisplayObject> = new Vector.<DisplayObject>();
     /** @private 最小位数 */
     protected var _bits:uint;
     /** @private */
@@ -76,7 +76,7 @@ public class MCNumber extends Sprite {
         for each (var m:DisplayObject in _mcs) {
             removeChild(m);
         }
-        _mcs = [];
+        _mcs.length = 0;
 
         var numStr:String = v.toString();
         while (numStr.length < _bits) {

@@ -429,7 +429,7 @@ public class KyoColor {
     /**
      * 转为 HSL 分量对象。
      * @param color <code>0xRRGGBB</code>。
-     * @return <code>{h:Number, s:Number, l:Number}</code>；
+     * @return <code>&#123;h:Number, s:Number, l:Number&#125;</code>；
      * <code>h</code> 为度 <code>[0, 360)</code>，<code>s</code>/<code>l</code> 为 <code>[0, 1]</code>。
      * @example
      * <listing version="3.0">

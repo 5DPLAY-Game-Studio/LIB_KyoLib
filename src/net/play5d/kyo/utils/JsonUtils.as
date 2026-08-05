@@ -25,7 +25,7 @@ package net.play5d.kyo.utils {
  */
 public class JsonUtils {
     /**
-     * 判断是否像 JSON 对象/数组字符串（首字符为 <code>{</code> 或 <code>[</code>）。
+     * 判断是否像 JSON 对象/数组字符串（首字符为 <code>&#123;</code> 或 <code>[</code>）。
      * @param v 待测值。
      * @return 为字符串且首字符匹配时为 <code>true</code>。
      * @example

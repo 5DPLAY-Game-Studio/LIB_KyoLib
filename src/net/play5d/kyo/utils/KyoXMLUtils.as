@@ -92,11 +92,11 @@ public class KyoXMLUtils {
      * @return 子节点数组。
      * @example
      * <listing version="3.0">
-     * var a:Array = KyoXMLUtils.encodeToArray(xml);
+     * var list:Vector.&lt;XML&gt; = KyoXMLUtils.encodeToArray(xml);
      * </listing>
      */
-    public static function encodeToArray(x:XML):Array {
-        var o:Array = [];
+    public static function encodeToArray(x:XML):Vector.<XML> {
+        var o:Vector.<XML> = new Vector.<XML>();
         for each (var i:XML in x.children()) {
             o.push(i);
         }
@@ -144,4 +144,4 @@ public class KyoXMLUtils {
 
 }
 }
-
+

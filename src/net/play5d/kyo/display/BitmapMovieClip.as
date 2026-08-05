@@ -131,6 +131,7 @@ public class BitmapMovieClip extends Sprite {
     /** @private MC 上待监听的函数数组属性名列表 */
     private var _listenFunctions:Array;
     /** @private 帧数据数组，索引 1 起为有效帧 */
+    [ArrayElementType('net.play5d.kyo.display.BitmapMCFrameVO')]
     private var _insArray:Array;
 
     /**
@@ -139,11 +140,13 @@ public class BitmapMovieClip extends Sprite {
      * @return <code>BitmapMCFrameVO</code> 数组，索引 1 起为帧数据。
      * @see BitmapMCFrameVO
      */
+    [ArrayElementType('net.play5d.kyo.display.BitmapMCFrameVO')]
     public function get insArray():Array {
         return _insArray;
     }
 
     /** @private */
+    [ArrayElementType('net.play5d.kyo.display.BitmapMCFrameVO')]
     public function set insArray(value:Array):void {
         if (!value) {
             return;
@@ -153,6 +156,7 @@ public class BitmapMovieClip extends Sprite {
     }
 
     /** @private */
+    [ArrayElementType('flash.display.BitmapData')]
     public function set bitmapDataArray(value:Array):void {
         if (!value) {
             return;
@@ -396,7 +400,7 @@ public class BitmapMovieClip extends Sprite {
      * 注册 MC 上函数数组属性的名称，绘制时从源 MC 提取并在对应帧调用。
      *
      * <p>源 MC 中声明同名 Array，在需触发的帧赋值；元素可为 <code>Function</code> 或
-     * <code>{f:Function, p:Array}</code>。</p>
+     * <code>&#123;f:Function, p:Array&#125;</code>。</p>
      *
      * @param name MC 上 Array 类型属性名。
      * @example
@@ -720,6 +724,7 @@ internal class McGroup extends Sprite {
      * @param baseFrameMc 基帧 MC，决定总帧数。
      * @param hideFrameout 帧数不足时是否隐藏该层。
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public function McGroup(mcs:Array, baseFrameMc:MovieClip = null, hideFrameout:Boolean = true) {
         this.hideFrameout = hideFrameout;
         _baseMc           = baseFrameMc;

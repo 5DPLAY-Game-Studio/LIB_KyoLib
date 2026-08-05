@@ -42,6 +42,7 @@ public class BitmapFontLoader {
     }
 
     /** @private 待加载的 XML URL 队列 */
+    [ArrayElementType('String')]
     private var _urls:Array;
     /** @private face → BitmapFont */
     private var _fontObj:Object = {};
@@ -75,6 +76,7 @@ public class BitmapFontLoader {
      * @see #loadFont()
      * @see #getFont()
      */
+    [ArrayElementType('String')]
     public function loadFonts(urls:Array, back:Function = null, process:Function = null):void {
         _loadBack     = back;
         _loadProgress = process;

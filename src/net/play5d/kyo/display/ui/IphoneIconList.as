@@ -117,7 +117,7 @@ public class IphoneIconList extends Sprite {
     /** @private 翻页目标 X */
     private var _tweenX:Number      = 0;
     /** @private 各页 KyoTileList */
-    private var _lists:Array;
+    private var _lists:Vector.<KyoTileList>;
     /** @private 实际使用的间距 */
     private var _gap:Point          = new Point();
     /** @private 列表子项是否可交互 */
@@ -156,6 +156,7 @@ public class IphoneIconList extends Sprite {
     }
 
     /** @private */
+    [ArrayElementType('flash.display.DisplayObject')]
     private var _displays:Array;
 
     /**
@@ -163,6 +164,7 @@ public class IphoneIconList extends Sprite {
      * @return 数组。
      * @default null
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public function get displays():Array {
         return _displays;
     }
@@ -241,6 +243,7 @@ public class IphoneIconList extends Sprite {
      * @see #addDisplay()
      * @see #update()
      */
+    [ArrayElementType('flash.display.DisplayObject')]
     public function setDisplay(v:Array):void {
         _displays = v;
         update();
@@ -330,7 +333,7 @@ public class IphoneIconList extends Sprite {
         }
 
         removeLists();
-        _lists = [];
+        _lists = new Vector.<KyoTileList>();
         updateScrollRect();
 
         curPage   = 1;
