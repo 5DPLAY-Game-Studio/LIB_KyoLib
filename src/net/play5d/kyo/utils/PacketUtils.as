@@ -22,6 +22,7 @@ import flash.utils.ByteArray;
 /**
  * Socket 定长头（short 长度）封包工具。
  *
+ * @see PacketBuffer
  * @see #createByteArrayWithHead()
  * @see #addByteArrayHead()
  */

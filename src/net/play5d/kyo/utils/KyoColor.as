@@ -677,6 +677,20 @@ public class KyoColor {
         return '#' + hex;
     }
 
+    /**
+     * 转为 AS 十六进制字面量字符串。
+     * @param color 颜色值。
+     * @return 形如 <code>0xffffff</code>（小写，无引号）。
+     * @example
+     * <listing version="3.0">
+     * KyoColor.toLiteral(KyoColor.RED); // '0xff0000'
+     * </listing>
+     * @see #toHex()
+     */
+    public static function toLiteral(color:uint):String {
+        return '0x' + toHex(color).substring(1).toLowerCase();
+    }
+
     /** @private 限制到 <code>[0, 1]</code>。 */
     private static function clamp01(n:Number):Number {
         if (n < 0) {

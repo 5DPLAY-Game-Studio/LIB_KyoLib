@@ -120,6 +120,20 @@ public class KyoTimerFormat {
     }
 
     /**
+     * 格式化为 <code>MM/DD HH:mm</code>（不含年、秒）。
+     * @param date 日期。
+     * @return 月日与时分字符串。
+     * @example
+     * <listing version="3.0">
+     * KyoTimerFormat.getMonthDayTime(new Date());
+     * </listing>
+     */
+    public static function getMonthDayTime(date:Date):String {
+        return formatNum(date.month + 1) + '/' + formatNum(date.date) + ' ' +
+               formatNum(date.hours) + ':' + formatNum(date.minutes);
+    }
+
+    /**
      * 获取星期几。
      * @param date 日期。
      * @param type 0=数字；1=英文；2=中文。
