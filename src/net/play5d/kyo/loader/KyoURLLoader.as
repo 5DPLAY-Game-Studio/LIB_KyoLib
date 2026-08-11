@@ -37,7 +37,7 @@ import flash.utils.ByteArray;
  * @see #getFileType()
  * @see KyoLoaderLite
  */
-public class KyoURLoader {
+public class KyoURLLoader {
     /** Unicode（UTF-16 LE）BOM 探测结果。 */
     public static const TYPE_UNICODE:String            = 'Unicode';
     /** Unicode big endian（UTF-16 BE）BOM 探测结果。 */
@@ -65,7 +65,7 @@ public class KyoURLoader {
      * @param progress 进度回调，参数为 0~1 比例；可省略。
      * @example
      * <listing version="3.0">
-     * KyoURLoader.load('a.txt', onData);
+     * KyoURLLoader.load('a.txt', onData);
      * </listing>
      */
     public static function load(
@@ -145,7 +145,7 @@ public class KyoURLoader {
      * @param failBack 失败回调，无参数；可省略。
      * @example
      * <listing version="3.0">
-     * KyoURLoader.post('api.php', {id: 1}, onData);
+     * KyoURLLoader.post('api.php', {id: 1}, onData);
      * </listing>
      */
     public static function post(url:String, data:Object, back:Function = null, failBack:Function = null):void {
@@ -191,7 +191,7 @@ public class KyoURLoader {
      * @return <code>TYPE_UNICODE</code> 等常量之一。
      * @example
      * <listing version="3.0">
-     * var t:String = KyoURLoader.getFileType(ba);
+     * var t:String = KyoURLLoader.getFileType(ba);
      * </listing>
      */
     public static function getFileType(fileData:ByteArray):String {

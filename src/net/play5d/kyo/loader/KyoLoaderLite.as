@@ -31,13 +31,13 @@ import flash.utils.ByteArray;
 /**
  * 静态轻量加载工具：显示对象、Loader、二进制与字节转显示对象。
  *
- * <p><b>首选</b>显示对象加载入口；文本/字节 HTTP 见 <code>KyoURLoader</code>。二者勿合并。</p>
+ * <p><b>首选</b>显示对象加载入口；文本/字节 HTTP 见 <code>KyoURLLoader</code>。二者勿合并。</p>
  *
  * @see #load()
  * @see #loadLoader()
  * @see #loadBytes()
  * @see #bytesToDisplay()
- * @see KyoURLoader
+ * @see KyoURLLoader
  */
 public class KyoLoaderLite {
     /**
@@ -45,13 +45,13 @@ public class KyoLoaderLite {
      * @param url 资源地址。
      * @param back 成功回调，参数为 <code>DisplayObject</code>。
      * @param fail 失败回调，无参数。
-     * @param process 进度回调，参数为 0~1 比例。
+     * @param progress 进度回调，参数为 0~1 比例。
      * @example
      * <listing version="3.0">
      * KyoLoaderLite.load('a.swf', onOk, onFail, onProg);
      * </listing>
      */
-    public static function load(url:String, back:Function, fail:Function, process:Function):void {
+    public static function load(url:String, back:Function, fail:Function, progress:Function):void {
         var l:Loader = new Loader();
         l.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
         l.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioError);
@@ -74,8 +74,8 @@ public class KyoLoaderLite {
         }
 
         function progressHandler(e:ProgressEvent):void {
-            if (process != null) {
-                process(e.bytesLoaded / e.bytesTotal);
+            if (progress != null) {
+                progress(e.bytesLoaded / e.bytesTotal);
             }
         }
 
@@ -96,13 +96,13 @@ public class KyoLoaderLite {
      * @param url 资源地址。
      * @param back 成功回调，参数为 <code>Loader</code>。
      * @param fail 失败回调，无参数。
-     * @param process 进度回调，参数为 0~1 比例。
+     * @param progress 进度回调，参数为 0~1 比例。
      * @example
      * <listing version="3.0">
      * KyoLoaderLite.loadLoader('a.swf', onOk, onFail, onProg);
      * </listing>
      */
-    public static function loadLoader(url:String, back:Function, fail:Function, process:Function):void {
+    public static function loadLoader(url:String, back:Function, fail:Function, progress:Function):void {
         var l:Loader = new Loader();
         l.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
         l.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioError);
@@ -124,8 +124,8 @@ public class KyoLoaderLite {
         }
 
         function progressHandler(e:ProgressEvent):void {
-            if (process != null) {
-                process(e.bytesLoaded / e.bytesTotal);
+            if (progress != null) {
+                progress(e.bytesLoaded / e.bytesTotal);
             }
         }
 
@@ -140,7 +140,7 @@ public class KyoLoaderLite {
     }
 
     /**
-     * 以二进制方式加载 URL（委托 <code>KyoURLoader</code>）。
+     * 以二进制方式加载 URL（委托 <code>KyoURLLoader</code>）。
      * @param url 资源地址。
      * @param back 成功回调，参数为 <code>ByteArray</code>。
      * @param fail 失败回调；可省略。
@@ -149,10 +149,10 @@ public class KyoLoaderLite {
      * <listing version="3.0">
      * KyoLoaderLite.loadBytes('a.bin', onBytes);
      * </listing>
-     * @see net.play5d.kyo.loader.KyoURLoader#load()
+     * @see net.play5d.kyo.loader.KyoURLLoader#load()
      */
     public static function loadBytes(url:String, back:Function, fail:Function = null, progress:Function = null):void {
-        KyoURLoader.load(url, onData, fail, {dataFormat: URLLoaderDataFormat.BINARY}, progress);
+        KyoURLLoader.load(url, onData, fail, {dataFormat: URLLoaderDataFormat.BINARY}, progress);
 
         function onData(data:*):void {
             if (back != null) {

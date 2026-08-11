@@ -44,7 +44,7 @@ public class DisplayEffect {
      * @param d 被截图的显示对象（须已有 parent）。
      * @param alphaLose 每帧减少的透明度，默认 0.1。
      * @param startAlpha 残影初始透明度，默认 1。
-     * @param colorTransFrom 残影颜色变换，可选。
+     * @param colorTransform 残影颜色变换，可选。
      * @example
      * <listing version="3.0">
      * DisplayEffect.ghostShadow(hero, 0.1, 1, GhostShadowColorTransform.red);
@@ -56,7 +56,7 @@ public class DisplayEffect {
         d             :DisplayObject,
         alphaLose     :Number = 0.1,
         startAlpha    :Number = 1,
-        colorTransFrom:ColorTransform = null
+        colorTransform:ColorTransform = null
     ):void {
         var pt:DisplayObjectContainer = d.parent;
         if (!pt) {
@@ -75,8 +75,8 @@ public class DisplayEffect {
         if (!bp) {
             return;
         }
-        if (colorTransFrom) {
-            bp.bitmap.transform.colorTransform = colorTransFrom;
+        if (colorTransform) {
+            bp.bitmap.transform.colorTransform = colorTransform;
         }
 
         pt.addChild(bp.bitmap);
@@ -91,7 +91,7 @@ public class DisplayEffect {
      * @param scaleAdd 每帧缩放增量，默认 0.1。
      * @param alphaLose 每帧透明度减量，默认 0.05。
      * @param startAlpha 初始透明度，默认 1。
-     * @param colorTransFrom 颜色变换，可选。
+     * @param colorTransform 颜色变换，可选。
      * @param parent 残影父容器；默认 <code>d.parent</code>。
      * @param size 用于计算缩放中心偏移的参考尺寸；默认取截图宽高。
      * @return 残影位图；无法创建时返回 <code>null</code>。
@@ -106,7 +106,7 @@ public class DisplayEffect {
         scaleAdd      :Number = .1,
         alphaLose     :Number = 0.05,
         startAlpha    :Number = 1,
-        colorTransFrom:ColorTransform = null,
+        colorTransform:ColorTransform = null,
         parent        :DisplayObjectContainer = null,
         size          :Point = null
     ):DisplayObject {
@@ -128,8 +128,8 @@ public class DisplayEffect {
         if (!bp) {
             return null;
         }
-        if (colorTransFrom) {
-            bp.bitmap.transform.colorTransform = colorTransFrom;
+        if (colorTransform) {
+            bp.bitmap.transform.colorTransform = colorTransform;
         }
 
         parent.addChild(bp.bitmap);

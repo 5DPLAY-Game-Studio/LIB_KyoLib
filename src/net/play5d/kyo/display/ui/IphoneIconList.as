@@ -469,7 +469,7 @@ public class IphoneIconList extends Sprite {
             perPage / hRow
         );
         list.lockSize  = true;
-        list.unitySize = _unitSize;
+        list.unitSize = _unitSize;
         list.gap       = _gap;
         list.update();
 

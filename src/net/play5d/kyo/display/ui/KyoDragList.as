@@ -42,17 +42,17 @@ public class KyoDragList extends KyoTileList {
     /**
      * @param displays 显示对象数组。
      * @param dragType 拖拽方向，默认垂直。
-     * @param hrow 横排最大个数。
-     * @param vrow 竖排最大个数。
+     * @param hRow 横排最大个数。
+     * @param vRow 竖排最大个数。
      */
     [ArrayElementType('flash.display.DisplayObject')]
     public function KyoDragList(
         displays:Array,
         dragType:int = KyoDragType.DRAG_TYPE_V,
-        hrow    :int = int.MAX_VALUE,
-        vrow    :int = 1
+        hRow    :int = int.MAX_VALUE,
+        vRow    :int = 1
     ) {
-        super(displays, hrow, vrow);
+        super(displays, hRow, vRow);
         this.dragType = dragType;
         addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
     }
@@ -146,8 +146,8 @@ public class KyoDragList extends KyoTileList {
      * @see #move()
      */
     public function moveById(id:int, tweenTime:Number = 0):void {
-        var xx:Number = (unitySize.x + gap.x) * id;
-        var yy:Number = (unitySize.y + gap.y) * id;
+        var xx:Number = (unitSize.x + gap.x) * id;
+        var yy:Number = (unitSize.y + gap.y) * id;
         if (tweenTime == 0) {
             move(xx, yy);
         }
@@ -238,7 +238,7 @@ public class KyoDragList extends KyoTileList {
      */
     public function autoScroll(time:int, tweenDuration:Number = 1):void {
         _tweenDuration = tweenDuration;
-        _perPage       = Math.round(maskSize.y / (unitySize.y + gap.y));
+        _perPage       = Math.round(maskSize.y / (unitSize.y + gap.y));
 
         _autoScrollTimer = new Timer(time);
         _autoScrollTimer.addEventListener(TimerEvent.TIMER, onTimerScroll);
@@ -331,10 +331,10 @@ public class KyoDragList extends KyoTileList {
             _release = false;
             switch (dragType) {
             case KyoDragType.DRAG_TYPE_H:
-                _curId = Math.round(scrollRect.x / unitySize.x);
+                _curId = Math.round(scrollRect.x / unitSize.x);
                 break;
             case KyoDragType.DRAG_TYPE_V:
-                _curId = Math.round(scrollRect.y / unitySize.y);
+                _curId = Math.round(scrollRect.y / unitSize.y);
                 break;
             }
             moveById(_curId, 0.5);

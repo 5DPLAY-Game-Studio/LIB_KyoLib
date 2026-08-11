@@ -22,7 +22,7 @@ import flash.display.BitmapData;
 import flash.events.Event;
 
 import net.play5d.kyo.loader.BitmapLoader;
-import net.play5d.kyo.loader.KyoURLoader;
+import net.play5d.kyo.loader.KyoURLLoader;
 
 /**
  * 位图字体加载与缓存。
@@ -68,7 +68,7 @@ public class BitmapFontLoader {
      * 按 URL 列表依次加载多套字体 XML（及对应贴图）。
      * @param urls 字体 XML 的 URL 数组。
      * @param back 全部完成时的无参回调，可选。
-     * @param process 进度回调，参数为已完成比例（0–1），可选。
+     * @param progress 进度回调，参数为已完成比例（0–1），可选。
      * @example
      * <listing version="3.0">
      * loader.loadFonts(['font/ui.xml'], onDone, onProgress);
@@ -77,9 +77,9 @@ public class BitmapFontLoader {
      * @see #getFont()
      */
     [ArrayElementType('String')]
-    public function loadFonts(urls:Array, back:Function = null, process:Function = null):void {
+    public function loadFonts(urls:Array, back:Function = null, progress:Function = null):void {
         _loadBack     = back;
-        _loadProgress = process;
+        _loadProgress = progress;
 
         _urls       = urls;
         _loadAmount = urls.length;
@@ -154,7 +154,7 @@ public class BitmapFontLoader {
         }
 
         var url:String = _urls.shift();
-        KyoURLoader.load(url, onLoadXMLFinish, loadXMLFail);
+        KyoURLLoader.load(url, onLoadXMLFinish, loadXMLFail);
 
         function onLoadXMLFinish(v:String):void {
             var xml:XML = new XML(v);

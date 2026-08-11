@@ -40,17 +40,17 @@ import net.play5d.kyo.utils.KyoMath;
 public class KyoTileList extends Sprite {
     /**
      * @param displays 显示对象数组，可为 <code>null</code>。
-     * @param hrow 每行最大个数，默认不限。
-     * @param vrow 每列最大个数，默认 1。
+     * @param hRow 每行最大个数，默认不限。
+     * @param vRow 每列最大个数，默认 1。
      * @example
      * <listing version="3.0">
      * var list:KyoTileList = new KyoTileList([a, b, c], 3, 2);
      * </listing>
      */
     [ArrayElementType('flash.display.DisplayObject')]
-    public function KyoTileList(displays:Array = null, hrow:int = int.MAX_VALUE, vrow:int = 1) {
-        _hRow = hrow;
-        _vRow = vrow;
+    public function KyoTileList(displays:Array = null, hRow:int = int.MAX_VALUE, vRow:int = 1) {
+        _hRow = hRow;
+        _vRow = vRow;
         setDisplays(displays);
     }
 
@@ -62,7 +62,7 @@ public class KyoTileList extends Sprite {
     /**
      * 统一单元宽高；首项尺寸为 0 时由首个有效子项填充。
      */
-    public var unitySize:Point    = new Point();
+    public var unitSize:Point    = new Point();
     /**
      * 换行时插入的横线元件类，未设置则不绘制。
      */
@@ -90,12 +90,12 @@ public class KyoTileList extends Sprite {
      */
     public var scrollBar:IKyoScrollBar;
     /**
-     * 为 <code>true</code> 时各行使用 <code>#unitySize</code> 计步，忽略各子项实际尺寸。
+     * 为 <code>true</code> 时各行使用 <code>#unitSize</code> 计步，忽略各子项实际尺寸。
      * @default false
      */
     public var lockSize:Boolean   = false;
     /**
-     * 为 <code>true</code> 时水平滚动比例含 <code>#unitySize</code> 偏移。
+     * 为 <code>true</code> 时水平滚动比例含 <code>#unitSize</code> 偏移。
      * @default true
      */
     public var scrollHadd:Boolean = true;
@@ -190,8 +190,8 @@ public class KyoTileList extends Sprite {
         var rect:Rectangle = new Rectangle(0, 0, _maskSize.x, _maskSize.y);
 
         if (scrollHadd) {
-            rect.x = _scrollPos.x * (_width + unitySize.x - _maskSize.x);
-            rect.y = _scrollPos.y * (_height + unitySize.y - _maskSize.y);
+            rect.x = _scrollPos.x * (_width + unitSize.x - _maskSize.x);
+            rect.y = _scrollPos.y * (_height + unitSize.y - _maskSize.y);
         }
         else {
             rect.x = _scrollPos.x * (_width - _maskSize.x);
@@ -487,14 +487,14 @@ public class KyoTileList extends Sprite {
 
             if (!firsted) {
                 firsted = true;
-                if (unitySize.x == 0) {
-                    unitySize.x = d.width;
+                if (unitSize.x == 0) {
+                    unitSize.x = d.width;
                 }
-                if (unitySize.y == 0) {
-                    unitySize.y = d.height;
+                if (unitSize.y == 0) {
+                    unitSize.y = d.height;
                 }
-                _width  = unitySize.x;
-                _height = unitySize.y;
+                _width  = unitSize.x;
+                _height = unitSize.y;
             }
 
             d.x = p.x;
@@ -502,7 +502,7 @@ public class KyoTileList extends Sprite {
             if ((i + 1) % h == 0) {
                 overh         = true;
                 p.x           = startPos.x;
-                var yy:Number = lockSize ? unitySize.y : d.height;
+                var yy:Number = lockSize ? unitSize.y : d.height;
                 p.y += yy + gap.y;
                 if (VLine) {
                     var vl:DisplayObject = new VLine();
@@ -519,7 +519,7 @@ public class KyoTileList extends Sprite {
                     rowV++;
                     overh = false;
                 }
-                var xx:Number = lockSize ? unitySize.x : d.width;
+                var xx:Number = lockSize ? unitSize.x : d.width;
                 p.x += xx + gap.x;
                 if (_width < p.x) {
                     _width = p.x;
@@ -529,11 +529,11 @@ public class KyoTileList extends Sprite {
         }
 
         if (h % _hRow != 0) {
-            xx = lockSize ? unitySize.x : d.width;
+            xx = lockSize ? unitSize.x : d.width;
             _width += xx;
         }
         if (rowV % _vRow != 0) {
-            yy = lockSize ? unitySize.y : d.height;
+            yy = lockSize ? unitSize.y : d.height;
             _height += yy;
         }
 
@@ -552,9 +552,9 @@ public class KyoTileList extends Sprite {
             return;
         }
         var w:Number;
-        if (lockSize && unitySize) {
+        if (lockSize && unitSize) {
             var hw:int = Math.min(displays.length, _hRow);
-            w          = (unitySize.x + gap.x) * (hw - 1) + unitySize.x;
+            w          = (unitSize.x + gap.x) * (hw - 1) + unitSize.x;
         }
         else {
             w = _width;

@@ -37,12 +37,12 @@ public class KyoScrollList extends KyoTileList {
     public function KyoScrollList(displays:Array = null, size:Point = null, scrollType:int = 0) {
         _scrollType  = scrollType;
         _size        = size;
-        var hrow:int = scrollType == 0 ? int.MAX_VALUE : 1;
-        var vrow:int = scrollType == 1 ? int.MAX_VALUE : 1;
+        var hRow:int = scrollType == 0 ? int.MAX_VALUE : 1;
+        var vRow:int = scrollType == 1 ? int.MAX_VALUE : 1;
 
         scrollRect = new Rectangle(0, 0, _size.x, _size.y);
 
-        super(displays, hrow, vrow);
+        super(displays, hRow, vRow);
     }
 
     /** @private 0 水平 / 1 垂直 */
@@ -68,12 +68,12 @@ public class KyoScrollList extends KyoTileList {
         var addn:int = 0;
         switch (_scrollType) {
         case 0:
-            addn       = Math.ceil(_size.x / (unitySize.x + gap.x));
-            _targetPos = displays.length * (unitySize.x + gap.x);
+            addn       = Math.ceil(_size.x / (unitSize.x + gap.x));
+            _targetPos = displays.length * (unitSize.x + gap.x);
             break;
         case 1:
-            addn       = Math.ceil(_size.y / (unitySize.y + gap.y));
-            _targetPos = displays.length * (unitySize.y + gap.y);
+            addn       = Math.ceil(_size.y / (unitSize.y + gap.y));
+            _targetPos = displays.length * (unitSize.y + gap.y);
             break;
         }
 

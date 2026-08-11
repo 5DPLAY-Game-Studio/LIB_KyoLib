@@ -19,16 +19,16 @@
 package net.play5d.kyo.utils {
 import flash.net.URLVariables;
 
-import net.play5d.kyo.loader.KyoURLoader;
+import net.play5d.kyo.loader.KyoURLLoader;
 
 /**
- * 简易 HTTP GET / POST 封装（委托 <code>KyoURLoader</code>）。
+ * 简易 HTTP GET / POST 封装（委托 <code>KyoURLLoader</code>）。
  *
- * <p>新代码请直接使用 <code>KyoURLoader</code>。本类保留兼容旧调用。</p>
+ * <p>新代码请直接使用 <code>KyoURLLoader</code>。本类保留兼容旧调用。</p>
  *
  * @see #get()
  * @see #post()
- * @see net.play5d.kyo.loader.KyoURLoader
+ * @see net.play5d.kyo.loader.KyoURLLoader
  */
 public class AJAX {
     /**
@@ -40,10 +40,10 @@ public class AJAX {
      * <listing version="3.0">
      * AJAX.post('api.php', vars, onData);
      * </listing>
-     * @see net.play5d.kyo.loader.KyoURLoader#post()
+     * @see net.play5d.kyo.loader.KyoURLLoader#post()
      */
     public static function post(url:String, data:URLVariables = null, back:Function = null):void {
-        KyoURLoader.post(url, data || new URLVariables(), back);
+        KyoURLLoader.post(url, data || new URLVariables(), back);
     }
 
     /**
@@ -55,7 +55,7 @@ public class AJAX {
      * <listing version="3.0">
      * AJAX.get('api.php', vars, onData);
      * </listing>
-     * @see net.play5d.kyo.loader.KyoURLoader#load()
+     * @see net.play5d.kyo.loader.KyoURLLoader#load()
      */
     public static function get(url:String, data:URLVariables = null, back:Function = null):void {
         if (data) {
@@ -63,7 +63,7 @@ public class AJAX {
             url += sep + data.toString();
         }
 
-        KyoURLoader.load(url, back);
+        KyoURLLoader.load(url, back);
     }
 }
 }

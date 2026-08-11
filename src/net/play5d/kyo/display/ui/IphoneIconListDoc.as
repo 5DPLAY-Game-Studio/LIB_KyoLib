@@ -80,7 +80,7 @@ public class IphoneIconListDoc extends Sprite {
         }
         if (!_list) {
             _list           = new KyoTileList();
-            _list.unitySize = new Point(11, 11);
+            _list.unitSize = new Point(11, 11);
             _list.lockSize  = true;
             _list.gap       = gap;
             addChild(_list);

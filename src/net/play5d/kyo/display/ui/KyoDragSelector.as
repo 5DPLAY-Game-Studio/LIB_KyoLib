@@ -47,16 +47,16 @@ public class KyoDragSelector extends KyoDragList {
     /**
      * @param displays 显示对象数组。
      * @param dragType 拖拽方向，默认垂直。
-     * @param hrow 横排最大个数。
-     * @param vrow 竖排最大个数。
+     * @param hRow 横排最大个数。
+     * @param vRow 竖排最大个数。
      */
     public function KyoDragSelector(
         displays:Array,
         dragType:int = KyoDragType.DRAG_TYPE_V,
-        hrow    :int = int.MAX_VALUE,
-        vrow    :int = 1
+        hRow    :int = int.MAX_VALUE,
+        vRow    :int = 1
     ) {
-        super(displays, dragType, hrow, vrow);
+        super(displays, dragType, hRow, vRow);
         mouseChildren = false;
         _forceDrag   = true;
     }
@@ -113,7 +113,7 @@ public class KyoDragSelector extends KyoDragList {
         case KyoDragType.DRAG_TYPE_H:
             break;
         case KyoDragType.DRAG_TYPE_V:
-            to['y']     = -_selectId * (unitySize.y + gap.y);
+            to['y']     = -_selectId * (unitSize.y + gap.y);
             _selectItem = displays[_selectId];
             break;
         }
@@ -124,8 +124,8 @@ public class KyoDragSelector extends KyoDragList {
      * @private 按位置计算选中索引，并应用 <code>changeEffectObj</code>。
      */
     private function displayUpdate():void {
-        var uh:Number = unitySize.y + gap.y;
-        _selectId       = (-this.y + unitySize.y / 2) / uh;
+        var uh:Number = unitSize.y + gap.y;
+        _selectId       = (-this.y + unitSize.y / 2) / uh;
         if (_selectId < 0) {
             _selectId = 0;
         }

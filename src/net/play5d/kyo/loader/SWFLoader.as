@@ -70,7 +70,7 @@ public class SWFLoader extends Loader {
      * @private
      */
     private function loadHead(url:String, back:Function, fail:Function):void {
-        KyoURLoader.load(url, onUrlLoadComplete, fail, {dataFormat: URLLoaderDataFormat.BINARY});
+        KyoURLLoader.load(url, onUrlLoadComplete, fail, {dataFormat: URLLoaderDataFormat.BINARY});
 
         function onUrlLoadComplete(b:ByteArray):void {
             if (!b) {

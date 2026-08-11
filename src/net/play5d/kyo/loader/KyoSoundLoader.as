@@ -66,16 +66,16 @@ public class KyoSoundLoader {
      * 按 URL 列表顺序加载声音。
      * @param urls 声音 URL 数组。
      * @param back 全部结束回调（含失败后继续）；无参数；可省略。
-     * @param process 总进度回调，参数为 0~1；可省略。
+     * @param progress 总进度回调，参数为 0~1；可省略。
      * @example
      * <listing version="3.0">
      * loader.loadSounds(['a.mp3', 'b.mp3'], onAll);
      * </listing>
      */
     [ArrayElementType('String')]
-    public function loadSounds(urls:Array, back:Function = null, process:Function = null):void {
-        _loadBack    = back;
-        _loadProgress = process;
+    public function loadSounds(urls:Array, back:Function = null, progress:Function = null):void {
+        _loadBack     = back;
+        _loadProgress = progress;
         _urls        = urls.concat();
         _loadLength  = urls.length;
 

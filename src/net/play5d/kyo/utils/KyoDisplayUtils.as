@@ -343,10 +343,10 @@ public class KyoDisplayUtils {
      * @return <code>BitmapData</code> 数组。
      * @example
      * <listing version="3.0">
-     * var frames:Array = KyoDisplayUtils.getBitmapDatasByMC(mc);
+     * var frames:Array = KyoDisplayUtils.getBitmapDataByMC(mc);
      * </listing>
      */
-    public static function getBitmapDatasByMC(mc:DisplayObject):Array {
+    public static function getBitmapDataByMC(mc:DisplayObject):Array {
         var a:Array = [];
         var bd:BitmapData;
         if (mc is MovieClip) {
