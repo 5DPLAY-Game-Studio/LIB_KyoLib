@@ -41,7 +41,7 @@ public class BitmapFontText extends Bitmap {
     /** @private */
     private var _font:BitmapFont;
     /** @private 着色前的原始位图副本 */
-    private var _orgBitmapData:BitmapData;
+    private var _originalBitmapData:BitmapData;
     /** @private */
     private var _text:String;
 
@@ -63,7 +63,7 @@ public class BitmapFontText extends Bitmap {
     public function set text(v:String):void {
         _text = v;
 
-        disposeOrgBitmap();
+        disposeOriginalBitmap();
         if (bitmapData) {
             bitmapData.dispose();
         }
@@ -88,18 +88,18 @@ public class BitmapFontText extends Bitmap {
      */
     public function applyColorTransform(ct:ColorTransform):void {
         if (ct == null) {
-            if (_orgBitmapData) {
+            if (_originalBitmapData) {
                 if (bitmapData) {
                     bitmapData.dispose();
                 }
-                bitmapData = _orgBitmapData.clone();
+                bitmapData = _originalBitmapData.clone();
             }
 
             return;
         }
 
-        if (!_orgBitmapData) {
-            _orgBitmapData = bitmapData.clone();
+        if (!_originalBitmapData) {
+            _originalBitmapData = bitmapData.clone();
         }
 
         bitmapData.colorTransform(new Rectangle(0, 0, bitmapData.width, bitmapData.height), ct);
@@ -113,7 +113,7 @@ public class BitmapFontText extends Bitmap {
      * </listing>
      */
     public function dispose():void {
-        disposeOrgBitmap();
+        disposeOriginalBitmap();
         if (bitmapData) {
             bitmapData.dispose();
             bitmapData = null;
@@ -121,10 +121,10 @@ public class BitmapFontText extends Bitmap {
     }
 
     /** @private */
-    private function disposeOrgBitmap():void {
-        if (_orgBitmapData) {
-            _orgBitmapData.dispose();
-            _orgBitmapData = null;
+    private function disposeOriginalBitmap():void {
+        if (_originalBitmapData) {
+            _originalBitmapData.dispose();
+            _originalBitmapData = null;
         }
     }
 

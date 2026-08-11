@@ -57,7 +57,7 @@ public class KyoScroller {
     /** @private 当前 scrollRect 原点 */
     private var _p:Point = new Point();
     /** @private 滚动方向 */
-    private var _direct:int;
+    private var _direction:int;
 
     /**
      * 开始滚动。
@@ -69,7 +69,7 @@ public class KyoScroller {
      * @see #stop()
      */
     public function start(direct:int = 1):void {
-        _direct = direct;
+        _direction = direct;
 
         stop();
         _d.addEventListener(Event.ENTER_FRAME, onMoving);
@@ -97,7 +97,7 @@ public class KyoScroller {
      * @private 按方向推进并循环。
      */
     private function onMoving(e:Event):void {
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             _p.x += speed;
             if (_p.x > _dsize.x) {

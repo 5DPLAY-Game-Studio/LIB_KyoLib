@@ -96,7 +96,7 @@ public class PicPointer extends Sprite {
      */
     public var delay:Number;
     /** @private 资源 URL 列表 */
-    private var _datas:Array;
+    private var _data:Array;
     /** @private id → PicLoader */
     private var _loaders:Object;
     /** @private 承载页内容的容器 */
@@ -339,7 +339,7 @@ public class PicPointer extends Sprite {
             needLoads.push(pl);
         }
 
-        _datas = v;
+        _data = v;
 
         _loaderCtrl.addEventListener(PicPointerEvent.LOAD_PROGRESS, onLoadProgress);
         _loaderCtrl.addEventListener(PicPointerEvent.LOAD_COMPLETE, onLoadComplete);
@@ -350,7 +350,7 @@ public class PicPointer extends Sprite {
      * @private 多页时创建计时器；单页则销毁计时器。
      */
     private function initTimer():void {
-        if (_datas.length > 1) {
+        if (_data.length > 1) {
             if (!_timer) {
                 _timer = new Timer(delay * 1000, 1);
                 _timer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimer);
@@ -371,11 +371,11 @@ public class PicPointer extends Sprite {
      * @private 将索引环绕到合法范围。
      */
     private function wrapIndex(id:int):int {
-        if (id > _datas.length - 1) {
+        if (id > _data.length - 1) {
             id = 0;
         }
         if (id < 0) {
-            id = _datas.length - 1;
+            id = _data.length - 1;
         }
 
         return id;

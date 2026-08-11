@@ -42,7 +42,7 @@ public class KyoSoundLoader {
     /** @private */
     private var _loadBack:Function;
     /** @private */
-    private var _loadProcess:Function;
+    private var _loadProgress:Function;
     /** @private */
     private var _loadLength:int;
 
@@ -75,7 +75,7 @@ public class KyoSoundLoader {
     [ArrayElementType('String')]
     public function loadSounds(urls:Array, back:Function = null, process:Function = null):void {
         _loadBack    = back;
-        _loadProcess = process;
+        _loadProgress = process;
         _urls        = urls.concat();
         _loadLength  = urls.length;
 
@@ -158,7 +158,7 @@ public class KyoSoundLoader {
     /**
      * @private
      */
-    private function loadFin():void {
+    private function loadFinish():void {
         if (_loadBack != null) {
             _loadBack();
             _loadBack = null;
@@ -169,10 +169,10 @@ public class KyoSoundLoader {
      * @private
      */
     private function onLoadProgress(e:ProgressEvent):void {
-        if (_loadProcess != null) {
+        if (_loadProgress != null) {
             var v:Number   = e.bytesLoaded / e.bytesTotal;
             var cur:Number = _loadLength - _urls.length - 1 + v;
-            _loadProcess(cur / _loadLength);
+            _loadProgress(cur / _loadLength);
         }
     }
 
@@ -188,7 +188,7 @@ public class KyoSoundLoader {
         _soundObj[_curUrl] = snd;
 
         if (_urls.length < 1) {
-            loadFin();
+            loadFinish();
         }
         else {
             loadNext();
@@ -207,7 +207,7 @@ public class KyoSoundLoader {
         trace('KyoSoundLoader.onLoadError :: 加载声音失败 : ' + snd.url);
 
         if (_urls.length < 1) {
-            loadFin();
+            loadFinish();
         }
         else {
             loadNext();

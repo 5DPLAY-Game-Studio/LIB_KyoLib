@@ -72,7 +72,7 @@ public class IphoneScrollPane extends Sprite {
     /** @private 是否已松手进入惯性阶段 */
     private var _release:Boolean;
     /** @private 惯性速度 */
-    private var _mouseSpd:Point = new Point();
+    private var _mouseSpeed:Point = new Point();
     /** @private 按下时的 scrollRect */
     private var _downSR:Rectangle;
     /** @private 是否已进入拖拽 */
@@ -152,15 +152,15 @@ public class IphoneScrollPane extends Sprite {
         var rect:Rectangle = _release ? scrollRect.clone() : new Rectangle(0, 0, _size.x, _size.y);
 
         if (_release) {
-            rect.x += _mouseSpd.x;
-            rect.y += _mouseSpd.y;
+            rect.x += _mouseSpeed.x;
+            rect.y += _mouseSpeed.y;
         }
         else {
             rect.x      = xx;
-            _mouseSpd.x = xx;
+            _mouseSpeed.x = xx;
 
             rect.y      = yy;
-            _mouseSpd.y = yy;
+            _mouseSpeed.y = yy;
         }
 
         if (_downSR) {
@@ -169,23 +169,23 @@ public class IphoneScrollPane extends Sprite {
         }
 
         if (_release) {
-            _mouseSpd.x = KyoMath.weaken(_mouseSpd.x, 3);
-            if (_mouseSpd.x > 6 && rect.x > (_source.width - _size.x) + 100) {
-                _mouseSpd.x = -6;
+            _mouseSpeed.x = KyoMath.weaken(_mouseSpeed.x, 3);
+            if (_mouseSpeed.x > 6 && rect.x > (_source.width - _size.x) + 100) {
+                _mouseSpeed.x = -6;
             }
-            if (_mouseSpd.x < -6 && rect.x < -100) {
-                _mouseSpd.x = 6;
-            }
-
-            _mouseSpd.y = KyoMath.weaken(_mouseSpd.y, 3);
-            if (_mouseSpd.y > 6 && rect.y > (_source.height - _size.y) + 100) {
-                _mouseSpd.y = -6;
-            }
-            if (_mouseSpd.y < -6 && rect.y < -100) {
-                _mouseSpd.y = 6;
+            if (_mouseSpeed.x < -6 && rect.x < -100) {
+                _mouseSpeed.x = 6;
             }
 
-            if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd.x, _mouseSpd.y)) {
+            _mouseSpeed.y = KyoMath.weaken(_mouseSpeed.y, 3);
+            if (_mouseSpeed.y > 6 && rect.y > (_source.height - _size.y) + 100) {
+                _mouseSpeed.y = -6;
+            }
+            if (_mouseSpeed.y < -6 && rect.y < -100) {
+                _mouseSpeed.y = 6;
+            }
+
+            if (KyoScrollDragUtil.isNearlyStopped(_mouseSpeed.x, _mouseSpeed.y)) {
                 finalEndDrag();
             }
         }
@@ -315,10 +315,10 @@ public class IphoneScrollPane extends Sprite {
             return;
         }
 
-        _mouseSpd.x = mux.x - _mouseSpd.x;
-        _mouseSpd.y = mux.y - _mouseSpd.y;
+        _mouseSpeed.x = mux.x - _mouseSpeed.x;
+        _mouseSpeed.y = mux.y - _mouseSpeed.y;
 
-        if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd.x, _mouseSpd.y, 5)) {
+        if (KyoScrollDragUtil.isNearlyStopped(_mouseSpeed.x, _mouseSpeed.y, 5)) {
             finalEndDrag();
         }
     }

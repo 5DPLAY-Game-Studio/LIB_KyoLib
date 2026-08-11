@@ -77,7 +77,7 @@ public class KyoDragList extends KyoTileList {
     /** @private */
     private var _tween:TweenLite;
     /** @private 惯性速度 */
-    private var _mouseSpd:Number = 0;
+    private var _mouseSpeed:Number = 0;
     /** @private 是否松手惯性阶段 */
     private var _release:Boolean;
     /** @private 自动滚动计时器 */
@@ -184,38 +184,38 @@ public class KyoDragList extends KyoTileList {
             break;
         case KyoDragType.DRAG_TYPE_H:
             if (_release) {
-                rect.x += _mouseSpd;
+                rect.x += _mouseSpeed;
                 if (rect.x < 0 || rect.x > (_width - maskSize.x)) {
-                    _mouseSpd /= 10;
+                    _mouseSpeed /= 10;
                 }
             }
             else {
                 rect.x    = xx;
-                _mouseSpd = xx;
+                _mouseSpeed = xx;
             }
             break;
         case KyoDragType.DRAG_TYPE_V:
             if (_release) {
-                rect.y += _mouseSpd;
+                rect.y += _mouseSpeed;
                 if (rect.y < 0 || rect.y > (_height - maskSize.y)) {
-                    _mouseSpd /= 10;
+                    _mouseSpeed /= 10;
                 }
             }
             else {
                 rect.y    = yy;
-                _mouseSpd = yy;
+                _mouseSpeed = yy;
             }
             break;
         }
         if (_release) {
-            _mouseSpd = KyoMath.weaken(_mouseSpd, 3);
+            _mouseSpeed = KyoMath.weaken(_mouseSpeed, 3);
             if (rect.y > _height) {
-                _mouseSpd = 0;
+                _mouseSpeed = 0;
             }
             if (rect.y < -w * 0.8) {
-                _mouseSpd = 0;
+                _mouseSpeed = 0;
             }
-            if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd)) {
+            if (KyoScrollDragUtil.isNearlyStopped(_mouseSpeed)) {
                 finalEndDrag();
             }
         }
@@ -366,13 +366,13 @@ public class KyoDragList extends KyoTileList {
 
         switch (dragType) {
         case KyoDragType.DRAG_TYPE_H:
-            _mouseSpd = mux.x - _mouseSpd;
+            _mouseSpeed = mux.x - _mouseSpeed;
             break;
         case KyoDragType.DRAG_TYPE_V:
-            _mouseSpd = mux.y - _mouseSpd;
+            _mouseSpeed = mux.y - _mouseSpeed;
             break;
         }
-        if (KyoScrollDragUtil.isNearlyStopped(_mouseSpd, 0, 5)) {
+        if (KyoScrollDragUtil.isNearlyStopped(_mouseSpeed, 0, 5)) {
             finalEndDrag();
         }
     }

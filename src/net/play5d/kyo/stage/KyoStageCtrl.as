@@ -249,13 +249,13 @@ public class KyoStageCtrl extends EventDispatcher {
     public function removeLayer(layer:IStage, effect:IStageFadeEffect = null, removeBack:Function = null):void {
 
         if (effect) {
-            effect.fadeOut(layer, effectFin);
+            effect.fadeOut(layer, onEffectFinish);
         }
         else {
-            effectFin();
+            onEffectFinish();
         }
 
-        function effectFin():void {
+        function onEffectFinish():void {
             try {
                 _mainStage.removeChild(layer.display);
                 layer.destroy();

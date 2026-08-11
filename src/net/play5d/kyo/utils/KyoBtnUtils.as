@@ -161,7 +161,7 @@ public class KyoBtnUtils {
                 _btnTween = TweenLite.to(d, 0.5, {
                     y         : param.y,
                     ease      : Elastic.easeOut,
-                    onComplete: btnEffectFin
+                    onComplete: btnEffectFinish
                 });
             }
             break;
@@ -177,7 +177,7 @@ public class KyoBtnUtils {
     }
 
     /** @private */
-    private static function btnEffectFin():void {
+    private static function btnEffectFinish():void {
         if (_curOnClick != null) {
             if (_curOnClickParam != null) {
                 _curOnClick(_curOnClickParam);
@@ -227,7 +227,7 @@ public class KyoBtnUtils {
             _curOnClickParam = o.clickParam;
 
             if (o.effectType == 1) {
-                btnEffectFin();
+                btnEffectFinish();
             }
             break;
         }

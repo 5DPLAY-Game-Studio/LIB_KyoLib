@@ -154,9 +154,9 @@ public class BitmapFontLoader {
         }
 
         var url:String = _urls.shift();
-        KyoURLoader.load(url, loadXMLFin, loadXMLFail);
+        KyoURLoader.load(url, onLoadXMLFinish, loadXMLFail);
 
-        function loadXMLFin(v:String):void {
+        function onLoadXMLFinish(v:String):void {
             var xml:XML = new XML(v);
             loadBitmapData(resolveSiblingPath(url, xml.pages.page.@file), xml, loadNext, loadNext);
         }

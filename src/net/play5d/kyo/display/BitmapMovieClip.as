@@ -455,7 +455,7 @@ public class BitmapMovieClip extends Sprite {
     /** @private 根据 insArray 初始化显示与播放状态 */
     private function initBMC():void {
         if (!_insArray || _insArray.length < 1) {
-            throw Error('bitMapDatas has no data');
+            throw Error('insArray has no data');
         }
         if (!_bp) {
             _bp = new Bitmap();

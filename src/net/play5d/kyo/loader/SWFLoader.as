@@ -70,9 +70,9 @@ public class SWFLoader extends Loader {
      * @private
      */
     private function loadHead(url:String, back:Function, fail:Function):void {
-        KyoURLoader.load(url, ulcom, fail, {dataFormat: URLLoaderDataFormat.BINARY});
+        KyoURLoader.load(url, onUrlLoadComplete, fail, {dataFormat: URLLoaderDataFormat.BINARY});
 
-        function ulcom(b:ByteArray):void {
+        function onUrlLoadComplete(b:ByteArray):void {
             if (!b) {
                 if (fail != null) {
                     fail();
@@ -91,11 +91,11 @@ public class SWFLoader extends Loader {
      * @private
      */
     private function loadFlash(url:String, back:Function):void {
-        contentLoaderInfo.addEventListener(Event.COMPLETE, loadCom);
+        contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
         load(new URLRequest(url));
 
-        function loadCom(e:Event):void {
-            contentLoaderInfo.removeEventListener(Event.COMPLETE, loadCom);
+        function onLoadComplete(e:Event):void {
+            contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
             if (back != null) {
                 back();
             }

@@ -108,11 +108,11 @@ public class PicScroller extends Sprite {
     public var showNear:Boolean    = true;
     /** @private 资源 URL 列表 */
     [ArrayElementType('String')]
-    private var _datas:Array;
+    private var _data:Array;
     /** @private 当前页 Loader */
     private var _loader:Loader;
     /** @private 当前滚动方向 */
-    private var _direct:int;
+    private var _direction:int;
     /** @private 承载页内容的容器 */
     private var _sp:Sprite;
     /** @private 相邻页 Loader */
@@ -172,8 +172,8 @@ public class PicScroller extends Sprite {
      */
     [ArrayElementType('String')]
     public function initialize(data:Array):void {
-        _datas  = data;
-        _direct = direct;
+        _data  = data;
+        _direction = direct;
         loadNext();
 
         addEventListener(MouseEvent.MOUSE_UP, onClick);
@@ -190,8 +190,8 @@ public class PicScroller extends Sprite {
     [ArrayElementType('String')]
     public function update(data:Array):void {
         destroy();
-        _datas  = data;
-        _direct = direct;
+        _data  = data;
+        _direction = direct;
         loadNext();
     }
 
@@ -225,17 +225,17 @@ public class PicScroller extends Sprite {
         }
 
         _loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
-        _loader.load(new URLRequest(_datas[_curId]));
+        _loader.load(new URLRequest(_data[_curId]));
         _sp.addChild(_loader);
     }
 
     /** @private 将索引限制在有效范围 */
     private function wrapIndex(id:int):int {
-        if (id > _datas.length - 1) {
+        if (id > _data.length - 1) {
             id = 0;
         }
         if (id < 0) {
-            id = _datas.length - 1;
+            id = _data.length - 1;
         }
 
         return id;
@@ -247,9 +247,9 @@ public class PicScroller extends Sprite {
         _nearLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadNearComplete);
 
         var nid:int = wrapIndex(_curId + 1);
-        _nearLoader.load(new URLRequest(_datas[nid]));
+        _nearLoader.load(new URLRequest(_data[nid]));
 
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             break;
         case 2:
@@ -319,7 +319,7 @@ public class PicScroller extends Sprite {
     private function getSpd():Number {
         var pos:Number;
         var span:Number;
-        switch (_direct) {
+        switch (_direction) {
         case 1:
         case 2:
             pos  = _sp.x;
@@ -360,7 +360,7 @@ public class PicScroller extends Sprite {
     private function move():void {
         var spd:Number = getSpd();
 
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             _sp.x += spd;
             break;
@@ -379,7 +379,7 @@ public class PicScroller extends Sprite {
     /** @private 设置滚动起始位置 */
     private function initStartPos():void {
         if (showNear) {
-            switch (_direct) {
+            switch (_direction) {
             case 1:
             case 2:
                 _sp.x = 0;
@@ -392,7 +392,7 @@ public class PicScroller extends Sprite {
             return;
         }
 
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             _sp.x = -_loader.width;
             break;
@@ -410,7 +410,7 @@ public class PicScroller extends Sprite {
 
     /** @private 是否已滚出可视区 */
     private function checkOver():Boolean {
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             return _sp.x > size.x;
         case 2:
@@ -430,7 +430,7 @@ public class PicScroller extends Sprite {
             return;
         }
         var b:Boolean;
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             b = _sp.x >= 0;
             break;
@@ -454,7 +454,7 @@ public class PicScroller extends Sprite {
         pause();
         var k:String;
         var v:Number;
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             k = 'x';
             v = 0;
@@ -486,7 +486,7 @@ public class PicScroller extends Sprite {
         dispatchEvent(new PicScrollEvent(PicScrollEvent.CHANGE_COMPLETE, _curId));
         newTimer();
 
-        _direct = direct;
+        _direction = direct;
     }
 
     /** @private 启动停留计时器 */
@@ -614,31 +614,31 @@ public class PicScroller extends Sprite {
 
         _dragging = false;
 
-        switch (_direct) {
+        switch (_direction) {
         case 1:
             if (_sp.x < -_loader.width / 4) {
-                _direct  = 2;
+                _direction  = 2;
                 _curId -= 2;
                 _reached = true;
             }
             break;
         case 2:
             if (_sp.x > _loader.width / 4) {
-                _direct  = 1;
+                _direction  = 1;
                 _curId -= 2;
                 _reached = true;
             }
             break;
         case 3:
             if (_sp.y < -_loader.height / 4) {
-                _direct  = 4;
+                _direction  = 4;
                 _curId -= 2;
                 _reached = true;
             }
             break;
         case 4:
             if (_sp.y > _loader.height / 4) {
-                _direct  = 3;
+                _direction  = 3;
                 _curId -= 2;
                 _reached = true;
             }

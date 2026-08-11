@@ -125,7 +125,7 @@ public class IphoneIconList extends Sprite {
     /** @private 按下时舞台 mouseX */
     private var _oldX:Number;
     /** @private 当前帧滑动速度 */
-    private var _mouseSpd:Number    = 0;
+    private var _mouseSpeed:Number    = 0;
     /** @private 上一帧 mouseX */
     private var _curMouseX:Number   = -1;
     /** @private 翻页 Tween */
@@ -492,8 +492,8 @@ public class IphoneIconList extends Sprite {
      * @private 松手后按速度/位移决定翻页或回弹。
      */
     private function resume():void {
-        if (Math.abs(_mouseSpd) > touchPow) {
-            if (_mouseSpd > 0) {
+        if (Math.abs(_mouseSpeed) > touchPow) {
+            if (_mouseSpeed > 0) {
                 if (prevPage()) {
                     return;
                 }
@@ -578,7 +578,7 @@ public class IphoneIconList extends Sprite {
             return;
         }
 
-        _mouseSpd  = stage.mouseX - _curMouseX;
+        _mouseSpeed  = stage.mouseX - _curMouseX;
         _curMouseX = stage.mouseX;
 
         var msx:Number = stage.mouseX;

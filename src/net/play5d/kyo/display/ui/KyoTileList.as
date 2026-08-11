@@ -49,8 +49,8 @@ public class KyoTileList extends Sprite {
      */
     [ArrayElementType('flash.display.DisplayObject')]
     public function KyoTileList(displays:Array = null, hrow:int = int.MAX_VALUE, vrow:int = 1) {
-        _hrow = hrow;
-        _vrow = vrow;
+        _hRow = hrow;
+        _vRow = vrow;
         setDisplays(displays);
     }
 
@@ -112,9 +112,9 @@ public class KyoTileList extends Sprite {
      */
     protected var _height:Number  = 0;
     /** @private 每行最大个数 */
-    private var _hrow:int;
+    private var _hRow:int;
     /** @private 每列最大个数 */
-    private var _vrow:int;
+    private var _vRow:int;
     /** @private 当前页码（从 1 起） */
     private var _page:int         = 1;
     /** @private 每页项数 */
@@ -145,7 +145,7 @@ public class KyoTileList extends Sprite {
     }
 
     /**
-     * 每页可容纳的子项数量（<code>_hrow * _vrow</code>）。
+     * 每页可容纳的子项数量（<code>_hRow * _vRow</code>）。
      * @return 每页项数。
      */
     public function get perPage():int {
@@ -424,13 +424,13 @@ public class KyoTileList extends Sprite {
      * </listing>
      */
     public function update():void {
-        if (_hrow < int.MAX_VALUE && _vrow < int.MAX_VALUE) {
-            _perPage   = _hrow * _vrow;
+        if (_hRow < int.MAX_VALUE && _vRow < int.MAX_VALUE) {
+            _perPage   = _hRow * _vRow;
             _totalPage = Math.ceil(displays.length / _perPage);
         }
         _page = KyoMath.fixRange(_page, 1, _totalPage);
 
-        list(_hrow, _vrow);
+        list(_hRow, _vRow);
         if (scrollBar) {
             if (_width > maskSize.x || _height > maskSize.y) {
                 scrollBar.enabled = true;
@@ -528,11 +528,11 @@ public class KyoTileList extends Sprite {
             addChild(d);
         }
 
-        if (h % _hrow != 0) {
+        if (h % _hRow != 0) {
             xx = lockSize ? unitySize.x : d.width;
             _width += xx;
         }
-        if (rowV % _vrow != 0) {
+        if (rowV % _vRow != 0) {
             yy = lockSize ? unitySize.y : d.height;
             _height += yy;
         }
@@ -553,7 +553,7 @@ public class KyoTileList extends Sprite {
         }
         var w:Number;
         if (lockSize && unitySize) {
-            var hw:int = Math.min(displays.length, _hrow);
+            var hw:int = Math.min(displays.length, _hRow);
             w          = (unitySize.x + gap.x) * (hw - 1) + unitySize.x;
         }
         else {
