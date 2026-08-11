@@ -28,10 +28,15 @@ import flash.net.SharedObject;
  */
 public class SaveDataManager {
     /**
+     * 构造存档管理器。
      * @param soName SharedObject 本地名。
-     * @param localPath 可选路径。
-     * @param secure 是否安全存储。
-     * @param autoSave 修改后是否自动 <code>save</code>。
+     * @param localPath 可选路径，默认 <code>null</code>。
+     * @param secure 是否安全存储，默认 <code>false</code>。
+     * @param autoSave 修改后是否自动 <code>save</code>，默认 <code>false</code>。
+     * @example
+     * <listing version="3.0">
+     * var mgr:SaveDataManager = new SaveDataManager('save1', null, false, true);
+     * </listing>
      */
     public function SaveDataManager(
         soName   :String,

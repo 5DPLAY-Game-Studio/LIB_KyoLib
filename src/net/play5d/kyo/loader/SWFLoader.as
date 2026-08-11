@@ -32,8 +32,13 @@ import flash.utils.ByteArray;
  */
 public class SWFLoader extends Loader {
     /**
+     * 构造并开始加载 SWF。
      * @param url SWF 地址。
      * @param back 内容加载完成回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * var l:SWFLoader = new SWFLoader('a.swf', onReady);
+     * </listing>
      */
     public function SWFLoader(url:String, back:Function = null) {
         loadSwf(url, back);
@@ -41,6 +46,7 @@ public class SWFLoader extends Loader {
 
     /**
      * 解析得到的 SWF 头信息。
+     * @default null
      */
     public var headInfo:SwfHeaderInfo;
 

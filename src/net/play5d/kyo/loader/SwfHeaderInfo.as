@@ -31,8 +31,13 @@ import flash.utils.Endian;
  */
 public class SwfHeaderInfo {
     /**
+     * 解析 SWF 头信息。
      * @param bytes 完整或部分 SWF 字节（至少含头与舞台信息所需长度）。
      * @throws IOError 非 FWS/CWS SWF。
+     * @example
+     * <listing version="3.0">
+     * var info:SwfHeaderInfo = new SwfHeaderInfo(bytes);
+     * </listing>
      */
     public function SwfHeaderInfo(bytes:ByteArray) {
         setWhRuleList();
@@ -41,6 +46,7 @@ public class SwfHeaderInfo {
 
     /**
      * 宽高解析规则表（按控制码）。
+     * @default null
      */
     protected var whRuleList:Array;
 
@@ -136,7 +142,8 @@ public class SwfHeaderInfo {
     }
 
     /**
-     * @return 头信息摘要字符串。
+     * 头信息摘要字符串。
+     * @return 如 <code>[type:FWS,version:...]</code>。
      * @example
      * <listing version="3.0">
      * trace(info.toString());
@@ -203,6 +210,10 @@ public class SwfHeaderInfo {
 
     /**
      * 初始化宽高控制码规则表。
+     * @example
+     * <listing version="3.0">
+     * setWhRuleList();
+     * </listing>
      */
     protected function setWhRuleList():void {
         whRuleList    = [];
@@ -221,6 +232,10 @@ public class SwfHeaderInfo {
      * @param list 规则表。
      * @param str 控制码十六进制字符串。
      * @return position 数组。
+     * @example
+     * <listing version="3.0">
+     * var pos:Array = getWhRulePosition(whRuleList, '50');
+     * </listing>
      */
     protected function getWhRulePosition(list:Array, str:String):Array {
         for (var i:String in list) {

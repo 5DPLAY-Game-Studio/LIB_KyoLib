@@ -39,6 +39,7 @@ import net.play5d.kyo.utils.KyoDisplayUtils;
  * @see #stage
  * @see #shine()
  * @see #shake()
+ * @see DisplayEffect
  */
 public class StageEffect {
     /** @private */

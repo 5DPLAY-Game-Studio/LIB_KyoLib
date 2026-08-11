@@ -243,6 +243,10 @@ public class KyoTileList extends Sprite {
      * 返回子项在 <code>#displays</code> 中的索引。
      * @param child 子显示对象。
      * @return 索引，不存在时为 <code>-1</code>。
+     * @example
+     * <listing version="3.0">
+     * var i:int = list.getChildIndex(icon);
+     * </listing>
      */
     public override function getChildIndex(child:DisplayObject):int {
         return displays.indexOf(child);
@@ -252,6 +256,10 @@ public class KyoTileList extends Sprite {
      * 从列表与显示树中移除子项并重新布局。
      * @param child 待移除对象。
      * @return 被移除的对象。
+     * @example
+     * <listing version="3.0">
+     * list.removeChild(icon);
+     * </listing>
      */
     public override function removeChild(child:DisplayObject):DisplayObject {
         KyoArrayUtils.removeItem(displays, child);
@@ -308,6 +316,10 @@ public class KyoTileList extends Sprite {
      * 按引用移除子项。
      * @param d 待移除对象。
      * @param updateNow 是否立即重新布局，默认 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * list.removeDisplay(icon);
+     * </listing>
      */
     public function removeDisplay(d:DisplayObject, updateNow:Boolean = true):void {
         var id:int = displays.indexOf(d);
@@ -321,6 +333,10 @@ public class KyoTileList extends Sprite {
      * 按索引移除子项。
      * @param id 数组索引。
      * @param updateNow 是否立即重新布局，默认 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * list.removeDisplayAt(0);
+     * </listing>
      */
     public function removeDisplayAt(id:int, updateNow:Boolean = true):void {
         displays.splice(id, 1);
@@ -351,6 +367,10 @@ public class KyoTileList extends Sprite {
      * 从每个非空子项移除同一事件监听。
      * @param event 事件类型。
      * @param handler 监听函数。
+     * @example
+     * <listing version="3.0">
+     * list.removeItemsListener(MouseEvent.CLICK, onItemClick);
+     * </listing>
      */
     public function removeItemsListener(event:String, handler:Function):void {
         for each(var d:DisplayObject in displays) {
@@ -365,6 +385,10 @@ public class KyoTileList extends Sprite {
      * 对每个非空子项调用同名方法并传入相同参数。
      * @param fun 方法名字符串。
      * @param params 可变参数列表。
+     * @example
+     * <listing version="3.0">
+     * list.callAll('gotoAndStop', 1);
+     * </listing>
      */
     public function callAll(fun:String, ...params):void {
         for each (var d:DisplayObject in displays) {
@@ -381,6 +405,10 @@ public class KyoTileList extends Sprite {
      * 在指定索引插入子项并重新布局。
      * @param d 待插入对象。
      * @param index 插入位置。
+     * @example
+     * <listing version="3.0">
+     * list.appendChild(icon, 0);
+     * </listing>
      */
     public function appendChild(d:Object, index:int):void {
         KyoArrayUtils.pushAt(displays, d, index);
@@ -427,6 +455,10 @@ public class KyoTileList extends Sprite {
      *
      * @param h 每行个数。
      * @param v 每列个数。
+     * @example
+     * <listing version="3.0">
+     * list.list(4, 2);
+     * </listing>
      */
     public function list(h:int, v:int):void {
         KyoDisplayUtils.removeAllChildren(this);

@@ -26,11 +26,14 @@ import flash.utils.ByteArray;
 import flash.utils.setTimeout;
 
 /**
- * 基于 <code>Socket</code> 的简易连接封装：回调、断线重连与多种发送方式。
+ * 基于 <code>flash.net.Socket</code> 的简易连接封装：回调、断线重连与多种发送方式。
+ *
+ * <p>非 AIR 专用；定长头 TCP 服务端见 <code>net.play5d.kyo.air.socket</code>。</p>
  *
  * @see #connect()
  * @see #sendMsg()
  * @see #autoConnect
+ * @see flash.net.Socket
  */
 public class KyoSocket {
     /**
@@ -50,18 +53,22 @@ public class KyoSocket {
     public var autoConnectGap:int = 1;
     /**
      * 错误回调，参数为错误描述字符串。
+     * @default null
      */
     public var onError:Function;
     /**
      * 连接成功回调，无参数。
+     * @default null
      */
     public var onConnect:Function;
     /**
      * 连接关闭回调，无参数。
+     * @default null
      */
     public var onClose:Function;
     /**
      * 收到数据回调，参数为 <code>ByteArray</code>。
+     * @default null
      */
     public var onData:Function;
     /** @private */

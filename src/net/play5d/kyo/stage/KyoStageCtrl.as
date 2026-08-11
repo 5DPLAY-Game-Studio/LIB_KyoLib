@@ -41,7 +41,12 @@ import net.play5d.kyo.stage.events.KyoStageEvent;
  */
 public class KyoStageCtrl extends EventDispatcher {
     /**
+     * 构造场景控制器。
      * @param mainStage 承载场景与层的根容器。
+     * @example
+     * <listing version="3.0">
+     * var ctrl:KyoStageCtrl = new KyoStageCtrl(root);
+     * </listing>
      */
     public function KyoStageCtrl(mainStage:Sprite) {
         _mainStage = mainStage;
@@ -150,8 +155,8 @@ public class KyoStageCtrl extends EventDispatcher {
     /**
      * 显示弹出层。
      * @param layer 弹出层场景。
-     * @param x <code>NaN</code> 时水平居中；否则为 x。
-     * @param y <code>NaN</code> 时垂直居中；否则为 y。
+     * @param x 横坐标；默认 0。传 <code>NaN</code> 时水平居中。
+     * @param y 纵坐标；默认 0。传 <code>NaN</code> 时垂直居中。
      * @param removeElse 为 <code>true</code> 时先关闭其他层。
      * @param effect 淡入效果；可省略。
      * @param addBack 加入并效果结束后的回调；可省略。

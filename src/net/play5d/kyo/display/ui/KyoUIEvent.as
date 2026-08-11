@@ -29,13 +29,18 @@ import flash.events.Event;
 public class KyoUIEvent extends Event {
     /**
      * <code>UPDATE</code> 事件的 <code>type</code> 属性值。
-     * @eventType UPDATE
+     * @eventType event-update
      */
     public static const UPDATE:String = 'event-update';
 
     /**
+     * 构造 UI 控件事件。
      * @param type 事件类型。
      * @param params 附加参数（如滚动比例 <code>Point</code>），可选。
+     * @example
+     * <listing version="3.0">
+     * dispatchEvent(new KyoUIEvent(KyoUIEvent.UPDATE, {ratio: 0.5}));
+     * </listing>
      */
     public function KyoUIEvent(type:String, params:Object = null) {
         super(type, false, false);

@@ -138,9 +138,9 @@ public class KyoUIUtils {
     /**
      * 设置 TextField 文本与是否可鼠标交互。
      * @param txt 文本框。
-     * @param text 内容。
+     * @param text 内容（经 <code>String(text)</code> 转换；<code>null</code> 会变成字符串 <code>'null'</code>）。
      * @param mouseEnabled 是否可交互。
-     * @param nullText text 为 null 时的占位。
+     * @param nullText 历史参数；当前实现在 <code>String()</code> 之后判断，通常不会生效。
      * @param autoSize 是否自动缩小字号适配。
      * @example
      * <listing version="3.0">

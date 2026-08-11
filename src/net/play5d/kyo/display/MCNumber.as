@@ -26,9 +26,16 @@ import flash.display.Sprite;
  *
  * @see BMCNumber
  * @see #number
+ * @example
+ * <listing version="3.0">
+ * var num:MCNumber = new MCNumber(DigitMC, 7, 1, -1, 2);
+ * addChild(num);
+ * num.number = 42;
+ * </listing>
  */
 public class MCNumber extends Sprite {
     /**
+     * 构造数字显示。
      * @param mc MovieClip 导出类（含数字帧）。
      * @param number 初始数值。
      * @param startFrame 数字 0 对应的起始帧，默认 1。
@@ -64,6 +71,10 @@ public class MCNumber extends Sprite {
     /**
      * 当前显示的数值。
      * @return 无符号整数。
+     * @example
+     * <listing version="3.0">
+     * num.number; // 42
+     * </listing>
      */
     public function get number():uint {
         return _number;

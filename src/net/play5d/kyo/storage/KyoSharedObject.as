@@ -26,6 +26,7 @@ import flash.net.SharedObject;
  * @see #save()
  * @see #clearLocal()
  * @see SaveDataManager
+ * @see flash.net.SharedObject
  */
 public class KyoSharedObject {
     /**

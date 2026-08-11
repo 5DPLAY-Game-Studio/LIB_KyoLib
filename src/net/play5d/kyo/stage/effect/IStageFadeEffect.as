@@ -31,6 +31,10 @@ public interface IStageFadeEffect {
      * 淡入（弹出）效果。
      * @param stage 目标场景。
      * @param complete 完成回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * effect.fadeIn(layer, onDone);
+     * </listing>
      */
     function fadeIn(stage:IStage, complete:Function = null):void;
 
@@ -38,6 +42,10 @@ public interface IStageFadeEffect {
      * 淡出（关闭）效果。
      * @param stage 目标场景。
      * @param complete 完成回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * effect.fadeOut(layer, onDone);
+     * </listing>
      */
     function fadeOut(stage:IStage, complete:Function = null):void;
 }

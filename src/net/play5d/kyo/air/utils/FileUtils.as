@@ -27,11 +27,12 @@ import net.play5d.kyo.utils.KyoLog;
 /**
  * AIR 本地文件读写（应用目录相对路径辅助）。
  *
- * <p>位于 <code>net.play5d.kyo.air</code> 下，表示<strong>仅 AIR</strong>可用（依赖 <code>flash.filesystem</code>）。壳存档等本地 IO
- * 首选本类。</p>
+ * <p>位于 <code>net.play5d.kyo.air</code> 下，表示<strong>仅 AIR</strong>可用（依赖 <code>flash.filesystem</code>）。
+ * 壳存档等本地 IO 首选本类。</p>
  *
  * @see #writeFile()
  * @see #readTextFile()
+ * @see ProcessUtils
  */
 public class FileUtils {
     /**
@@ -95,7 +96,6 @@ public class FileUtils {
         return File.applicationDirectory.nativePath + '/' + nativeUrl;
     }
 
-
     /**
      * 创建目录（完整路径）。
      * @param url 目录完整路径。
@@ -156,6 +156,5 @@ public class FileUtils {
             KyoLog.log('FileUtils.deleteFile', e);
         }
     }
-
 }
 }

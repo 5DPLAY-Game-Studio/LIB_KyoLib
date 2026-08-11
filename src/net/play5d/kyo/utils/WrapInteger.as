@@ -23,6 +23,11 @@ package net.play5d.kyo.utils {
  *
  * @see #setValue()
  * @see #getValue()
+ * @example
+ * <listing version="3.0">
+ * var w:WrapInteger = new WrapInteger(42);
+ * w.getValue(); // 42
+ * </listing>
  */
 public class WrapInteger {
 
@@ -30,6 +35,7 @@ public class WrapInteger {
     private static var _rndArr:Array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     /**
+     * 构造并写入初始值。
      * @param v 初始值。
      */
     public function WrapInteger(v:int) {
@@ -45,6 +51,10 @@ public class WrapInteger {
     /**
      * 写入新值（重新随机偏移）。
      * @param v 明文整数。
+     * @example
+     * <listing version="3.0">
+     * w.setValue(100);
+     * </listing>
      */
     public function setValue(v:int):void {
         _offset = Math.floor(Math.random() * _rndArr.length);
@@ -54,13 +64,22 @@ public class WrapInteger {
     /**
      * 读取明文整数。
      * @return 当前值。
+     * @example
+     * <listing version="3.0">
+     * var n:int = w.getValue();
+     * </listing>
      */
     public function getValue():int {
         return _w ^ _rndArr[_offset];
     }
 
     /**
+     * 当前值的字符串形式。
      * @return 当前值的字符串形式。
+     * @example
+     * <listing version="3.0">
+     * String(w); // '42'
+     * </listing>
      */
     public function toString():String {
         return getValue().toString();

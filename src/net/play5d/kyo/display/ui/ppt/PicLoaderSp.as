@@ -77,6 +77,10 @@ public class PicLoaderSp extends Sprite {
 
     /**
      * 卸载当前播放器。
+     * @example
+     * <listing version="3.0">
+     * loader.unload();
+     * </listing>
      * @see #destroy()
      */
     public final function unload():void {

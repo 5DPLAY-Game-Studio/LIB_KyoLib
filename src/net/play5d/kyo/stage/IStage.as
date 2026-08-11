@@ -30,22 +30,35 @@ import flash.display.DisplayObject;
 public interface IStage {
     /**
      * 场景显示对象。
+     * @return 根显示对象。
      */
     function get display():DisplayObject;
 
     /**
      * 构建场景（加入显示列表前）。
+     * @example
+     * <listing version="3.0">
+     * stage.build();
+     * </listing>
      */
     function build():void;
 
     /**
      * 加入显示列表后的后续构建。
+     * @example
+     * <listing version="3.0">
+     * stage.afterBuild();
+     * </listing>
      */
     function afterBuild():void;
 
     /**
      * 销毁场景。
      * @param back 销毁完成后的回调；可省略。
+     * @example
+     * <listing version="3.0">
+     * stage.destroy(onDestroyed);
+     * </listing>
      */
     function destroy(back:Function = null):void;
 }

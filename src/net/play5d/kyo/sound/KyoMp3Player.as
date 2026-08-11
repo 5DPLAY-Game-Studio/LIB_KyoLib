@@ -46,10 +46,12 @@ public class KyoMp3Player {
 
     /**
      * 播放模式，见 <code>MODE_ALL_LOOP</code> 等常量。
+     * @default null
      */
     public var playMode:String;
     /**
      * 曲目 URL 列表。
+     * @default []
      */
     public var list:Array = [];
     /** @private */

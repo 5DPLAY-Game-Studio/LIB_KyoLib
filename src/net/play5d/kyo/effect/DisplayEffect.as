@@ -32,6 +32,7 @@ import net.play5d.kyo.utils.KyoDisplayUtils;
  * 显示对象特效工具（残影、缩放影、MC 一次性特效、抖动等）。
  *
  * @see GhostShadowColorTransform
+ * @see StageEffect
  * @see #ghostShadow()
  * @see #zoomShadow()
  * @see #mcEffect()

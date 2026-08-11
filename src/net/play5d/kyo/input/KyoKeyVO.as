@@ -25,8 +25,13 @@ package net.play5d.kyo.input {
  */
 public class KyoKeyVO {
     /**
+     * 构造按键值对象。
      * @param name 键名（映射用）。
      * @param code 键盘 keyCode。
+     * @example
+     * <listing version="3.0">
+     * var key:KyoKeyVO = new KyoKeyVO('A', 65);
+     * </listing>
      */
     public function KyoKeyVO(name:String, code:int) {
         this.name = name;
@@ -35,10 +40,12 @@ public class KyoKeyVO {
 
     /**
      * 键名。
+     * @default null
      */
     public var name:String;
     /**
      * 键盘 keyCode。
+     * @default 0
      */
     public var code:int;
     /**
@@ -48,6 +55,7 @@ public class KyoKeyVO {
     public var isDown:Boolean;
 
     /**
+     * 返回键名。
      * @return 键名。
      * @example
      * <listing version="3.0">

@@ -37,6 +37,7 @@ import flash.utils.flash_proxy;
 public dynamic class JSEnv extends Proxy {
     /**
      * 指向浏览器 <code>window</code> 的代理实例。
+     * @default JSEnv(0)
      */
     public static var $:JSEnv = new JSEnv(0);
 
@@ -49,6 +50,10 @@ public dynamic class JSEnv extends Proxy {
     /**
      * 构造 JS 对象代理。
      * @param id JS 侧引用表 id；0 为 window。
+     * @example
+     * <listing version="3.0">
+     * var win:JSEnv = JSEnv.$;
+     * </listing>
      */
     public function JSEnv(id:int) {
         _objId = id;

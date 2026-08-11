@@ -29,7 +29,7 @@ import flash.events.Event;
 public class KyoTouchEvent extends Event {
     /**
      * <code>SLIDE</code> 事件的 <code>type</code> 属性值。
-     * @eventType SLIDE
+     * @eventType event-slide
      */
     public static const SLIDE:String = 'event-slide';
 
@@ -43,8 +43,13 @@ public class KyoTouchEvent extends Event {
     public static const DIRECT_RIGHT:int = 3;
 
     /**
+     * 构造触摸事件。
      * @param type 事件类型。
      * @param obj 可选属性字典（键写入本实例，如 <code>direct</code>）。
+     * @example
+     * <listing version="3.0">
+     * dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_LEFT}));
+     * </listing>
      */
     public function KyoTouchEvent(type:String, obj:Object = null) {
         for (var key:String in obj) {

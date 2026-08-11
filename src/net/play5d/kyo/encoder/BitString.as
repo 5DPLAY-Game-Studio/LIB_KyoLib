@@ -20,6 +20,8 @@ package net.play5d.kyo.encoder {
 /**
  * JPEG 霍夫曼编码用的位串（长度 + 值）。
  *
+ * <p>由 <code>JPGEncoder</code> 内部写入位流时使用；一般业务代码无需直接构造。</p>
+ *
  * @see JPGEncoder
  */
 public class BitString {

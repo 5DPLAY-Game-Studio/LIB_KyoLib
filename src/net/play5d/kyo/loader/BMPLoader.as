@@ -28,9 +28,9 @@ import flash.net.URLRequest;
 import flash.utils.ByteArray;
 
 /**
- * <code>EVENT_PARSE_ERROR</code> 事件的 <code>type</code> 属性值。
+ * 非 BMP 或解析失败时派发。
  *
- * @eventType parseError
+ * @eventType BMPLoader.EVENT_PARSE_ERROR
  */
 [Event(name='parseError', type='flash.events.Event')]
 /**
@@ -60,13 +60,19 @@ public class BMPLoader extends EventDispatcher {
     public static const EVENT_PARSE_ERROR:String = 'parseError';
 
     /**
-     * 构造函数。
+     * 构造 BMP 加载器。
+     * @example
+     * <listing version="3.0">
+     * var loader:BMPLoader = new BMPLoader();
+     * loader.load('a.bmp');
+     * </listing>
      */
     public function BMPLoader() {
     }
 
     /**
      * 解析成功后的位图。
+     * @default null
      */
     public var content:Bitmap;
 

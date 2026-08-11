@@ -30,7 +30,12 @@ import net.play5d.kyo.stage.IStage;
  */
 public class ElastEffect implements IStageFadeEffect {
     /**
-     * @param duration 动画时长（秒）。
+     * 构造弹性位移效果。
+     * @param duration 动画时长（秒），默认 1。
+     * @example
+     * <listing version="3.0">
+     * var ef:ElastEffect = new ElastEffect(0.8);
+     * </listing>
      */
     public function ElastEffect(duration:Number = 1) {
         _duration = duration;

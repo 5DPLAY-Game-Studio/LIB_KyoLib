@@ -205,6 +205,10 @@ public class PicPointer extends Sprite {
     /**
      * 用新数据重建幻灯（先 <code>destroy</code> 再加载）。
      * @param data 资源 URL 数组。
+     * @example
+     * <listing version="3.0">
+     * pointer.update(['a.jpg', 'b.jpg']);
+     * </listing>
      * @see #initialize()
      * @see #destroy()
      */
@@ -257,6 +261,10 @@ public class PicPointer extends Sprite {
 
     /**
      * 重置并启动自动翻页计时器。
+     * @example
+     * <listing version="3.0">
+     * pointer.resume();
+     * </listing>
      * @see #pause()
      */
     public function resume():void {
@@ -284,6 +292,10 @@ public class PicPointer extends Sprite {
 
     /**
      * 切换到上一页并播放过渡动画。
+     * @example
+     * <listing version="3.0">
+     * pointer.toPrev();
+     * </listing>
      * @see #toNext()
      */
     public function toPrev():void {

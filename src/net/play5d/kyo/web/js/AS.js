@@ -17,9 +17,10 @@
  */
 
 /**
- * Flash ↔ JS 桥接页脚脚本：对象/函数引用表与 js_* 入口供 ExternalInterface 调用。
+ * Flash ↔ JS 桥接页脚脚本：对象/函数引用表与全局 `js_*` 入口，供 ExternalInterface 调用。
  *
- * <p>需与页面中 id 为 <code>fla</code> 的 Flash 对象及 AS 侧 <code>JSEnv</code> 配合。</p>
+ * 需与页面中 id 为 `fla` 的 Flash 对象及 AS 侧 `JSEnv` 配合。
+ * 全局导出：`js_in` / `js_get` / `js_set` / `js_method` / `js_call` / `js_new`。
  */
 +function () {
     var arrRef = [window];

@@ -34,6 +34,7 @@ import flash.utils.setTimeout;
  *
  * @see #createProcess()
  * @see #callCMD()
+ * @see FileUtils
  */
 public class ProcessUtils {
     /**
@@ -55,7 +56,6 @@ public class ProcessUtils {
 
         var exeFile:File = new File(path);
         if (!exeFile.exists) {
-
             return null;
         }
 
@@ -106,7 +106,6 @@ public class ProcessUtils {
 
         var process:NativeProcess = createCMDProcess();
         if (!process) {
-
             return false;
         }
 
@@ -237,6 +236,5 @@ public class ProcessUtils {
 
         return process;
     }
-
 }
 }

@@ -200,24 +200,25 @@ public class MoneyUtils {
 
 /**
  * 千位节节点（文件内）。
+ * @private
  */
 class ThousandNode {
     /**
-     * 构造函数。
+     * @private
      */
     public function ThousandNode() {
     }
 
     /**
-     * 节前是否需补零。
+     * @private 节前是否需补零。
      */
     public var beforeZero:Boolean;
     /**
-     * 节后是否需补零。
+     * @private 节后是否需补零。
      */
     public var afterZero:Boolean;
     /**
-     * 本节点描述。
+     * @private 本节点描述。
      * @default ''
      */
     public var desc:String = '';

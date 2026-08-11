@@ -67,6 +67,10 @@ public class BitmapDataPool {
      * @param transparent 是否透明。
      * @param fillColor 填充色。
      * @return 可绘制的 <code>BitmapData</code>；宽或高非法时为 <code>null</code>。
+     * @example
+     * <listing version="3.0">
+     * var bd:BitmapData = BitmapDataPool.I.acquire(64, 64);
+     * </listing>
      */
     public function acquire(
         width       :int,
@@ -94,6 +98,10 @@ public class BitmapDataPool {
      * 归还位图到池；桶已满则 <code>dispose</code>。
      *
      * @param bd 由 <code>acquire</code> 取得或同尺寸的临时位图。
+     * @example
+     * <listing version="3.0">
+     * BitmapDataPool.I.release(bd);
+     * </listing>
      */
     public function release(bd:BitmapData):void {
         if (!bd) {
@@ -124,6 +132,10 @@ public class BitmapDataPool {
 
     /**
      * 清空并释放池内全部位图。
+     * @example
+     * <listing version="3.0">
+     * BitmapDataPool.I.clear();
+     * </listing>
      */
     public function clear():void {
         for each (var list:Vector.<BitmapData> in _buckets) {

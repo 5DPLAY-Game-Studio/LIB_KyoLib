@@ -50,7 +50,7 @@ public class KyoBGSounder {
      */
     public var sound:Object;
     /**
-     * 当前是否处于播放流程中（非暂停态标记）。
+     * 当前是否处于播放流程中（由 <code>play</code> / <code>stop</code> 置位；<code>pause</code> / <code>resume</code> 不改此标记）。
      * @default false
      */
     public var playing:Boolean;

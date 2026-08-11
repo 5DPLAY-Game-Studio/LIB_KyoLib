@@ -41,6 +41,7 @@ public class PacketBuffer {
 
     /**
      * 追加收到的字节。
+     * <p>缓冲为空（含 <code>clear</code> / 拆包耗尽后）时会直接引用传入的 <code>ByteArray</code>，之后对该对象的写入会影响缓冲。</p>
      * @param ba 本次读到的数据。
      * @example
      * <listing version="3.0">

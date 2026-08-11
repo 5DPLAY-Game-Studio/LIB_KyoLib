@@ -27,6 +27,10 @@ import flash.display.Sprite;
 public class RunJS extends Sprite {
     /**
      * 构造后依次运行各演示。
+     * @example
+     * <listing version="3.0">
+     * addChild(new RunJS());
+     * </listing>
      */
     public function RunJS() {
         jsLine('DOM Demo:');
@@ -42,9 +46,7 @@ public class RunJS extends Sprite {
         demoAjax();
     }
 
-    /**
-     * 浏览器 window 代理。
-     */
+    /** @private 浏览器 window 代理 */
     private var _window:JSEnv = JSEnv.$;
 
     /**

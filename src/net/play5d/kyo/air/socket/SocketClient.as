@@ -30,13 +30,41 @@ import net.play5d.kyo.utils.PacketBuffer;
 import net.play5d.kyo.utils.PacketUtils;
 
 /**
+ * 客户端已连接时分派。
+ * @eventType net.play5d.kyo.air.socket.events.SocketEvent.CLIENT_CONNECT
+ */
+[Event(name='SocketEvent_CLIENT_CONNECT', type='net.play5d.kyo.air.socket.events.SocketEvent')]
+/**
+ * 连接关闭时分派。
+ * @eventType net.play5d.kyo.air.socket.events.SocketEvent.CLOSE
+ */
+[Event(name='SocketEvent_CLOSE', type='net.play5d.kyo.air.socket.events.SocketEvent')]
+/**
+ * 收到完整包体时分派。
+ * @eventType net.play5d.kyo.air.socket.events.SocketEvent.RECEIVE_DATA
+ */
+[Event(name='SocketEvent_RECEIVE_DATA', type='net.play5d.kyo.air.socket.events.SocketEvent')]
+/**
+ * 连接错误时分派。
+ * @eventType net.play5d.kyo.air.socket.events.SocketEvent.ERROR
+ */
+[Event(name='SocketEvent_ERROR', type='net.play5d.kyo.air.socket.events.SocketEvent')]
+/**
  * 定长头（short 长度）TCP 客户端，配合 <code>PacketBuffer</code> 拆包。
  *
- * <p>基于 <code>flash.net.Socket</code>；与 AIR 服务端 <code>SocketServer</code> 成对使用。</p>
+ * <p>基于 <code>flash.net.Socket</code>；与 AIR 服务端 <code>SocketServer</code> 成对使用。
+ * 发送时自动加 2 字节长度头并走 <code>PacketUtils.compress</code>。</p>
  *
  * @see SocketServer
+ * @see SocketEvent
  * @see PacketBuffer
  * @see PacketUtils
+ * @example
+ * <listing version="3.0">
+ * var client:SocketClient = new SocketClient();
+ * client.addEventListener(SocketEvent.CLIENT_CONNECT, onConn);
+ * client.connect('127.0.0.1', 12345);
+ * </listing>
  */
 public class SocketClient extends EventDispatcher {
     /**
@@ -55,6 +83,7 @@ public class SocketClient extends EventDispatcher {
 
     /**
      * 是否已连接。
+     * @default false
      */
     public var isConnected:Boolean;
     /** @private */
@@ -65,6 +94,10 @@ public class SocketClient extends EventDispatcher {
     /**
      * 远端地址描述。
      * @return <code>ip:port</code>。
+     * @example
+     * <listing version="3.0">
+     * client.getSocketServer(); // '127.0.0.1:12345'
+     * </listing>
      */
     public function getSocketServer():String {
         return _clientSocket.remoteAddress + ':' + _clientSocket.remotePort;
@@ -102,6 +135,10 @@ public class SocketClient extends EventDispatcher {
     /**
      * 发送对象或原始字节（自动加长度头）。
      * @param msg <code>ByteArray</code> 或可 <code>writeObject</code> 的数据。
+     * @example
+     * <listing version="3.0">
+     * client.send({type: 1, name: 'hi'});
+     * </listing>
      */
     public function send(msg:Object):void {
         try {
@@ -132,6 +169,10 @@ public class SocketClient extends EventDispatcher {
     /**
      * 将对象 JSON 序列化后发送。
      * @param msg 可被 <code>JSON.stringify</code> 的对象。
+     * @example
+     * <listing version="3.0">
+     * client.sendJSON({cmd: 'ping'});
+     * </listing>
      */
     public function sendJSON(msg:Object):void {
         send(JSON.stringify(msg));

@@ -46,7 +46,7 @@ public class EncryptUtils {
 
     /**
      * AES-128-CBC 加密。
-     * @param source <code>String</code> 或 <code>ByteArray</code>。
+     * @param source <code>String</code> 或 <code>ByteArray</code>；其它类型会导致加密失败。
      * @param key 十六进制密钥字符串。
      * @param iv 十六进制 IV 字符串。
      * @return 密文字节。

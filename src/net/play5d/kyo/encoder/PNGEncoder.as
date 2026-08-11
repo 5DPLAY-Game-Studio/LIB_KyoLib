@@ -24,6 +24,7 @@ import flash.utils.ByteArray;
  * 将 <code>BitmapData</code> 编码为 PNG（IHDR / IDAT / IEND）。
  *
  * @see #encode()
+ * @see JPGEncoder
  */
 public class PNGEncoder {
     /** @private CRC 查找表 */

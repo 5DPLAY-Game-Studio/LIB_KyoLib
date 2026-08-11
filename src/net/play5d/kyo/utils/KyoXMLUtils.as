@@ -105,7 +105,8 @@ public class KyoXMLUtils {
     }
 
     /**
-     * 将 XMLList 转为 uint，无效时返回默认值。
+     * 将 XMLList 转为 uint；仅当解析结果 <code>&gt; 0</code> 时返回该值，否则返回默认值。
+     * <p>注意：解析为 <code>0</code> 或负数时也会回落到默认值（实现为 <code>v &gt; 0</code>）。</p>
      * @param x XMLList。
      * @param defaultNumber 默认值。
      * @return 无符号整数。

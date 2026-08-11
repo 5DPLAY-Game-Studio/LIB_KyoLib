@@ -20,6 +20,9 @@ package net.play5d.kyo.utils {
 /**
  * 同时按 id 与插入顺序索引的映射表。
  *
+ * <p>同一 <code>id</code> 再次 <code>push</code> 会覆盖字典项但仍向顺序数组追加，可能导致 <code>length</code> 与 id 映射不同步。
+ * <code>removeItemById</code> 以真值判断存在，值为 <code>0</code>/<code>false</code>/<code>''</code> 时可能无法删除。</p>
+ *
  * @see ArrayLite
  * @see #push()
  * @see #getItemById()
@@ -40,7 +43,7 @@ public class ArrayMap {
     }
 
     /**
-     * 追加一项（按 id 覆盖字典项，并追加到顺序数组）。
+     * 追加一项（覆盖字典中同 id，并始终追加到顺序数组）。
      * @param id 键。
      * @param value 值。
      * @example
@@ -80,7 +83,8 @@ public class ArrayMap {
     }
 
     /**
-     * 按 id 删除（同步从顺序数组移除）。
+     * 按 id 删除（同步从顺序数组移除首个匹配项）。
+     * <p>以 <code>if (!_o[id])</code> 判断存在，假值无法删除。</p>
      * @param id 键。
      * @example
      * <listing version="3.0">

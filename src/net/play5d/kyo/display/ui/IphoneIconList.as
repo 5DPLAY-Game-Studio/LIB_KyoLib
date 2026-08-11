@@ -276,6 +276,10 @@ public class IphoneIconList extends Sprite {
      * 按引用移除显示对象。
      * @param d 要移除的对象。
      * @param updateNow 是否立即 <code>update</code>，默认 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * list.removeDisplay(icon);
+     * </listing>
      * @see #removeDisplayAt()
      */
     public function removeDisplay(d:DisplayObject, updateNow:Boolean = true):void {
@@ -290,6 +294,10 @@ public class IphoneIconList extends Sprite {
      * 按索引移除显示对象。
      * @param id 索引。
      * @param updateNow 是否立即重建，默认 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * list.removeDisplayAt(0);
+     * </listing>
      */
     public function removeDisplayAt(id:int, updateNow:Boolean = true):void {
         displays.splice(id, 1);
@@ -359,6 +367,10 @@ public class IphoneIconList extends Sprite {
     /**
      * 翻到下一页。
      * @return 是否成功翻页。
+     * @example
+     * <listing version="3.0">
+     * list.nextPage();
+     * </listing>
      * @see #goPage()
      */
     public function nextPage():Boolean {
@@ -368,6 +380,10 @@ public class IphoneIconList extends Sprite {
     /**
      * 翻到上一页。
      * @return 是否成功翻页。
+     * @example
+     * <listing version="3.0">
+     * list.prevPage();
+     * </listing>
      * @see #goPage()
      */
     public function prevPage():Boolean {

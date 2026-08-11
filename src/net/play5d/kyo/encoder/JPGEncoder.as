@@ -26,13 +26,18 @@ import flash.utils.*;
  * <p>构造时按质量生成量化表与霍夫曼表；<code>encode()</code> 输出完整 JPEG 数据。</p>
  *
  * @see #encode()
+ * @see BitString
+ * @see PNGEncoder
  */
 public class JPGEncoder {
 
     /**
      * 按指定质量初始化量化表与霍夫曼表。
-     * @param quality 压缩质量，范围 1–100；超出会被钳制。
-     * @default 50
+     * @param quality 压缩质量，范围 1–100；超出会被钳制，默认 50。
+     * @example
+     * <listing version="3.0">
+     * var encoder:JPGEncoder = new JPGEncoder(80);
+     * </listing>
      */
     public function JPGEncoder(quality:Number = 50) {
         if (quality <= 0) {

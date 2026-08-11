@@ -28,6 +28,8 @@ import net.play5d.kyo.utils.vo.KyoWeatherVO;
 /**
  * 从 Yahoo Weather RSS 加载天气，并解析今日 / 明日预报。
  *
+ * <p><strong>遗留接口</strong>：Yahoo Weather RSS 已下线，通常无法再成功加载；保留仅供历史代码引用。</p>
+ *
  * @see #loadWeather()
  * @see #todayWeather
  * @see net.play5d.kyo.utils.vo.KyoWeatherVO

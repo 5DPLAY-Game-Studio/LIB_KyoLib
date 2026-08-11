@@ -24,14 +24,16 @@ import flash.geom.Point;
 /**
  * 缓动 / 运动工具（静态方法）。
  *
+ * <p>当前仅提供抛物线位移；水平按 <code>speed</code> 正向累加，适用于目标在右侧的情形。</p>
+ *
  * @see #parabola()
  */
 public class KyoEase {
     /**
-     * 抛物线运动：水平匀速，垂直受重力加速，越过目标点后回调。
+     * 抛物线运动：水平正向匀速，垂直受重力加速，越过目标点后回调。
      * @param display 要移动的显示对象。
-     * @param target 目标坐标。
-     * @param speed 水平速度（像素/帧），默认 10。
+     * @param target 目标坐标（通常 <code>x</code> 大于起点）。
+     * @param speed 水平速度（像素/帧，正向），默认 10。
      * @param g 重力加速度，默认 1。
      * @param callBack 到达条件满足时的无参回调，可选。
      * @example

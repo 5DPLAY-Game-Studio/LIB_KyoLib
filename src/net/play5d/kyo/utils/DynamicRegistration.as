@@ -27,8 +27,13 @@ import flash.geom.Point;
  */
 public class DynamicRegistration {
     /**
+     * 构造动态注册点辅助。
      * @param target 目标显示对象。
      * @param regPoint 本地坐标系下的注册点。
+     * @example
+     * <listing version="3.0">
+     * var reg:DynamicRegistration = new DynamicRegistration(mc, new Point(10, 10));
+     * </listing>
      */
     public function DynamicRegistration(target:DisplayObject, regPoint:Point) {
         _target   = target;

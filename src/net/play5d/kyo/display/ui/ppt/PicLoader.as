@@ -97,6 +97,10 @@ public class PicLoader extends Sprite {
 
     /**
      * 移除并卸载内部加载器。
+     * @example
+     * <listing version="3.0">
+     * pic.unload();
+     * </listing>
      * @see #destroy()
      * @see #unloadLoader()
      */
@@ -107,6 +111,10 @@ public class PicLoader extends Sprite {
     /**
      * 按类型卸载给定加载器。
      * @param l <code>ImageLoader</code> 或 <code>SwfLoader</code>。
+     * @example
+     * <listing version="3.0">
+     * pic.unloadLoader(imageLoader);
+     * </listing>
      */
     public final function unloadLoader(l:*):void {
         if (l is ImageLoader) {

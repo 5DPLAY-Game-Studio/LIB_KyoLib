@@ -27,14 +27,19 @@ import flash.events.Event;
 public class KyoEvent extends Event {
     /**
      * <code>CHANGE</code> 事件的 <code>type</code> 属性值。
-     * @eventType CHANGE
+     * @eventType kyo-event-change
      */
     public static const CHANGE:String = 'kyo-event-change';
 
     /**
+     * 构造 UI 通用事件。
      * @param type 事件类型。
      * @param bubbles 是否冒泡，默认 <code>false</code>。
      * @param cancelable 是否可取消，默认 <code>false</code>。
+     * @example
+     * <listing version="3.0">
+     * dispatchEvent(new KyoEvent(KyoEvent.CHANGE));
+     * </listing>
      */
     public function KyoEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);

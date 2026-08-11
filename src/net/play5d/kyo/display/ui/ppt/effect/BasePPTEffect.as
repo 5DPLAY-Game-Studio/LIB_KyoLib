@@ -133,6 +133,10 @@ public class BasePPTEffect {
      * @param cur 当前页。
      * @param next 下一页。
      * @param prev 上一页。
+     * @example
+     * <listing version="3.0">
+     * effect.setPics(cur, next, prev);
+     * </listing>
      * @see #setCurrent()
      * @see #setNext()
      * @see #setPrev()
@@ -148,6 +152,10 @@ public class BasePPTEffect {
     /**
      * 设置当前页并刷新起始布局。
      * @param v 当前页显示对象。
+     * @example
+     * <listing version="3.0">
+     * effect.setCurrent(pageMc);
+     * </listing>
      */
     public final function setCurrent(v:DisplayObject):void {
         _currentPic = v;
@@ -157,6 +165,10 @@ public class BasePPTEffect {
     /**
      * 设置下一页并刷新起始布局。
      * @param v 下一页显示对象。
+     * @example
+     * <listing version="3.0">
+     * effect.setNext(nextMc);
+     * </listing>
      */
     public final function setNext(v:DisplayObject):void {
         _nextPic = v;
@@ -166,6 +178,10 @@ public class BasePPTEffect {
     /**
      * 设置上一页并刷新起始布局。
      * @param v 上一页显示对象。
+     * @example
+     * <listing version="3.0">
+     * effect.setPrev(prevMc);
+     * </listing>
      */
     public final function setPrev(v:DisplayObject):void {
         _prevPic = v;
@@ -175,6 +191,10 @@ public class BasePPTEffect {
     /**
      * 过渡到下一页；子类实现具体动画。
      * @param back 完成回调。
+     * @example
+     * <listing version="3.0">
+     * effect.tweenNext(onDone);
+     * </listing>
      */
     public function tweenNext(back:Function):void {
     }
@@ -182,12 +202,20 @@ public class BasePPTEffect {
     /**
      * 过渡到上一页；子类实现具体动画。
      * @param back 完成回调。
+     * @example
+     * <listing version="3.0">
+     * effect.tweenPrev(onDone);
+     * </listing>
      */
     public function tweenPrev(back:Function):void {
     }
 
     /**
      * 拖拽未达翻页阈值时回弹；子类实现。
+     * @example
+     * <listing version="3.0">
+     * effect.tweenBack();
+     * </listing>
      */
     public function tweenBack():void {
     }
@@ -195,6 +223,12 @@ public class BasePPTEffect {
     /**
      * 是否正在过渡动画中。
      * @return 基类恒为 <code>false</code>；子类按 Tween 状态返回。
+     * @example
+     * <listing version="3.0">
+     * if (!effect.tweening()) {
+     *     effect.tweenNext(onDone);
+     * }
+     * </listing>
      */
     public function tweening():Boolean {
         return false;
@@ -202,6 +236,10 @@ public class BasePPTEffect {
 
     /**
      * 停止当前过渡；子类实现。
+     * @example
+     * <listing version="3.0">
+     * effect.tweenStop();
+     * </listing>
      */
     public function tweenStop():void {
     }

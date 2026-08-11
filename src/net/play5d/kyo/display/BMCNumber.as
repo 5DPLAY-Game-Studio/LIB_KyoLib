@@ -25,9 +25,15 @@ import flash.display.MovieClip;
  *
  * @see MCNumber
  * @see BitmapMovieClip
+ * @example
+ * <listing version="3.0">
+ * var num:BMCNumber = new BMCNumber(DigitMC, 12);
+ * addChild(num);
+ * </listing>
  */
 public class BMCNumber extends MCNumber {
     /**
+     * 构造位图影片数字。
      * @param mc MovieClip 类，或已有 <code>BitmapMCFrameVO</code> 帧数组。
      * @param number 初始数值。
      * @param startFrame 数字起始帧，默认 1。

@@ -36,10 +36,15 @@ public class KyoStageEvent extends Event {
     public static const CHANGE_STATE:String = 'CHANGE_STATE';
 
     /**
+     * 构造场景事件。
      * @param type 事件类型。
      * @param stage 相关场景。
      * @param bubbles 是否冒泡。
      * @param cancelable 是否可取消。
+     * @example
+     * <listing version="3.0">
+     * dispatchEvent(new KyoStageEvent(KyoStageEvent.CHANGE_STATE, stg));
+     * </listing>
      */
     public function KyoStageEvent(type:String, stage:IStage, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);
@@ -48,6 +53,7 @@ public class KyoStageEvent extends Event {
 
     /**
      * 事件关联的场景。
+     * @default null
      */
     public var stage:IStage;
 }

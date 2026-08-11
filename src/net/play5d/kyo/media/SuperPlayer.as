@@ -183,7 +183,7 @@ public class SuperPlayer extends Sprite {
     }
 
     /**
-     * 视频元数据（时长等）。
+     * 视频元数据（时长等）；无视频时访问会出错，请先确认已加载视频。
      * @return 元数据对象。
      */
     public function get videoMetaData():Object {
@@ -274,7 +274,7 @@ public class SuperPlayer extends Sprite {
     }
 
     /**
-     * 切换视频播放 / 暂停。
+     * 切换视频播放 / 暂停；无视频时访问会出错。
      * @example
      * <listing version="3.0">
      * player.toggleMovie();
@@ -463,26 +463,43 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 /**
+ * 播放完成时派发。
+ * @eventType InsVideo.PLAY_COMPLETE
+ */
+[Event(name='insvideo.play.complete', type='flash.events.Event')]
+/**
+ * 播放失败时派发。
+ * @eventType InsVideo.PLAY_FAIL
+ */
+[Event(name='insvideo.play.fail', type='flash.events.Event')]
+/**
+ * 元数据就绪时派发。
+ * @eventType InsVideo.META_DATA
+ */
+[Event(name='insvideo.event.metadata', type='flash.events.Event')]
+/**
  * NetStream 视频播放包装（文件内 internal）。
+ * @private
  */
 internal class InsVideo extends Sprite {
     /**
-     * 播放完成。
+     * <code>PLAY_COMPLETE</code> 事件的 <code>type</code> 属性值。
      * @eventType insvideo.play.complete
      */
     public static const PLAY_COMPLETE:String = 'insvideo.play.complete';
     /**
-     * 播放失败。
+     * <code>PLAY_FAIL</code> 事件的 <code>type</code> 属性值。
      * @eventType insvideo.play.fail
      */
     public static const PLAY_FAIL:String     = 'insvideo.play.fail';
     /**
-     * 元数据就绪。
+     * <code>META_DATA</code> 事件的 <code>type</code> 属性值。
      * @eventType insvideo.event.metadata
      */
     public static const META_DATA:String     = 'insvideo.event.metadata';
 
     /**
+     * 构造并连接 NetStream（初始为暂停）。
      * @param url 视频 URL。
      * @param size 显示尺寸。
      */
@@ -512,15 +529,19 @@ internal class InsVideo extends Sprite {
     }
 
     /**
-     * 是否在缓冲空时自动 resume（本类内循环逻辑）。
+     * 为 <code>true</code> 时，在 <code>Play.Complete</code> / <code>Buffer.Empty</code> 上自动 <code>resume</code>。
+     * <p><code>SuperPlayer</code> 的循环由外层 <code>_loopPlay</code> 处理，通常不设置本字段。</p>
+     * @default false
      */
     public var loopPlay:Boolean;
     /**
      * 是否正在播放。
+     * @default false
      */
     public var playing:Boolean;
     /**
      * onMetaData 对象。
+     * @default null
      */
     public var metadata:Object;
     /** @private */
@@ -536,6 +557,10 @@ internal class InsVideo extends Sprite {
 
     /**
      * 从开头重新播放。
+     * @example
+     * <listing version="3.0">
+     * video.play();
+     * </listing>
      */
     public function play():void {
         playing = true;
@@ -549,6 +574,10 @@ internal class InsVideo extends Sprite {
 
     /**
      * 暂停。
+     * @example
+     * <listing version="3.0">
+     * video.pause();
+     * </listing>
      */
     public function pause():void {
         playing = false;
@@ -557,6 +586,10 @@ internal class InsVideo extends Sprite {
 
     /**
      * 继续。
+     * @example
+     * <listing version="3.0">
+     * video.resume();
+     * </listing>
      */
     public function resume():void {
         playing = true;
@@ -565,6 +598,10 @@ internal class InsVideo extends Sprite {
 
     /**
      * 停止并稍后关闭流。
+     * @example
+     * <listing version="3.0">
+     * video.stop();
+     * </listing>
      */
     public function stop():void {
         playing = false;
@@ -576,6 +613,10 @@ internal class InsVideo extends Sprite {
 
     /**
      * 销毁连接与视频。
+     * @example
+     * <listing version="3.0">
+     * video.destroy();
+     * </listing>
      */
     public function destroy():void {
         stop();

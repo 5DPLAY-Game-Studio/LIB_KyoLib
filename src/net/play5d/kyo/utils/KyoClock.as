@@ -206,6 +206,7 @@ public class KyoClock {
 
     /**
      * 停止并释放定时器与回调表。
+     * <p>之后若再调用 <code>addCallback</code> 等依赖回调表的方法会出错，需重新构造实例。</p>
      * @example
      * <listing version="3.0">
      * clock.clear();

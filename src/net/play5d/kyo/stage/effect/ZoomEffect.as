@@ -33,8 +33,13 @@ import net.play5d.kyo.stage.IStage;
  */
 public class ZoomEffect implements IStageFadeEffect {
     /**
-     * @param duration 时长（秒）。
-     * @param back 淡入是否使用 <code>Back.easeOut</code>。
+     * 构造缩放弹出效果。
+     * @param duration 时长（秒），默认 0.3。
+     * @param back 淡入是否使用 <code>Back.easeOut</code>，默认 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * var ef:ZoomEffect = new ZoomEffect(0.3, true);
+     * </listing>
      */
     public function ZoomEffect(duration:Number = 0.3, back:Boolean = true) {
         _duration = duration;

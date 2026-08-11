@@ -48,10 +48,12 @@ public class PreLoader extends MovieClip {
     public var showLoadbar:Boolean = true;
     /**
      * 加载完成后要实例化的主类全名。
+     * @default null
      */
     protected var _mainClass:String;
     /**
      * 进度条实例。
+     * @default null
      */
     protected var _loadbar:LoaderBar;
 
@@ -83,6 +85,10 @@ public class PreLoader extends MovieClip {
     /**
      * 进度更新钩子；默认驱动进度条。
      * @param p 0~1。
+     * @example
+     * <listing version="3.0">
+     * onProgress(0.5);
+     * </listing>
      */
     protected function onProgress(p:Number):void {
         if (_loadbar) {
@@ -93,6 +99,11 @@ public class PreLoader extends MovieClip {
     /**
      * 加载完成：移除进度条，跳到第 2 帧并添加主类实例。
      * @param e 完成事件。
+     * @example
+     * <listing version="3.0">
+     * // 由 loaderInfo COMPLETE 触发
+     * loadComplete(e);
+     * </listing>
      */
     protected function loadComplete(e:Event):void {
         if (_loadbar) {

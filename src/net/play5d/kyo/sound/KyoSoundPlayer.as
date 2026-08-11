@@ -208,9 +208,11 @@ import flash.media.SoundTransform;
 
 /**
  * 单声道播放包装（文件内 internal）。
+ * @private
  */
 internal class InsSound {
     /**
+     * 构造声道包装。
      * @param sound 声音实例。
      */
     public function InsSound(sound:Sound) {
@@ -219,10 +221,12 @@ internal class InsSound {
 
     /**
      * 是否正在播放。
+     * @default false
      */
     public var playing:Boolean;
     /**
      * 播放完成回调。
+     * @default null
      */
     public var onComplete:Function;
     /** @private */
@@ -254,6 +258,10 @@ internal class InsSound {
      * 开始播放。
      * @param loop 循环次数。
      * @param volume 音量。
+     * @example
+     * <listing version="3.0">
+     * ins.play(1, 0.8);
+     * </listing>
      */
     public function play(loop:int, volume:Number):void {
         _volume = volume;
@@ -263,6 +271,10 @@ internal class InsSound {
 
     /**
      * 停止。
+     * @example
+     * <listing version="3.0">
+     * ins.stop();
+     * </listing>
      */
     public function stop():void {
         if (_channel) {

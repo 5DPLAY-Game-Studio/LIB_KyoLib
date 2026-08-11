@@ -20,6 +20,9 @@ package net.play5d.kyo.utils {
 /**
  * 以 id 为键的轻量字典，并维护元素个数 <code>length</code>。
  *
+ * <p>以真值判断键是否已存在：存入 <code>0</code>/<code>false</code>/<code>''</code> 等假值时，
+ * <code>length</code> 增减可能不准，删除也可能被跳过。</p>
+ *
  * @see ArrayMap
  * @see #push()
  * @see #getItem()

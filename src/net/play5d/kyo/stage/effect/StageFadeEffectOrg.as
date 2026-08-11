@@ -28,11 +28,16 @@ import net.play5d.kyo.stage.IStage;
  */
 public class StageFadeEffectOrg implements IStageFadeEffect {
     /**
-     * @param time 时长（秒）。
-     * @param x 是否对 x 做从 0 补间回原值。
-     * @param y 是否对 y 做从 0 补间回原值。
-     * @param alpha 是否对 alpha 做从 0 补间回原值。
+     * 构造原点补间淡入效果。
+     * @param time 时长（秒），默认 0.5。
+     * @param x 是否对 x 做从 0 补间回原值，默认 <code>false</code>。
+     * @param y 是否对 y 做从 0 补间回原值，默认 <code>false</code>。
+     * @param alpha 是否对 alpha 做从 0 补间回原值，默认 <code>false</code>。
      * @param easeFun TweenLite ease 函数；可省略。
+     * @example
+     * <listing version="3.0">
+     * var ef:StageFadeEffectOrg = new StageFadeEffectOrg(0.5, false, true, true);
+     * </listing>
      */
     public function StageFadeEffectOrg(
         time   :Number = 0.5,
@@ -89,9 +94,13 @@ public class StageFadeEffectOrg implements IStageFadeEffect {
     }
 
     /**
-     * 淡出（当前为空实现）。
+     * 淡出（当前为空实现，不调用 <code>complete</code>）。
      * @param stage 目标场景。
      * @param complete 完成回调（未调用）。
+     * @example
+     * <listing version="3.0">
+     * new StageFadeEffectOrg().fadeOut(layer);
+     * </listing>
      */
     public function fadeOut(stage:IStage, complete:Function = null):void {
     }

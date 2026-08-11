@@ -35,8 +35,14 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class WaterWaveEffect extends Sprite {
     /**
+     * 构造水波纹效果，并做一次空渲染以初始化缓冲。
      * @param img 源位图（效果生命周期内由本类持有并在 <code>destroy</code> 时 dispose）。
      * @param scale 显示缩放倍数，默认 1。
+     * @example
+     * <listing version="3.0">
+     * var wave:WaterWaveEffect = new WaterWaveEffect(bd, 1);
+     * addChild(wave);
+     * </listing>
      */
     public function WaterWaveEffect(img:BitmapData, scale:int = 1) {
         _surface = img;
