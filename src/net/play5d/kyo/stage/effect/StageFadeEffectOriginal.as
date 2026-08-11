@@ -26,7 +26,7 @@ import net.play5d.kyo.stage.IStage;
  *
  * @see IStageFadeEffect
  */
-public class StageFadeEffectOrg implements IStageFadeEffect {
+public class StageFadeEffectOriginal implements IStageFadeEffect {
     /**
      * 构造原点补间淡入效果。
      * @param time 时长（秒），默认 0.5。
@@ -36,10 +36,10 @@ public class StageFadeEffectOrg implements IStageFadeEffect {
      * @param easeFun TweenLite ease 函数；可省略。
      * @example
      * <listing version="3.0">
-     * var ef:StageFadeEffectOrg = new StageFadeEffectOrg(0.5, false, true, true);
+     * var ef:StageFadeEffectOriginal = new StageFadeEffectOriginal(0.5, false, true, true);
      * </listing>
      */
-    public function StageFadeEffectOrg(
+    public function StageFadeEffectOriginal(
         time   :Number = 0.5,
         x      :Boolean = false,
         y      :Boolean = false,
@@ -66,7 +66,7 @@ public class StageFadeEffectOrg implements IStageFadeEffect {
      * @param complete 完成回调；可省略。
      * @example
      * <listing version="3.0">
-     * new StageFadeEffectOrg(0.5, false, true, true).fadeIn(layer);
+     * new StageFadeEffectOriginal(0.5, false, true, true).fadeIn(layer);
      * </listing>
      */
     public function fadeIn(stage:IStage, complete:Function = null):void {
@@ -99,7 +99,7 @@ public class StageFadeEffectOrg implements IStageFadeEffect {
      * @param complete 完成回调（未调用）。
      * @example
      * <listing version="3.0">
-     * new StageFadeEffectOrg().fadeOut(layer);
+     * new StageFadeEffectOriginal().fadeOut(layer);
      * </listing>
      */
     public function fadeOut(stage:IStage, complete:Function = null):void {

@@ -28,16 +28,16 @@ import net.play5d.kyo.stage.IStage;
  * @see IStageFadeEffect
  * @see ZoomEffect
  */
-public class ElastEffect implements IStageFadeEffect {
+public class ElasticEffect implements IStageFadeEffect {
     /**
      * 构造弹性位移效果。
      * @param duration 动画时长（秒），默认 1。
      * @example
      * <listing version="3.0">
-     * var ef:ElastEffect = new ElastEffect(0.8);
+     * var ef:ElasticEffect = new ElasticEffect(0.8);
      * </listing>
      */
-    public function ElastEffect(duration:Number = 1) {
+    public function ElasticEffect(duration:Number = 1) {
         _duration = duration;
     }
 
@@ -50,7 +50,7 @@ public class ElastEffect implements IStageFadeEffect {
      * @param complete 完成回调（当前实现未调用）。
      * @example
      * <listing version="3.0">
-     * new ElastEffect().fadeIn(stage);
+     * new ElasticEffect().fadeIn(stage);
      * </listing>
      */
     public function fadeIn(stage:IStage, complete:Function = null):void {
@@ -63,7 +63,7 @@ public class ElastEffect implements IStageFadeEffect {
      * @param complete 完成回调（当前实现未调用）。
      * @example
      * <listing version="3.0">
-     * new ElastEffect().fadeOut(stage);
+     * new ElasticEffect().fadeOut(stage);
      * </listing>
      */
     public function fadeOut(stage:IStage, complete:Function = null):void {

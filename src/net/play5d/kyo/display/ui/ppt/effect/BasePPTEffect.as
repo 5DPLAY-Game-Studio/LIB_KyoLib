@@ -30,9 +30,9 @@ import net.play5d.kyo.display.ui.ppt.PicPointer;
  *
  * <p>负责绑定 <code>PicPointer</code>、管理当前/上一/下一页显示对象，以及可选的拖拽翻页流程；具体过渡由子类实现。</p>
  *
- * @see PPTef_alpha
- * @see PPTef_scrollH
- * @see PPTef_scrollV
+ * @see PPTEffect_alpha
+ * @see PPTEffect_scrollH
+ * @see PPTEffect_scrollV
  * @see net.play5d.kyo.display.ui.ppt.PicPointer
  */
 public class BasePPTEffect {

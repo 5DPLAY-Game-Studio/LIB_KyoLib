@@ -115,18 +115,18 @@ public class KyoTouchInput extends EventDispatcher {
 
         if (Math.abs(dx) >= Math.abs(dy)) {
             if (dx > slidePos) {
-                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_RIGHT}));
+                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direction: KyoTouchEvent.DIRECTION_RIGHT}));
             }
             if (dx < -slidePos) {
-                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_LEFT}));
+                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direction: KyoTouchEvent.DIRECTION_LEFT}));
             }
         }
         else {
             if (dy > slidePos) {
-                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_DOWN}));
+                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direction: KyoTouchEvent.DIRECTION_DOWN}));
             }
             if (dy < -slidePos) {
-                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_UP}));
+                dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direction: KyoTouchEvent.DIRECTION_UP}));
             }
         }
     }

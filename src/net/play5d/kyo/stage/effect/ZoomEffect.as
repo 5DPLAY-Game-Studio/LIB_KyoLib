@@ -29,7 +29,7 @@ import net.play5d.kyo.stage.IStage;
  * 缩放弹出 / 缩回的场景层效果。
  *
  * @see IStageFadeEffect
- * @see ElastEffect
+ * @see ElasticEffect
  */
 public class ZoomEffect implements IStageFadeEffect {
     /**

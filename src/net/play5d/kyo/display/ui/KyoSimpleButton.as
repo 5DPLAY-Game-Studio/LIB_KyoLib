@@ -34,13 +34,13 @@ import net.play5d.kyo.utils.KyoColor;
  * @see #btnWidth
  * @see #btnHeight
  */
-public class KyoSimpButton extends Sprite {
+public class KyoSimpleButton extends Sprite {
     /**
      * @param label 按钮文字。
      * @param width 宽，默认 50。
      * @param height 高，默认 20。
      */
-    public function KyoSimpButton(label:String, width:Number = 50, height:Number = 20) {
+    public function KyoSimpleButton(label:String, width:Number = 50, height:Number = 20) {
         super();
 
         btnWidth  = width;

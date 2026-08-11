@@ -24,7 +24,7 @@ import flash.events.Event;
  *
  * @see KyoTouchInput
  * @see #SLIDE
- * @see #direct
+ * @see #direction
  */
 public class KyoTouchEvent extends Event {
     /**
@@ -34,21 +34,21 @@ public class KyoTouchEvent extends Event {
     public static const SLIDE:String = 'event-slide';
 
     /** 向上滑动。 */
-    public static const DIRECT_UP:int    = 0;
+    public static const DIRECTION_UP:int    = 0;
     /** 向下滑动。 */
-    public static const DIRECT_DOWN:int  = 6;
+    public static const DIRECTION_DOWN:int  = 6;
     /** 向左滑动。 */
-    public static const DIRECT_LEFT:int  = 9;
+    public static const DIRECTION_LEFT:int  = 9;
     /** 向右滑动。 */
-    public static const DIRECT_RIGHT:int = 3;
+    public static const DIRECTION_RIGHT:int = 3;
 
     /**
      * 构造触摸事件。
      * @param type 事件类型。
-     * @param obj 可选属性字典（键写入本实例，如 <code>direct</code>）。
+     * @param obj 可选属性字典（键写入本实例，如 <code>direction</code>）。
      * @example
      * <listing version="3.0">
-     * dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direct: KyoTouchEvent.DIRECT_LEFT}));
+     * dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direction: KyoTouchEvent.DIRECTION_LEFT}));
      * </listing>
      */
     public function KyoTouchEvent(type:String, obj:Object = null) {
@@ -59,9 +59,9 @@ public class KyoTouchEvent extends Event {
     }
 
     /**
-     * 滑动方向，见 <code>DIRECT_UP</code> 等常量。
+     * 滑动方向，见 <code>DIRECTION_UP</code> 等常量。
      * @default 0
      */
-    public var direct:int;
+    public var direction:int;
 }
 }

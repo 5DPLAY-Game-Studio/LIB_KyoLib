@@ -34,14 +34,14 @@ import net.play5d.kyo.utils.KyoStringUtils;
  * @see #load()
  * @see #finish()
  */
-public class PicLoaderSp extends Sprite {
+public class PicLoaderSprite extends Sprite {
     /** @private 位图扩展名（小写、无点） */
     private static const BITMAP_EXTENSIONS:Array = ['jpg', 'jpeg', 'gif', 'png'];
 
     /**
      * @param size 显示区域尺寸。
      */
-    public function PicLoaderSp(size:Point) {
+    public function PicLoaderSprite(size:Point) {
         this._size = size;
     }
 
@@ -112,7 +112,7 @@ public class PicLoaderSp extends Sprite {
      */
     public final function load(back:Function = null, isCurrent:Boolean = false):void {
         if (!_url) {
-            trace('PicLoaderSp : url is null!');
+            trace('PicLoaderSprite : url is null!');
 
             return;
         }

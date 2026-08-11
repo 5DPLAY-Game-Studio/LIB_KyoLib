@@ -20,9 +20,9 @@ package net.play5d.kyo.display.ui {
 /**
  * iPhone 风格图标列表中的可拖拽按钮约定。
  *
- * <p><code>IphoneIconList</code> 在列表拖拽开始时会对实现本接口的子项调用 <code>onDrag</code>。</p>
+ * <p><code>IPhoneIconList</code> 在列表拖拽开始时会对实现本接口的子项调用 <code>onDrag</code>。</p>
  *
- * @see IphoneIconList
+ * @see IPhoneIconList
  */
 public interface IPhoneBtn {
     /**

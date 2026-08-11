@@ -22,9 +22,9 @@ import net.play5d.kyo.stage.IStage;
 /**
  * 场景层淡入 / 淡出效果接口。
  *
- * @see ElastEffect
+ * @see ElasticEffect
  * @see ZoomEffect
- * @see StageFadeEffectOrg
+ * @see StageFadeEffectOriginal
  */
 public interface IStageFadeEffect {
     /**

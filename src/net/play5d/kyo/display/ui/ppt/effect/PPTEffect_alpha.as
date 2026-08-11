@@ -26,11 +26,11 @@ import com.greensock.TweenLite;
  * @see #tweenNext()
  * @see #tweenPrev()
  */
-public class PPTef_alpha extends BasePPTEffect {
+public class PPTEffect_alpha extends BasePPTEffect {
     /**
      * 构造淡入淡出效果。
      */
-    public function PPTef_alpha() {
+    public function PPTEffect_alpha() {
         super();
     }
 

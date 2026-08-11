@@ -61,15 +61,15 @@ public class KyoScroller {
 
     /**
      * 开始滚动。
-     * @param direct 方向：1 右→左，2 左→右，3 上→下，4 下→上；默认 1。
+     * @param direction 方向：1 右→左，2 左→右，3 上→下，4 下→上；默认 1。
      * @example
      * <listing version="3.0">
      * scroller.start(1);
      * </listing>
      * @see #stop()
      */
-    public function start(direct:int = 1):void {
-        _direction = direct;
+    public function start(direction:int = 1):void {
+        _direction = direction;
 
         stop();
         _d.addEventListener(Event.ENTER_FRAME, onMoving);

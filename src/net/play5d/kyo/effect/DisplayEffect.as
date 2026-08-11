@@ -42,7 +42,7 @@ public class DisplayEffect {
     /**
      * 在目标当前位置留下残影，逐帧降低透明度后移除。
      * @param d 被截图的显示对象（须已有 parent）。
-     * @param alphaLose 每帧减少的透明度，默认 0.1。
+     * @param alphaLoss 每帧减少的透明度，默认 0.1。
      * @param startAlpha 残影初始透明度，默认 1。
      * @param colorTransform 残影颜色变换，可选。
      * @example
@@ -54,7 +54,7 @@ public class DisplayEffect {
      */
     public static function ghostShadow(
         d             :DisplayObject,
-        alphaLose     :Number = 0.1,
+        alphaLoss     :Number = 0.1,
         startAlpha    :Number = 1,
         colorTransform:ColorTransform = null
     ):void {
@@ -65,7 +65,7 @@ public class DisplayEffect {
 
         var params:Object = {
             parent   : pt,
-            alphaLose: alphaLose
+            alphaLoss: alphaLoss
         };
         var bitmapParams:Object = {
             alpha: startAlpha
@@ -89,7 +89,7 @@ public class DisplayEffect {
      * 缩放残影：截图后逐帧放大并淡出。
      * @param d 被截图的显示对象。
      * @param scaleAdd 每帧缩放增量，默认 0.1。
-     * @param alphaLose 每帧透明度减量，默认 0.05。
+     * @param alphaLoss 每帧透明度减量，默认 0.05。
      * @param startAlpha 初始透明度，默认 1。
      * @param colorTransform 颜色变换，可选。
      * @param parent 残影父容器；默认 <code>d.parent</code>。
@@ -104,7 +104,7 @@ public class DisplayEffect {
     public static function zoomShadow(
         d             :DisplayObject,
         scaleAdd      :Number = .1,
-        alphaLose     :Number = 0.05,
+        alphaLoss     :Number = 0.05,
         startAlpha    :Number = 1,
         colorTransform:ColorTransform = null,
         parent        :DisplayObjectContainer = null,
@@ -117,7 +117,7 @@ public class DisplayEffect {
 
         var params:Object = {
             parent   : parent,
-            alphaLose: alphaLose,
+            alphaLoss: alphaLoss,
             scaleAdd : scaleAdd
         };
         var bitmapParams:Object = {
@@ -254,7 +254,7 @@ internal class InsShadow {
     /** @private 残影位图 */
     public var bitmap:Bitmap;
     /** @private 每帧透明度减量 */
-    public var alphaLose:Number = 0.1;
+    public var alphaLoss:Number = 0.1;
     /** @private 残影所在容器 */
     public var parent:DisplayObjectContainer;
     /** @private 每帧缩放增量；0 表示不缩放 */
@@ -286,7 +286,7 @@ internal class InsShadow {
      * @private 淡出 / 缩放，结束后移除并 dispose。
      */
     private function onEnterFrame(e:Event):void {
-        bitmap.alpha -= alphaLose;
+        bitmap.alpha -= alphaLoss;
 
         if (scaleAdd != 0) {
             bitmap.scaleX += _scaleAddP.x;

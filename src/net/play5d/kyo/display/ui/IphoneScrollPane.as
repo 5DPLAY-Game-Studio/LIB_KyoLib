@@ -37,11 +37,11 @@ import net.play5d.kyo.utils.KyoMath;
  * @see #scrollV
  * @see #move()
  */
-public class IphoneScrollPane extends Sprite {
+public class IPhoneScrollPane extends Sprite {
     /**
      * @param size 可视区域尺寸。
      */
-    public function IphoneScrollPane(size:Point) {
+    public function IPhoneScrollPane(size:Point) {
         _size = size;
     }
 

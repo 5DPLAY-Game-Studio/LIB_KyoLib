@@ -24,12 +24,12 @@ import flash.geom.Rectangle;
 /**
  * 滚动面板 / 拖拽列表共用的拖拽判定与坐标辅助。
  *
- * <p>供 <code>KyoScrollPane</code>、<code>IphoneScrollPane</code>、<code>KyoDragList</code> 等复用；
+ * <p>供 <code>KyoScrollPane</code>、<code>IPhoneScrollPane</code>、<code>KyoDragList</code> 等复用；
  * 不改变各组件自身的惯性 / 回弹策略。</p>
  *
  * @see KyoDragType
  * @see KyoScrollPane
- * @see IphoneScrollPane
+ * @see IPhoneScrollPane
  * @see KyoDragList
  */
 public class KyoScrollDragUtil {

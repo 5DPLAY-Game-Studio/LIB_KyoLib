@@ -25,24 +25,24 @@ import flash.geom.Point;
 import net.play5d.kyo.utils.KyoAlign;
 
 /**
- * <code>IphoneIconList</code> 的页码指示器：每页一个 MC，点击可跳转。
+ * <code>IPhoneIconList</code> 的页码指示器：每页一个 MC，点击可跳转。
  *
  * <p>指示器 MC 需支持帧 1（当前页）/ 帧 2（非当前），并带动态属性 <code>pg</code>（页码）。</p>
  *
- * @see IphoneIconList
- * @see IphoneIconListEvent
+ * @see IPhoneIconList
+ * @see IPhoneIconListEvent
  * @see #update()
  */
-public class IphoneIconListDoc extends Sprite {
+public class IPhoneIconListIndicator extends Sprite {
     /**
-     * @param docClass 指示器 MovieClip 类。
+     * @param indicatorClass 指示器 MovieClip 类。
      * @param list 关联的图标列表。
      */
-    public function IphoneIconListDoc(docClass:Class, list:IphoneIconList) {
+    public function IPhoneIconListIndicator(indicatorClass:Class, list:IPhoneIconList) {
         super();
-        _docClass = docClass;
-        _iconList = list;
-        _iconList.addEventListener(IphoneIconListEvent.PAGE_CHANGE, update);
+        _indicatorClass = indicatorClass;
+        _iconList       = list;
+        _iconList.addEventListener(IPhoneIconListEvent.PAGE_CHANGE, update);
         update();
     }
 
@@ -52,9 +52,9 @@ public class IphoneIconListDoc extends Sprite {
      */
     public var gap:Point = new Point(20, 0);
     /** @private */
-    private var _iconList:IphoneIconList;
+    private var _iconList:IPhoneIconList;
     /** @private */
-    private var _docClass:Class;
+    private var _indicatorClass:Class;
     /** @private 指示器 tile 列表 */
     private var _list:KyoTileList;
 
@@ -63,7 +63,7 @@ public class IphoneIconListDoc extends Sprite {
      * @param params 可忽略（兼容事件监听签名）。
      * @example
      * <listing version="3.0">
-     * doc.update();
+     * indicator.update();
      * </listing>
      */
     public function update(...params):void {
@@ -72,17 +72,17 @@ public class IphoneIconListDoc extends Sprite {
 
         var ds:Array = [];
         for (var i:int; i < total; i++) {
-            var c:MovieClip = new _docClass();
+            var c:MovieClip = new _indicatorClass();
             c.pg            = i + 1;
             c.gotoAndStop((i + 1 == current) ? 1 : 2);
-            c.addEventListener(MouseEvent.CLICK, onDocClick);
+            c.addEventListener(MouseEvent.CLICK, onIndicatorClick);
             ds.push(c);
         }
         if (!_list) {
-            _list           = new KyoTileList();
+            _list          = new KyoTileList();
             _list.unitSize = new Point(11, 11);
-            _list.lockSize  = true;
-            _list.gap       = gap;
+            _list.lockSize = true;
+            _list.gap      = gap;
             addChild(_list);
         }
         _list.setDisplays(ds);
@@ -95,12 +95,12 @@ public class IphoneIconListDoc extends Sprite {
      * 移除翻页监听并清空指示器子项。
      * @example
      * <listing version="3.0">
-     * doc.destroy();
+     * indicator.destroy();
      * </listing>
      */
     public function destroy():void {
         if (_iconList) {
-            _iconList.removeEventListener(IphoneIconListEvent.PAGE_CHANGE, update);
+            _iconList.removeEventListener(IPhoneIconListEvent.PAGE_CHANGE, update);
         }
         if (_list) {
             _list.removeAllChildren();
@@ -110,7 +110,7 @@ public class IphoneIconListDoc extends Sprite {
     /**
      * @private 点击指示器跳页。
      */
-    private function onDocClick(e:MouseEvent):void {
+    private function onIndicatorClick(e:MouseEvent):void {
         var c:MovieClip = e.currentTarget as MovieClip;
         _iconList.goPage(c.pg);
     }

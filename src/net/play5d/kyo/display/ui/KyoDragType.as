@@ -23,7 +23,7 @@ package net.play5d.kyo.display.ui {
  * @see KyoDragList
  * @see KyoDragSelector
  * @see KyoScrollPane
- * @see IphoneScrollPane
+ * @see IPhoneScrollPane
  * @see KyoScrollDragUtil
  */
 public class KyoDragType {

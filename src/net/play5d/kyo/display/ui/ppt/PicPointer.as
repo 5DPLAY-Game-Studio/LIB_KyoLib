@@ -26,7 +26,7 @@ import flash.text.TextField;
 import flash.utils.Timer;
 
 import net.play5d.kyo.display.ui.ppt.effect.BasePPTEffect;
-import net.play5d.kyo.display.ui.ppt.effect.PPTef_scrollH;
+import net.play5d.kyo.display.ui.ppt.effect.PPTEffect_scrollH;
 import net.play5d.kyo.utils.KyoColor;
 
 /**
@@ -68,7 +68,7 @@ public class PicPointer extends Sprite {
     /**
      * @param size 可视区域尺寸。
      * @param delay 自动翻页间隔（秒），默认 1。
-     * @param effect 切换效果；为 <code>null</code> 时使用 <code>PPTef_scrollH</code>。
+     * @param effect 切换效果；为 <code>null</code> 时使用 <code>PPTEffect_scrollH</code>。
      */
     public function PicPointer(size:Point, delay:Number = 1, effect:BasePPTEffect = null) {
         this.size  = size;
@@ -77,7 +77,7 @@ public class PicPointer extends Sprite {
         scrollRect = new Rectangle(0, 0, size.x, size.y);
 
         _effect = effect;
-        _effect ||= new PPTef_scrollH();
+        _effect ||= new PPTEffect_scrollH();
 
         _picSprite = new Sprite();
         addChild(_picSprite);

@@ -34,7 +34,7 @@ import net.play5d.kyo.utils.KyoColor;
  * @see #stage
  * @see #alert()
  * @see #confirm()
- * @see KyoSimpButton
+ * @see KyoSimpleButton
  */
 public class KyoUI {
     /**
@@ -67,7 +67,7 @@ public class KyoUI {
     public static function alert(msg:String, width:Number = 200, height:Number = 100):void {
         var sp:Sprite = openPanel(msg, width, height);
 
-        var btn:KyoSimpButton = new KyoSimpButton('确定', btnSize.x, btnSize.y);
+        var btn:KyoSimpleButton = new KyoSimpleButton('确定', btnSize.x, btnSize.y);
         btn.x = (width - btn.width) / 2;
         btn.y = height - btn.height - 10;
         btn.onClick(function (e:Event = null):void {
@@ -102,7 +102,7 @@ public class KyoUI {
     ):void {
         var sp:Sprite = openPanel(msg, width, height);
 
-        var okBtn:KyoSimpButton = new KyoSimpButton('确定', btnSize.x, btnSize.y);
+        var okBtn:KyoSimpleButton = new KyoSimpleButton('确定', btnSize.x, btnSize.y);
         okBtn.x = width - okBtn.width * 2 - 20;
         okBtn.y = height - okBtn.height - 10;
         okBtn.onClick(function ():void {
@@ -113,7 +113,7 @@ public class KyoUI {
         });
         sp.addChild(okBtn);
 
-        var cancelBtn:KyoSimpButton = new KyoSimpButton('取消', btnSize.x, btnSize.y);
+        var cancelBtn:KyoSimpleButton = new KyoSimpleButton('取消', btnSize.x, btnSize.y);
         cancelBtn.x = width - cancelBtn.width - 10;
         cancelBtn.y = height - cancelBtn.height - 10;
         cancelBtn.onClick(function ():void {

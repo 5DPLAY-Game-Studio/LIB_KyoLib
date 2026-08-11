@@ -85,7 +85,7 @@ public class PicScroller extends Sprite {
      * 移动方向（1：从左向右，2：从右向左，3：从上向下，4：从下向上）。
      * @default 4
      */
-    public var direct:int          = 4;
+    public var direction:int          = 4;
     /**
      * 是否锁定图片宽度为可视宽度。
      * @default true
@@ -173,7 +173,7 @@ public class PicScroller extends Sprite {
     [ArrayElementType('String')]
     public function initialize(data:Array):void {
         _data  = data;
-        _direction = direct;
+        _direction = direction;
         loadNext();
 
         addEventListener(MouseEvent.MOUSE_UP, onClick);
@@ -191,7 +191,7 @@ public class PicScroller extends Sprite {
     public function update(data:Array):void {
         destroy();
         _data  = data;
-        _direction = direct;
+        _direction = direction;
         loadNext();
     }
 
@@ -486,7 +486,7 @@ public class PicScroller extends Sprite {
         dispatchEvent(new PicScrollEvent(PicScrollEvent.CHANGE_COMPLETE, _curId));
         newTimer();
 
-        _direction = direct;
+        _direction = direction;
     }
 
     /** @private 启动停留计时器 */
@@ -583,7 +583,7 @@ public class PicScroller extends Sprite {
 
     /** @private 拖动中更新位置 */
     private function onDragging(e:Event):void {
-        switch (direct) {
+        switch (direction) {
         case 1:
         case 2:
             _dragging ||= Math.abs(mouseX - _downP.x) > 10;

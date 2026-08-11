@@ -191,7 +191,7 @@ public class KyoUIUtils {
      * 按横向或纵向排列多个 TextField。
      * @param txts TextField 数组。
      * @param startPos 起始坐标；NaN 时取首项当前位置。
-     * @param direct 0=横向，1=竖向。
+     * @param direction 0=横向，1=竖向。
      * @param autoSize 默认 <code>TextFieldAutoSize.LEFT</code>。
      * @param offset 宽高微调。
      * @example
@@ -200,14 +200,14 @@ public class KyoUIUtils {
      * </listing>
      */
     public static function alignTexts(
-            txts:Array, startPos:Number = NaN, direct:int = 0, autoSize:String = null, offset:Point = null
+            txts:Array, startPos:Number = NaN, direction:int = 0, autoSize:String = null, offset:Point = null
     ):void {
         autoSize ||= TextFieldAutoSize.LEFT;
 
         var len:Number = startPos;
         if (isNaN(len)) {
             var f:TextField = txts[0] as TextField;
-            len             = direct == 0 ? f.x : f.y;
+            len             = direction == 0 ? f.x : f.y;
         }
 
         for each (var i:TextField in txts) {
@@ -217,7 +217,7 @@ public class KyoUIUtils {
                 i.height += offset.y;
             }
 
-            switch (direct) {
+            switch (direction) {
             case 0:
                 i.x = len;
                 len += i.width;

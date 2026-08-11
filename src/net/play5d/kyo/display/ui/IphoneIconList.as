@@ -31,26 +31,26 @@ import net.play5d.kyo.utils.KyoColor;
 
 /**
  * 翻页完成时分派。
- * @eventType IphoneIconListEvent.PAGE_CHANGE
+ * @eventType IPhoneIconListEvent.PAGE_CHANGE
  */
-[Event(name='PAGE_CHANGE', type='net.play5d.kyo.display.ui.IphoneIconListEvent')]
+[Event(name='PAGE_CHANGE', type='net.play5d.kyo.display.ui.IPhoneIconListEvent')]
 /**
  * iPhone 风格分页图标列表：横向滑动翻页，每页为 <code>KyoTileList</code>。
  *
- * @see IphoneIconListEvent
- * @see IphoneIconListDoc
+ * @see IPhoneIconListEvent
+ * @see IPhoneIconListIndicator
  * @see IPhoneBtn
  * @see #setDisplay()
  * @see #goPage()
  */
-public class IphoneIconList extends Sprite {
+public class IPhoneIconList extends Sprite {
     /**
      * @param touchSize 单页触摸 / 可视区域尺寸。
      * @param unitSize 单个图标单元尺寸；参与自动计算间距。
      * @param perPage 每页图标数，默认 16。
      * @param hRow 每行图标数，默认 4。
      */
-    public function IphoneIconList(touchSize:Point, unitSize:Point = null, perPage:int = 16, hRow:int = 4) {
+    public function IPhoneIconList(touchSize:Point, unitSize:Point = null, perPage:int = 16, hRow:int = 4) {
         this.touchSize = touchSize;
         _unitSize      = unitSize;
         this.perPage   = perPage;
@@ -427,7 +427,7 @@ public class IphoneIconList extends Sprite {
         }
 
         curPage = p;
-        dispatchEvent(new IphoneIconListEvent(IphoneIconListEvent.PAGE_CHANGE));
+        dispatchEvent(new IPhoneIconListEvent(IPhoneIconListEvent.PAGE_CHANGE));
 
         return true;
     }

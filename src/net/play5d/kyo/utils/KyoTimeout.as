@@ -27,7 +27,7 @@ import flash.events.Event;
  * <p><b>首选</b>游戏内节奏延时。使用前须 <code>init</code>。广告/应用暂停需冻结的延时用 <code>KyoTimerUtils</code>，勿与本类合并。</p>
  *
  * @see #init()
- * @see #setFrameout()
+ * @see #setFrameTimeout()
  * @see #setTimeout()
  * @see KyoTimerUtils
  */
@@ -57,10 +57,10 @@ public class KyoTimeout {
      * @param param 传给回调的参数。
      * @example
      * <listing version="3.0">
-     * KyoTimeout.setFrameout(onReady, 30);
+     * KyoTimeout.setFrameTimeout(onReady, 30);
      * </listing>
      */
-    public static function setFrameout(func:Function, frame:int, ...param):void {
+    public static function setFrameTimeout(func:Function, frame:int, ...param):void {
         _functions.push({func: func, frame: frame, param: param});
         setListener();
     }
@@ -78,7 +78,7 @@ public class KyoTimeout {
     public static function setTimeout(func:Function, time:int, ...param):void {
         var frame:int    = Math.ceil((time / 1000) * _root.stage.frameRate);
         var params:Array = [func, frame].concat(param);
-        setFrameout.apply(null, params);
+        setFrameTimeout.apply(null, params);
     }
 
     /** @private */

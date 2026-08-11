@@ -224,7 +224,7 @@ public class BitmapMovieClip extends Sprite {
      * @param clipRect 可选裁剪矩形。
      * @param smoothing 是否平滑缩放。
      * @param baseFrameMc 基帧 MC，总帧数与标签以其为准。
-     * @param hideFrameout 帧数不足的层是否隐藏，默认 <code>true</code>。
+     * @param hideFrameTimeout 帧数不足的层是否隐藏，默认 <code>true</code>。
      * @see #draw()
      * @example
      * <listing version="3.0">
@@ -239,10 +239,10 @@ public class BitmapMovieClip extends Sprite {
         clipRect      :Rectangle = null,
         smoothing     :Boolean = false,
         baseFrameMc   :MovieClip = null,
-        hideFrameout  :Boolean = true
+        hideFrameTimeout  :Boolean = true
     ):void {
         beforeDraw(matrix, colorTransform, blendMode, clipRect, smoothing);
-        var mcGroup:McGroup = new McGroup(source, baseFrameMc, hideFrameout);
+        var mcGroup:McGroup = new McGroup(source, baseFrameMc, hideFrameTimeout);
         var drawVar:DrawVar = new DrawVar(mcGroup, matrix, colorTransform, blendMode, clipRect, smoothing);
         var e:int           = _maxFrames == -1 ? mcGroup.totalFrames : Math.min(_maxFrames, mcGroup.totalFrames);
         for (var i:int = 1; i <= e; i++) {
@@ -722,11 +722,11 @@ internal class McGroup extends Sprite {
     /**
      * @param mcs 待合成层列表。
      * @param baseFrameMc 基帧 MC，决定总帧数。
-     * @param hideFrameout 帧数不足时是否隐藏该层。
+     * @param hideFrameTimeout 帧数不足时是否隐藏该层。
      */
     [ArrayElementType('flash.display.DisplayObject')]
-    public function McGroup(mcs:Array, baseFrameMc:MovieClip = null, hideFrameout:Boolean = true) {
-        this.hideFrameout = hideFrameout;
+    public function McGroup(mcs:Array, baseFrameMc:MovieClip = null, hideFrameTimeout:Boolean = true) {
+        this.hideFrameTimeout = hideFrameTimeout;
         _baseMc           = baseFrameMc;
 
         var countFrame:Boolean = true;
@@ -757,7 +757,7 @@ internal class McGroup extends Sprite {
     /** @private 合成总帧数 */
     public var totalFrames:int;
     /** @private 是否隐藏超出帧数的层 */
-    public var hideFrameout:Boolean;
+    public var hideFrameTimeout:Boolean;
     /** @private 子层列表 */
     private var _ins:Array = [];
     /** @private 基帧 MC */
@@ -810,7 +810,7 @@ internal class McGroup extends Sprite {
                     continue;
                 }
             }
-            if (hideFrameout) {
+            if (hideFrameTimeout) {
                 d.visible = false;
             }
         }
