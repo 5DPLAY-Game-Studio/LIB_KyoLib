@@ -60,6 +60,8 @@ public class KyoLoaderLite {
 
         function loadComplete(e:Event):void {
             var d:DisplayObject = l.content;
+            // 先作废进度回调，避免 COMPLETE 之后滞后 PROGRESS 污染上层步进
+            progress = null;
             if (back != null) {
                 back(d);
             }
@@ -67,6 +69,7 @@ public class KyoLoaderLite {
         }
 
         function ioError(e:IOErrorEvent):void {
+            progress = null;
             if (fail != null) {
                 fail();
             }
@@ -74,7 +77,7 @@ public class KyoLoaderLite {
         }
 
         function progressHandler(e:ProgressEvent):void {
-            if (progress != null) {
+            if (progress != null && e.bytesTotal > 0) {
                 progress(e.bytesLoaded / e.bytesTotal);
             }
         }
@@ -86,6 +89,7 @@ public class KyoLoaderLite {
 
             l.contentLoaderInfo.removeEventListener(Event.COMPLETE, loadComplete);
             l.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);
+            l.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
             l.unloadAndStop(true);
             l = null;
         }
@@ -110,6 +114,7 @@ public class KyoLoaderLite {
         l.load(new URLRequest(url));
 
         function loadComplete(e:Event):void {
+            progress = null;
             if (back != null) {
                 back(l);
             }
@@ -117,6 +122,7 @@ public class KyoLoaderLite {
         }
 
         function ioError(e:IOErrorEvent):void {
+            progress = null;
             if (fail != null) {
                 fail();
             }
@@ -124,7 +130,7 @@ public class KyoLoaderLite {
         }
 
         function progressHandler(e:ProgressEvent):void {
-            if (progress != null) {
+            if (progress != null && e.bytesTotal > 0) {
                 progress(e.bytesLoaded / e.bytesTotal);
             }
         }
@@ -136,6 +142,7 @@ public class KyoLoaderLite {
 
             l.contentLoaderInfo.removeEventListener(Event.COMPLETE, loadComplete);
             l.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);
+            l.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
         }
     }
 
