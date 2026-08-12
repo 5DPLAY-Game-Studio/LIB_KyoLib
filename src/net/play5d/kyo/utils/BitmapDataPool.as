@@ -19,14 +19,15 @@
 package net.play5d.kyo.utils {
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
-import flash.utils.Dictionary;
 
 /**
- * 临时 <code>BitmapData</code> 对象池。
+ * <code>BitmapData</code> 按尺寸分桶的轻量对象池。
  *
- * <p>按宽高与透明通道分桶复用，减轻绘制时的分配与 GC 压力。
- * 进入缓存长期持有的位图请用 <code>new BitmapData</code>，勿从本池取出后永久占用。</p>
+ * <p>用于反复栅格化场景，减少 <code>new BitmapData</code> 与 GC 压力。
+ * 战斗结束等时机应调用 <code>clear</code>。</p>
  *
+ * @see #acquire()
+ * @see #release()
  * @example
  * <listing version="3.0">
  * var bd:BitmapData = BitmapDataPool.I.acquire(64, 64, true, 0);
@@ -35,8 +36,7 @@ import flash.utils.Dictionary;
  * </listing>
  */
 public class BitmapDataPool {
-    /** @private 每桶最大缓存张数 */
-    private static const MAX_PER_BUCKET:int = 8;
+
     /** @private */
     private static var _i:BitmapDataPool;
 
@@ -50,26 +50,35 @@ public class BitmapDataPool {
         return _i;
     }
 
+    /** @private 每尺寸桶最大空闲数 */
+    private static const MAX_PER_BUCKET:int = 8;
+    /** @private 池内 BitmapData 总数上限 */
+    private static const MAX_TOTAL:int = 64;
+
+    /** @private */
+    private var _buckets:Object = {};
+    /** @private */
+    private var _total:int;
+    /** @private */
+    private var _tmpRect:Rectangle = new Rectangle();
+
     /**
-     * 构造函数（通常通过 <code>I</code> 使用）。
+     * 构造函数。
      */
     public function BitmapDataPool() {
     }
 
-    /** @private */
-    private var _buckets:Dictionary = new Dictionary();
-
     /**
-     * 取得指定尺寸的位图；池中无可用实例时新建。
+     * 取得指定尺寸的位图；池中无则新建。
      *
-     * @param width 宽度（像素）。
-     * @param height 高度（像素）。
+     * @param width 宽。
+     * @param height 高。
      * @param transparent 是否透明。
-     * @param fillColor 填充色。
-     * @return 可绘制的 <code>BitmapData</code>；宽或高非法时为 <code>null</code>。
+     * @param fillColor 填充色（含 alpha）。
+     * @return 位图；尺寸非法或创建失败时为 <code>null</code>。
      * @example
      * <listing version="3.0">
-     * var bd:BitmapData = BitmapDataPool.I.acquire(64, 64);
+     * var bd:BitmapData = BitmapDataPool.I.acquire(32, 32);
      * </listing>
      */
     public function acquire(
@@ -84,20 +93,28 @@ public class BitmapDataPool {
 
         var key:String               = bucketKey(width, height, transparent);
         var list:Vector.<BitmapData> = _buckets[key] as Vector.<BitmapData>;
+        var bd:BitmapData;
         if (list && list.length > 0) {
-            var bd:BitmapData = list.pop();
-            bd.fillRect(new Rectangle(0, 0, bd.width, bd.height), fillColor);
+            bd = list.pop();
+            _total--;
+            _tmpRect.setTo(0, 0, width, height);
+            bd.fillRect(_tmpRect, fillColor);
 
             return bd;
         }
 
-        return new BitmapData(width, height, transparent, fillColor);
+        try {
+            return new BitmapData(width, height, transparent, fillColor);
+        }
+        catch (e:Error) {
+            return null;
+        }
     }
 
     /**
-     * 归还位图到池；桶已满则 <code>dispose</code>。
+     * 归还位图；桶满或总量超限时直接 dispose。
      *
-     * @param bd 由 <code>acquire</code> 取得或同尺寸的临时位图。
+     * @param bd 由 <code>acquire</code> 取得或同尺寸的位图。
      * @example
      * <listing version="3.0">
      * BitmapDataPool.I.release(bd);
@@ -108,26 +125,25 @@ public class BitmapDataPool {
             return;
         }
 
-        try {
-            var key:String               = bucketKey(bd.width, bd.height, bd.transparent);
-            var list:Vector.<BitmapData> = _buckets[key] as Vector.<BitmapData>;
-            if (!list) {
-                list          = new Vector.<BitmapData>();
-                _buckets[key] = list;
-            }
-            if (list.length < MAX_PER_BUCKET) {
-                list.push(bd);
-                return;
-            }
-        }
-        catch (e:Error) {
+        var key:String               = bucketKey(bd.width, bd.height, bd.transparent);
+        var list:Vector.<BitmapData> = _buckets[key] as Vector.<BitmapData>;
+        if (!list) {
+            list           = new Vector.<BitmapData>();
+            _buckets[key]  = list;
         }
 
-        try {
-            bd.dispose();
+        if (list.length >= MAX_PER_BUCKET || _total >= MAX_TOTAL) {
+            try {
+                bd.dispose();
+            }
+            catch (e:Error) {
+            }
+
+            return;
         }
-        catch (e2:Error) {
-        }
+
+        list.push(bd);
+        _total++;
     }
 
     /**
@@ -143,6 +159,9 @@ public class BitmapDataPool {
                 continue;
             }
             for each (var bd:BitmapData in list) {
+                if (!bd) {
+                    continue;
+                }
                 try {
                     bd.dispose();
                 }
@@ -151,13 +170,14 @@ public class BitmapDataPool {
             }
             list.length = 0;
         }
-
-        _buckets = new Dictionary();
+        _buckets = {};
+        _total   = 0;
     }
 
     /** @private */
-    private function bucketKey(width:int, height:int, transparent:Boolean):String {
+    private static function bucketKey(width:int, height:int, transparent:Boolean):String {
         return width + 'x' + height + (transparent ? 't' : 'o');
     }
+
 }
 }
