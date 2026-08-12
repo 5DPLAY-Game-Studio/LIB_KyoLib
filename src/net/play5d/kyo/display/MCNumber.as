@@ -82,6 +82,9 @@ public class MCNumber extends Sprite {
 
     /** @private */
     public function set number(v:uint):void {
+        if (v == _number && _mcs.length > 0) {
+            return;
+        }
         _number = v;
 
         for each (var m:DisplayObject in _mcs) {
