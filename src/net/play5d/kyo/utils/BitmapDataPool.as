@@ -107,8 +107,9 @@ public class BitmapDataPool {
             return new BitmapData(width, height, transparent, fillColor);
         }
         catch (e:Error) {
-            return null;
         }
+
+        return null;
     }
 
     /**
