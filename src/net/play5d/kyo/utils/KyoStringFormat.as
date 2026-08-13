@@ -120,7 +120,7 @@ public class KyoStringFormat {
             parts[parts.length] = format.substring(literalStart, i);
             replaced            = true;
 
-            if (!(name in params)) {
+            if (!params.hasOwnProperty(name)) {
                 if (!missing) {
                     missing = [];
                 }
