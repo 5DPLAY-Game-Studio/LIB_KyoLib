@@ -50,6 +50,7 @@ import flash.utils.Dictionary;
  *
  * @see #load()
  * @see #getClass()
+ * @see #hasSwf()
  * @see #addSwf()
  */
 public class KyoClassLoader extends EventDispatcher {
@@ -73,6 +74,22 @@ public class KyoClassLoader extends EventDispatcher {
      */
     public function get loadedAmount():int {
         return _loadedAmount;
+    }
+
+    /**
+     * 是否已登记指定 id 的 SWF 域。
+     * @param swf SWF 的 URL（作 id）。
+     * @return 已加载则为 <code>true</code>。
+     * @example
+     * <listing version="3.0">
+     * if (cl.hasSwf('ui.swf')) {
+     *     // already loaded
+     * }
+     * </listing>
+     * @see #getClass()
+     */
+    public function hasSwf(swf:String):Boolean {
+        return _classes[swf] != null;
     }
 
     /**
