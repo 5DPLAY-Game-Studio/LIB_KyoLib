@@ -163,9 +163,6 @@ public class UUID {
         return str;
     }
 
-    /**
-     * 构造函数（包内可见；通常使用静态 <code>create</code>）。
-     */
     function UUID() {
     }
 }

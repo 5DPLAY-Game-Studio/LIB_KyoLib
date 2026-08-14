@@ -28,8 +28,6 @@ public class KyoRepeater {
     /**
      * 构造空重复器。
      */
-    public function KyoRepeater() {
-    }
 
     /**
      * 数据源数组。

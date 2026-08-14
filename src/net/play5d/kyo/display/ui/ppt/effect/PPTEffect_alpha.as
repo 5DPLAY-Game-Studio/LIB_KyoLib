@@ -30,9 +30,6 @@ public class PPTEffect_alpha extends BasePPTEffect {
     /**
      * 构造淡入淡出效果。
      */
-    public function PPTEffect_alpha() {
-        super();
-    }
 
     /** @private 当前过渡 Tween */
     private var _tween:TweenLite;

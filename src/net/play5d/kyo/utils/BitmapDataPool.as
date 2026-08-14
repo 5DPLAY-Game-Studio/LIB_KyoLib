@@ -63,12 +63,6 @@ public class BitmapDataPool {
     private var _tmpRect:Rectangle = new Rectangle();
 
     /**
-     * 构造函数。
-     */
-    public function BitmapDataPool() {
-    }
-
-    /**
      * 取得指定尺寸的位图；池中无则新建。
      *
      * @param width 宽。

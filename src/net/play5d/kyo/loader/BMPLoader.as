@@ -67,8 +67,6 @@ public class BMPLoader extends EventDispatcher {
      * loader.load('a.bmp');
      * </listing>
      */
-    public function BMPLoader() {
-    }
 
     /**
      * 解析成功后的位图。

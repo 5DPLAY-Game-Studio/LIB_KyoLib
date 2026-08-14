@@ -32,8 +32,6 @@ public class BaseBox extends Sprite {
     /**
      * 构造空盒。
      */
-    public function BaseBox() {
-    }
 
     /**
      * 子项水平间距。

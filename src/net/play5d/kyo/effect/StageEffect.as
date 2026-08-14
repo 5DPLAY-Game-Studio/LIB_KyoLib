@@ -61,12 +61,6 @@ public class StageEffect {
     }
 
     /**
-     * 构造函数；通常通过 <code>StageEffect.I</code> 获取实例。
-     */
-    public function StageEffect() {
-    }
-
-    /**
      * 特效作用的目标显示对象。
      * @default null
      */

@@ -32,12 +32,6 @@ import flash.utils.Timer;
  */
 public class KyoClock {
     /**
-     * 构造函数。
-     */
-    public function KyoClock() {
-    }
-
-    /**
      * 当前时间；由定时器刷新。
      */
     public var now:Date = new Date();

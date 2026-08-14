@@ -53,12 +53,6 @@ import flash.utils.Dictionary;
  * @see #addSwf()
  */
 public class KyoClassLoader extends EventDispatcher {
-    /**
-     * 构造函数。
-     */
-    public function KyoClassLoader() {
-    }
-
     /** @private id → ApplicationDomain */
     private var _classes:Object       = {};
     /** @private */

@@ -39,8 +39,6 @@ public class BasePPTEffect {
     /**
      * 构造效果实例。
      */
-    public function BasePPTEffect() {
-    }
 
     /**
      * 是否启用拖拽翻页。

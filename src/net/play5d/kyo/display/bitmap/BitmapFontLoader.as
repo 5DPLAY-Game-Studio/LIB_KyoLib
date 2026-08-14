@@ -38,8 +38,6 @@ public class BitmapFontLoader {
     /**
      * 构造空的字体加载器。
      */
-    public function BitmapFontLoader() {
-    }
 
     /** @private 待加载的 XML URL 队列 */
     [ArrayElementType('String')]

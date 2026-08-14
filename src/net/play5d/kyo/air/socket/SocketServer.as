@@ -88,8 +88,6 @@ public class SocketServer extends EventDispatcher {
     /**
      * 构造服务端（通常通过 <code>I</code> 使用）。
      */
-    public function SocketServer() {
-    }
 
     /**
      * 是否已绑定监听（或仍有业务意义上的连接态）。

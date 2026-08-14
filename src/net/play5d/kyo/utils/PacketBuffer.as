@@ -33,8 +33,6 @@ public class PacketBuffer {
     /**
      * 构造空缓冲。
      */
-    public function PacketBuffer() {
-    }
 
     /** @private 未拆完的累计字节 */
     private var _buf:ByteArray = new ByteArray();
