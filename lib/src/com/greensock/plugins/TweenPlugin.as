@@ -285,12 +285,14 @@ package com.greensock.plugins {
 					while (pt2 && pt2.pr > pt.pr) {
 						pt2 = pt2._next;
 					}
-					if ((pt._prev = pt2 ? pt2._prev : last)) {
+					pt._prev = pt2 ? pt2._prev : last;
+					if (pt._prev) {
 						pt._prev._next = pt;
 					} else {
 						first = pt;
 					}
-					if ((pt._next = pt2)) {
+					pt._next = pt2;
+					if (pt._next) {
 						pt2._prev = pt;
 					} else {
 						last = pt;
