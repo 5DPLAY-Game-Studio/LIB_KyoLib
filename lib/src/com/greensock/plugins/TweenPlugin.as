@@ -155,10 +155,13 @@ package com.greensock.plugins {
 		 */
 		protected function _addTween(target:Object, propName:String, start:Number, end:*, overwriteProp:String=null, round:Boolean=false):PropTween {
 			var c:Number;
-			if (end != null && (c = (typeof(end) === "number" || end.charAt(1) !== "=") ? Number(end) - start : int(end.charAt(0)+"1") * Number(end.substr(2)))) {
-				_firstPT = new PropTween(target, propName, start, c, overwriteProp || propName, false, _firstPT);
-				_firstPT.r = round;
-				return _firstPT;
+			if (end != null) {
+				c = (typeof(end) === "number" || end.charAt(1) !== "=") ? Number(end) - start : int(end.charAt(0)+"1") * Number(end.substr(2));
+				if (c) {
+					_firstPT = new PropTween(target, propName, start, c, overwriteProp || propName, false, _firstPT);
+					_firstPT.r = round;
+					return _firstPT;
+				}
 			}
 			return null;
 		}

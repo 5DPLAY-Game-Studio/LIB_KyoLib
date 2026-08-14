@@ -1630,10 +1630,16 @@ TweenMax.killAll(false, false, true, false);
 				l:int = a.length,
 				isDC:Boolean,
 				allTrue:Boolean = (tweens && delayedCalls && timelines),
+				shouldKill:Boolean,
 				tween:Animation, i:int;
 			for (i = 0; i < l; i++) {
 				tween = a[i];
-				if (allTrue || (tween is SimpleTimeline) || ((isDC = (TweenLite(tween).target == TweenLite(tween).vars.onComplete)) && delayedCalls) || (tweens && !isDC)) {
+				shouldKill = allTrue || (tween is SimpleTimeline);
+				if (!shouldKill) {
+					isDC = (TweenLite(tween).target == TweenLite(tween).vars.onComplete);
+					shouldKill = (isDC && delayedCalls) || (tweens && !isDC);
+				}
+				if (shouldKill) {
 					if (complete) {
 						tween.totalTime(tween._reversed ? 0 : tween.totalDuration());     
 					} else {

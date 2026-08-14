@@ -248,7 +248,8 @@ TweenMax.to(obj, 5, {bezier:{type:"cubic", values:[{x:100, y:250}, {x:150, y:100
 				this._prec = 1 / this._curSeg.length;
 			}
 			
-			if ((ar = this._autoRotate)) {
+			ar = this._autoRotate;
+			if (ar) {
 				this._initialRotations = [];
 				if (!(ar[0] is Array)) {
 					this._autoRotate = ar = [ar];

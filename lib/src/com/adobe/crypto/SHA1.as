@@ -123,10 +123,10 @@ package com.adobe.crypto
 		{
 			// initialize the h's
 			var h0:int = 0x67452301;
-			var h1:int = 0xefcdab89;
-			var h2:int = 0x98badcfe;
+			var h1:int = -271733879;  // 0xefcdab89
+			var h2:int = -1732584194; // 0x98badcfe
 			var h3:int = 0x10325476;
-			var h4:int = 0xc3d2e1f0;
+			var h4:int = -1009589776; // 0xc3d2e1f0
 			
 			var len:int = blocks.length;
 			var w:Array = new Array( 80 );
@@ -186,7 +186,7 @@ package com.adobe.crypto
 					w[ t ] = ( temp << 1 ) | ( temp >>> 31 )
 					
 					// 6.1.d
-					temp = ( ( a << 5 ) | ( a >>> 27 ) ) + ( ( b & c ) | ( b & d ) | ( c & d ) ) + e + int( w[ t ] ) + 0x8f1bbcdc;
+					temp = ( ( a << 5 ) | ( a >>> 27 ) ) + ( ( b & c ) | ( b & d ) | ( c & d ) ) + e + int( w[ t ] ) + (-1894007588); // 0x8f1bbcdc
 					
 					e = d;
 					d = c;
@@ -201,7 +201,7 @@ package com.adobe.crypto
 					w[ t ] = ( temp << 1 ) | ( temp >>> 31 )
 
 					// 6.1.d
-					temp = ( ( a << 5 ) | ( a >>> 27 ) ) + ( b ^ c ^ d ) + e + int( w[ t ] ) + 0xca62c1d6;
+					temp = ( ( a << 5 ) | ( a >>> 27 ) ) + ( b ^ c ^ d ) + e + int( w[ t ] ) + (-899497514); // 0xca62c1d6
 
 					e = d;
 					d = c;
