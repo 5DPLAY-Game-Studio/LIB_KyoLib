@@ -237,7 +237,7 @@ public class SwfHeaderInfo {
      * var pos:Array = getWhRulePosition(whRuleList, '50');
      * </listing>
      */
-    protected function getWhRulePosition(list:Array, str:String):Array {
+    private static function getWhRulePosition(list:Array, str:String):Array {
         for (var i:String in list) {
             if (list[i].ctrlCode == str) {
                 break;

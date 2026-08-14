@@ -184,7 +184,7 @@ public class KyoSoundPlayer {
     /**
      * @private
      */
-    private function getSound(s:Object):Sound {
+    private static function getSound(s:Object):Sound {
         var snd:Sound;
         if (s is Array) {
             s = KyoRandom.getRandomInArray(s as Array);

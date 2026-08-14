@@ -189,7 +189,7 @@ public class BitmapFontLoader {
     /**
      * @private 取 <code>baseUrl</code> 所在目录下的兄弟路径。
      */
-    private function resolveSiblingPath(baseUrl:String, fileName:String):String {
+    private static function resolveSiblingPath(baseUrl:String, fileName:String):String {
         return baseUrl.substr(0, baseUrl.lastIndexOf('/') + 1) + fileName;
     }
 

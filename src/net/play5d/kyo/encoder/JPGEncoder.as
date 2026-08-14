@@ -292,7 +292,7 @@ public class JPGEncoder {
     }
 
     /** @private 由标准码长/码字表生成霍夫曼查找表 */
-    private function computeHuffmanTbl(nrcodes:Vector.<int>, std_table:Vector.<int>):Array {
+    private static function computeHuffmanTbl(nrcodes:Vector.<int>, std_table:Vector.<int>):Array {
         var codevalue:int    = 0;
         var pos_in_table:int = 0;
         var HT:Array         = [];
@@ -386,7 +386,7 @@ public class JPGEncoder {
     }
 
     /** @private 8×8 块前向 DCT 并量化 */
-    private function fDCTQuant(data:Vector.<Number>, fdtbl:Vector.<Number>):Vector.<Number> {
+    private static function fDCTQuant(data:Vector.<Number>, fdtbl:Vector.<Number>):Vector.<Number> {
         var tmp0:Number, tmp1:Number, tmp2:Number, tmp3:Number, tmp4:Number, tmp5:Number, tmp6:Number, tmp7:Number;
         var tmp10:Number, tmp11:Number, tmp12:Number, tmp13:Number;
         var z1:Number, z2:Number, z3:Number, z4:Number, z5:Number, z11:Number, z13:Number;
