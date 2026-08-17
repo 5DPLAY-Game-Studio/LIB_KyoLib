@@ -182,14 +182,15 @@ public class KyoMath {
      * @param point 原点。
      * @param radians 弧度。
      * @param scale y 分量缩放。
-     * @return 新点。
+     * @param result 若传入则写入并返回该点，避免分配。
+     * @return 旋转后的点。
      * @example
      * <listing version="3.0">
      * var p:Point = KyoMath.getPointByRadians(pt, Math.PI / 2);
      * </listing>
      */
-    public static function getPointByRadians(point:Point, radians:Number, scale:Number = 1):Point {
-        var rp:Point = new Point();
+    public static function getPointByRadians(point:Point, radians:Number, scale:Number = 1, result:Point = null):Point {
+        var rp:Point = result != null ? result : new Point();
         rp.x         = point.x * Math.cos(radians) - point.y * Math.sin(radians) * scale;
         rp.y         = point.x * Math.sin(radians) + point.y * Math.cos(radians) * scale;
 
