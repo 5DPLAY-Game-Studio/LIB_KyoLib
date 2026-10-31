@@ -53,6 +53,8 @@
 :: Notes
 ::   ASCII-only console messages. No chcp / lang packs.
 ::   Do NOT use -skip-xsl=true (drops summary XML; thin SWC docs).
+::   If the repo path contains &, asdoc_drive.bat substs a free drive
+::   before asdoc.jar. ASDoc writes sourcefile into XML without escaping &.
 ::   IDEA (monorepo): External Tool EmbedKyoLibAsDoc after Make.
 ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -60,7 +62,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set BAT_HOME=%~dp0
+set "BAT_HOME=%~dp0"
 
 if /i "%MODE%"=="" set MODE=full
 if /i not "%MODE%"=="embed" if /i not "%MODE%"=="full" (
@@ -83,64 +85,70 @@ if "%FLEX_HOME%"=="" (
 	goto END
 )
 call :EXIST "%FLEX_HOME%"
+if errorlevel 1 goto END
 
-set FLEX_BIN=%FLEX_HOME%\bin
+set "FLEX_BIN=%FLEX_HOME%\bin"
 call :EXIST "%FLEX_BIN%"
+if errorlevel 1 goto END
 
-set ASDOC_JAR=%FLEX_HOME%\lib\asdoc.jar
+set "ASDOC_JAR=%FLEX_HOME%\lib\asdoc.jar"
 call :EXIST "%ASDOC_JAR%"
+if errorlevel 1 goto END
 
-set FLEX_FRAMEWORKS=%FLEX_HOME%\frameworks
+set "FLEX_FRAMEWORKS=%FLEX_HOME%\frameworks"
 call :EXIST "%FLEX_FRAMEWORKS%"
+if errorlevel 1 goto END
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 2) Module paths and target SWC
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-set MODULE_ROOT=%BAT_HOME%..
-for %%I in ("%MODULE_ROOT%") do set MODULE_ROOT=%%~fI
+set "MODULE_ROOT=%BAT_HOME%.."
+for %%I in ("%MODULE_ROOT%") do set "MODULE_ROOT=%%~fI"
 
-set KYO_SRC=%MODULE_ROOT%\src
-set KYO_LIB_SRC=%MODULE_ROOT%\lib\src
+set "KYO_SRC=%MODULE_ROOT%\src"
+set "KYO_LIB_SRC=%MODULE_ROOT%\lib\src"
 call :EXIST "%KYO_SRC%"
+if errorlevel 1 goto END
 call :EXIST "%KYO_LIB_SRC%"
+if errorlevel 1 goto END
 
 :: Parent may be monorepo root (BleachVsNaruto) or a standalone clone parent
-set REPO_ROOT=%MODULE_ROOT%\..
-for %%I in ("%REPO_ROOT%") do set REPO_ROOT=%%~fI
+set "REPO_ROOT=%MODULE_ROOT%\.."
+for %%I in ("%REPO_ROOT%") do set "REPO_ROOT=%%~fI"
 
 :: Prefer monorepo tools\script\ps (single source); fallback to local copy
 set "ASDOC_PS=%REPO_ROOT%\tools\script\ps"
 if not exist "%ASDOC_PS%\inject_docs_swc.ps1" set "ASDOC_PS=%MODULE_ROOT%\tools\asdoc"
 set "ASDOC_LOCAL=%MODULE_ROOT%\tools\asdoc"
 
-set OTHER_SWC=%REPO_ROOT%\out\production\LIB_Other\LIB_Other.swc
-if not exist "%OTHER_SWC%" (
-	echo [WARN] LIB_Other.swc not found: %OTHER_SWC%
+set "OTHER_SWC=%REPO_ROOT%\out\production\LIB_Other\LIB_Other.swc"
+if not exist "!OTHER_SWC!" (
+	echo [WARN] LIB_Other.swc not found: !OTHER_SWC!
 	echo [WARN] Build LIB_Other first if asdoc reports unresolved types.
-	set OTHER_SWC=
+	set "OTHER_SWC="
 )
 
 :: Monorepo:  <repo>\out\production\LIB_KyoLib\LIB_KyoLib.swc
 :: Standalone submodule / asconfig.ind:
 ::   <LIB_KyoLib>\out\production\LIB_KyoLib\LIB_KyoLib.swc
-set SWC_MONO=%REPO_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc
-set SWC_IND=%MODULE_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc
+set "SWC_MONO=%REPO_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc"
+set "SWC_IND=%MODULE_ROOT%\out\production\LIB_KyoLib\LIB_KyoLib.swc"
 
 if "%SWC_PATH%"=="" (
-	if exist "%SWC_MONO%" (
-		set SWC_PATH=%SWC_MONO%
-	) else if exist "%SWC_IND%" (
-		set SWC_PATH=%SWC_IND%
+	if exist "!SWC_MONO!" (
+		set "SWC_PATH=!SWC_MONO!"
+	) else if exist "!SWC_IND!" (
+		set "SWC_PATH=!SWC_IND!"
 	) else (
-		set SWC_PATH=%SWC_MONO%
+		set "SWC_PATH=!SWC_MONO!"
 	)
 )
 
 if /i "%MODE%"=="embed" (
-	set DOC_OUT=%MODULE_ROOT%\out\asdoc_embed
+	set "DOC_OUT=!MODULE_ROOT!\out\asdoc_embed"
 ) else (
-	set DOC_OUT=%MODULE_ROOT%\out\asdoc
+	set "DOC_OUT=!MODULE_ROOT!\out\asdoc"
 )
 if not exist "%DOC_OUT%" mkdir "%DOC_OUT%"
 
@@ -157,7 +165,7 @@ if /i "%IF_MISSING%"=="1" (
 
 if /i "%MODE%"=="embed" (
 	if not exist "%SWC_PATH%" (
-		echo SWC not found: %SWC_PATH%
+		echo SWC not found: !SWC_PATH!
 		echo Build LIB_KyoLib first.
 		goto END
 	)
@@ -167,7 +175,7 @@ if /i "%MODE%"=="embed" (
 :: 3) Filter lib\src: drop Crypto.as, write a minimal stub
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-set FILTERED_LIB=%DOC_OUT%\_libsrc
+set "FILTERED_LIB=%DOC_OUT%\_libsrc"
 if exist "%FILTERED_LIB%" rmdir /s /q "%FILTERED_LIB%"
 mkdir "%FILTERED_LIB%"
 
@@ -178,7 +186,7 @@ if !RC! GEQ 8 (
 	goto END
 )
 
-set STUB_DIR=%FILTERED_LIB%\com\hurlant\crypto
+set "STUB_DIR=%FILTERED_LIB%\com\hurlant\crypto"
 if not exist "%STUB_DIR%" mkdir "%STUB_DIR%"
 (
 	echo package com.hurlant.crypto {
@@ -197,10 +205,10 @@ if not exist "%STUB_DIR%" mkdir "%STUB_DIR%"
 :: 4) Chinese UI chrome: terms + local templates
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-set PATH=%FLEX_BIN%;%PATH%
+set "PATH=%FLEX_BIN%;%PATH%"
 
-set ASDOC_TMPL=%ASDOC_LOCAL%\templates
-set ASDOC_ZH_TERMS=%ASDOC_LOCAL%\zh_CN\ASDoc_terms.xml
+set "ASDOC_TMPL=%ASDOC_LOCAL%\templates"
+set "ASDOC_ZH_TERMS=%ASDOC_LOCAL%\zh_CN\ASDoc_terms.xml"
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%ASDOC_PS%\build_terms_zh.ps1" -OutDir "%ASDOC_LOCAL%\zh_CN"
 if not exist "%ASDOC_ZH_TERMS%" (
@@ -224,11 +232,21 @@ if /i "%MODE%"=="embed" (
 ) else (
 	echo Generating LIB_KyoLib ASDoc...
 )
-echo Output: %DOC_OUT%
+echo Output: !DOC_OUT!
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 5) Run asdoc.jar
+::    sourcefile in toplevel.xml is not XML-escaped; a path containing
+::    & breaks the parser. Map the repo to a drive letter first.
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+set "REAL_DOC_OUT=!DOC_OUT!"
+set "ASDOC_DRIVE_BAT=%REPO_ROOT%\tools\script\func\asdoc_drive.bat"
+if exist "!ASDOC_DRIVE_BAT!" (
+	call "!ASDOC_DRIVE_BAT!" MOUNT
+	if errorlevel 1 goto END
+)
+if defined ASDOC_DRIVE call :APPLY_ASDOC_DRIVE
 
 if defined OTHER_SWC (
 	java -Xmx1536m -classpath "%ASDOC_JAR%" flex2.tools.ASDoc ^
@@ -258,22 +276,25 @@ if defined OTHER_SWC (
 		-output "%DOC_OUT%"
 )
 
-if errorlevel 1 (
+set "JAVA_ERR=!ERRORLEVEL!"
+if exist "!ASDOC_DRIVE_BAT!" call "!ASDOC_DRIVE_BAT!" UNMOUNT
+set "DOC_OUT=!REAL_DOC_OUT!"
+if not "!JAVA_ERR!"=="0" (
 	echo ASDoc generation failed.
 	goto END
 )
 
 if /i "%MODE%"=="full" (
-	echo ASDoc generated: %DOC_OUT%\index.html
+	echo ASDoc generated: !DOC_OUT!\index.html
 ) else (
-	echo ASDoc XML generated: %DOC_OUT%\tempdita
+	echo ASDoc XML generated: !DOC_OUT!\tempdita
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 6) Embed tempdita into SWC docs/
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-set TEMPDITA=%DOC_OUT%\tempdita
+set "TEMPDITA=%DOC_OUT%\tempdita"
 
 if /i "%SKIP_SWC%"=="1" (
 	echo [WARN] SKIP_SWC=1: SWC docs embedding skipped.
@@ -286,13 +307,13 @@ if not exist "%TEMPDITA%" (
 )
 
 if not exist "%SWC_PATH%" (
-	echo [WARN] SWC not found: %SWC_PATH%
+	echo [WARN] SWC not found: !SWC_PATH!
 	echo [WARN] Build LIB_KyoLib first, then re-run to embed docs.
 	if /i "%MODE%"=="embed" goto END
 	goto AFTER_SWC
 )
 
-echo Embedding ASDoc into SWC: %SWC_PATH%
+echo Embedding ASDoc into SWC: !SWC_PATH!
 powershell -NoProfile -ExecutionPolicy Bypass -File "%ASDOC_PS%\inject_docs_swc.ps1" -SwcPath "%SWC_PATH%" -TempDitaDir "%TEMPDITA%"
 if errorlevel 1 (
 	echo Failed to embed ASDoc into SWC.
@@ -312,12 +333,25 @@ exit /b 0
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :END
+if defined ASDOC_DRIVE_BAT if exist "!ASDOC_DRIVE_BAT!" call "!ASDOC_DRIVE_BAT!" UNMOUNT
 if /i not "%NO_PAUSE%"=="1" pause >nul
 exit /b 1
 
+:: Point asdoc.jar at the subst drive so sourcefile XML has no &.
+:APPLY_ASDOC_DRIVE
+set "KYO_SRC=!ASDOC_DRIVE!:\LIB_KyoLib\src"
+set "ASDOC_TMPL=!ASDOC_DRIVE!:\LIB_KyoLib\tools\asdoc\templates"
+set "DOC_REL=out\asdoc"
+if /i "!MODE!"=="embed" set "DOC_REL=out\asdoc_embed"
+set "DOC_OUT=!ASDOC_DRIVE!:\LIB_KyoLib\!DOC_REL!"
+set "FILTERED_LIB=!DOC_OUT!\_libsrc"
+if defined OTHER_SWC set "OTHER_SWC=!ASDOC_DRIVE!:\out\production\LIB_Other\LIB_Other.swc"
+exit /b 0
+
 :EXIST
-if not exist %1 (
-	echo File does not exist: %~1
-	goto END
+set "EXIST_PATH=%~1"
+if not exist "!EXIST_PATH!" (
+	echo File does not exist: !EXIST_PATH!
+	exit /b 1
 )
-goto :EOF
+exit /b 0
