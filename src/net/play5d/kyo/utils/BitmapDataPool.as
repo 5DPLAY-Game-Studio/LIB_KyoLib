@@ -79,7 +79,7 @@ public class BitmapDataPool {
         width       :int,
         height      :int,
         transparent :Boolean = true,
-        fillColor   :uint = KyoColor.BLACK
+        fillColor   :uint = 0x000000
     ):BitmapData {
         if (width < 1 || height < 1) {
             return null;
