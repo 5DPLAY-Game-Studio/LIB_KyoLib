@@ -26,7 +26,7 @@ import flash.events.KeyboardEvent;
  * @see #initialize()
  * @see #listen()
  */
-public class KeyBoarder {
+public class Keyboard {
 
     /** @private */
     private static var _inited:Boolean;
@@ -42,7 +42,7 @@ public class KeyBoarder {
      * @param stage 舞台。
      * @example
      * <listing version="3.0">
-     * KeyBoarder.initialize(stage);
+     * Keyboard.initialize(stage);
      * </listing>
      */
     public static function initialize(stage:Stage):void {
@@ -61,7 +61,7 @@ public class KeyBoarder {
      * 将焦点设回 Stage。
      * @example
      * <listing version="3.0">
-     * KeyBoarder.focus();
+     * Keyboard.focus();
      * </listing>
      */
     public static function focus():void {
@@ -76,7 +76,7 @@ public class KeyBoarder {
      * @param handler 回调。
      * @example
      * <listing version="3.0">
-     * KeyBoarder.listen(onKey);
+     * Keyboard.listen(onKey);
      * </listing>
      */
     public static function listen(handler:Function):void {
@@ -93,7 +93,7 @@ public class KeyBoarder {
      * @param handler 先前注册的回调。
      * @example
      * <listing version="3.0">
-     * KeyBoarder.unlisten(onKey);
+     * Keyboard.unlisten(onKey);
      * </listing>
      */
     public static function unlisten(handler:Function):void {
