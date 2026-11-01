@@ -26,7 +26,7 @@ import flash.events.KeyboardEvent;
  * @see #initialize()
  * @see #listen()
  */
-public class Keyboard {
+public class KyoKeyboard {
 
     /** @private */
     private static var _inited:Boolean;
@@ -42,7 +42,7 @@ public class Keyboard {
      * @param stage 舞台。
      * @example
      * <listing version="3.0">
-     * Keyboard.initialize(stage);
+     * KyoKeyboard.initialize(stage);
      * </listing>
      */
     public static function initialize(stage:Stage):void {
@@ -61,7 +61,7 @@ public class Keyboard {
      * 将焦点设回 Stage。
      * @example
      * <listing version="3.0">
-     * Keyboard.focus();
+     * KyoKeyboard.focus();
      * </listing>
      */
     public static function focus():void {
@@ -76,7 +76,7 @@ public class Keyboard {
      * @param handler 回调。
      * @example
      * <listing version="3.0">
-     * Keyboard.listen(onKey);
+     * KyoKeyboard.listen(onKey);
      * </listing>
      */
     public static function listen(handler:Function):void {
@@ -93,7 +93,7 @@ public class Keyboard {
      * @param handler 先前注册的回调。
      * @example
      * <listing version="3.0">
-     * Keyboard.unlisten(onKey);
+     * KyoKeyboard.unlisten(onKey);
      * </listing>
      */
     public static function unlisten(handler:Function):void {
