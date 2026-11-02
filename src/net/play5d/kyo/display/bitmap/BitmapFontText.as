@@ -46,7 +46,7 @@ public class BitmapFontText extends Bitmap {
     private var _text:String;
 
     /**
-     * 当前显示的文本；赋值时重新生成 <code>bitmapData</code> 并同步宽度。
+     * 当前显示的文本；赋值时重新生成 <code>bitmapData</code>，并按像素 1:1 显示。
      * @return 文本内容。
      * @default null
      * @example
@@ -70,7 +70,9 @@ public class BitmapFontText extends Bitmap {
 
         bitmapData = _font.renderText(v);
         smoothing  = true;
-        width      = bitmapData.width;
+        // 按像素 1:1，避免 width 改写 scaleX。
+        scaleX     = 1;
+        scaleY     = 1;
     }
 
     /**
