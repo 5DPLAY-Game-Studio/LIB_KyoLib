@@ -553,7 +553,7 @@ internal class InsVideo extends Sprite {
     /** @private */
     private var _flvNS:NetStream;
     /** @private */
-    private var _siint:int;
+    private var _closeTimeout:int;
 
     /**
      * 从开头重新播放。
@@ -565,7 +565,7 @@ internal class InsVideo extends Sprite {
     public function play():void {
         playing = true;
 
-        clearTimeout(_siint);
+        clearTimeout(_closeTimeout);
 
         _flvNS.play(_flvURL);
         _flvNS.seek(0);
@@ -607,8 +607,8 @@ internal class InsVideo extends Sprite {
         playing = false;
         _flvNS.pause();
         _flvNS.seek(0);
-        clearTimeout(_siint);
-        _siint = setTimeout(_flvNS.close, 1000);
+        clearTimeout(_closeTimeout);
+        _closeTimeout = setTimeout(_flvNS.close, 1000);
     }
 
     /**
