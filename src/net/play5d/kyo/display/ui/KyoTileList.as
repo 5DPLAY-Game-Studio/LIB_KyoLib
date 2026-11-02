@@ -435,7 +435,7 @@ public class KyoTileList extends Sprite {
             if (_width > maskSize.x || _height > maskSize.y) {
                 scrollBar.enabled = true;
                 if (!scrollBar.hasEventListener(KyoUIEvent.UPDATE)) {
-                    scrollBar.addEventListener(KyoUIEvent.UPDATE, srollUpdate);
+                    scrollBar.addEventListener(KyoUIEvent.UPDATE, scrollUpdate);
                 }
             }
             else {
@@ -572,7 +572,7 @@ public class KyoTileList extends Sprite {
     }
 
     /** @private 滚动条拖拽回调，更新 <code>#scrollPos</code>。 */
-    private function srollUpdate(e:KyoUIEvent):void {
+    private function scrollUpdate(e:KyoUIEvent):void {
         var pos:Point = e.params as Point;
         scrollPos     = pos;
     }
