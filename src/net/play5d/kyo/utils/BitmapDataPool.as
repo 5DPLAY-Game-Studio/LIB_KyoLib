@@ -53,10 +53,10 @@ public class BitmapDataPool {
     /** @private 每尺寸桶最大空闲数 */
     private static const MAX_PER_BUCKET:int = 8;
     /** @private 池内 BitmapData 总数上限 */
-    private static const MAX_TOTAL:int = 64;
+    private static const MAX_TOTAL:int      = 64;
 
     /** @private */
-    private var _buckets:Object = {};
+    private var _buckets:Object    = {};
     /** @private */
     private var _total:int;
     /** @private */

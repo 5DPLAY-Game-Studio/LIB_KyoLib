@@ -49,22 +49,22 @@ public class IPhoneScrollPane extends Sprite {
      * 判定为拖拽的最小像素位移。
      * @default 5
      */
-    public var dragPixel:int   = 5;
+    public var dragPixel:int      = 5;
     /**
      * 是否允许水平滚动。
      * @default true
      */
-    public var hEnabled:Boolean = true;
+    public var hEnabled:Boolean   = true;
     /**
      * 是否允许垂直滚动。
      * @default true
      */
-    public var vEnabled:Boolean = true;
+    public var vEnabled:Boolean   = true;
     /**
      * 是否响应拖拽。
      * @default true
      */
-    public var enabled:Boolean = true;
+    public var enabled:Boolean    = true;
     /** @private */
     private var _size:Point;
     /** @private 按下时舞台坐标 */

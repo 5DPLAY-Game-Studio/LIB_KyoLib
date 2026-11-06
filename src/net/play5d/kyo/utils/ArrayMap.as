@@ -30,7 +30,7 @@ package net.play5d.kyo.utils {
  */
 public class ArrayMap {
     /** @private */
-    private var _o:Object = {};
+    private var _o:Object  = {};
     /** @private */
     private var _arr:Array = [];
 

@@ -232,13 +232,13 @@ public class BitmapMovieClip extends Sprite {
      * </listing>
      */
     public function drawMulti(
-        source        :Array,
-        matrix        :Matrix = null,
-        colorTransform:ColorTransform = null,
-        blendMode     :String = null,
-        clipRect      :Rectangle = null,
-        smoothing     :Boolean = false,
-        baseFrameMc   :MovieClip = null,
+        source            :Array,
+        matrix            :Matrix = null,
+        colorTransform    :ColorTransform = null,
+        blendMode         :String = null,
+        clipRect          :Rectangle = null,
+        smoothing         :Boolean = false,
+        baseFrameMc       :MovieClip = null,
         hideFrameTimeout  :Boolean = true
     ):void {
         beforeDraw(matrix, colorTransform, blendMode, clipRect, smoothing);

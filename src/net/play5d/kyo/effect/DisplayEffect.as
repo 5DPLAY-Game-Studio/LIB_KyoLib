@@ -258,7 +258,7 @@ internal class InsShadow {
     /** @private 残影所在容器 */
     public var parent:DisplayObjectContainer;
     /** @private 每帧缩放增量；0 表示不缩放 */
-    public var scaleAdd:Number = 0;
+    public var scaleAdd:Number  = 0;
     /** @private 参考尺寸，用于缩放时的位置补偿 */
     public var size:Point;
     /** @private 考虑镜像后的每帧缩放增量 */

@@ -35,7 +35,7 @@ public class SocketEvent extends Event {
      * <p>客户端连上服务端，或服务端接受新客户端时派发。</p>
      * @eventType SocketEvent_CLIENT_CONNECT
      */
-    public static const CLIENT_CONNECT:String = 'SocketEvent_CLIENT_CONNECT';
+    public static const CLIENT_CONNECT:String     = 'SocketEvent_CLIENT_CONNECT';
     /**
      * <code>CLIENT_DIS_CONNECT</code> 事件的 <code>type</code> 属性值。
      * <p>服务端侧检测到客户端断开时派发。</p>
@@ -47,19 +47,19 @@ public class SocketEvent extends Event {
      * <p>收到完整包体时派发。</p>
      * @eventType SocketEvent_RECEIVE_DATA
      */
-    public static const RECEIVE_DATA:String = 'SocketEvent_RECEIVE_DATA';
+    public static const RECEIVE_DATA:String       = 'SocketEvent_RECEIVE_DATA';
     /**
      * <code>CLOSE</code> 事件的 <code>type</code> 属性值。
      * <p>连接关闭时派发。</p>
      * @eventType SocketEvent_CLOSE
      */
-    public static const CLOSE:String = 'SocketEvent_CLOSE';
+    public static const CLOSE:String              = 'SocketEvent_CLOSE';
     /**
      * <code>ERROR</code> 事件的 <code>type</code> 属性值。
      * <p>连接错误时派发。</p>
      * @eventType SocketEvent_ERROR
      */
-    public static const ERROR:String = 'SocketEvent_ERROR';
+    public static const ERROR:String              = 'SocketEvent_ERROR';
 
     /**
      * 构造 Socket 事件。

@@ -27,8 +27,8 @@ package net.play5d.kyo.utils {
  * </listing>
  */
 public function superTrace(...args):void {
-    var e:Error = new Error();
-    var stack:String = e.getStackTrace();
+    var e:Error       = new Error();
+    var stack:String  = e.getStackTrace();
     var matches:Array = stack ? stack.match(/[\w\/]*\(\)/g) : null;
     var caller:String = matches && matches.length > 1 ? '[' + matches[1] + ']' : '[?]';
     trace(caller, args);

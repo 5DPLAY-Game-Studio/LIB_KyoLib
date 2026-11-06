@@ -103,15 +103,15 @@ public class SuperPlayer extends Sprite {
     /**
      * 视为视频的扩展名列表。
      */
-    public var videoExts:Array = ['flv', 'mp4'];
+    public var videoExts:Array   = ['flv', 'mp4'];
     /**
      * 视为 SWF 的扩展名列表。
      */
-    public var flashExts:Array = ['swf'];
+    public var flashExts:Array   = ['swf'];
     /**
      * 视为图片的扩展名列表。
      */
-    public var picExts:Array   = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
+    public var picExts:Array     = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
     /** @private */
     private var _url:String;
     /** @private */

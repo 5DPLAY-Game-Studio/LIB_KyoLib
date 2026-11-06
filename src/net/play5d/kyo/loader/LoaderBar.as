@@ -46,7 +46,7 @@ public class LoaderBar extends Sprite {
      * 前景填充色。
      * @default KyoColor.RED
      */
-    public var color:uint = KyoColor.RED;
+    public var color:uint     = KyoColor.RED;
     /**
      * 边框颜色。
      * @default 0x426F00

@@ -40,7 +40,7 @@ public class KyoSocket {
      * 字符串编码格式。
      * @default UTF-8
      */
-    public var charset:String = 'UTF-8';
+    public var charset:String     = 'UTF-8';
     /**
      * 断线后是否自动重连。
      * @default false

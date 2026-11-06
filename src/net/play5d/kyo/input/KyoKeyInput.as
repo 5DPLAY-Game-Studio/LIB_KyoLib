@@ -45,25 +45,25 @@ public class KyoKeyInput {
      * 是否记录连招顺序队列。
      * @default true
      */
-    public var orderKeyEnabled:Boolean = true;
+    public var orderKeyEnabled:Boolean       = true;
     /**
      * 连续按键队列的最大值。
      * @default 10
      */
-    public var maxOrderKeyLength:int = 10;
+    public var maxOrderKeyLength:int         = 10;
     /**
      * 连续按键时间限定（毫秒）；超时则清空队列。
      * @default 200
      */
-    public var orderKeyDuration:int = 200;
+    public var orderKeyDuration:int          = 200;
     /** @private */
     private var _orderKeys:Vector.<KyoKeyVO> = new Vector.<KyoKeyVO>();
     /** @private */
     private var _lastDownTime:int;
     /** @private */
-    private var _downCodes:Object = {};
+    private var _downCodes:Object            = {};
     /** @private name → KyoKeyVO */
-    private var _keys:Object      = {};
+    private var _keys:Object                 = {};
     /** @private code → KyoKeyVO */
     private var _map:Object;
     /** @private */

@@ -204,15 +204,15 @@ public class KyoUtils {
 
     /** @private 收集源对象类型图上的限定名（按根类缓存） */
     private static function collectCloneTypeNames(object:*):Vector.<String> {
-        var rootName:String           = getQualifiedClassName(object);
-        var cached:Vector.<String>    = _cloneTypeNameCache[rootName] as Vector.<String>;
+        var rootName:String        = getQualifiedClassName(object);
+        var cached:Vector.<String> = _cloneTypeNameCache[rootName] as Vector.<String>;
         if (cached) {
             return cached;
         }
 
-        var result:Vector.<String>    = new Vector.<String>();
-        var dictionary:Dictionary     = new Dictionary();
-        var xml:XML                   = describeType(object);
+        var result:Vector.<String> = new Vector.<String>();
+        var dictionary:Dictionary  = new Dictionary();
+        var xml:XML                = describeType(object);
 
         addCloneTypeName(dictionary, String(xml.@name));
         collectCloneTypeAttrs(dictionary, xml.extendsClass);

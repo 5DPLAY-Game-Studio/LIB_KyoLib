@@ -58,11 +58,11 @@ public class KyoTileList extends Sprite {
      * 子项之间的水平与垂直间距。
      * @default (5, 5)
      */
-    public var gap:Point          = new Point(5, 5);
+    public var gap:Point      = new Point(5, 5);
     /**
      * 统一单元宽高；首项尺寸为 0 时由首个有效子项填充。
      */
-    public var unitSize:Point    = new Point();
+    public var unitSize:Point = new Point();
     /**
      * 换行时插入的横线元件类，未设置则不绘制。
      */
@@ -75,7 +75,7 @@ public class KyoTileList extends Sprite {
      * 显示编号，<code>-1</code> 表示不显示。
      * @default -1
      */
-    public var showNum:int        = -1;
+    public var showNum:int    = -1;
     /**
      * 当前管理的显示对象数组。
      */

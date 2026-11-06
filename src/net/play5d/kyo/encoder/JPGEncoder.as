@@ -71,13 +71,13 @@ public class JPGEncoder {
         35, 36, 48, 49, 57, 58, 62, 63
     ];
     /** @private 亮度量化表 */
-    private var YTable:Vector.<int>              = new Vector.<int>(64, true);
+    private var YTable:Vector.<int>                   = new Vector.<int>(64, true);
     /** @private 色度量化表 */
-    private var UVTable:Vector.<int>             = new Vector.<int>(64, true);
+    private var UVTable:Vector.<int>                  = new Vector.<int>(64, true);
     /** @private 亮度 DCT 量化缩放因子表 */
-    private var fdtbl_Y:Vector.<Number>          = new Vector.<Number>(64, true);
+    private var fdtbl_Y:Vector.<Number>               = new Vector.<Number>(64, true);
     /** @private 色度 DCT 量化缩放因子表 */
-    private var fdtbl_UV:Vector.<Number>         = new Vector.<Number>(64, true);
+    private var fdtbl_UV:Vector.<Number>              = new Vector.<Number>(64, true);
     /** @private 亮度 DC 霍夫曼表 */
     private var YDC_HT:Array;
     /** @private 色度 DC 霍夫曼表 */
@@ -147,23 +147,23 @@ public class JPGEncoder {
         0xf9, 0xfa
     ];
     /** @private AC 系数位编码查找表 */
-    private var bitcode:Vector.<BitString>       = new Vector.<BitString>(65535);
+    private var bitcode:Vector.<BitString> = new Vector.<BitString>(65535);
     /** @private AC 系数类别查找表 */
-    private var category:Vector.<int>            = new Vector.<int>(65535);
+    private var category:Vector.<int>      = new Vector.<int>(65535);
     /** @private 输出字节流 */
     private var byteout:ByteArray;
     /** @private 当前输出字节缓存 */
-    private var bytenew:int                      = 0;
+    private var bytenew:int                = 0;
     /** @private 当前字节内位位置 */
-    private var bytepos:int                      = 7;
+    private var bytepos:int                = 7;
     /** @private 8×8 块 ZigZag 重排缓冲 */
-    private var DU:Vector.<Number>               = new Vector.<Number>(64, true);
+    private var DU:Vector.<Number>         = new Vector.<Number>(64, true);
     /** @private 8×8 亮度块 */
-    private var YDU:Vector.<Number>              = new Vector.<Number>(64, true);
+    private var YDU:Vector.<Number>        = new Vector.<Number>(64, true);
     /** @private 8×8 U 色度块 */
-    private var UDU:Vector.<Number>              = new Vector.<Number>(64, true);
+    private var UDU:Vector.<Number>        = new Vector.<Number>(64, true);
     /** @private 8×8 V 色度块 */
-    private var VDU:Vector.<Number>              = new Vector.<Number>(64, true);
+    private var VDU:Vector.<Number>        = new Vector.<Number>(64, true);
 
     /**
      * 将位图编码为 JPEG 字节流。
@@ -404,7 +404,7 @@ public class JPGEncoder {
             tmp4 = data[dataOff + 3] - data[dataOff + 4];
 
             /* Even part */
-            tmp10 = tmp0 + tmp3;	/* phase 2 */
+            tmp10 = tmp0 + tmp3;    /* phase 2 */
             tmp13 = tmp0 - tmp3;
             tmp11 = tmp1 + tmp2;
             tmp12 = tmp1 - tmp2;
@@ -431,10 +431,10 @@ public class JPGEncoder {
             z4 = 1.306562965 * tmp12 + z5; /* c2+c6 */
             z3 = tmp11 * 0.707106781; /* c4 */
 
-            z11 = tmp7 + z3;	/* phase 5 */
+            z11 = tmp7 + z3;    /* phase 5 */
             z13 = tmp7 - z3;
 
-            data[dataOff + 5] = z13 + z2;	/* phase 6 */
+            data[dataOff + 5] = z13 + z2;   /* phase 6 */
             data[dataOff + 3] = z13 - z2;
             data[dataOff + 1] = z11 + z4;
             data[dataOff + 7] = z11 - z4;
@@ -455,7 +455,7 @@ public class JPGEncoder {
             tmp4 = data[dataOff + 24] - data[dataOff + 32];
 
             /* Even part */
-            tmp10 = tmp0 + tmp3;	/* phase 2 */
+            tmp10 = tmp0 + tmp3;    /* phase 2 */
             tmp13 = tmp0 - tmp3;
             tmp11 = tmp1 + tmp2;
             tmp12 = tmp1 - tmp2;
@@ -482,7 +482,7 @@ public class JPGEncoder {
             z4 = 1.306562965 * tmp12 + z5; /* c2+c6 */
             z3 = tmp11 * 0.707106781; /* c4 */
 
-            z11 = tmp7 + z3;	/* phase 5 */
+            z11 = tmp7 + z3;    /* phase 5 */
             z13 = tmp7 - z3;
 
             data[dataOff + 40] = z13 + z2; /* phase 6 */
@@ -543,7 +543,7 @@ public class JPGEncoder {
     /** @private 写入 DQT 量化表段 */
     private function writeDQT():void {
         writeWord(0xFFDB); // marker
-        writeWord(132);	   // length
+        writeWord(132);    // length
         writeByte(0);
         var i:int;
         for (i = 0; i < 64; i++) {

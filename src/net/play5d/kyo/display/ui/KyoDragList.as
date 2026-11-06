@@ -65,7 +65,7 @@ public class KyoDragList extends KyoTileList {
      * 判定为拖拽的最小像素位移。
      * @default 5
      */
-    public var dragPixel:int     = 5;
+    public var dragPixel:int       = 5;
     /** @private 按下时舞台坐标 */
     protected var _downPoint:Point;
     /** @private 按下时列表坐标（子类可用） */

@@ -125,7 +125,7 @@ public class IPhoneIconList extends Sprite {
     /** @private 按下时舞台 mouseX */
     private var _oldX:Number;
     /** @private 当前帧滑动速度 */
-    private var _mouseSpeed:Number    = 0;
+    private var _mouseSpeed:Number  = 0;
     /** @private 上一帧 mouseX */
     private var _curMouseX:Number   = -1;
     /** @private 翻页 Tween */
@@ -521,7 +521,7 @@ public class IPhoneIconList extends Sprite {
 
         _tweenX = _oldContentX;
         _tween  = TweenLite.to(this, .5, {
-            contentX : _tweenX,
+            contentX  : _tweenX,
             onComplete: resumeComplete,
             onUpdate  : updateScrollRect
         });

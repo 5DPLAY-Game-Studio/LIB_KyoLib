@@ -54,7 +54,7 @@ public class MCNumber extends Sprite {
      * 每位固定宽度；为 -1 时用显示对象宽度。
      * @default -1
      */
-    public var mcWidth:Number = -1;
+    public var mcWidth:Number                 = -1;
     /**
      * 数字 0 对应的起始帧。
      */

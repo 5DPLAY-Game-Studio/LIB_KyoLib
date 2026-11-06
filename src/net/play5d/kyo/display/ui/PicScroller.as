@@ -85,7 +85,7 @@ public class PicScroller extends Sprite {
      * 移动方向（1：从左向右，2：从右向左，3：从上向下，4：从下向上）。
      * @default 4
      */
-    public var direction:int          = 4;
+    public var direction:int       = 4;
     /**
      * 是否锁定图片宽度为可视宽度。
      * @default true
