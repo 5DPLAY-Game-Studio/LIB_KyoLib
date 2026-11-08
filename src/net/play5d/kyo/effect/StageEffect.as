@@ -144,14 +144,14 @@ public class StageEffect {
 
     /**
      * 直接应用颜色变换到 <code>stage</code>。
-     * @param ct 颜色变换。
+     * @param colorTransform 颜色变换。
      * @example
      * <listing version="3.0">
      * StageEffect.I.applyColorTransform(new ColorTransform());
      * </listing>
      */
-    public function applyColorTransform(ct:ColorTransform):void {
-        stage.transform.colorTransform = ct;
+    public function applyColorTransform(colorTransform:ColorTransform):void {
+        stage.transform.colorTransform = colorTransform;
     }
 
     /**

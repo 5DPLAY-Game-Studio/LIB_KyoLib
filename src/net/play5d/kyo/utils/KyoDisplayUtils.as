@@ -177,10 +177,10 @@ public class KyoDisplayUtils {
         }
 
         function projectOverlap(axis:Point, rectArr1:Array, rectArr2:Array):Boolean {
-            var rect1MinMax:Array = getScalarValue(rectArr1, axis);
-            var rect2MinMax:Array = getScalarValue(rectArr2, axis);
+            var rect1MinMax:Array             = getScalarValue(rectArr1, axis);
+            var recolorTransform2MinMax:Array = getScalarValue(rectArr2, axis);
 
-            return rect2MinMax[0] > rect1MinMax[1] || rect2MinMax[1] < rect1MinMax[0];
+            return recolorTransform2MinMax[0] > rect1MinMax[1] || recolorTransform2MinMax[1] < rect1MinMax[0];
         }
 
         function maybeCollide(p00:Point, p01:Point, p10:Point, p11:Point):Boolean {
@@ -214,10 +214,10 @@ public class KyoDisplayUtils {
         );
         var radian1:Number  = obj1.radian;
 
-        var rect2:Rectangle = new Rectangle(obj2.x, obj2.y, obj2.width, obj2.height);
-        var rotation2:int   = int(obj2.rotation);
-        var scaleX2:Number  = obj2.scaleX != undefined ? obj2.scaleX : 1;
-        var origin2:Point   = new Point(
+        var recolorTransform2:Rectangle = new Rectangle(obj2.x, obj2.y, obj2.width, obj2.height);
+        var rotation2:int               = int(obj2.rotation);
+        var scaleX2:Number              = obj2.scaleX != undefined ? obj2.scaleX : 1;
+        var origin2:Point               = new Point(
                 obj2.originX != undefined ? obj2.originX : 0,
                 obj2.originY != undefined ? obj2.originY : 0
         );
@@ -229,12 +229,12 @@ public class KyoDisplayUtils {
         }
 
         if (scaleX2 < 0) {
-            origin2.x = rect2.width - origin2.x;
-            rect2.x   = rect2.x - rect2.width + obj2.originX + origin2.x;
+            origin2.x             = recolorTransform2.width - origin2.x;
+            recolorTransform2.x   = recolorTransform2.x - recolorTransform2.width + obj2.originX + origin2.x;
         }
 
         var arr1:Array = getRectEachPoint(rect1, origin1, rotation1, radian1);
-        var arr2:Array = getRectEachPoint(rect2, origin2, rotation2, radian2);
+        var arr2:Array = getRectEachPoint(recolorTransform2, origin2, rotation2, radian2);
 
         if (!maybeCollide(origin1, arr1[0], origin2, arr2[0])) {
             return false;
@@ -676,29 +676,29 @@ public class KyoDisplayUtils {
 
     /**
      * 克隆 ColorTransform（不含 color 属性赋值）。
-     * @param ct 源。
+     * @param colorTransform 源。
      * @return 新实例。
      * @example
      * <listing version="3.0">
-     * var ct2:ColorTransform = KyoDisplayUtils.cloneColorTransform(ct);
+     * var colorTransform2:ColorTransform = KyoDisplayUtils.cloneColorTransform(colorTransform);
      * </listing>
      */
-    public static function cloneColorTransform(ct:ColorTransform):ColorTransform {
-        var newCt:ColorTransform = new ColorTransform();
+    public static function cloneColorTransform(colorTransform:ColorTransform):ColorTransform {
+        var newColorTransform:ColorTransform = new ColorTransform();
 
-        newCt.alphaMultiplier = ct.alphaMultiplier;
-        newCt.alphaOffset     = ct.alphaOffset;
+        newColorTransform.alphaMultiplier = colorTransform.alphaMultiplier;
+        newColorTransform.alphaOffset     = colorTransform.alphaOffset;
 
-        newCt.blueMultiplier = ct.blueMultiplier;
-        newCt.blueOffset     = ct.blueOffset;
+        newColorTransform.blueMultiplier = colorTransform.blueMultiplier;
+        newColorTransform.blueOffset     = colorTransform.blueOffset;
 
-        newCt.greenMultiplier = ct.greenMultiplier;
-        newCt.greenOffset     = ct.greenOffset;
+        newColorTransform.greenMultiplier = colorTransform.greenMultiplier;
+        newColorTransform.greenOffset     = colorTransform.greenOffset;
 
-        newCt.redMultiplier = ct.redMultiplier;
-        newCt.redOffset     = ct.redOffset;
+        newColorTransform.redMultiplier = colorTransform.redMultiplier;
+        newColorTransform.redOffset     = colorTransform.redOffset;
 
-        return newCt;
+        return newColorTransform;
     }
 
     /**

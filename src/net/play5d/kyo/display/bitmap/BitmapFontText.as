@@ -81,15 +81,15 @@ public class BitmapFontText extends Bitmap {
      * <p>首次非空调用会缓存当前 <code>bitmapData</code> 的克隆，供之后还原。
      * 方法名避开与 <code>DisplayObject.colorTransform</code> 属性冲突。</p>
      *
-     * @param ct 颜色变换；为 <code>null</code> 时还原。
+     * @param colorTransform 颜色变换；为 <code>null</code> 时还原。
      * @example
      * <listing version="3.0">
      * label.applyColorTransform(new ColorTransform(1, 0, 0, 1));
      * label.applyColorTransform(null); // 还原
      * </listing>
      */
-    public function applyColorTransform(ct:ColorTransform):void {
-        if (ct == null) {
+    public function applyColorTransform(colorTransform:ColorTransform):void {
+        if (colorTransform == null) {
             if (_originalBitmapData) {
                 if (bitmapData) {
                     bitmapData.dispose();
@@ -104,7 +104,7 @@ public class BitmapFontText extends Bitmap {
             _originalBitmapData = bitmapData.clone();
         }
 
-        bitmapData.colorTransform(new Rectangle(0, 0, bitmapData.width, bitmapData.height), ct);
+        bitmapData.colorTransform(new Rectangle(0, 0, bitmapData.width, bitmapData.height), colorTransform);
     }
 
     /**

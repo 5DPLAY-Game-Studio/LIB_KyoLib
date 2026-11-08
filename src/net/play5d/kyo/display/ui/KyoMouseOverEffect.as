@@ -54,9 +54,9 @@ public class KyoMouseOverEffect {
             switch (effectType) {
             case EFFECT_TYPE_HIGHLIGHT:
                 if (over) {
-                    var ct:ColorTransform = new ColorTransform();
-                    ct.redOffset = ct.greenOffset = ct.blueOffset = 128;
-                    targetDisplay.transform.colorTransform = ct;
+                    var colorTransform:ColorTransform = new ColorTransform();
+                    colorTransform.redOffset = colorTransform.greenOffset = colorTransform.blueOffset = 128;
+                    targetDisplay.transform.colorTransform = colorTransform;
                 }
                 else {
                     targetDisplay.transform.colorTransform = new ColorTransform();
