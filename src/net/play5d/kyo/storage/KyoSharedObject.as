@@ -30,7 +30,10 @@ import flash.net.SharedObject;
  */
 public class KyoSharedObject {
     /**
-     * 读取本地 SharedObject 的 data 快照后关闭。
+     * 读取本地 SharedObject 的 data 引用后关闭。
+     *
+     * <p>返回的是 data 引用，<code>close</code> 之后再改不会写回。<code>getLocal</code> 拿到的是同名现有实例，<code>close</code> 会把这份实例关掉。</p>
+     *
      * @param id 本地名。
      * @return data 对象。
      * @example
@@ -48,6 +51,9 @@ public class KyoSharedObject {
 
     /**
      * 清空后写入对象字段并 flush。
+     *
+     * <p><code>data</code> 为 null 时抛错。字段按引用写入，不深拷贝。不检查 <code>flush</code> 的返回值，用户拒绝扩容时可能还没写完就 <code>close</code>。</p>
+     *
      * @param id 本地名。
      * @param data 要写入的键值。
      * @example
@@ -69,6 +75,9 @@ public class KyoSharedObject {
 
     /**
      * 清空指定本地 SharedObject。
+     *
+     * <p>只 <code>clear</code>，不 <code>close</code>。同名实例若仍被别处持有，内容也会被清掉。</p>
+     *
      * @param id 本地名。
      * @example
      * <listing version="3.0">

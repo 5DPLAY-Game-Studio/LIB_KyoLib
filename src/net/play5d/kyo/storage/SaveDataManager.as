@@ -55,7 +55,14 @@ public class SaveDataManager {
 
     /**
      * 是否已写入过存档标记 <code>_has_data_</code>。
+     *
+     * <p>只有布尔 <code>true</code> 才算有存档。</p>
+     *
      * @return 是否有存档。
+     * @example
+     * <listing version="3.0">
+     * if (mgr.hasData) { }
+     * </listing>
      */
     public function get hasData():Boolean {
         return _so.data._has_data_ == true;
@@ -63,7 +70,14 @@ public class SaveDataManager {
 
     /**
      * 底层 SharedObject.data。
+     *
+     * <p>赋值会先清空再写入各字段，并按构造时的 <code>autoSave</code> 决定是否 <code>save</code>。值为 null 时，清空之后会抛错。</p>
+     *
      * @return data 对象。
+     * @example
+     * <listing version="3.0">
+     * var d:Object = mgr.data;
+     * </listing>
      */
     public function get data():Object {
         return _so.data;
@@ -107,6 +121,9 @@ public class SaveDataManager {
 
     /**
      * 合并对象字段到 data。
+     *
+     * <p>不删除原有键。<code>o</code> 为 null 时抛错。</p>
+     *
      * @param o 键值对象。
      * @example
      * <listing version="3.0">
@@ -122,6 +139,9 @@ public class SaveDataManager {
 
     /**
      * 清空 SharedObject。
+     *
+     * <p>立刻清空磁盘上的同名存档，不会自动 <code>save</code>。</p>
+     *
      * @example
      * <listing version="3.0">
      * mgr.clear();
@@ -133,6 +153,9 @@ public class SaveDataManager {
 
     /**
      * 写入标记与时间戳并 flush。
+     *
+     * <p>标记键是 <code>_has_data_</code>，时间键是 <code>date_time</code>。不关闭 SharedObject，也不检查 <code>flush</code> 是否被用户拒绝。</p>
+     *
      * @example
      * <listing version="3.0">
      * mgr.save();
