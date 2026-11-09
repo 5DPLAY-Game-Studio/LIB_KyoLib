@@ -40,6 +40,9 @@ public class KyoKeyLite {
 
     /**
      * 在指定 Stage 上注册键盘监听。
+     *
+     * <p>会清空按下表。再次调用不会拆掉上一舞台上的监听，更换舞台前应先 <code>off</code>。</p>
+     *
      * @param stage 舞台；为 <code>null</code> 时抛错。
      * @throws Error stage 为空。
      * @example
@@ -62,6 +65,9 @@ public class KyoKeyLite {
 
     /**
      * 移除键盘监听。
+     *
+     * <p>不清除已记录的按下态，之后 <code>isDown</code> 仍可读到旧值。</p>
+     *
      * @example
      * <listing version="3.0">
      * KyoKeyLite.off();

@@ -31,14 +31,19 @@ import flash.utils.getTimer;
  */
 public class KyoKeyInput {
     /**
+     * 在指定舞台上创建键盘输入管理。
      * @param stage 侦听键盘事件的舞台。
+     * @example
+     * <listing version="3.0">
+     * var input:KyoKeyInput = new KyoKeyInput(stage);
+     * </listing>
      */
     public function KyoKeyInput(stage:Stage) {
         this.stage = stage;
     }
 
     /**
-     * 舞台引用。
+     * 侦听键盘事件的舞台。
      */
     public var stage:Stage;
     /**
@@ -75,6 +80,9 @@ public class KyoKeyInput {
 
     /**
      * 批量设置按键映射（先清空再添加）。
+     *
+     * <p>添加后会开启键盘侦听。</p>
+     *
      * @param array 元素为 <code>&#123;name:String, code:int&#125;</code> 或 <code>KyoKeyVO</code>。
      * @example
      * <listing version="3.0">
@@ -92,7 +100,7 @@ public class KyoKeyInput {
     }
 
     /**
-     * 增加一条按键映射。
+     * 增加一条按键映射，并开启侦听。
      * @param o <code>&#123;name:String, code:int&#125;</code> 或 <code>KyoKeyVO</code>。
      * @example
      * <listing version="3.0">
@@ -113,7 +121,7 @@ public class KyoKeyInput {
     }
 
     /**
-     * 移除一条按键映射。
+     * 移除一条按键映射；找到并移除后会开启侦听。
      * @param o 键名 <code>String</code> 或 <code>KyoKeyVO</code>。
      * @example
      * <listing version="3.0">
@@ -184,6 +192,9 @@ public class KyoKeyInput {
 
     /**
      * 开启按键侦听。
+     *
+     * <p><code>stage</code> 为 null 时抛错，但内部已记为开启；须先 <code>turnOff</code> 才能再次开启。</p>
+     *
      * @throws Error stage 为 null。
      * @example
      * <listing version="3.0">
@@ -222,6 +233,9 @@ public class KyoKeyInput {
 
     /**
      * 按映射键名判断是否全部按下。
+     *
+     * <p>任一键名未映射时抛错。</p>
+     *
      * @param params 一个或多个键名（映射表中的 name）。
      * @return 全部按下为 <code>true</code>。
      * @example
@@ -264,6 +278,9 @@ public class KyoKeyInput {
 
     /**
      * 按映射键名判断是否“按过”（若按下则清除其 isDown）。
+     *
+     * <p>清除后若按键仍按住，下一次重复 <code>KEY_DOWN</code> 会再次记入连招。</p>
+     *
      * @param params 键名。
      * @return 调用时是否处于按下。
      * @example
@@ -318,6 +335,9 @@ public class KyoKeyInput {
 
     /**
      * 判断最近按键顺序是否匹配（匹配成功后清空队列）。
+     *
+     * <p>与队列末尾按对象引用比较，不比较 <code>name</code> / <code>code</code>。传入的须是映射表里的同一实例。</p>
+     *
      * @param params 期望顺序的 <code>KyoKeyVO</code> 列表。
      * @return 是否匹配。
      * @example

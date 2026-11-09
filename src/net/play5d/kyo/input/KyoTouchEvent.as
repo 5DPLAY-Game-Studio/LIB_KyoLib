@@ -33,19 +33,31 @@ public class KyoTouchEvent extends Event {
      */
     public static const SLIDE:String = 'event-slide';
 
-    /** 向上滑动。 */
+    /**
+     * 向上滑动。
+     * @default 0
+     */
     public static const DIRECTION_UP:int    = 0;
-    /** 向下滑动。 */
+    /**
+     * 向下滑动。
+     * @default 6
+     */
     public static const DIRECTION_DOWN:int  = 6;
-    /** 向左滑动。 */
+    /**
+     * 向左滑动。
+     * @default 9
+     */
     public static const DIRECTION_LEFT:int  = 9;
-    /** 向右滑动。 */
+    /**
+     * 向右滑动。
+     * @default 3
+     */
     public static const DIRECTION_RIGHT:int = 3;
 
     /**
      * 构造触摸事件。
      * @param type 事件类型。
-     * @param obj 可选属性字典（键写入本实例，如 <code>direction</code>）。
+     * @param obj 属性字典（键写入本实例，如 <code>direction</code>）。为 <code>null</code> 时无法构造，不需要附加数据时传空对象。
      * @example
      * <listing version="3.0">
      * dispatchEvent(new KyoTouchEvent(KyoTouchEvent.SLIDE, {direction: KyoTouchEvent.DIRECTION_LEFT}));
@@ -60,6 +72,9 @@ public class KyoTouchEvent extends Event {
 
     /**
      * 滑动方向，见 <code>DIRECTION_UP</code> 等常量。
+     *
+     * <p>未赋值时为 0，与 <code>DIRECTION_UP</code> 相同。</p>
+     *
      * @default 0
      */
     public var direction:int;

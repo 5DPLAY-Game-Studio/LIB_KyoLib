@@ -31,6 +31,8 @@ import flash.geom.Rectangle;
 /**
  * 基于鼠标按下 / 抬起的滑动输入（模拟触摸滑动），派发 <code>KyoTouchEvent.SLIDE</code>。
  *
+ * <p>水平位移不小于垂直位移时判为左右，否则判为上下。松开时若指针不在有效区域则不派发。</p>
+ *
  * @see KyoTouchEvent
  * @see #slidePos
  * @see #enableArea
@@ -38,7 +40,12 @@ import flash.geom.Rectangle;
  */
 public class KyoTouchInput extends EventDispatcher {
     /**
-     * @param stage 侦听鼠标事件的舞台。
+     * 在指定舞台上创建滑动输入，并立即开始侦听。
+     * @param stage 侦听鼠标事件的舞台，不能为 null。
+     * @example
+     * <listing version="3.0">
+     * var touch:KyoTouchInput = new KyoTouchInput(stage);
+     * </listing>
      */
     public function KyoTouchInput(stage:Stage) {
         _stage  = stage;
@@ -52,7 +59,8 @@ public class KyoTouchInput extends EventDispatcher {
     public var slidePos:int = 20;
     /**
      * 可选有效区域；为 <code>null</code> 时全舞台有效。
-     * 判定使用 <code>x/y/width/height</code>（非标准含宽高的矩形包含）。
+     *
+     * <p>右边界与 <code>width</code> 比较，下边界与 <code>height</code> 比较，而不是 <code>x + width</code>、<code>y + height</code>。</p>
      */
     public var enableArea:Rectangle;
     /** @private */
