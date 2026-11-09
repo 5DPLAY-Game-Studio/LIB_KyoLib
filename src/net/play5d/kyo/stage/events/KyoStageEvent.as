@@ -39,8 +39,8 @@ public class KyoStageEvent extends Event {
      * 构造场景事件。
      * @param type 事件类型。
      * @param stage 相关场景。
-     * @param bubbles 是否冒泡。
-     * @param cancelable 是否可取消。
+     * @param bubbles 是否冒泡，默认 false。
+     * @param cancelable 是否可取消，默认 false。
      * @example
      * <listing version="3.0">
      * dispatchEvent(new KyoStageEvent(KyoStageEvent.CHANGE_STATE, stg));

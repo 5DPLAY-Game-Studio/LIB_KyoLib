@@ -54,6 +54,9 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 切换场景时暂时关闭鼠标交互的毫秒数；0 表示不关闭。
+     *
+     * <p>关闭的是舞台的 <code>mouseChildren</code>，时间到后设为 true，不恢复调用前的值。</p>
+     *
      * @default 0
      */
     public var changeStateMouseGap:int = 0;
@@ -66,7 +69,8 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 当前主场景。
-     * @return 当前 <code>IStage</code>。
+     * @return 当前 <code>IStage</code>；尚未切换时为 null。
+     * @default null
      */
     public function get currentStage():IStage {
         return _curStage;
@@ -91,6 +95,9 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 切换主场景。
+     *
+     * <p>不移除已有弹出层。同类且 <code>sameChange</code> 为 false 时不派发事件。事件在切换流程发出，不等 <code>buildAfterDestroy</code> 的销毁回调；事件里的场景是即将进入的新场景。</p>
+     *
      * @param stg 新场景。
      * @param sameChange 与当前同类时是否仍切换。
      * @param buildAfterDestroy 为 <code>true</code> 时等旧场景 <code>destroy</code> 回调后再构建。
@@ -154,6 +161,9 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 显示弹出层。
+     *
+     * <p>根容器不在舞台上时会出错。居中按 Flash 舞台尺寸和根容器缩放计算。淡入效果不调用完成回调时，不会执行 <code>afterBuild</code> 和 <code>addBack</code>。</p>
+     *
      * @param layer 弹出层场景。
      * @param x 横坐标；默认 0。传 <code>NaN</code> 时水平居中。
      * @param y 纵坐标；默认 0。传 <code>NaN</code> 时垂直居中。
@@ -212,6 +222,9 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 是否已存在指定层（实例或类型）。
+     *
+     * <p>既不是实例也不是 <code>Class</code> 时返回 false。</p>
+     *
      * @param layer <code>IStage</code> 实例或 <code>Class</code>。
      * @return 是否存在。
      * @example
@@ -238,6 +251,9 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 移除弹出层。
+     *
+     * <p>淡出效果不调用完成回调时，层不会从显示列表移除，也不会 <code>destroy</code>。</p>
+     *
      * @param layer 目标层。
      * @param effect 淡出效果；可省略。
      * @param removeBack 移除完成后的回调；可省略。
@@ -277,6 +293,9 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 移除全部弹出层。
+     *
+     * <p>同步移除时会改层表，可能漏掉其中一些层的 <code>destroy</code>；方法结束时仍把层表清空。</p>
+     *
      * @example
      * <listing version="3.0">
      * ctrl.removeAllLayer();
@@ -291,6 +310,9 @@ public class KyoStageCtrl extends EventDispatcher {
 
     /**
      * 清理主场景，可选同时清层。
+     *
+     * <p>当前场景的显示对象已不在根容器上时，<code>destroy</code> 之后的移除会抛错，当前场景引用不会清空。</p>
+     *
      * @param _removeAllLayer 是否先 <code>removeAllLayer</code>。
      * @example
      * <listing version="3.0">

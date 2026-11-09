@@ -31,6 +31,10 @@ public interface IStage {
     /**
      * 场景显示对象。
      * @return 根显示对象。
+     * @example
+     * <listing version="3.0">
+     * var view:DisplayObject = stage.display;
+     * </listing>
      */
     function get display():DisplayObject;
 
@@ -45,6 +49,9 @@ public interface IStage {
 
     /**
      * 加入显示列表后的后续构建。
+     *
+     * <p><code>KyoStageCtrl</code> 对主场景会在加入显示列表后立刻调用；弹出层要等淡入效果的完成回调。</p>
+     *
      * @example
      * <listing version="3.0">
      * stage.afterBuild();

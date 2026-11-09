@@ -24,6 +24,8 @@ import net.play5d.kyo.stage.IStage;
 /**
  * 从原点（x/y/alpha 归零后）补间回原值的淡入效果；淡出为空实现。
  *
+ * <p>三个开关都关时仍会空跑一段时长，再调用完成回调。淡出不调用完成回调，因此不能用来让 <code>KyoStageCtrl</code> 关掉弹出层。</p>
+ *
  * @see IStageFadeEffect
  */
 public class StageFadeEffectOriginal implements IStageFadeEffect {

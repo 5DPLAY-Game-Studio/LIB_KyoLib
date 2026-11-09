@@ -25,6 +25,8 @@ import net.play5d.kyo.stage.IStage;
 /**
  * 弹性上下位移的场景淡入 / 淡出效果。
  *
+ * <p>不会调用完成回调。交给 <code>KyoStageCtrl</code> 时，淡入不会 <code>afterBuild</code>，淡出也不会真正移除该层。</p>
+ *
  * @see IStageFadeEffect
  * @see ZoomEffect
  */
