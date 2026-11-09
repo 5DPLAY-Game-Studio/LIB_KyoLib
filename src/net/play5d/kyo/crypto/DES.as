@@ -25,7 +25,7 @@ import flash.utils.ByteArray;
 /**
  * DES 加解密工具（基于 as3crypto 的 <code>DESKey</code>）。
  *
- * <p>明文以 UTF-8 写入 <code>ByteArray</code> 后加密，密文以 Base64 字符串输出；解密过程相反。</p>
+ * <p>明文以 UTF-8 写入 <code>ByteArray</code> 后加密，密文以 Base64 字符串输出；解密过程相反。密钥取 <code>keyString</code> 的 UTF-8 字节，DES 按 8 字节处理。</p>
  *
  * @see #encrypt()
  * @see #decrypt()
@@ -34,8 +34,13 @@ import flash.utils.ByteArray;
  */
 public class DES {
     /**
-     * DES 密钥字符串，写入密钥 <code>ByteArray</code> 时按 UTF-8 编码。
+     * DES 密钥字符串。
+     *
+     * <p>构造密钥时按 UTF-8 写入。DES 按 8 字节密钥处理。</p>
+     *
      * @default '123456'
+     * @see #encrypt()
+     * @see #decrypt()
      */
     public static var keyString:String = '123456';
 
