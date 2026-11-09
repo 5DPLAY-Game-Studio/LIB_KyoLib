@@ -29,8 +29,11 @@ import flash.net.URLRequest;
 public class KyoSoundLite {
     /**
      * 播放声音。
+     *
+     * <p>不是 <code>Class</code> 或 URL 时不播放。<code>times</code> 传给 <code>Sound.play</code> 的 <code>loops</code>，默认 1 会在播完后再回到开头一次。</p>
+     *
      * @param sound 声音 <code>Class</code> 或 URL 字符串。
-     * @param times 循环次数；默认 1。
+     * @param times 传给 <code>Sound.play</code> 的循环次数，默认 1。
      * @example
      * <listing version="3.0">
      * KyoSoundLite.play('hit.mp3');

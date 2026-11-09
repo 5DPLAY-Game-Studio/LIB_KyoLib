@@ -38,6 +38,10 @@ public class KyoBGSounder {
     /**
      * 单例。
      * @return 单例实例。
+     * @example
+     * <listing version="3.0">
+     * var bgm:KyoBGSounder = KyoBGSounder.I;
+     * </listing>
      */
     public static function get I():KyoBGSounder {
         _i ||= new KyoBGSounder();
@@ -47,6 +51,7 @@ public class KyoBGSounder {
 
     /**
      * 音乐 URL、声音 Class 或 <code>Sound</code> 实例。
+     * @default null
      */
     public var sound:Object;
     /**
@@ -84,8 +89,11 @@ public class KyoBGSounder {
 
     /**
      * 播放背景音乐。
+     *
+     * <p>已经加载过声音时直接返回，须先 <code>stop</code>。交给 <code>Sound.play</code> 的循环次数固定为 1，曲目会先连播两遍；<code>isLoop</code> 为 true 时，这一轮结束后再从头开始。没有声卡时仍把 <code>playing</code> 设为 true。</p>
+     *
      * @param snd 为空时使用 <code>sound</code>。
-     * @param isLoop 是否循环。
+     * @param isLoop 这一轮结束后是否从头再播，默认 true。
      * @example
      * <listing version="3.0">
      * KyoBGSounder.I.play('bgm.mp3');
@@ -124,6 +132,9 @@ public class KyoBGSounder {
 
     /**
      * 停止并关闭当前音乐。
+     *
+     * <p>嵌入或已下载完成的声音 <code>close</code> 会抛 2029，此处忽略。</p>
+     *
      * @example
      * <listing version="3.0">
      * KyoBGSounder.I.stop();
@@ -166,6 +177,9 @@ public class KyoBGSounder {
 
     /**
      * 从暂停位置继续播放。
+     *
+     * <p>会按循环方式重挂完成监听，即使当初 <code>play</code> 没有要求循环。</p>
+     *
      * @example
      * <listing version="3.0">
      * KyoBGSounder.I.resume();
@@ -180,6 +194,9 @@ public class KyoBGSounder {
 
     /**
      * 播放中则停止，否则播放。
+     *
+     * <p>只看 <code>playing</code>。暂停后标记仍为 true，此时会 <code>stop</code> 而不是继续。</p>
+     *
      * @example
      * <listing version="3.0">
      * KyoBGSounder.I.toggle();

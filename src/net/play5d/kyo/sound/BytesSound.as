@@ -27,7 +27,12 @@ import flash.utils.ByteArray;
  */
 public class BytesSound extends Sound {
     /**
+     * 创建声音；传入字节时立即加载。
      * @param bytes 可选压缩音频数据；非空则立即 <code>loadBytes</code>。
+     * @example
+     * <listing version="3.0">
+     * var s:BytesSound = new BytesSound(ba);
+     * </listing>
      */
     public function BytesSound(bytes:ByteArray = null) {
         super(null, null);
@@ -38,6 +43,9 @@ public class BytesSound extends Sound {
 
     /**
      * 按最多 40KB 一块调用 <code>loadCompressedDataFromByteArray</code>，完成后 <code>clear</code> 源字节。
+     *
+     * <p>会先把源字节的 <code>position</code> 置 0。加载结束后清空的是调用方传入的那个 <code>ByteArray</code>。</p>
+     *
      * @param v 压缩音频字节。
      * @example
      * <listing version="3.0">

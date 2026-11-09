@@ -37,6 +37,10 @@ public class KyoSoundPlayer {
     /**
      * 单例。
      * @return 单例实例。
+     * @example
+     * <listing version="3.0">
+     * var player:KyoSoundPlayer = KyoSoundPlayer.I;
+     * </listing>
      */
     public static function get I():KyoSoundPlayer {
         _i ||= new KyoSoundPlayer();
@@ -53,10 +57,13 @@ public class KyoSoundPlayer {
 
     /**
      * 播放声音。
+     *
+     * <p><code>channelId</code> 为 -1 时不登记声道，<code>onComplete</code> 无效；距上次不足 <code>gap</code> 毫秒则丢弃。字符串 URL 不播放。数组会先随机取一项，该项仍须是 <code>Class</code> 或 <code>Sound</code>。</p>
+     *
      * @param s 声音对象、<code>Class</code>，或数组（随机取一项）。
      * @param channelId 声道 ID；同 ID 同时仅一路；-1 表示不限声道。
-     * @param gap 播放间隔（毫秒），仅 <code>channelId == -1</code> 时有效。
-     * @param loops 循环次数。
+     * @param gap 播放间隔（毫秒），仅 <code>channelId == -1</code> 时有效，默认 100。
+     * @param loops 传给 <code>Sound.play</code> 的循环次数，0 表示只播一遍，默认 0。
      * @param volume 音量；-1 时用全局或该声道音量。
      * @param merge 为 <code>true</code> 时覆盖同声道正在播放的声音。
      * @param onComplete 声道播放完成回调；可省略。
@@ -110,6 +117,9 @@ public class KyoSoundPlayer {
 
     /**
      * 停止指定声道。
+     *
+     * <p>默认 -1，停不掉未登记的播放。</p>
+     *
      * @param channelId 声道 ID。
      * @example
      * <listing version="3.0">
@@ -125,6 +135,9 @@ public class KyoSoundPlayer {
 
     /**
      * 停止所有声道声音。
+     *
+     * <p><code>clean</code> 为 true 时把声道表置空，之后按声道播放或停止会出错。</p>
+     *
      * @param clean 为 <code>true</code> 时清空声道表。
      * @example
      * <listing version="3.0">
@@ -160,6 +173,9 @@ public class KyoSoundPlayer {
 
     /**
      * 设置音量。
+     *
+     * <p>改已有声道的音量会从当前进度重新开播。<code>channelId</code> 为 -1 时，已经以 -1 播出的声音不会改音量。</p>
+     *
      * @param volume 0~1。
      * @param channelId 声道；-1 时设全局并同步已有声道。
      * @example

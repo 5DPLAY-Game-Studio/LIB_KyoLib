@@ -33,19 +33,37 @@ import net.play5d.kyo.utils.KyoRandom;
  * @see #play()
  */
 public class KyoMp3Player {
-    /** 列表循环。 */
+    /**
+     * 列表循环。
+     * @default all_loop_mode
+     */
     public static const MODE_ALL_LOOP:String = 'all_loop_mode';
-    /** 单曲循环。 */
+    /**
+     * 单曲循环。
+     * @default one_loop_mode
+     */
     public static const MODE_ONE_LOOP:String = 'one_loop_mode';
-    /** 列表播完停止。 */
+    /**
+     * 列表播完停止。
+     * @default all_once_mode
+     */
     public static const MODE_ALL_ONCE:String = 'all_once_mode';
-    /** 单曲播完停止。 */
+    /**
+     * 单曲播完停止。
+     * @default one_once_mode
+     */
     public static const MODE_ONE_ONCE:String = 'one_once_mode';
-    /** 随机下一曲。 */
+    /**
+     * 随机下一曲。
+     * @default random_mode
+     */
     public static const MODE_RANDOM:String   = 'random_mode';
 
     /**
      * 播放模式，见 <code>MODE_ALL_LOOP</code> 等常量。
+     *
+     * <p>为 null 时播完不切歌。</p>
+     *
      * @default null
      */
     public var playMode:String;
@@ -65,6 +83,9 @@ public class KyoMp3Player {
 
     /**
      * 播放指定 URL；为空时尝试从暂停位置恢复，或播放列表首项。
+     *
+     * <p>会把地址补进 <code>list</code>。无参数且暂停位置大于 0 时从该位置接着播，新声道不再监听播放完成。此前进过 <code>stop</code> 时声音已被清掉，这样调用会出错。</p>
+     *
      * @param v MP3 URL；可省略。
      * @throws Error 列表为空且无法确定播放目标。
      * @example
@@ -98,6 +119,9 @@ public class KyoMp3Player {
 
     /**
      * 停止当前播放。
+     *
+     * <p>不清除暂停位置。</p>
+     *
      * @example
      * <listing version="3.0">
      * player.stop();
@@ -114,6 +138,9 @@ public class KyoMp3Player {
 
     /**
      * 暂停并记录位置。
+     *
+     * <p>没有正在播放的声道时会出错。</p>
+     *
      * @example
      * <listing version="3.0">
      * player.pause();
