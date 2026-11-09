@@ -30,6 +30,8 @@ import flash.utils.setTimeout;
  *
  * <p>非 AIR 专用；定长头 TCP 服务端见 <code>net.play5d.kyo.air.socket</code>。</p>
  *
+ * <p>关闭、IO 错误和安全性错误都会调用 <code>onClose</code>。后两者还会先调用 <code>onError</code>。自动重连每次另排一次，间隔 <code>autoConnectGap</code> 秒，不取消尚未执行的上一次。</p>
+ *
  * @see #connect()
  * @see #sendMsg()
  * @see #autoConnect
@@ -52,7 +54,7 @@ public class KyoSocket {
      */
     public var autoConnectGap:int = 1;
     /**
-     * 错误回调，参数为错误描述字符串。
+     * IO 错误或安全性错误时的回调，参数为错误描述字符串。连接关闭不调用。
      * @default null
      */
     public var onError:Function;
@@ -62,12 +64,15 @@ public class KyoSocket {
      */
     public var onConnect:Function;
     /**
-     * 连接关闭回调，无参数。
+     * 连接关闭、IO 错误或安全性错误时的回调，无参数。
      * @default null
      */
     public var onClose:Function;
     /**
      * 收到数据回调，参数为 <code>ByteArray</code>。
+     *
+     * <p>未设置时不从套接字读出，数据留在缓冲里。</p>
+     *
      * @default null
      */
     public var onData:Function;
@@ -80,7 +85,14 @@ public class KyoSocket {
 
     /**
      * 是否已连接。
+     *
+     * <p>尚未 <code>connect</code> 时读取会出错。</p>
+     *
      * @return 连接状态。
+     * @example
+     * <listing version="3.0">
+     * if (socket.connected) { }
+     * </listing>
      */
     public function get connected():Boolean {
         return _socket.connected;
@@ -88,8 +100,11 @@ public class KyoSocket {
 
     /**
      * 连接服务器。
-     * @param host 主机；默认 <code>localhost</code>。
-     * @param port 端口。
+     *
+     * <p>再次调用不会关闭上一个套接字，旧连接的回调仍会进来。</p>
+     *
+     * @param host 主机，默认 localhost。
+     * @param port 端口，默认 0。
      * @example
      * <listing version="3.0">
      * socket.connect('127.0.0.1', 8080);
@@ -109,6 +124,9 @@ public class KyoSocket {
 
     /**
      * 发送消息：<code>int</code> 写整型；<code>String</code> 按定长多字节写入。
+     *
+     * <p>套接字未连上时直接返回。字符串按 <code>charset</code> 编码后，长于 <code>length</code> 会截断，短于则补 0。其它类型忽略。</p>
+     *
      * @param msg <code>int</code> 或 <code>String</code>。
      * @param length 字符串定长字节数；默认 32。
      * @example
@@ -137,7 +155,7 @@ public class KyoSocket {
     }
 
     /**
-     * 发送字节。
+     * 发送字节；套接字未连上时直接返回。
      * @param b 数据。
      * @example
      * <listing version="3.0">
@@ -154,7 +172,7 @@ public class KyoSocket {
     }
 
     /**
-     * 发送 AMF 对象。
+     * 发送 AMF 对象；套接字未连上时直接返回。
      * @param o 对象。
      * @example
      * <listing version="3.0">
@@ -171,7 +189,10 @@ public class KyoSocket {
     }
 
     /**
-     * 在未连接时用上次主机端口重连。
+     * 在未连接时用上次的主机和端口重连。
+     *
+     * <p>已经连上时直接返回。尚未 <code>connect</code> 时会出错。</p>
+     *
      * @example
      * <listing version="3.0">
      * socket.reconnect();
