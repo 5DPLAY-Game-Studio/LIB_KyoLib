@@ -20,7 +20,7 @@ package net.play5d.kyo.cache {
 import flash.display.BitmapData;
 
 /**
- * 按 ID 缓存任意对象；清理时对 <code>BitmapData</code> 调用 dispose，并递归清理数组元素。
+ * 按 ID 缓存任意对象；清理时对 <code>BitmapData</code> 调用 <code>dispose</code>，并递归清理数组元素。
  *
  * @see #cacheById()
  * @see #getById()
@@ -28,8 +28,13 @@ import flash.display.BitmapData;
  */
 public class KyoCacheManager {
     /**
-     * 当前缓存条目数（仅新建 ID 时递增；覆盖已有 ID 不增加）。
+     * 当前缓存条目数。
+     *
+     * <p>仅新建 ID 时递增；覆盖已有 ID 不增加。<code>clear</code> 后回到 0。</p>
+     *
      * @default 0
+     * @see #cacheById()
+     * @see #clear()
      */
     public static var count:int          = 0;
     /** @private id → 缓存对象 */
@@ -37,12 +42,16 @@ public class KyoCacheManager {
 
     /**
      * 按 ID 写入缓存。
+     *
+     * <p>覆盖已有 ID 时不增加 <code>count</code>。</p>
+     *
      * @param obj 要缓存的对象。
      * @param id 缓存键。
      * @example
      * <listing version="3.0">
      * KyoCacheManager.cacheById(bd, 'hero');
      * </listing>
+     * @see #count
      */
     public static function cacheById(obj:*, id:String):void {
         if (!(id in _cacheObjs)) {
@@ -53,12 +62,14 @@ public class KyoCacheManager {
 
     /**
      * 按 ID 取出缓存。
+     *
      * @param id 缓存键。
      * @return 对象；不存在则为 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var o:* = KyoCacheManager.getById('hero');
      * </listing>
+     * @see #cacheById()
      */
     public static function getById(id:String):* {
         return (id in _cacheObjs) ? _cacheObjs[id] : null;
@@ -66,10 +77,14 @@ public class KyoCacheManager {
 
     /**
      * 清除全部缓存并重置计数。
+     *
+     * <p><code>BitmapData</code> 会 <code>dispose</code>；数组元素会递归清理。</p>
+     *
      * @example
      * <listing version="3.0">
      * KyoCacheManager.clear();
      * </listing>
+     * @see #count
      */
     public static function clear():void {
         for each (var item:* in _cacheObjs) {
