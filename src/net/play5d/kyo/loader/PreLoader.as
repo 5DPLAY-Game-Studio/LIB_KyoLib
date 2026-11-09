@@ -33,6 +33,10 @@ import flash.utils.getDefinitionByName;
 public class PreLoader extends MovieClip {
     /**
      * 构造函数；加入舞台后自动 <code>initialize</code>。
+     * @example
+     * <listing version="3.0">
+     * var pre:PreLoader = new PreLoader();
+     * </listing>
      */
     public function PreLoader() {
         super();
@@ -43,6 +47,9 @@ public class PreLoader extends MovieClip {
 
     /**
      * 是否显示内置 <code>LoaderBar</code>。
+     *
+     * <p>须在加入舞台之前设置，加入后才会按这个值决定是否创建进度条。</p>
+     *
      * @default true
      */
     public var showLoadbar:Boolean = true;
@@ -59,6 +66,9 @@ public class PreLoader extends MovieClip {
 
     /**
      * 创建进度条并监听 <code>loaderInfo</code> 进度。
+     *
+     * <p>进度条固定为 800×15，放在 (100, 500)。</p>
+     *
      * @param width 可用宽（当前实现未用于布局，保留形参）。
      * @param height 可用高（当前实现未用于布局，保留形参）。
      * @example
@@ -99,6 +109,7 @@ public class PreLoader extends MovieClip {
     /**
      * 加载完成：移除进度条，跳到第 2 帧并添加主类实例。
      * @param e 完成事件。
+     * @throws ReferenceError 未设置或找不到 <code>_mainClass</code>。
      * @example
      * <listing version="3.0">
      * // 由 loaderInfo COMPLETE 触发

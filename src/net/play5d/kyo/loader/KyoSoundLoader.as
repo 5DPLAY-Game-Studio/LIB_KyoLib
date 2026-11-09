@@ -48,6 +48,9 @@ public class KyoSoundLoader {
 
     /**
      * 关闭已缓存声音并清空表。
+     *
+     * <p>对已经下载完成的 <code>Sound</code> 调用 <code>close</code> 会抛错，后面的缓存可能清不掉。</p>
+     *
      * @example
      * <listing version="3.0">
      * loader.unload();
@@ -64,6 +67,9 @@ public class KyoSoundLoader {
 
     /**
      * 按 URL 列表顺序加载声音。
+     *
+     * <p>再次调用会换掉队列和回调，但上一次尚未结束的加载仍会继续，并接着拉新队列。</p>
+     *
      * @param urls 声音 URL 数组。
      * @param back 全部结束回调（含失败后继续）；无参数；可省略。
      * @param progress 总进度回调，参数为 0~1；可省略。
@@ -122,6 +128,9 @@ public class KyoSoundLoader {
 
     /**
      * 读取目录下列表 XML，再批量加载其中的声音路径。
+     *
+     * <p>列表文件加载失败时不会调用 <code>back</code>。</p>
+     *
      * @param path 目录前缀。
      * @param listXML 列表文件名（相对 path）。
      * @param back 全部加载结束回调；可省略。

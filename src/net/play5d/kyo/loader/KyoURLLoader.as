@@ -38,13 +38,25 @@ import flash.utils.ByteArray;
  * @see KyoLoaderLite
  */
 public class KyoURLLoader {
-    /** Unicode（UTF-16 LE）BOM 探测结果。 */
+    /**
+     * Unicode（UTF-16 LE）BOM 探测结果。
+     * @default Unicode
+     */
     public static const TYPE_UNICODE:String            = 'Unicode';
-    /** Unicode big endian（UTF-16 BE）BOM 探测结果。 */
+    /**
+     * Unicode big endian（UTF-16 BE）BOM 探测结果。
+     * @default Unicode big endian
+     */
     public static const TYPE_UNICODE_BIG_ENDIAN:String = 'Unicode big endian';
-    /** UTF-8 BOM 探测结果。 */
+    /**
+     * UTF-8 BOM 探测结果。
+     * @default UTF-8
+     */
     public static const TYPE_UTF8:String               = 'UTF-8';
-    /** 无已知 BOM 时视为 ANSI。 */
+    /**
+     * 无已知 BOM 时视为 ANSI。
+     * @default ANSI
+     */
     public static const TYPE_ANSI:String               = 'ANSI';
     /**
      * 为 <code>true</code> 时 IO 错误会 <code>trace</code>。
@@ -53,6 +65,7 @@ public class KyoURLLoader {
     public static var showDebug:Boolean                = true;
     /**
      * 最近一次 <code>load</code> 失败时的错误字符串；成功前会清空。
+     * @default null
      */
     public static var errorStr:String;
 
@@ -140,7 +153,7 @@ public class KyoURLLoader {
     /**
      * 发送 POST 请求。
      * @param url 地址。
-     * @param data <code>URLVariables</code> 或普通 Object（会转为 URLVariables）。
+     * @param data <code>URLVariables</code> 或普通 Object（会转为 URLVariables）；为 <code>null</code> 时抛错。
      * @param back 成功回调，参数为响应数据；可省略。
      * @param failBack 失败回调，无参数；可省略。
      * @example
@@ -187,6 +200,9 @@ public class KyoURLLoader {
 
     /**
      * 根据文件头 BOM 判断文本编码类型（读取后复位 position）。
+     *
+     * <p>只读前两字节。UTF-8 只核对 <code>EF BB</code>，不足两字节会抛错。</p>
+     *
      * @param fileData 文件字节。
      * @return <code>TYPE_UNICODE</code> 等常量之一。
      * @example

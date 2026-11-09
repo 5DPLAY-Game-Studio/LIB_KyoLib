@@ -48,6 +48,8 @@ import flash.utils.ByteArray;
 /**
  * 以二进制加载 BMP 并解析为 <code>Bitmap</code>（支持 1/4/8/24 位）。
  *
+ * <p>文件头不是 BM 时派发解析失败。其它位深既不派发完成，也不派发解析失败。</p>
+ *
  * @see #load()
  * @see #content
  * @see #EVENT_PARSE_ERROR
@@ -58,15 +60,6 @@ public class BMPLoader extends EventDispatcher {
      * @eventType parseError
      */
     public static const EVENT_PARSE_ERROR:String = 'parseError';
-
-    /**
-     * 构造 BMP 加载器。
-     * @example
-     * <listing version="3.0">
-     * var loader:BMPLoader = new BMPLoader();
-     * loader.load('a.bmp');
-     * </listing>
-     */
 
     /**
      * 解析成功后的位图。

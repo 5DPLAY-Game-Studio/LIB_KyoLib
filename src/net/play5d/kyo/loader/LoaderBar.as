@@ -32,8 +32,13 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class LoaderBar extends Sprite {
     /**
-     * @param width 条宽。
-     * @param height 条高。
+     * 创建进度条并立即按尺寸绘制。
+     * @param width 条宽，默认 500。
+     * @param height 条高，默认 10。
+     * @example
+     * <listing version="3.0">
+     * var bar:LoaderBar = new LoaderBar(200, 8);
+     * </listing>
      */
     public function LoaderBar(width:Number = 500, height:Number = 10) {
         super();
@@ -71,6 +76,9 @@ public class LoaderBar extends Sprite {
 
     /**
      * 按当前颜色与尺寸重绘底框与进度条。
+     *
+     * <p>底框上沿比进度条高 1 像素。</p>
+     *
      * @example
      * <listing version="3.0">
      * bar.color = KyoColor.LIME;

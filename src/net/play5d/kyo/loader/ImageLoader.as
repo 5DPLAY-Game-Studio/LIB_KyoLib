@@ -26,6 +26,16 @@ import flash.geom.Point;
 import flash.net.URLRequest;
 
 /**
+ * 加载完成时在本实例上再派发。
+ * @eventType flash.events.Event.COMPLETE
+ */
+[Event(name='complete', type='flash.events.Event')]
+/**
+ * <code>mergeError</code> 为 false 时在本实例上再派发 IO 错误。
+ * @eventType flash.events.IOErrorEvent.IO_ERROR
+ */
+[Event(name='ioError', type='flash.events.IOErrorEvent')]
+/**
  * 继承 <code>Loader</code> 的图片加载器，支持目标尺寸、平滑、进度与成功 / 失败回调。
  *
  * @see #loadImage()
@@ -39,11 +49,16 @@ public class ImageLoader extends Loader {
     public static var traceError:Boolean = true;
 
     /**
+     * 创建图片加载器；<code>url</code> 非空时立即加载。
      * @param url 可选，非空则立即 <code>loadImage</code>。
-     * @param size 目标尺寸；<code>x</code> 或 <code>y</code> 为 0 时按比例缩放。
+     * @param size 目标尺寸；<code>x</code> 或 <code>y</code> 有一个为 0 时按另一边等比缩放。
      * @param back 成功回调，参数为本实例。
      * @param fail 失败回调，参数为本实例。
      * @param progress 进度回调，参数为本实例与 0–1 比例；可省略。
+     * @example
+     * <listing version="3.0">
+     * var img:ImageLoader = new ImageLoader('a.png', null, onOk);
+     * </listing>
      */
     public function ImageLoader(
         url     :String = null,
@@ -171,6 +186,9 @@ public class ImageLoader extends Loader {
 
     /**
      * 用当前 URL 重新加载。
+     *
+     * <p>不沿用上一次的成功、失败和进度回调。</p>
+     *
      * @example
      * <listing version="3.0">
      * img.reload();

@@ -30,15 +30,20 @@ import flash.display.Bitmap;
 public class BitmapLoader {
     /**
      * 加载完成的位图；失败或未加载时为 <code>null</code>。
+     * @default null
      */
     public var bitmap:Bitmap;
     /**
      * 最近一次 <code>load</code> 的 URL。
+     * @default null
      */
     public var url:String;
 
     /**
      * 加载图片 URL。
+     *
+     * <p>失败时不改 <code>bitmap</code>。再次加载不会 <code>dispose</code> 上一次的位图数据。</p>
+     *
      * @param url 图片地址。
      * @param back 成功回调，参数为 <code>Bitmap</code>；可省略。
      * @param fail 失败回调，无参数；可省略。

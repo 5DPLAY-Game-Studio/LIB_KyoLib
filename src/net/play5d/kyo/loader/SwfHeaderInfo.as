@@ -24,6 +24,8 @@ import flash.utils.Endian;
 /**
  * 从 SWF 二进制解析文件头：类型、版本、大小、舞台宽高、帧率与帧数。
  *
+ * <p>压缩格式只处理 CWS。舞台矩形的 nbits 不在内置表中时，解析会失败。</p>
+ *
  * @see SWFLoader
  * @see #type
  * @see #width

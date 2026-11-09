@@ -42,6 +42,9 @@ import flash.utils.ByteArray;
 public class KyoLoaderLite {
     /**
      * 加载 URL，成功回调显示内容。
+     *
+     * <p>回调返回后会 <code>unloadAndStop</code>。需要在回调之外继续使用内容时，改用 <code>loadLoader</code>。</p>
+     *
      * @param url 资源地址。
      * @param back 成功回调，参数为 <code>DisplayObject</code>。
      * @param fail 失败回调，无参数。

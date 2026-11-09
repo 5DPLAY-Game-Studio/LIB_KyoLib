@@ -71,6 +71,7 @@ public class KyoClassLoader extends EventDispatcher {
     /**
      * 已开始加载的个数（含当前项）。
      * @return 已启动加载数。
+     * @default 0
      */
     public function get loadedAmount():int {
         return _loadedAmount;
@@ -83,7 +84,7 @@ public class KyoClassLoader extends EventDispatcher {
      * @example
      * <listing version="3.0">
      * if (cl.hasSwf('ui.swf')) {
-     *     // already loaded
+     *     // 已加载
      * }
      * </listing>
      * @see #getClass()
@@ -122,6 +123,9 @@ public class KyoClassLoader extends EventDispatcher {
 
     /**
      * 加载一个或多个 SWF（未完成前不可再次调用）。
+     *
+     * <p>单个失败会转发 IO 错误并继续队列，结束后仍派发完成。传入空数组会标成加载中，且不会派发完成。</p>
+     *
      * @param url 单个 URL 字符串，或 URL 数组。
      * @throws Error 上一次加载尚未结束。
      * @example

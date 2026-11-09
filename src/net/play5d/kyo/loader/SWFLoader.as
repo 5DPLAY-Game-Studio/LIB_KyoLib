@@ -52,6 +52,9 @@ public class SWFLoader extends Loader {
 
     /**
      * 先加载二进制解析头，再加载 SWF。
+     *
+     * <p><code>fail</code> 只在头数据加载失败时调用。头不是 FWS/CWS 时解析会抛错。内容加载失败不会回调。</p>
+     *
      * @param url SWF 地址。
      * @param back 内容加载完成回调。
      * @param fail 头或数据失败回调；可省略。
