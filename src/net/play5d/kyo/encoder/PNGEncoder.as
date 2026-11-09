@@ -34,8 +34,11 @@ public class PNGEncoder {
 
     /**
      * 将位图编码为 PNG 字节流。
+     *
+     * <p>不透明位图写成不透明 RGBA；透明位图保留 alpha。返回时 <code>position</code> 在末尾。</p>
+     *
      * @param img 源位图。
-     * @return PNG 数据的 <code>ByteArray</code>。
+     * @return PNG 字节流。
      * @example
      * <listing version="3.0">
      * var bytes:ByteArray = PNGEncoder.encode(bd);
@@ -49,13 +52,13 @@ public class PNGEncoder {
         var ihdr:ByteArray = new ByteArray();
         ihdr.writeInt(img.width);
         ihdr.writeInt(img.height);
-        ihdr.writeUnsignedInt(0x08060000); // 32bit RGBA
+        ihdr.writeUnsignedInt(0x08060000); // 8 位 RGBA，压缩与过滤方法为 0
         ihdr.writeByte(0);
         writeChunk(png, 0x49484452, ihdr);
 
         var idat:ByteArray = new ByteArray();
         for (var i:int = 0; i < img.height; i++) {
-            idat.writeByte(0); // no filter
+            idat.writeByte(0); // 该行不过滤
 
             var p:uint;
             var j:int;

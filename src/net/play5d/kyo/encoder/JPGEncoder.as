@@ -167,8 +167,11 @@ public class JPGEncoder {
 
     /**
      * 将位图编码为 JPEG 字节流。
+     *
+     * <p>只使用 RGB，忽略透明通道。宽或高不是 8 的倍数时，块内越界像素按 0 采样。返回时 <code>position</code> 在末尾。</p>
+     *
      * @param image 源位图。
-     * @return JPEG 数据的 <code>ByteArray</code>。
+     * @return JPEG 字节流。
      * @example
      * <listing version="3.0">
      * var encoder:JPGEncoder = new JPGEncoder(80);
