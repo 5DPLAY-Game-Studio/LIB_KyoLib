@@ -36,8 +36,13 @@ import flash.events.MouseEvent;
  */
 public class TabBox extends BaseBox {
     /**
+     * 创建选项卡容器。
      * @param gapX 水平间距，默认 5。
      * @param gapY 垂直间距，默认 0。
+     * @example
+     * <listing version="3.0">
+     * var tabs:TabBox = new TabBox(8, 0);
+     * </listing>
      */
     public function TabBox(gapX:Number = 5, gapY:Number = 0) {
         this.gapX = gapX;

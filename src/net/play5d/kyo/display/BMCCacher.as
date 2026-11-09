@@ -27,7 +27,12 @@ package net.play5d.kyo.display {
  */
 public class BMCCacher {
     /**
+     * 创建位图影片缓存，可限制缓存组数。
      * @param totalAmount 最大缓存组数；为 -1 表示不限制，默认 -1。
+     * @example
+     * <listing version="3.0">
+     * var cacher:BMCCacher = new BMCCacher(8);
+     * </listing>
      */
     public function BMCCacher(totalAmount:int = -1) {
         _total = totalAmount;
@@ -76,6 +81,10 @@ public class BMCCacher {
     /**
      * 移除并销毁指定缓存。
      * @param id 缓存键。
+     * @example
+     * <listing version="3.0">
+     * cacher.remove('hero');
+     * </listing>
      */
     public function remove(id:String):void {
         var frames:Array = _cacheObj[id];

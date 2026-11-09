@@ -41,6 +41,10 @@ public class Box extends Sprite {
      * @param color 填充色，默认 <code>KyoColor.BLACK</code>。
      * @param alpha 透明度，默认 1。
      * @param origin 注册点偏移；为 <code>null</code> 时从 (0,0) 起绘。
+     * @example
+     * <listing version="3.0">
+     * var box:Box = new Box(80, 40);
+     * </listing>
      */
     public function Box(
             width :Number,

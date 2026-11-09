@@ -39,11 +39,16 @@ import mx.rpc.events.FaultEvent;
  */
 public class SwfLoader extends Sprite {
     /**
+     * 创建 SWF 加载器。
      * @param url 可选；非空则立即加载。
      * @param size 显示区域尺寸（同时作为 <code>scrollRect</code>）。
      * @param back 成功无参回调，可选。
      * @param fail 失败无参回调，可选。
      * @param progress 进度回调 <code>(loader, per)</code>，可选。
+     * @example
+     * <listing version="3.0">
+     * var loader:SwfLoader = new SwfLoader(url, new Point(320, 180));
+     * </listing>
      */
     public function SwfLoader(
         url     :String = null,

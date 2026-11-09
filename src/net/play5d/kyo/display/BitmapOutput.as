@@ -32,6 +32,7 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class BitmapOutput extends Bitmap {
     /**
+     * 把显示对象画进指定尺寸的位图。
      * @param source 绘制源。
      * @param width 输出宽。
      * @param height 输出高。
@@ -39,6 +40,10 @@ public class BitmapOutput extends Bitmap {
      * @param fillColor 填充色，默认 <code>KyoColor.BLACK</code>。
      * @param pixelSnapping 像素对齐，默认 <code>'auto'</code>。
      * @param smoothing 是否平滑，默认 <code>false</code>。
+     * @example
+     * <listing version="3.0">
+     * var out:BitmapOutput = new BitmapOutput(source, 100, 40);
+     * </listing>
      */
     public function BitmapOutput(
         source       :DisplayObject,

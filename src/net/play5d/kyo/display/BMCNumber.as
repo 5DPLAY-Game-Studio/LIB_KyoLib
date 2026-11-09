@@ -38,6 +38,10 @@ public class BMCNumber extends MCNumber {
      * @param number 初始数值。
      * @param startFrame 数字起始帧，默认 1。
      * @param mcWidth 每位宽度；-1 为自动，默认 -1。
+     * @example
+     * <listing version="3.0">
+     * var num:BMCNumber = new BMCNumber(DigitMC, 12);
+     * </listing>
      */
     public function BMCNumber(mc:Object, number:uint, startFrame:int = 1, mcWidth:Number = -1) {
         var mcClass:Class;

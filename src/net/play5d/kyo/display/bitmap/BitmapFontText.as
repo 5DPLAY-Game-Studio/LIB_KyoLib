@@ -31,7 +31,12 @@ import flash.geom.Rectangle;
  */
 public class BitmapFontText extends Bitmap {
     /**
+     * 用位图字体创建文本。
      * @param font 用于渲染文本的位图字体。
+     * @example
+     * <listing version="3.0">
+     * var label:BitmapFontText = new BitmapFontText(font);
+     * </listing>
      */
     public function BitmapFontText(font:BitmapFont) {
         super(null, 'auto', true);

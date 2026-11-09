@@ -35,6 +35,10 @@ public class BitmapFont {
      * 由字体 XML 与源贴图构建字符缓存。
      * @param fontXML Starling 位图字体 XML（含 <code>info</code>、<code>chars</code>）。
      * @param fontBitmap 字体贴图。
+     * @example
+     * <listing version="3.0">
+     * var font:BitmapFont = new BitmapFont(fontXML, fontBitmap);
+     * </listing>
      */
     public function BitmapFont(fontXML:XML, fontBitmap:BitmapData) {
         _source    = fontBitmap;

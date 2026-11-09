@@ -39,7 +39,12 @@ public class PicLoaderSprite extends Sprite {
     private static const BITMAP_EXTENSIONS:Array = ['jpg', 'jpeg', 'gif', 'png'];
 
     /**
+     * 创建图片加载占位。
      * @param size 显示区域尺寸。
+     * @example
+     * <listing version="3.0">
+     * var holder:PicLoaderSprite = new PicLoaderSprite(new Point(320, 180));
+     * </listing>
      */
     public function PicLoaderSprite(size:Point) {
         this._size = size;

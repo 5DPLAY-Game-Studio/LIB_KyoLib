@@ -54,9 +54,14 @@ import flash.utils.Timer;
  */
 public class PicScroller extends Sprite {
     /**
+     * 创建图片轮播。
      * @param size 可视区域尺寸。
      * @param speed 滚动速度，默认 1。
      * @param delay 停留间隔（秒），默认 1。
+     * @example
+     * <listing version="3.0">
+     * var scroller:PicScroller = new PicScroller(new Point(320, 180));
+     * </listing>
      */
     public function PicScroller(size:Point, speed:Number = 1, delay:Number = 1) {
         this.speed = speed;

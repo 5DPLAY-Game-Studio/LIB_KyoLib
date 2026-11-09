@@ -45,12 +45,14 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class BitmapText extends Bitmap {
     /**
-     * @param autoUpdate 样式或文本变更后是否自动重绘。
-     * @param color 初始文本颜色。
+     * 创建可更新的位图文字。
+     * @param autoUpdate 样式或文本变更后是否自动重绘，默认 <code>true</code>。
+     * @param color 初始文本颜色，默认 <code>KyoColor.BLACK</code>。
      * @param bitmapFilters 绘制后依次应用的位图滤镜数组；为 <code>null</code> 时不应用滤镜。
-     * @default autoUpdate true
-     * @default color KyoColor.BLACK
-     * @default bitmapFilters null
+     * @example
+     * <listing version="3.0">
+     * var label:BitmapText = new BitmapText();
+     * </listing>
      */
     [ArrayElementType('flash.filters.BitmapFilter')]
     public function BitmapText(autoUpdate:Boolean = true, color:uint = KyoColor.BLACK, bitmapFilters:Array = null) {
@@ -253,10 +255,8 @@ public class BitmapText extends Bitmap {
      * <p><code>beginIndex</code>、<code>endIndex</code> 为 <code>-1</code> 时表示全文。</p>
      *
      * @param f 要应用的格式。
-     * @param beginIndex 起始字符索引。
-     * @param endIndex 结束字符索引（不含）。
-     * @default beginIndex -1
-     * @default endIndex -1
+     * @param beginIndex 起始字符索引，默认 -1（全文）。
+     * @param endIndex 结束字符索引（不含），默认 -1（全文）。
      * @example
      * <listing version="3.0">
      * var fmt:TextFormat = new TextFormat('Arial', 14, KyoColor.RED);

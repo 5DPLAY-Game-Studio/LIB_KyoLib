@@ -66,9 +66,14 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class PicPointer extends Sprite {
     /**
+     * 创建幻灯片指针。
      * @param size 可视区域尺寸。
      * @param delay 自动翻页间隔（秒），默认 1。
      * @param effect 切换效果；为 <code>null</code> 时使用 <code>PPTEffect_scrollH</code>。
+     * @example
+     * <listing version="3.0">
+     * var pointer:PicPointer = new PicPointer(new Point(320, 180));
+     * </listing>
      */
     public function PicPointer(size:Point, delay:Number = 1, effect:BasePPTEffect = null) {
         this.size  = size;

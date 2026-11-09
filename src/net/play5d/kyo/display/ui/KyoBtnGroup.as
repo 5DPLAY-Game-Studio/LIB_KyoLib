@@ -25,7 +25,12 @@ package net.play5d.kyo.display.ui {
  */
 public class KyoBtnGroup {
     /**
+     * 用一组按钮创建互斥焦点组。
      * @param btns 按钮集合（可遍历的 <code>Object</code> / 数组等）。
+     * @example
+     * <listing version="3.0">
+     * var group:KyoBtnGroup = new KyoBtnGroup(btns);
+     * </listing>
      */
     public function KyoBtnGroup(btns:Object) {
         _btns = btns;

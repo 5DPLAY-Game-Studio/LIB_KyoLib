@@ -54,8 +54,13 @@ public class PicPointerEvent extends Event {
     public static const LOAD_COMPLETE:String = 'LOAD_COMPLETE';
 
     /**
+     * 构造幻灯片事件。
      * @param type 事件类型。
      * @param data 附加数据（如页索引或进度 0–1），可选。
+     * @example
+     * <listing version="3.0">
+     * new PicPointerEvent(PicPointerEvent.CHANGE_START, 0);
+     * </listing>
      */
     public function PicPointerEvent(type:String, data:Object = null) {
         super(type, false, false);

@@ -39,7 +39,12 @@ import net.play5d.kyo.utils.KyoMath;
  */
 public class IPhoneScrollPane extends Sprite {
     /**
+     * 创建可惯性滚动的视口。
      * @param size 可视区域尺寸。
+     * @example
+     * <listing version="3.0">
+     * var pane:IPhoneScrollPane = new IPhoneScrollPane(new Point(200, 300));
+     * </listing>
      */
     public function IPhoneScrollPane(size:Point) {
         _size = size;
@@ -147,6 +152,10 @@ public class IPhoneScrollPane extends Sprite {
      * 按位移更新滚动（拖拽中或惯性阶段由内部调用）。
      * @param xx 水平位移。
      * @param yy 垂直位移，默认 0。
+     * @example
+     * <listing version="3.0">
+     * pane.move(12, 0);
+     * </listing>
      */
     public function move(xx:Number, yy:Number = 0):void {
         var rect:Rectangle = _release ? scrollRect.clone() : new Rectangle(0, 0, _size.x, _size.y);

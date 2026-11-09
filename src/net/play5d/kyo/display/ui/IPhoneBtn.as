@@ -27,11 +27,19 @@ package net.play5d.kyo.display.ui {
 public interface IPhoneBtn {
     /**
      * 列表进入拖拽态时回调（如取消按钮自身交互）。
+     * @example
+     * <listing version="3.0">
+     * btn.onDrag();
+     * </listing>
      */
     function onDrag():void;
 
     /**
      * 销毁按钮占用的资源。
+     * @example
+     * <listing version="3.0">
+     * btn.destroy();
+     * </listing>
      */
     function destroy():void;
 }

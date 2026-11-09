@@ -36,9 +36,14 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class KyoSimpleButton extends Sprite {
     /**
+     * 创建纯绘制按钮。
      * @param label 按钮文字。
      * @param width 宽，默认 50。
      * @param height 高，默认 20。
+     * @example
+     * <listing version="3.0">
+     * var btn:KyoSimpleButton = new KyoSimpleButton('OK', 80, 28);
+     * </listing>
      */
     public function KyoSimpleButton(label:String, width:Number = 50, height:Number = 20) {
         super();

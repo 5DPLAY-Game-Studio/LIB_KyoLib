@@ -28,7 +28,12 @@ import com.greensock.TweenLite;
  */
 public class PPTEffect_scrollH extends BasePPTEffect {
     /**
+     * 创建水平滑动切换效果。
      * @param direction 滑动方向：<code>1</code> 正向（上一页在左、下一页在右），<code>-1</code> 反向。
+     * @example
+     * <listing version="3.0">
+     * var effect:PPTEffect_scrollH = new PPTEffect_scrollH();
+     * </listing>
      */
     public function PPTEffect_scrollH(direction:int = 1) {
         super();

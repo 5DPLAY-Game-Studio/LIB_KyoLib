@@ -40,10 +40,6 @@ import flash.events.EventDispatcher;
  */
 public class PPTLoaderCtrl extends EventDispatcher {
     /**
-     * 构造队列加载控制器。
-     */
-
-    /**
      * 当前正在加载的序号（从 1 起计）。
      * @default 0
      */

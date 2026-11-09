@@ -50,6 +50,10 @@ public class BitmapMovieClip extends Sprite {
      * @param autoPlay 是否自动播放，默认 <code>true</code>。
      * @param drawFrames 最大绘制帧数；MC 超过此值则不创建后续帧，<code>-1</code> 表示不限制。
      * @param lockSize 绘制时若 Matrix 含缩放，是否锁定宽高（将 matrix 的 <code>a</code>/<code>d</code> 置为 1），默认 <code>false</code>。
+     * @example
+     * <listing version="3.0">
+     * var bmc:BitmapMovieClip = new BitmapMovieClip();
+     * </listing>
      */
     public function BitmapMovieClip(autoPlay:Boolean = true, drawFrames:int = -1, lockSize:Boolean = false) {
         this.autoPlay = autoPlay;
@@ -415,6 +419,10 @@ public class BitmapMovieClip extends Sprite {
     /**
      * 按 <code>gapFrame</code> 间隔推进一帧（ENTER_FRAME 回调内部使用）。
      *
+     * @example
+     * <listing version="3.0">
+     * bmc.renderNextFrame();
+     * </listing>
      * @see #gapFrame
      */
     public function renderNextFrame():void {
@@ -655,6 +663,7 @@ import net.play5d.kyo.utils.KyoDisplayUtils;
  */
 internal class DrawVar {
     /**
+     * @private 保存一次 draw 的源和参数。
      * @param source 待绘制源。
      * @param matrix 可选变换矩阵。
      * @param colorTransform 可选颜色变换。
@@ -720,6 +729,7 @@ internal class DrawVar {
  */
 internal class McGroup extends Sprite {
     /**
+     * @private 记录待合成的影片层。
      * @param mcs 待合成层列表。
      * @param baseFrameMc 基帧 MC，决定总帧数。
      * @param hideFrameTimeout 帧数不足时是否隐藏该层。
@@ -848,6 +858,7 @@ internal class McGroup extends Sprite {
  */
 internal class InsFunction {
     /**
+     * @private 保存帧脚本回调及其参数。
      * @param fun 回调函数。
      * @param params 参数数组。
      */

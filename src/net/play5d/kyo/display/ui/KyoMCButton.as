@@ -23,6 +23,21 @@ import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 
 /**
+ * 皮肤被按下时转发。
+ * @eventType flash.events.MouseEvent.MOUSE_DOWN
+ */
+[Event(name='mouseDown', type='flash.events.MouseEvent')]
+/**
+ * 皮肤被松开时转发。
+ * @eventType flash.events.MouseEvent.MOUSE_UP
+ */
+[Event(name='mouseUp', type='flash.events.MouseEvent')]
+/**
+ * 皮肤被点击时转发。
+ * @eventType flash.events.MouseEvent.CLICK
+ */
+[Event(name='click', type='flash.events.MouseEvent')]
+/**
  * 基于 MovieClip 帧的按钮：转发点击等鼠标事件，并支持焦点 / 禁用帧切换。
  *
  * @see IKyoButton
@@ -32,11 +47,16 @@ import flash.events.MouseEvent;
  */
 public class KyoMCButton extends EventDispatcher implements IKyoButton {
     /**
+     * 用 MovieClip 帧创建按钮。
      * @param mc 按钮皮肤 MovieClip。
      * @param normalFrame 普通态帧（标签或帧号），默认 1。
      * @param selectFrame 选中 / 焦点态帧，可选。
      * @param overFrame 悬停态帧，可选（当前未自动切换）。
      * @param disabledFrame 禁用态帧，可选。
+     * @example
+     * <listing version="3.0">
+     * var btn:KyoMCButton = new KyoMCButton(skin);
+     * </listing>
      */
     public function KyoMCButton(
         mc           :MovieClip,

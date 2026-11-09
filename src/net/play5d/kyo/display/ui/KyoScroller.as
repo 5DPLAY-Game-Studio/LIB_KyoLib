@@ -31,9 +31,14 @@ import flash.geom.Rectangle;
  */
 public class KyoScroller {
     /**
+     * 创建内容滚动器。
      * @param d 被滚动的显示对象。
      * @param size 可视区域尺寸。
      * @param dsize 内容尺寸；为 <code>null</code> 时取 <code>d</code> 的宽高。
+     * @example
+     * <listing version="3.0">
+     * var scroller:KyoScroller = new KyoScroller(content, new Point(200, 150));
+     * </listing>
      */
     public function KyoScroller(d:DisplayObject, size:Point, dsize:Point = null) {
         _d     = d;

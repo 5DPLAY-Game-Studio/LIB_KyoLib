@@ -24,10 +24,7 @@ package net.play5d.kyo.display.ui {
  * @see KyoBtnGroup
  */
 public interface IKyoButton {
-    /**
-     * 设置是否处于焦点 / 选中态。
-     * @param v <code>true</code> 为焦点。
-     */
+    /** @private 设置是否处于焦点 / 选中态 */
     function set focus(v:Boolean):void;
 }
 }

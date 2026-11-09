@@ -36,9 +36,14 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class KyoScrollPane extends Sprite {
     /**
+     * 创建带遮罩的滚动面板。
      * @param maskSize 可视区域尺寸。
      * @param source 内容显示对象，可选。
      * @param dragType 拖拽方向，默认垂直。
+     * @example
+     * <listing version="3.0">
+     * var pane:KyoScrollPane = new KyoScrollPane(new Point(200, 150), content);
+     * </listing>
      */
     public function KyoScrollPane(maskSize:Point, source:DisplayObject = null, dragType:int = KyoDragType.DRAG_TYPE_V) {
         this.dragType = dragType;

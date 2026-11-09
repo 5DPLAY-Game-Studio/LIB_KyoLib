@@ -35,8 +35,13 @@ import net.play5d.kyo.utils.KyoAlign;
  */
 public class IPhoneIconListIndicator extends Sprite {
     /**
+     * 创建绑定列表的页码指示器。
      * @param indicatorClass 指示器 MovieClip 类。
      * @param list 关联的图标列表。
+     * @example
+     * <listing version="3.0">
+     * var indicator:IPhoneIconListIndicator = new IPhoneIconListIndicator(Dot, list);
+     * </listing>
      */
     public function IPhoneIconListIndicator(indicatorClass:Class, list:IPhoneIconList) {
         super();

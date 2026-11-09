@@ -41,6 +41,10 @@ public class MCNumber extends Sprite {
      * @param startFrame 数字 0 对应的起始帧，默认 1。
      * @param mcWidth 每位宽度；为 -1 时用实例实际宽度，默认 -1。
      * @param bits 最小位数（不足补 0），默认 0 表示不补。
+     * @example
+     * <listing version="3.0">
+     * var num:MCNumber = new MCNumber(DigitMC, 7);
+     * </listing>
      */
     public function MCNumber(mc:Class, number:uint, startFrame:int = 1, mcWidth:Number = -1, bits:uint = 0) {
         _mc             = mc;
@@ -57,6 +61,7 @@ public class MCNumber extends Sprite {
     public var mcWidth:Number                 = -1;
     /**
      * 数字 0 对应的起始帧。
+     * @default 1
      */
     public var startFrame:int;
     /** @private MC 类 */

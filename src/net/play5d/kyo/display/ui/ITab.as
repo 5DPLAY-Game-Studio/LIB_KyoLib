@@ -28,6 +28,7 @@ import flash.events.IEventDispatcher;
 public interface ITab extends IEventDispatcher {
     /**
      * 是否处于选中态。
+     * @return 选中时为 <code>true</code>。
      */
     function get selected():Boolean;
 
@@ -38,6 +39,7 @@ public interface ITab extends IEventDispatcher {
 
     /**
      * 作为子项加入布局的显示对象。
+     * @return 用于布局的显示对象。
      */
     function get display():DisplayObject;
 }

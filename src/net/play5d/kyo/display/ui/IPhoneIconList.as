@@ -45,10 +45,15 @@ import net.play5d.kyo.utils.KyoColor;
  */
 public class IPhoneIconList extends Sprite {
     /**
+     * 创建分页图标列表。
      * @param touchSize 单页触摸 / 可视区域尺寸。
      * @param unitSize 单个图标单元尺寸；参与自动计算间距。
      * @param perPage 每页图标数，默认 16。
      * @param hRow 每行图标数，默认 4。
+     * @example
+     * <listing version="3.0">
+     * var list:IPhoneIconList = new IPhoneIconList(new Point(320, 480));
+     * </listing>
      */
     public function IPhoneIconList(touchSize:Point, unitSize:Point = null, perPage:int = 16, hRow:int = 4) {
         this.touchSize = touchSize;
@@ -252,6 +257,10 @@ public class IPhoneIconList extends Sprite {
     /**
      * 追加一个显示对象；末页未满则直接加入，否则重建分页。
      * @param d 显示对象。
+     * @example
+     * <listing version="3.0">
+     * list.addDisplay(icon);
+     * </listing>
      */
     public function addDisplay(d:DisplayObject):void {
         _displays ||= [];

@@ -37,6 +37,10 @@ public class Line extends Shape {
      * @param thickness 线粗（高度），默认 1。
      * @param color 填充色，默认 <code>KyoColor.BLACK</code>。
      * @param angle 旋转角度（度），默认 0。
+     * @example
+     * <listing version="3.0">
+     * var line:Line = new Line(120, 2);
+     * </listing>
      */
     public function Line(
             width     :Number,

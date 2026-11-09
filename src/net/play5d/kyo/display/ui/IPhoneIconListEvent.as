@@ -33,9 +33,14 @@ public class IPhoneIconListEvent extends Event {
     public static const PAGE_CHANGE:String = 'PAGE_CHANGE';
 
     /**
+     * 构造图标列表事件。
      * @param type 事件类型。
      * @param bubbles 是否冒泡，默认 <code>false</code>。
      * @param cancelable 是否可取消，默认 <code>false</code>。
+     * @example
+     * <listing version="3.0">
+     * new IPhoneIconListEvent(IPhoneIconListEvent.PAGE_CHANGE);
+     * </listing>
      */
     public function IPhoneIconListEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
         super(type, bubbles, cancelable);

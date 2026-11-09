@@ -28,6 +28,11 @@ import net.play5d.kyo.utils.KyoDisplayUtils;
 import net.play5d.kyo.utils.KyoMath;
 
 /**
+ * 布局变化时分派（<code>Event.CHANGE</code>）。
+ * @eventType flash.events.Event.CHANGE
+ */
+[Event(name='change', type='flash.events.Event')]
+/**
  * 表格排行样式瓦片列表：按横竖排数分页排列子项，支持遮罩滚动与滚动条联动。
  *
  * <p>调用 <code>#update()</code> 或修改 <code>#page</code> 后重新布局，并派发 <code>Event.CHANGE</code>。</p>
@@ -39,6 +44,7 @@ import net.play5d.kyo.utils.KyoMath;
  */
 public class KyoTileList extends Sprite {
     /**
+     * 创建瓦片列表。
      * @param displays 显示对象数组，可为 <code>null</code>。
      * @param hRow 每行最大个数，默认不限。
      * @param vRow 每列最大个数，默认 1。
@@ -61,6 +67,7 @@ public class KyoTileList extends Sprite {
     public var gap:Point      = new Point(5, 5);
     /**
      * 统一单元宽高；首项尺寸为 0 时由首个有效子项填充。
+     * @default (0, 0)
      */
     public var unitSize:Point = new Point();
     /**
@@ -83,6 +90,7 @@ public class KyoTileList extends Sprite {
     public var displays:Array;
     /**
      * 布局起始坐标。
+     * @default (0, 0)
      */
     public var startPos:Point     = new Point();
     /**
@@ -105,10 +113,12 @@ public class KyoTileList extends Sprite {
     public var rowV:int;
     /**
      * 布局内容总宽度。
+     * @default 0
      */
     protected var _width:Number   = 0;
     /**
      * 布局内容总高度。
+     * @default 0
      */
     protected var _height:Number  = 0;
     /** @private 每行最大个数 */
@@ -564,6 +574,10 @@ public class KyoTileList extends Sprite {
 
     /**
      * 将当前滚动比例同步到关联滚动条。
+     * @example
+     * <listing version="3.0">
+     * updateScrollBar();
+     * </listing>
      */
     protected function updateScrollBar():void {
         if (scrollBar) {

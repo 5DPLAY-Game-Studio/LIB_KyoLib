@@ -43,8 +43,13 @@ public class PicScrollEvent extends Event {
     public static const MOUSE_UP:String        = 'MOUSE_UP';
 
     /**
+     * 构造图片滚动事件。
      * @param type 事件类型。
      * @param data 附加数据（通常为当前页索引），可选。
+     * @example
+     * <listing version="3.0">
+     * new PicScrollEvent(PicScrollEvent.CHANGE, 0);
+     * </listing>
      */
     public function PicScrollEvent(type:String, data:Object = null) {
         super(type, false, false);

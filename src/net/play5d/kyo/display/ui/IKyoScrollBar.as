@@ -26,15 +26,16 @@ import flash.events.IEventDispatcher;
  * @see KyoScrollPane
  */
 public interface IKyoScrollBar extends IEventDispatcher {
-    /**
-     * 设置滚动条是否可用。
-     * @param v <code>true</code> 为可用。
-     */
+    /** @private 设置滚动条是否可用 */
     function set enabled(v:Boolean):void;
 
     /**
      * 根据内容滚动位置更新滑块。
      * @param pos 滚动位置（具体含义由实现定义，通常为像素或比例）。
+     * @example
+     * <listing version="3.0">
+     * bar.update(0);
+     * </listing>
      */
     function update(pos:Number):void;
 }

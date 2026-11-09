@@ -29,9 +29,14 @@ import flash.geom.Rectangle;
  */
 public class KyoScrollList extends KyoTileList {
     /**
+     * 创建可滚动的平铺列表。
      * @param displays 显示对象数组，可选。
      * @param size 可视区域尺寸。
      * @param scrollType 0 水平，1 垂直；默认 0。
+     * @example
+     * <listing version="3.0">
+     * var list:KyoScrollList = new KyoScrollList(items, new Point(200, 120));
+     * </listing>
      */
     [ArrayElementType('flash.display.DisplayObject')]
     public function KyoScrollList(displays:Array = null, size:Point = null, scrollType:int = 0) {

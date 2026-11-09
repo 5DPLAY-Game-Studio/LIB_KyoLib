@@ -40,10 +40,15 @@ import net.play5d.kyo.utils.KyoMath;
  */
 public class KyoDragList extends KyoTileList {
     /**
+     * 创建可拖拽滚动的平铺列表。
      * @param displays 显示对象数组。
      * @param dragType 拖拽方向，默认垂直。
      * @param hRow 横排最大个数。
      * @param vRow 竖排最大个数。
+     * @example
+     * <listing version="3.0">
+     * var list:KyoDragList = new KyoDragList(items);
+     * </listing>
      */
     [ArrayElementType('flash.display.DisplayObject')]
     public function KyoDragList(
@@ -169,6 +174,10 @@ public class KyoDragList extends KyoTileList {
      * 按位移更新滚动区域（拖拽 / 惯性内部调用）。
      * @param xx 水平位移。
      * @param yy 垂直位移，默认 0。
+     * @example
+     * <listing version="3.0">
+     * list.move(8, 0);
+     * </listing>
      */
     public function move(xx:Number, yy:Number = 0):void {
         var w:Number       = maskSize ? maskSize.x : _width;

@@ -45,10 +45,15 @@ public class KyoDragSelector extends KyoDragList {
     public static const EVENT_CHANGE:String = 'select-change-event';
 
     /**
+     * 创建可拖拽选择的列表。
      * @param displays 显示对象数组。
      * @param dragType 拖拽方向，默认垂直。
      * @param hRow 横排最大个数。
      * @param vRow 竖排最大个数。
+     * @example
+     * <listing version="3.0">
+     * var selector:KyoDragSelector = new KyoDragSelector(items);
+     * </listing>
      */
     public function KyoDragSelector(
         displays:Array,

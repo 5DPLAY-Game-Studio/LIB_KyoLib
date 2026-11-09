@@ -36,8 +36,13 @@ import net.play5d.kyo.loader.ImageLoader;
  */
 public class PicLoader extends Sprite {
     /**
+     * 创建图片加载器。
      * @param size 目标显示尺寸。
      * @param url 资源地址，可选。
+     * @example
+     * <listing version="3.0">
+     * var loader:PicLoader = new PicLoader(new Point(320, 180), url);
+     * </listing>
      */
     public function PicLoader(size:Point, url:String = null) {
         this._size = size;

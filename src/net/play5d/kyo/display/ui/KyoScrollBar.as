@@ -50,9 +50,14 @@ public class KyoScrollBar extends EventDispatcher implements IKyoScrollBar {
     public static const TYPE_V:int = 1;
 
     /**
+     * 创建滚动条。
      * @param ui 可拖拽的滑块显示对象。
      * @param dragRange 拖拽范围：<code>x</code> 为起点，<code>y</code> 为终点。
      * @param type 方向，默认 <code>TYPE_V</code>。
+     * @example
+     * <listing version="3.0">
+     * var bar:KyoScrollBar = new KyoScrollBar(ui, new Point(0, 200));
+     * </listing>
      */
     public function KyoScrollBar(ui:Sprite, dragRange:Point, type:int = TYPE_V) {
         this.ui         = ui;
