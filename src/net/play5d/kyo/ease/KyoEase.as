@@ -31,11 +31,14 @@ import flash.geom.Point;
 public class KyoEase {
     /**
      * 抛物线运动：水平正向匀速，垂直受重力加速，越过目标点后回调。
+     *
+     * <p>垂直初速度向上，轨迹先升后降。<code>x</code> 与 <code>y</code> 都大于目标后，移除本次 <code>ENTER_FRAME</code> 并调用回调。重复调用会叠加监听。</p>
+     *
      * @param display 要移动的显示对象。
      * @param target 目标坐标（通常 <code>x</code> 大于起点）。
      * @param speed 水平速度（像素/帧，正向），默认 10。
-     * @param g 重力加速度，默认 1。
-     * @param callBack 到达条件满足时的无参回调，可选。
+     * @param g 每帧叠加的垂直速度（像素/帧²，向下为正），默认 1。
+     * @param callBack 到达条件满足时的无参回调；为 <code>null</code> 时忽略。
      * @example
      * <listing version="3.0">
      * KyoEase.parabola(ball, new Point(400, 300), 8, 1, onLand);
