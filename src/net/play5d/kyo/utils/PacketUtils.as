@@ -29,6 +29,9 @@ import flash.utils.ByteArray;
 public class PacketUtils {
     /**
      * 将任意可 <code>writeObject</code> 的数据写成带 2 字节长度头的包。
+     *
+     * <p>长度用 <code>writeShort</code>。载荷超过 32767 字节时高位被截掉，拆包端会读成负数。</p>
+     *
      * @param data 载荷。
      * @return 从头起可读的 <code>ByteArray</code>。
      * @example
@@ -52,8 +55,11 @@ public class PacketUtils {
 
     /**
      * 为已有字节前插入 2 字节长度头。
+     *
+     * <p>长度同样用 <code>writeShort</code>，超过 32767 字节会截断。返回 <code>null</code> 只在长度超出正整数范围时才会发生。</p>
+     *
      * @param byte 原载荷。
-     * @return 新包；长度为负时返回 <code>null</code>。
+     * @return 新包；长度超出正整数时返回 <code>null</code>。
      * @example
      * <listing version="3.0">
      * var pkt:ByteArray = PacketUtils.addByteArrayHead(payload);

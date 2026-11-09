@@ -26,6 +26,9 @@ package net.play5d.kyo.utils {
 public class KyoXMLUtils {
     /**
      * 将 XML 子节点属性写入 VO 实例列表或字典。
+     *
+     * <p>布尔字段只有 <code>0</code> 和 <code>1</code> 按假和真处理，<code>false</code> 会变成 <code>true</code>。字典模式下，节点没有该属性时都写到空字符串键上，后写的覆盖先写的。</p>
+     *
      * @param xml <code>XML</code> 或 <code>XMLList</code>。
      * @param voClass VO 类。
      * @param keyId 非空时按该属性作字典键；否则返回数组。

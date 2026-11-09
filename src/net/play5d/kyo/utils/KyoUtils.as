@@ -283,6 +283,9 @@ public class KyoUtils {
 
     /**
      * 自定义右键菜单。
+     *
+     * <p>舞台已经存在时，会关掉整个舞台的默认右键菜单。</p>
+     *
      * @param main 目标 Sprite。
      * @param menu 菜单项标题数组。
      * @param select 选中回调，参数为菜单标题；可省略。
@@ -353,6 +356,9 @@ public class KyoUtils {
 
     /**
      * 克隆类定义的对象，所有 public var 的属性将进行克隆（仅支持简单类型的属性）。
+     *
+     * <p>类没有无参构造时会抛错。</p>
+     *
      * @param from 源实例。
      * @return 新实例。
      * @example

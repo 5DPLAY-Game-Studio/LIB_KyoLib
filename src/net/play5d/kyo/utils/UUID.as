@@ -30,6 +30,9 @@ public class UUID {
 
     /**
      * 生成形如 <code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code> 的 ID。
+     *
+     * <p>只是按这个外形拼出来的十六进制，没有版本号和变体位。</p>
+     *
      * @return UUID 字符串（大写十六进制）。
      * @example
      * <listing version="3.0">

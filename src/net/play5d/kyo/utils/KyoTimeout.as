@@ -39,6 +39,9 @@ public class KyoTimeout {
 
     /**
      * 初始化，绑定用于侦听帧事件的根容器。
+     *
+     * <p>再次调用会换掉回调表，已经排上的延时不再执行。</p>
+     *
      * @param root 根 Sprite（需已在舞台上以便取 frameRate）。
      * @example
      * <listing version="3.0">
@@ -52,6 +55,9 @@ public class KyoTimeout {
 
     /**
      * 在指定帧数之后调用。
+     *
+     * <p><code>frame</code> 在判断之后才减。传入 0 会在下一次 <code>ENTER_FRAME</code> 调用；传入 n 要再过 n+1 次。某一帧里若清掉已经触发的空位，紧挨在空位后面的未到期项这一帧可能不会减计数。</p>
+     *
      * @param func 回调。
      * @param frame 等待帧数。
      * @param param 传给回调的参数。
@@ -67,6 +73,9 @@ public class KyoTimeout {
 
     /**
      * 在指定毫秒后调用（按舞台帧率换算为帧）。
+     *
+     * <p>根不在舞台上时读 <code>frameRate</code> 会抛错。换算后再走 <code>setFrameTimeout</code>，实际还会多等一帧。</p>
+     *
      * @param func 回调。
      * @param time 毫秒。
      * @param param 传给回调的参数。

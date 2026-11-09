@@ -65,10 +65,10 @@ public class BitmapDataPool {
     /**
      * 取得指定尺寸的位图；池中无则新建。
      *
-     * @param width 宽。
-     * @param height 高。
-     * @param transparent 是否透明。
-     * @param fillColor 填充色（含 alpha）。
+     * @param width 宽。小于 1 时返回 <code>null</code>。
+     * @param height 高。小于 1 时返回 <code>null</code>。
+     * @param transparent 是否透明。默认 <code>true</code>。
+     * @param fillColor 填充色（含 alpha）。默认 <code>0x000000</code>。复用时会整张填成这个颜色。
      * @return 位图；尺寸非法或创建失败时为 <code>null</code>。
      * @example
      * <listing version="3.0">
@@ -108,6 +108,8 @@ public class BitmapDataPool {
 
     /**
      * 归还位图；桶满或总量超限时直接 dispose。
+     *
+     * <p>归还后池可能把它交给下一次 <code>acquire</code>，调用方不应再画它。传入 <code>null</code> 时直接返回。</p>
      *
      * @param bd 由 <code>acquire</code> 取得或同尺寸的位图。
      * @example

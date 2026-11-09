@@ -53,6 +53,9 @@ public class KyoDisplayUtils {
 
     /**
      * 按构造函数新建实例并复制 transform / filters 等；可选加入父级。
+     *
+     * <p>类没有无参构造时会抛错。<code>scale9Grid</code> 会先缩小到二十分之一再赋给副本，这是为了绕过 Flash Player 9 的错误，更高版本上九宫格会偏小。</p>
+     *
      * @param target 源显示对象。
      * @param autoAdd 为 <code>true</code> 且有 parent 时加入同一显示列表。
      * @return 副本。
@@ -89,6 +92,9 @@ public class KyoDisplayUtils {
 
     /**
      * 判断两个矩形是否碰撞（支持旋转）。
+     *
+     * <p><code>radian</code> 为 0 时改用 <code>rotation</code>（角度）。<code>rotation</code> 会转成 <code>int</code>。<code>scaleY</code> 不参与。<code>origin</code> 缺省是 (0, 0)，不是矩形中心。</p>
+     *
      * @param obj1 含 <code>x/y/width/height</code>（必填）；可选 <code>scaleX/rotation/radian/originX/originY</code>。
      * @param obj2 同 obj1。
      * @return 是否碰撞。
@@ -258,9 +264,12 @@ public class KyoDisplayUtils {
 
     /**
      * 判断显示对象是否位于容器在指定全局点下的最顶层。
+     *
+     * <p>不传 <code>container</code> 且 <code>child</code> 不在舞台上时会抛错。容器没有舞台时检测点保持 (1, 1)。</p>
+     *
      * @param child 待测显示对象。
      * @param container 命中检测容器；默认 <code>child.stage</code>。
-     * @param globalPoint 全局检测点；默认舞台中心。
+     * @param globalPoint 全局检测点；有舞台时用舞台中心。
      * @return 是否为该点下最顶层（容器则含其子项）。
      * @example
      * <listing version="3.0">
@@ -339,6 +348,9 @@ public class KyoDisplayUtils {
 
     /**
      * 获取 MC 的所有帧的绘制位图。
+     *
+     * <p>会把 <code>MovieClip</code> 停在最后一帧。宽或高为 0 时创建位图会抛错。</p>
+     *
      * @param mc 目标显示对象（<code>MovieClip</code> 则逐帧）。
      * @return <code>BitmapData</code> 数组。
      * @example
@@ -492,6 +504,9 @@ public class KyoDisplayUtils {
 
     /**
      * 按阈值将位图某色设为透明。
+     *
+     * <p>采样用 <code>getPixel</code>，不带 alpha。比较掩码是 <code>0xF0F0F0</code>，只看每个通道的高 4 位。源位图不会被改掉。</p>
+     *
      * @param source <code>Bitmap</code> 或 <code>BitmapData</code>。
      * @param arg1 省略则取 (0,0) 像素；为颜色值；或与 arg2 组成采样坐标 x。
      * @param arg2 采样坐标 y（当 arg1 为 x 时）。
@@ -526,6 +541,9 @@ public class KyoDisplayUtils {
 
     /**
      * 获取显示对象相对目标祖先容器的坐标。
+     *
+     * <p>只累加 <code>x</code>/<code>y</code>，不含缩放和旋转。</p>
+     *
      * @param d 要移动的显示对象。
      * @param to 目标显示对象（祖先）。
      * @return 相对坐标；若 <code>to</code> 非祖先则返回累加坐标并 <code>trace</code> 警告。
@@ -552,6 +570,9 @@ public class KyoDisplayUtils {
 
     /**
      * 将显示对象移动到另一容器内。
+     *
+     * <p><code>fixParentPoint</code> 为 <code>true</code> 时，目标不是祖先也会先改坐标。</p>
+     *
      * @param d 移动的显示对象。
      * @param to 目标容器。
      * @param fixParentPoint 自动调整坐标（仅当目标为祖先时有效）。
@@ -620,6 +641,9 @@ public class KyoDisplayUtils {
 
     /**
      * 将显示对象灰度化，或还原并移除灰度滤镜。
+     *
+     * <p>置灰会换成只剩灰度滤镜，原有滤镜被丢掉。还原时会去掉每一个 <code>ColorMatrixFilter</code>。</p>
+     *
      * @param mc 目标显示对象。
      * @param restore 为 <code>true</code> 时移除 <code>ColorMatrixFilter</code> 并还原其余滤镜。
      * @example

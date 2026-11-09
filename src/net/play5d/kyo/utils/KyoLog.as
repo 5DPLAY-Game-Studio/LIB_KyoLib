@@ -90,6 +90,9 @@ public class KyoLog {
 
     /**
      * 在容器上显示半透明日志层。
+     *
+     * <p>文本宽度只在第一次显示时按当时的舞台或容器计算，之后不再改。</p>
+     *
      * @param ct 父容器。
      * @example
      * <listing version="3.0">

@@ -73,6 +73,9 @@ public class KyoKeyboard {
 
     /**
      * 注册键盘回调（签名接收 <code>KeyboardEvent</code>）。
+     *
+     * <p>尚未 <code>initialize</code> 时直接返回，之后补初始化也不会把这次回调补上。回调里 <code>unlisten</code> 排在后面的监听可能被跳过。</p>
+     *
      * @param handler 回调。
      * @example
      * <listing version="3.0">

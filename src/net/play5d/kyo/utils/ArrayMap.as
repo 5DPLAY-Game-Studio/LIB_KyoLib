@@ -84,7 +84,7 @@ public class ArrayMap {
 
     /**
      * 按 id 删除（同步从顺序数组移除首个匹配项）。
-     * <p>以 <code>if (!_o[id])</code> 判断存在，假值无法删除。</p>
+     * <p>以 <code>if (!_o[id])</code> 判断存在，假值无法删除。顺序数组用 <code>indexOf</code> 删第一个相等值，相同的值会删错位置。</p>
      * @param id 键。
      * @example
      * <listing version="3.0">

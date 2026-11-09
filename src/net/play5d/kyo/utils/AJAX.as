@@ -33,6 +33,9 @@ import net.play5d.kyo.loader.KyoURLLoader;
 public class AJAX {
     /**
      * 以 POST 请求 URL。
+     *
+     * <p>省略 <code>data</code> 时改传空的 <code>URLVariables</code>。失败没有回调。</p>
+     *
      * @param url 地址。
      * @param data 表单变量；可省略。
      * @param back 成功回调，参数为响应数据；可省略。

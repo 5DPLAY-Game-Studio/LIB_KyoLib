@@ -85,6 +85,9 @@ public class KyoWeather {
 
     /**
      * 按城市 WOEID 加载摄氏度预报 RSS。
+     *
+     * <p>再次加载成功后，<code>todayWeather</code> 和 <code>tomorrowWeather</code> 仍是第一次解析的结果。响应不是 XML 时抛错，不会走失败回调。</p>
+     *
      * @param cityCode Yahoo 城市代码。
      * @param back 成功回调，无参数；可省略。
      * @param error 失败回调，无参数；可省略。

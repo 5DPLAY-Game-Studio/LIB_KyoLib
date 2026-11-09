@@ -165,6 +165,9 @@ public class KyoUIUtils {
 
     /**
      * 缩小字号直到文本宽/高适配 TextField。
+     *
+     * <p>放不下时字号会一直减下去。</p>
+     *
      * @param txt 文本框。
      * @example
      * <listing version="3.0">
@@ -189,6 +192,9 @@ public class KyoUIUtils {
 
     /**
      * 按横向或纵向排列多个 TextField。
+     *
+     * <p><code>offset</code> 会累加到文本框的宽高上，重复调用会越加越大。</p>
+     *
      * @param txts TextField 数组。
      * @param startPos 起始坐标；NaN 时取首项当前位置。
      * @param direction 0=横向，1=竖向。

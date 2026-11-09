@@ -210,9 +210,8 @@ public class KyoSeedRandom {
     /**
      * 按概率产生布尔值。
      *
-     * @param rate 为 <code>true</code> 的概率，范围建议 <code>[0, 1]</code>。
+     * @param rate 为 <code>true</code> 的概率，范围建议 <code>[0, 1]</code>，默认 0.5。
      * @return 是否命中。
-     * @default 0.5
      * @example
      * <listing version="3.0">
      * if (KyoSeedRandom.I.getNextBoolean(0.3)) {

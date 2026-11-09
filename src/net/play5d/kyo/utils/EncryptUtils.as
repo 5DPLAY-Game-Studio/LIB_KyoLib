@@ -33,6 +33,9 @@ import flash.utils.ByteArray;
 public class EncryptUtils {
     /**
      * 对字节做 MD5（大文件仅取头尾各 1KB）。
+     *
+     * <p>不足 2KB 时哈希全部内容。达到 2KB 时只取开头 1KB 和结尾 1KB，中间不参与。</p>
+     *
      * @param bytes 源字节。
      * @return MD5 十六进制字符串。
      * @example

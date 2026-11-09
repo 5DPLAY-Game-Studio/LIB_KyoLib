@@ -26,6 +26,9 @@ package net.play5d.kyo.utils {
 public class KyoArrayUtils {
     /**
      * 按子元素属性查找第一个匹配项。
+     *
+     * <p>元素为 <code>null</code> 时会抛错。</p>
+     *
      * @param array 源数组。
      * @param matchKey 属性名。
      * @param matchValue 属性值。
@@ -47,6 +50,9 @@ public class KyoArrayUtils {
 
     /**
      * 按子元素属性删除所有匹配项。
+     *
+     * <p>元素为 <code>null</code> 时会抛错。</p>
+     *
      * @param array 源数组。
      * @param matchKey 属性名。
      * @param matchValue 属性值。
@@ -101,6 +107,9 @@ public class KyoArrayUtils {
 
     /**
      * 插入不存在的对象到数组中。
+     *
+     * <p><code>item</code> 为 <code>null</code> 时不插入并返回 <code>false</code>。</p>
+     *
      * @param array 目标数组。
      * @param item 待插入项。
      * @return 是否新插入。
@@ -153,6 +162,9 @@ public class KyoArrayUtils {
 
     /**
      * 从数组中删除对象。
+     *
+     * <p>只删掉第一次出现的那项。</p>
+     *
      * @param array 目标数组或类数组。
      * @param item 待删除项。
      * @example

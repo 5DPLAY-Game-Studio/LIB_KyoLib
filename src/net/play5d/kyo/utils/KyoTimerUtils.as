@@ -36,6 +36,9 @@ public class KyoTimerUtils {
 
     /**
      * 延时调用。
+     *
+     * <p>id 是 0 到 99999 的随机数。撞上仍在等待的 id 时，先到期的那次会把后一次一起清掉。</p>
+     *
      * @param func 回调。
      * @param delay 毫秒。
      * @param params 传给回调的参数。
@@ -72,6 +75,9 @@ public class KyoTimerUtils {
 
     /**
      * 暂停全部未完成定时器。
+     *
+     * <p>恢复时会重新等待完整的 <code>delay</code>，已经走过的时间不算。</p>
+     *
      * @example
      * <listing version="3.0">
      * KyoTimerUtils.pauseAllTimer();

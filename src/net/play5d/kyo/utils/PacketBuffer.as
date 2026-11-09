@@ -30,10 +30,6 @@ import flash.utils.ByteArray;
  * @see #getPackets()
  */
 public class PacketBuffer {
-    /**
-     * 构造空缓冲。
-     */
-
     /** @private 未拆完的累计字节 */
     private var _buf:ByteArray = new ByteArray();
 
@@ -58,6 +54,9 @@ public class PacketBuffer {
 
     /**
      * 从缓冲中拆出当前所有完整包体（不含长度头）。
+     *
+     * <p>长度是有符号 short。大于 32767 时读出来是负数，残包判断会失效。</p>
+     *
      * @return 包体 <code>ByteArray</code> 数组；不足一整包时保留残片并返回已拆出的部分。
      * @example
      * <listing version="3.0">

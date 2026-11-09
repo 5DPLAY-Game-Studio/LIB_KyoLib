@@ -47,6 +47,9 @@ public class DynamicRegistration {
 
     /**
      * 设置属性；非 x/y 时会补偿位移以固定注册点。
+     *
+     * <p>设置 <code>x</code> 或 <code>y</code> 时直接减去注册点的本地坐标，不经过当前缩放和旋转。目标没有父级时会抛错。</p>
+     *
      * @param prop 属性名（如 <code>x</code>、<code>y</code>、<code>rotation</code>、<code>scaleX</code>）。
      * @param value 新值。
      * @example

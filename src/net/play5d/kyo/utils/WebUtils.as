@@ -62,6 +62,9 @@ public class WebUtils {
 
     /**
      * 向 JS 注册 Flash 回调；可先轮询 <code>jsReady</code> 再注册。
+     *
+     * <p><code>jsReady</code> 一直不返回 <code>true</code> 时，100 毫秒的轮询不会停。</p>
+     *
      * @param functionName JS 可调用的函数名。
      * @param closure AS 回调。
      * @param jsReady 返回 Boolean 的 JS 就绪函数名；可省略。
@@ -136,6 +139,9 @@ public class WebUtils {
 
     /**
      * 轮询获取 SWF URL 参数。
+     *
+     * <p>第一次检查在 300 毫秒之后。<code>checkVar</code> 的值是 <code>0</code>、<code>false</code> 或空串时一直当成还没就绪。超时到了仍会回调，参数里可能没有这个键。</p>
+     *
      * @param stage 舞台。
      * @param checkVar 用于检测是否就绪的参数键。
      * @param back 成功回调，参数为 parameters 对象。
@@ -181,6 +187,9 @@ public class WebUtils {
 
     /**
      * 在匹配键后插入路径，并修正重复的 <code>http://</code>。
+     *
+     * <p>字符串替换只换第一处，并且只收掉重复的 <code>http://</code>。</p>
+     *
      * @param txt 原文。
      * @param matchKey 匹配键。
      * @param urlPath 插入路径。
@@ -214,6 +223,9 @@ public class WebUtils {
 
     /**
      * 取本地路径目录部分（按 <code>\\</code>）。
+     *
+     * <p>没有反斜杠时返回空串。</p>
+     *
      * @param url 本地路径。
      * @return 目录。
      * @example
@@ -229,6 +241,9 @@ public class WebUtils {
 
     /**
      * 取当前 SWF 文件名。
+     *
+     * <p>查询串仍留在文件名里。</p>
+     *
      * @param stage 舞台。
      * @return 文件名。
      * @example
@@ -269,6 +284,9 @@ public class WebUtils {
 
     /**
      * 调用 JS <code>alert</code>。
+     *
+     * <p>文本里的引号会把脚本截断。</p>
+     *
      * @param v 提示文本。
      * @example
      * <listing version="3.0">

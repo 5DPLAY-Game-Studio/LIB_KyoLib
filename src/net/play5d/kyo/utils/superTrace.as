@@ -20,6 +20,8 @@ package net.play5d.kyo.utils {
 /**
  * 带调用栈方法名的 <code>trace</code>。
  *
+ * <p>发行版拿不到调用栈时，前缀是 <code>[?]</code>。</p>
+ *
  * @param args 输出参数。
  * @example
  * <listing version="3.0">

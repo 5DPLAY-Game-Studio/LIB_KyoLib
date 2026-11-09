@@ -102,6 +102,9 @@ public class KyoStringUtils {
 
     /**
      * 整数转中文数字（简易，支持到万）。
+     *
+     * <p>只适用于非负整数。大于 99999 时万位没有进位，会读到越界的字。</p>
+     *
      * @param n 非负整数。
      * @return 中文数字串。
      * @example
@@ -189,6 +192,9 @@ public class KyoStringUtils {
 
     /**
      * 去除扩展名（最后一个 <code>.</code> 及之后）。
+     *
+     * <p>只看最后一个点，不管路径分隔符。点后面的查询串也会一起切掉。</p>
+     *
      * @param v 带扩展名的字符串。
      * @return 去掉扩展名的字符串。
      * @example
@@ -222,6 +228,9 @@ public class KyoStringUtils {
 
     /**
      * 反复 match 并收集捕获组（最多一万次）。
+     *
+     * <p>删掉的是第一个捕获组，不是整段匹配。没有捕获组时可能一直空转到一万次。</p>
+     *
      * @param v 源字符串。
      * @param p 正则或匹配模式。
      * @return 捕获结果数组（逆序）。
@@ -263,7 +272,7 @@ public class KyoStringUtils {
     /**
      * 读取字符串格式的变量。
      *
-     * <p>每行 <code>变量名=值</code>；以 <code>//</code> 开头的行为注释。</p>
+     * <p>每行 <code>变量名=值</code>；以 <code>//</code> 开头的行为注释。没有等号的行也会写入，值是 <code>undefined</code>。值里的等号只保留第一段。</p>
      *
      * @param v 文本内容。
      * @return 键值 Object。

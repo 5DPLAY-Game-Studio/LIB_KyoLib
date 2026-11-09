@@ -47,6 +47,8 @@ public class KyoClassUtils {
     /**
      * 获得类的公开实例变量名（不含访问器）。
      *
+     * <p>返回的是缓存数组，改它会影响之后对同一个类的查询。</p>
+     *
      * @param cls 类；为 <code>null</code> 则返回 <code>null</code>。
      * @return 属性名数组；无则空数组。
      * @example
@@ -98,7 +100,7 @@ public class KyoClassUtils {
     /**
      * 获得实例上由本类声明、且仅接受一个 <code>Event</code> 参数的方法名。
      *
-     * <p>不含继承方法；参数类型须为 <code>flash.events.Event</code>（不含子类签名）。</p>
+     * <p>不含继承方法；参数类型须为 <code>flash.events.Event</code>（不含子类签名）。返回的是缓存数组，改它会影响之后对同一个类的查询。</p>
      *
      * @param value 实例；为 <code>null</code> 则返回 <code>null</code>。
      * @return 方法名数组；无则空数组。

@@ -53,6 +53,9 @@ public class KyoAlign {
 
     /**
      * 垂直居中：将 <code>target</code> 相对参照高度居中。
+     *
+     * <p>参照是数字或 <code>Point</code> 时，在当前 <code>y</code> 上累加偏移，重复调用会继续挪。参照是显示对象时，先对齐到对方的 <code>y</code> 再居中。参照类型不对时 <code>y</code> 变成 <code>NaN</code>。</p>
+     *
      * @param target 要对齐的对象。
      * @param ref 参照高度：<code>Number</code>、高度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
      * @example
@@ -104,6 +107,9 @@ public class KyoAlign {
 
     /**
      * 水平居中：将 <code>target</code> 相对参照宽度居中。
+     *
+     * <p>参照是数字或 <code>Point</code> 时，在当前 <code>x</code> 上累加偏移，重复调用会继续挪。参照是显示对象时，先对齐到对方的 <code>x</code> 再居中。参照类型不对时 <code>x</code> 变成 <code>NaN</code>。</p>
+     *
      * @param target 要对齐的对象。
      * @param ref 参照宽度：<code>Number</code>、宽度区间 <code>Point</code>（y-x）、或 <code>DisplayObject</code>。
      * @example

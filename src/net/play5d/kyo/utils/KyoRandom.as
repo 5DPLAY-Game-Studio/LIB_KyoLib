@@ -54,6 +54,9 @@ public class KyoRandom {
 
     /**
      * 随机取出多个元素。
+     *
+     * <p>不允许重复且数量大于数组长度时，多出来的是 <code>undefined</code>。</p>
+     *
      * @param array 源数组。
      * @param amount 数量。
      * @param repeat 是否允许重复。
@@ -93,6 +96,9 @@ public class KyoRandom {
 
     /**
      * 在两端点之间随机（含边界）。
+     *
+     * <p>上界几乎取不到，<code>Math.random</code> 达不到 1。</p>
+     *
      * @param a 一端。
      * @param b 另一端。
      * @return 随机数。
@@ -111,6 +117,9 @@ public class KyoRandom {
 
     /**
      * 按权重随机（必选出一项）。
+     *
+     * <p>会按权重把传入数组升序排好。权重合计小于 1 时，随机值会被压成负数，接着抛错。</p>
+     *
      * @param array 元素对象数组。
      * @param attributeName 权重属性名（Number）。
      * @return 选中元素。
@@ -146,6 +155,9 @@ public class KyoRandom {
 
     /**
      * 按权重随机（轻量；可能返回 <code>null</code>）。
+     *
+     * <p>不是累加权重。先按属性升序排序，再取第一个大于等于随机数的权重，同权重里再随机。也会改传入数组的顺序。</p>
+     *
      * @param array 元素对象数组。
      * @param attributeName 权重属性名（建议 0~1）。
      * @param randMax 随机上界。

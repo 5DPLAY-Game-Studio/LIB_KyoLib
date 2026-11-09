@@ -31,6 +31,9 @@ import flash.geom.Rectangle;
 public class KyoDragUtils {
     /**
      * 在按下对象上挂钩 DOWN/MOVE/UP；回调返回 <code>false</code> 可取消后续。
+     *
+     * <p>三个回调都不接收事件对象。只有返回值确实是布尔 <code>false</code> 才取消；不写 <code>return</code> 不会取消。</p>
+     *
      * @param downMc 按下目标。
      * @param onDown 按下回调；可返回 Boolean。
      * @param onUp 抬起回调；可返回 Boolean。
@@ -93,6 +96,9 @@ public class KyoDragUtils {
 
     /**
      * 基于 <code>dragBase</code> 调用 <code>startDrag</code> / <code>stopDrag</code>。
+     *
+     * <p><code>onDown</code> / <code>onUp</code> 只要返回假值就会取消，包括不写 <code>return</code>。取消抬起时不会 <code>stopDrag</code>。</p>
+     *
      * @param downMc 按下的 Sprite。
      * @param params 可选键：<code>onDown/onUp/onMove/dragMc/bounds/lockCenter</code>。
      * @example

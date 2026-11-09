@@ -80,6 +80,9 @@ public class KyoBtnUtils {
 
     /**
      * 解除简单按钮监听。
+     *
+     * <p>映射值会被写成 <code>null</code>，键仍留在字典里，显示对象不会因此被回收。</p>
+     *
      * @param d 显示对象。
      * @example
      * <listing version="3.0">
@@ -96,6 +99,9 @@ public class KyoBtnUtils {
 
     /**
      * 定义带按下效果的按钮。
+     *
+     * <p>只有效果 1 会立刻调用点击。效果 2 要等回弹结束。其它值把点击存下来但不调用。回弹和点击回调全局只有一份，另一个按钮按下会停掉当前回弹。没有点击回调的按钮走效果 2 时，回弹结束仍会调用上一次留下的回调。对同一个对象再调用一次会再加一套监听。</p>
+     *
      * @param d 显示对象；为 Sprite 时开启 buttonMode。
      * @param click 点击回调；可省略。
      * @param clickParam 传给回调的参数；可省略。
@@ -132,6 +138,9 @@ public class KyoBtnUtils {
 
     /**
      * 解除按钮监听与映射。
+     *
+     * <p>映射值会被写成 <code>null</code>，键仍留在字典里，显示对象不会因此被回收。</p>
+     *
      * @param d 显示对象。
      * @example
      * <listing version="3.0">

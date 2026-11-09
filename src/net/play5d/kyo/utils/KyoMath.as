@@ -105,6 +105,9 @@ public class KyoMath {
 
     /**
      * 平均值。
+     *
+     * <p>空数组得到 <code>NaN</code>。第一个参数是数组时，后面的数字不参与。</p>
+     *
      * @param params 一个数组，或多个数字。
      * @return 平均值。
      * @example
@@ -140,6 +143,9 @@ public class KyoMath {
 
     /**
      * 计算两点间的角度（度）。
+     *
+     * <p>两点重合时得到 <code>NaN</code>，转成 <code>int</code> 后是 0。</p>
+     *
      * @param A 起点。
      * @param B 终点。
      * @return 角度。
@@ -373,6 +379,9 @@ public class KyoMath {
 
     /**
      * 将小数转化为百分比形式。
+     *
+     * <p><code>decimalPlaces</code> 为 -1 时不截断，浮点误差会留在字符串里。其它位数向零截断。</p>
+     *
      * @param v 小数。
      * @param decimalPlaces 小数位数，-1 时不限制，0 时为整数。
      * @return 百分比字符串。
@@ -434,6 +443,9 @@ public class KyoMath {
 
     /**
      * 求两矩形相交区域；无相交则 <code>null</code>（会规范化负宽高）。
+     *
+     * <p>规范化会改到传入的两个矩形。</p>
+     *
      * @param rectA 矩形 A。
      * @param rectB 矩形 B。
      * @return 相交矩形或 <code>null</code>。

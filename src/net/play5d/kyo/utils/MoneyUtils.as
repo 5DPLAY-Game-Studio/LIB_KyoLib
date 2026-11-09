@@ -35,6 +35,9 @@ public class MoneyUtils {
 
     /**
      * 把阿拉伯数字转换成中文大写金额。
+     *
+     * <p>负数的符号会留在整数字符串里，结果不是金额读法。</p>
+     *
      * @param num 阿拉伯数字。
      * @return 中文大写。
      * @throws Error 整数部分超过 16 位。

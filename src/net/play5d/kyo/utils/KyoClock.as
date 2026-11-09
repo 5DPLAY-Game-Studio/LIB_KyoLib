@@ -120,6 +120,9 @@ public class KyoClock {
 
     /**
      * 注册定时回调。
+     *
+     * <p>同一个函数只会登记一次，后一次的参数不会覆盖。</p>
+     *
      * @param fun 回调函数。
      * @param params 传给 <code>apply</code> 的参数数组；可省略。
      * @example
@@ -187,6 +190,9 @@ public class KyoClock {
 
     /**
      * 复位定时器计数。
+     *
+     * <p>同时会停掉定时器，不会再 <code>start</code>。</p>
+     *
      * @example
      * <listing version="3.0">
      * clock.reset();
@@ -200,7 +206,7 @@ public class KyoClock {
 
     /**
      * 停止并释放定时器与回调表。
-     * <p>之后若再调用 <code>addCallback</code> 等依赖回调表的方法会出错，需重新构造实例。</p>
+     * <p>之后若再调用 <code>addCallback</code> 等依赖回调表的方法会出错，需重新构造实例。<code>start</code> 仍会建定时器，到点访问回调表会抛错。</p>
      * @example
      * <listing version="3.0">
      * clock.clear();

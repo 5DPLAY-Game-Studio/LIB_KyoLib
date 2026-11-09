@@ -35,6 +35,9 @@ public class KyoDrawUtils {
 
     /**
      * 绘制空心圆环扇形到透明 <code>BitmapData</code>。
+     *
+     * <p>从 -90 度（正上方）起画。位图边长是半径的两倍。</p>
+     *
      * @param width 环宽。
      * @param radius 外半径。
      * @param angle 扇形角度。
@@ -75,6 +78,9 @@ public class KyoDrawUtils {
 
     /**
      * 在指定 <code>Graphics</code> 上绘制扇形。
+     *
+     * <p>会先 <code>clear</code> 整个画笔。渐变只准备了色标 128 和 255，颜色数组不是两项时会抛错。</p>
+     *
      * @param graphics 目标画笔。
      * @param x 圆心 x。
      * @param y 圆心 y。
