@@ -69,7 +69,10 @@ public class StageEffect {
     private var _shakeBack:Function;
 
     /**
-     * 从指定着色过渡回当前颜色（闪屏感）。
+     * 从指定着色过渡回默认颜色（闪屏感）。
+     *
+     * <p>会先把 <code>stage</code> 的颜色变换清成默认，再从着色过渡回去。</p>
+     *
      * @param duration 过渡时长（秒），默认 1。
      * @param color 闪烁着色，默认白色。
      * @param alpha 着色强度（tintAmount），默认 0.5。
@@ -85,7 +88,10 @@ public class StageEffect {
     }
 
     /**
-     * 衰减式屏幕抖动：幅度逐帧减小，结束后坐标归零并调用回调。
+     * 衰减式屏幕抖动：幅度逐次减小，结束后坐标归零并调用回调。
+     *
+     * <p>开始时也会把坐标归零。再次调用会立刻执行上一次尚未触发的结束回调，再开始新的抖动。</p>
+     *
      * @param x 初始 X 抖动幅度。
      * @param y 初始 Y 抖动幅度。
      * @param back 结束回调，可选。
@@ -156,6 +162,9 @@ public class StageEffect {
 
     /**
      * 对当前 <code>stage</code> 截图并做放大淡出残影。
+     *
+     * <p>每帧左上移 6.5 像素、缩放加 0.04、透明度减 0.1，透明后移除并 <code>dispose</code>。没有父容器时不产生残影。</p>
+     *
      * @example
      * <listing version="3.0">
      * StageEffect.I.bigShadow();

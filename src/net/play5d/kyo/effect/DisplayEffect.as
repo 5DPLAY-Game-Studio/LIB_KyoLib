@@ -41,6 +41,9 @@ import net.play5d.kyo.utils.KyoDisplayUtils;
 public class DisplayEffect {
     /**
      * 在目标当前位置留下残影，逐帧降低透明度后移除。
+     *
+     * <p>残影放在目标下面，并把目标重新加到父容器顶层。没有父容器或截图失败时不产生残影。</p>
+     *
      * @param d 被截图的显示对象（须已有 parent）。
      * @param alphaLoss 每帧减少的透明度，默认 0.1。
      * @param startAlpha 残影初始透明度，默认 1。
@@ -140,7 +143,7 @@ public class DisplayEffect {
 
     /**
      * 在容器中播放一次性 MovieClip 特效，播完后自动移除。
-     * @param child 父容器。
+     * @param child 父容器（参数名沿用历史命名）。
      * @param effect 继承 <code>MovieClip</code> 的类。
      * @param pos 放置坐标；为 <code>null</code> 时用默认 (0,0)。
      * @return 已加入显示列表并开始播放的实例。
@@ -171,6 +174,9 @@ public class DisplayEffect {
 
     /**
      * 对显示对象做短时位移抖动（结束后坐标归零）。
+     *
+     * <p>再次调用会拆掉尚未结束的抖动再重新开始。结束时把坐标设为 0，而不是抖动前的位置。</p>
+     *
      * @param stage 被抖动的对象（参数名沿用历史命名）。
      * @param frames 持续帧数，默认 1。
      * @param strength 每帧位移幅度，默认 2。

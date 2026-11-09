@@ -93,6 +93,9 @@ public class WaterWaveEffect extends Sprite {
 
     /**
      * 释放内部缓冲与源图。
+     *
+     * <p>会 <code>dispose</code> 构造时传入的源图和内部缓冲，但不把自身移出显示列表。</p>
+     *
      * @example
      * <listing version="3.0">
      * wave.destroy();
@@ -120,6 +123,9 @@ public class WaterWaveEffect extends Sprite {
 
     /**
      * 推进一帧水波演算；可选在指定点写入扰动。
+     *
+     * <p>坐标先除以 1.5，再除以构造时的缩放，然后按 <code>strength</code> 向四邻写入扰动。</p>
+     *
      * @param points 扰动坐标列表（元素为 <code>Point</code>）；为 <code>null</code> 时仅做传播衰减。
      * @example
      * <listing version="3.0">

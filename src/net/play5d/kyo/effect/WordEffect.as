@@ -22,16 +22,16 @@ import com.greensock.TweenLite;
 import flash.text.TextField;
 
 /**
- * 文字显示效果工具。
+ * 按间隔把文本框内容逐字显示出来。
  *
- * @author kyo
  * @see #showOneByOne()
+ * @author kyo
  */
 public class WordEffect {
     /**
      * 将文本框内容按字逐个追加显示。
      *
-     * <p>会先清空 <code>txt.text</code>，再按间隔把原文字逐字 <code>appendText</code> 回去；最后一个字出现后调用 <code>finish</code>（若有）。</p>
+     * <p>会先清空 <code>txt.text</code>，再按间隔把原文字逐字 <code>appendText</code> 回去；最后一个字出现后调用 <code>finish</code>（若有）。原文为空时不调用 <code>finish</code>。重复调用不会取消尚未执行的延迟。</p>
      *
      * @param txt 目标文本框（需已设好完整 <code>text</code>）。
      * @param gapTime 相邻两字之间的间隔（秒），默认 0.03。
