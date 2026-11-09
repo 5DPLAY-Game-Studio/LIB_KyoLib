@@ -20,9 +20,12 @@ package net.play5d.kyo.utils {
 /**
  * 随机数与随机选取工具。
  *
+ * <p>使用 <code>Math.random</code>，序列不可复现。可指定种子的序列见 <code>KyoSeedRandom</code>。</p>
+ *
  * @see #getRandomInArray()
  * @see #between()
  * @see #getRandomByRate()
+ * @see KyoSeedRandom
  */
 public class KyoRandom {
     /**
