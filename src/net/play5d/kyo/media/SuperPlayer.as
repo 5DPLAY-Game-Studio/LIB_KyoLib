@@ -48,6 +48,8 @@ import net.play5d.kyo.utils.KyoColor;
 /**
  * 按扩展名播放视频 / SWF / 图片的容器播放器。
  *
+ * <p>图片是否保持比例由 <code>lockRatio</code> 决定。SWF 按较大边铺满并裁到显示宽高；成功时垫上的黑底，<code>stop</code> 和 <code>destroy</code> 都不会移除。</p>
+ *
  * @see #play()
  * @see #TYPE_VIDEO
  * @author kyo
@@ -70,16 +72,30 @@ public class SuperPlayer extends Sprite {
      */
     public static const EVENT_LOAD_FAIL:String     = 'load_fail';
 
-    /** 当前为 Flash/SWF。 */
+    /**
+     * 当前为 Flash/SWF。
+     * @default type_is_flash
+     */
     public static const TYPE_FLASH:String  = 'type_is_flash';
-    /** 当前为视频。 */
+    /**
+     * 当前为视频。
+     * @default type_is_video
+     */
     public static const TYPE_VIDEO:String  = 'type_is_video';
-    /** 当前为位图。 */
+    /**
+     * 当前为位图。
+     * @default type_is_bitmap
+     */
     public static const TYPE_BITMAP:String = 'type_is_bitmap';
 
     /**
+     * 按显示宽高创建播放器，此时不绘制背景。
      * @param width 显示宽。
      * @param height 显示高。
+     * @example
+     * <listing version="3.0">
+     * var player:SuperPlayer = new SuperPlayer(640, 360);
+     * </listing>
      */
     public function SuperPlayer(width:Number, height:Number) {
         _size = new Point(width, height);
@@ -88,6 +104,7 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 当前媒体类型，见 <code>TYPE_FLASH</code> 等常量。
+     * @default null
      */
     public var type:String;
     /**
@@ -97,19 +114,25 @@ public class SuperPlayer extends Sprite {
     public var autoPlay:Boolean  = true;
     /**
      * 图片是否锁定宽高比。
+     *
+     * <p>为 true 时，宽大于高则按宽适配并垂直居中，否则按高适配并水平居中。为 false 时拉伸到显示宽高。</p>
+     *
      * @default false
      */
     public var lockRatio:Boolean = false;
     /**
      * 视为视频的扩展名列表。
+     * @default flv, mp4
      */
     public var videoExts:Array   = ['flv', 'mp4'];
     /**
      * 视为 SWF 的扩展名列表。
+     * @default swf
      */
     public var flashExts:Array   = ['swf'];
     /**
      * 视为图片的扩展名列表。
+     * @default jpg, jpeg, gif, png, bmp
      */
     public var picExts:Array     = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
     /** @private */
@@ -129,8 +152,12 @@ public class SuperPlayer extends Sprite {
     private var _bgColor:uint;
 
     /**
-     * 背景填充色；设为 1 时不绘制背景。
+     * 背景填充色。
+     *
+     * <p>赋值后才绘制。设为 1 时只清除、不填充。</p>
+     *
      * @return 填充色。
+     * @default 0
      */
     public function get bgColor():uint {
         return _bgColor;
@@ -155,6 +182,7 @@ public class SuperPlayer extends Sprite {
     /**
      * 当前播放 URL。
      * @return URL。
+     * @default null
      */
     public function get playingUrl():String {
         return _url;
@@ -162,6 +190,9 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 图片或 SWF 的加载内容；视频时为 <code>null</code>。
+     *
+     * <p>SWF 尚未加载完成时读取会出错。</p>
+     *
      * @return 内容或 <code>null</code>。
      */
     public function get content():DisplayObject {
@@ -192,8 +223,11 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 按扩展名选择视频 / SWF / 图片并加载。
+     *
+     * <p>会先停止当前媒体。扩展名取最后一个点之后的小写片段，不剥离查询串；无法识别时不加载，也不派发失败。循环只对视频生效，缓冲耗尽也会当成播放完成。</p>
+     *
      * @param url 资源地址。
-     * @param loop 视频播完是否循环。
+     * @param loop 视频播完是否循环，默认 false。
      * @example
      * <listing version="3.0">
      * player.play('a.mp4', true);
@@ -225,6 +259,9 @@ public class SuperPlayer extends Sprite {
 
     /**
      * 停止并卸载当前媒体。
+     *
+     * <p>不清除 <code>type</code>。视频流约 1 秒后关闭。</p>
+     *
      * @example
      * <listing version="3.0">
      * player.stop();
